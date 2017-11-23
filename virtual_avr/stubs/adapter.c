@@ -21,12 +21,66 @@ int gpio_get_pin_value(u32 pin)
 
 void adc_convert(u16* adc)
 {
-   // fill out adc[0]-[1] with clock and param pots
+    adc[0] = vadc_get(0);
+    adc[1] = vadc_get(1);
+    adc[2] = vadc_get(2);
+    adc[3] = vadc_get(3);
 }
+
+typedef enum {
+    WAITING,
+    WRITING_CVA_HIGH,
+    WRITING_CVA_LOW,
+    WRITING_CVB_HIGH,
+    WRITING_CVB_LOW
+} spi_dac_state_t;
+
+spi_dac_state_t spi_dac_state = WAITING;
+u32 spi_word;
 
 void spi_write(u32 chip, u32 byte) 
 {
-    // store byte in CVA/CVB data
+    switch (spi_dac_state)
+    {
+        case WAITING:
+        {
+            if (byte == 0x31)
+            {
+                spi_dac_state = WRITING_CVA_HIGH;
+            } 
+            else if (byte == 0x38)
+            {
+                spi_dac_state = WRITING_CVB_HIGH;
+            }
+            break;
+        }
+        case WRITING_CVA_HIGH:
+        {
+            spi_word = byte << 4;
+            spi_dac_state = WRITING_CVA_LOW;
+            break;
+        }
+        case WRITING_CVA_LOW:
+        {
+            spi_word |= byte;
+            vdac_set(0, spi_word);
+            spi_dac_state = WAITING;
+            break;
+        }
+        case WRITING_CVB_HIGH:
+        {
+            spi_word = byte << 4;
+            spi_dac_state = WRITING_CVB_LOW;
+            break;
+        }
+        case WRITING_CVB_LOW:
+        {
+            spi_word |= byte;
+            vdac_set(1, spi_word);
+            spi_dac_state = WAITING;
+            break;
+        }
+    } 
 }
 
 void spi_selectChip(u32 arg1, u32 arg2) {};

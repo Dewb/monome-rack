@@ -5,7 +5,6 @@
 // hardware interface points
 extern "C" int main(void);
 extern "C" void check_events(void);
-extern "C" void process_timers(void);
 
 // Plugin definition
 
@@ -84,21 +83,47 @@ struct WhiteWhale : Module {
 
 void WhiteWhale::step() {
 
-	process_timers();
+	// Convert clock input jack to GPIO signals for normal connection and value
+	bool clockNormal = !inputs[CLOCK_INPUT].active;
+	if (clockNormal != vgpio_get(B09))
+	{
+		vgpio_set(B09, clockNormal);
+		simulate_clock_normal_interrupt();
+	}
+	bool externalClock = inputs[CLOCK_INPUT].value > 0;
+	if (externalClock != vgpio_get(B08))
+	{
+		vgpio_set(B08, externalClock);
+		simulate_external_clock_interrupt();
+	}
+
+	// Convert knob float parameters to 12-bit ADC values
+	vadc_set(0, params[CLOCK_PARAM].value * 0xFFF);
+	vadc_set(1, params[PARAM_PARAM].value * 0xFFF);
+
+	// Advance software timers
+	simulate_timer_interrupt(engineGetSampleTime());
+
+	// Pump event loop
     check_events();
 
-	// detect clock connection
-	vgpio_set(B09, !inputs[CLOCK_INPUT].active);
-
-	lights[CLOCK_LIGHT].value = vgpio_get(B10);
-	lights[TRIG1_LIGHT].value = vgpio_get(B00);
-	lights[TRIG2_LIGHT].value = vgpio_get(B01);
-	lights[TRIG3_LIGHT].value = vgpio_get(B02);
-	lights[TRIG4_LIGHT].value = vgpio_get(B03);
-	lights[CVA_LIGHT].value = 1.0;
-    lights[CVB_LIGHT].value = 1.0;
+	// Update lights from GPIO
+	lights[CLOCK_LIGHT].setBrightnessSmooth(vgpio_get(B10));
+	lights[TRIG1_LIGHT].setBrightnessSmooth(vgpio_get(B00));
+	lights[TRIG2_LIGHT].setBrightnessSmooth(vgpio_get(B01));
+	lights[TRIG3_LIGHT].setBrightnessSmooth(vgpio_get(B02));
+	lights[TRIG4_LIGHT].setBrightnessSmooth(vgpio_get(B03));
+	lights[CVA_LIGHT].value = vdac_get(0)/65536.0;
+    lights[CVB_LIGHT].value = vdac_get(1)/65536.0;
 	
-	outputs[CLOCK_OUTPUT].value = vgpio_get(B10);
+	// Update output jacks from GPIO & DAC
+	outputs[CLOCK_OUTPUT].value = vgpio_get(B10) * 8.0;
+	outputs[TRIG1_OUTPUT].value = vgpio_get(B00) * 8.0;
+	outputs[TRIG2_OUTPUT].value = vgpio_get(B01) * 8.0;
+	outputs[TRIG3_OUTPUT].value = vgpio_get(B02) * 8.0;
+	outputs[TRIG4_OUTPUT].value = vgpio_get(B03) * 8.0;
+	outputs[CVA_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
+    outputs[CVB_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
 
 }
 

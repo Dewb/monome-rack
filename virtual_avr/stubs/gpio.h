@@ -1,3 +1,4 @@
+#include "compiler.h"
 
 bool gpio_get_pin_value(uint32_t pin);
 
