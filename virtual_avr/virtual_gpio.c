@@ -1,6 +1,7 @@
 #include "virtual_gpio.h"
 #include "timers.h"
 #include "events.h"
+#include "monome.h"
 
 int gpioBlock[7];
 uint16_t adcBlock[4];
@@ -77,4 +78,9 @@ void simulate_timer_interrupt(float sampleTime)
         phase -= clockRate;
         process_timers();
     }
+}
+
+void simulate_monome_connect()
+{
+    check_monome_device_desc("m o n o m e", "", "m 1 2 8 - 0 0 0 0 0 0 0 0");
 }

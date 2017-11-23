@@ -1,4 +1,5 @@
 #include "whitewhale.hpp"
+#include "grid.hpp"
 
 #include "virtual_gpio.h"
 
@@ -19,6 +20,7 @@ void init(rack::Plugin *p) {
 	p->website = "https://github.com/monome/whitewhale";
 
 	p->addModel(createModel<WhiteWhaleWidget>("Monome", "WW", "White Whale", SEQUENCER_TAG));
+	p->addModel(createModel<Grid128Widget>("Monome", "Grid128", "Grid 128", SEQUENCER_TAG));
 }
 
 struct WhiteLight : ModuleLightWidget {

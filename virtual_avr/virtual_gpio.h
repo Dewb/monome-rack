@@ -17,6 +17,8 @@ void simulate_clock_normal_interrupt();
 void simulate_external_clock_interrupt();
 void simulate_timer_interrupt(float sampleTime);
 
+void simulate_monome_connect();
+
 #ifdef __cplusplus
 }
 #endif
