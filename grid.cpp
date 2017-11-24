@@ -80,13 +80,20 @@ struct MonomePad : ParamWidget {
     void draw(NVGcontext *vg) override
     {
         uint8_t val = *ledAddress;
-        NVGcolor color1 = nvgRGB(val * 15 + 16, val * 15 + 16, val * 8 + 32);
-        NVGcolor color2 = nvgRGBA(val * 12, val * 10, val * 12, 128);
+        NVGcolor color1 = nvgRGB(val * 14 + 31, val * 13 + 31, val * 11 + 16);
+        NVGcolor color2 = nvgRGB(val * 12 + 31, val * 11 + 15, val * 10 + 8);
 
         nvgBeginPath(vg);
-        auto paint = nvgBoxGradient(vg, 0, 0, box.size.x, box.size.y, 5, 10, color1, color2);
+        auto paint = nvgBoxGradient(vg, 0, 0, box.size.x, box.size.y, box.size.x * 0.5, box.size.x * 1.2, color1, color2);
         nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 4);
-        nvgFillPaint(vg, paint);
+        if (val > 0)
+        {
+            nvgFillPaint(vg, paint);
+        } 
+        else
+        {
+            nvgFillColor(vg, nvgRGB(0,0,0));
+        }
         nvgFill(vg);
     }
 
