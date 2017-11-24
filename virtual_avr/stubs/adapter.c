@@ -110,8 +110,10 @@ typedef void uhc_device_t;
 void ftdi_change(uhc_device_t* dev, u8 plug) {;;}
 void ftdi_setup(void) {;;}
 
-u8* ftdi_rx_buf(void) { return 0; }
-u8 ftdi_rx_bytes(void) { return 0; }
+u8 queryresponse[] = { 0, 1, 2, 0, 0, 0 };
+
+u8* ftdi_rx_buf(void) { return queryresponse; }
+u8 ftdi_rx_bytes(void) { return 6; }
 u8 ftdi_rx_busy(void) { return 0; }
 u8 ftdi_tx_busy(void) { return 0; }
 u8 ftdi_connected(void) { return 0; }

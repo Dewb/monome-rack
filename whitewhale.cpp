@@ -146,8 +146,8 @@ WhiteWhaleWidget::WhiteWhaleWidget() {
 	addChild(createScrew<ScrewSilver>(Vec(0, 0)));
 	addChild(createScrew<ScrewSilver>(Vec(0, 365)));
 
-	addParam(createParam<RoundSmallBlackKnob>(Vec(12, 30), module, WhiteWhale::PARAM_PARAM, -2.0, 6.0, 2.0));
-	addParam(createParam<RoundSmallBlackKnob>(Vec(12, 250), module, WhiteWhale::CLOCK_PARAM, -2.0, 6.0, 2.0));
+	addParam(createParam<RoundSmallBlackKnob>(Vec(12, 30), module, WhiteWhale::PARAM_PARAM, 0.0, 1.0, 0.5));
+	addParam(createParam<RoundSmallBlackKnob>(Vec(12, 250), module, WhiteWhale::CLOCK_PARAM, 0.0, 1.0, 0.5));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(83-4.59, 286), module, WhiteWhale::CLOCK_LIGHT));
 	addChild(createLight<MediumLight<YellowLight>>(Vec(83-4.59, 84), module, WhiteWhale::TRIG1_LIGHT));

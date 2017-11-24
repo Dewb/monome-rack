@@ -18,6 +18,7 @@ void simulate_external_clock_interrupt();
 void simulate_timer_interrupt(float sampleTime);
 
 void simulate_monome_connect();
+void simulate_monome_key(uint8_t x, uint8_t u, uint8_t val);
 
 #ifdef __cplusplus
 }

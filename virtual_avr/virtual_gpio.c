@@ -82,5 +82,16 @@ void simulate_timer_interrupt(float sampleTime)
 
 void simulate_monome_connect()
 {
-    check_monome_device_desc("m o n o m e", "", "m 1 2 8 - 0 0 0 0 0 0 0 0");
+    check_monome_device_desc("m o n o m e", "", "m X X X X X X X X X");
+}
+
+void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
+{
+    event_t ev;
+    uint8_t* data = (uint8_t*)(&(ev.data));
+    data[0] = x;
+    data[1] = y;
+    data[2] = val;
+    ev.type = kEventMonomeGridKey;
+    event_post(&ev);
 }
