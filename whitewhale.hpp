@@ -10,7 +10,7 @@ extern Plugin *plugin;
 ////////////////////
 
 struct WhiteWhaleWidget : ModuleWidget {
-	WhiteWhaleWidget();
+    WhiteWhaleWidget();
 };
 
 

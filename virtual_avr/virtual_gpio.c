@@ -53,7 +53,7 @@ void vdac_set(int channel, uint16_t value)
 
 void simulate_clock_normal_interrupt()
 {
-	event_t e;
+    event_t e;
     e.type = kEventClockNormal;
     e.data = !vgpio_get(B09);
     event_post(&e);

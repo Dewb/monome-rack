@@ -7,7 +7,7 @@ using namespace rack;
 ////////////////////
 
 struct Grid128Widget : ModuleWidget {
-	Grid128Widget();
+    Grid128Widget();
 };
 
 

@@ -8,27 +8,27 @@ extern uint8_t monomeLedBuffer[256];
 template<size_t GRID_X, size_t GRID_Y>
 struct Grid : Module {
 
-	enum ParamIds {
-		NUM_PARAMS = GRID_X * GRID_Y
-	};
-	enum InputIds {
-		NUM_INPUTS
-	};
-	enum OutputIds {
-		NUM_OUTPUTS
-	};
-	enum LightIds {
-		NUM_LIGHTS = GRID_X * GRID_Y
-	};
+    enum ParamIds {
+        NUM_PARAMS = GRID_X * GRID_Y
+    };
+    enum InputIds {
+        NUM_INPUTS
+    };
+    enum OutputIds {
+        NUM_OUTPUTS
+    };
+    enum LightIds {
+        NUM_LIGHTS = GRID_X * GRID_Y
+    };
 
     const int X = GRID_X;
     const int Y = GRID_Y;
     bool pressedState[GRID_X * GRID_Y];
 
-	Grid() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
+    Grid() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
     {
         simulate_monome_connect();
-	}
+    }
 
     void step() override {
         for (size_t i = 0; i < GRID_X; i++)
@@ -45,19 +45,19 @@ struct Grid : Module {
         }
     }
 
-	json_t *toJson() override {
-		json_t *rootJ = json_object();
-		return rootJ;
-	}
+    json_t *toJson() override {
+        json_t *rootJ = json_object();
+        return rootJ;
+    }
 
-	void fromJson(json_t *rootJ) override {
-	}
+    void fromJson(json_t *rootJ) override {
+    }
 
-	void reset() override {
-	}
+    void reset() override {
+    }
 
-	void randomize() override {
-	}
+    void randomize() override {
+    }
 };
 
 
@@ -67,7 +67,7 @@ struct MonomePad : ParamWidget {
     int key_x;
     int key_y;
 
-	MonomePad() : ParamWidget() {
+    MonomePad() : ParamWidget() {
     }
         
     void setKeyAddress(int x, int y, uint8_t* ledByte)
@@ -75,7 +75,7 @@ struct MonomePad : ParamWidget {
         ledAddress = ledByte;
         key_x = x;
         key_y = y;
-	}
+    }
 
     void draw(NVGcontext *vg) override
     {
@@ -122,17 +122,17 @@ struct MonomePad : ParamWidget {
 
 Grid128Widget::Grid128Widget() {
 
-	auto *module = new Grid<16, 8>();
-	setModule(module);
-	box.size = Vec(15*48, 380);
+    auto *module = new Grid<16, 8>();
+    setModule(module);
+    box.size = Vec(15*48, 380);
 
-	{
-		//auto panel = new SVGPanel();
-		auto panel = new LightPanel();
-		panel->box.size = box.size;
-		//panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
-		addChild(panel);
-	}
+    {
+        //auto panel = new SVGPanel();
+        auto panel = new LightPanel();
+        panel->box.size = box.size;
+        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
+        addChild(panel);
+    }
 
     Vec margins(20, 20);
     int spacing = 9;
