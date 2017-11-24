@@ -3,7 +3,7 @@
 #include "events.h"
 #include "monome.h"
 
-int gpioBlock[7];
+int gpioBlock[8];
 uint16_t adcBlock[4];
 uint16_t dacBlock[2];
 
@@ -17,6 +17,7 @@ int vgpio_get(uint32_t pin)
     if (pin == B08) { return gpioBlock[4]; }
     if (pin == B09) { return gpioBlock[5]; }
     if (pin == B10) { return gpioBlock[6]; }
+    if (pin == NMI) { return gpioBlock[7]; }
     return 0;
 }
 
@@ -29,6 +30,7 @@ void vgpio_set(uint32_t pin, int value)
     if (pin == B08) { gpioBlock[4] = !!value; }
     if (pin == B09) { gpioBlock[5] = !!value; }
     if (pin == B10) { gpioBlock[6] = !!value; }
+    if (pin == NMI) { gpioBlock[7] = !!value; }
 }
 
 uint16_t vadc_get(int channel)
@@ -64,6 +66,14 @@ void simulate_external_clock_interrupt()
     event_t e;
     e.type = kEventClockExt;
     e.data = vgpio_get(B08);
+    event_post(&e);
+}
+
+void simulate_front_button_interrupt()
+{
+    event_t e;
+    e.type = kEventFront;
+    e.data = vgpio_get(NMI);
     event_post(&e);
 }
 

@@ -11,6 +11,7 @@ extern Plugin *plugin;
 
 struct WhiteWhaleWidget : ModuleWidget {
     WhiteWhaleWidget();
+    void randomize() override;
 };
 
 

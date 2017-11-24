@@ -1,7 +1,6 @@
 #include "types.h"
 #include "virtual_gpio.h"
-
-typedef unsigned long size_t;
+#include <string.h>
 
 
 void gpio_set_gpio_pin(u32 pin)
@@ -86,9 +85,32 @@ void spi_write(u32 chip, u32 byte)
 void spi_selectChip(u32 arg1, u32 arg2) {};
 void spi_unselectChip(u32 arg1, u32 arg2) {};
 
-volatile void *flashc_memset8(volatile void* dst, const void* src, size_t nbytes, bool erase) { return NULL; }
-volatile void *flashc_memset32(volatile void* dst, const void* src, size_t nbytes, bool erase) { return NULL; }
-volatile void *flashc_memcpy(volatile void* dst, const void* src, size_t nbytes, bool erase) { return NULL; }
+void *flashc_memset64(void *dst, uint64_t src, size_t nbytes, bool erase)
+{
+    memcpy(dst, &src, sizeof(uint64_t));
+    return dst;
+}
+
+void *flashc_memset32(void *dst, uint32_t src, size_t nbytes, bool erase)
+{
+	return flashc_memset64(dst, src | (uint64_t)src << 32, nbytes, erase);
+}
+
+void *flashc_memset16(void *dst, uint16_t src, size_t nbytes, bool erase)
+{
+	return flashc_memset32(dst, src | (uint32_t)src << 16, nbytes, erase);
+}
+
+void *flashc_memset8(void *dst, uint8_t src, size_t nbytes, bool erase)
+{
+	return flashc_memset16(dst, src | (uint16_t)src << 8, nbytes, erase);
+}
+
+void *flashc_memcpy(void* dst, const void* src, size_t nbytes, bool erase)
+{ 
+    memcpy(dst, src, nbytes);
+    return dst; 
+}
 
 void init_dbg_rs232(int hertz) {;;}
 void init_gpio() {;;}

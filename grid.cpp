@@ -163,3 +163,25 @@ Grid128Widget::Grid128Widget() {
         }
     }
 }
+
+json_t *Grid128Widget::toJson() {
+	json_t *rootJ = json_object();
+
+	// manufacturer
+	json_object_set_new(rootJ, "plugin", json_string(model->plugin->slug.c_str()));
+	// model
+	json_object_set_new(rootJ, "model", json_string(model->slug.c_str()));
+	// pos
+	json_t *posJ = json_pack("[f, f]", (double) box.pos.x, (double) box.pos.y);
+	json_object_set_new(rootJ, "pos", posJ);
+	
+	return rootJ;
+}
+
+void Grid128Widget::fromJson(json_t *rootJ) {
+	// pos
+	json_t *posJ = json_object_get(rootJ, "pos");
+	double x, y;
+	json_unpack(posJ, "[F, F]", &x, &y);
+	box.pos = Vec(x, y);
+}

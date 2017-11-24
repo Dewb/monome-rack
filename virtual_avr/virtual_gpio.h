@@ -15,6 +15,7 @@ void vdac_set(int channel, uint16_t value);
 
 void simulate_clock_normal_interrupt();
 void simulate_external_clock_interrupt();
+void simulate_front_button_interrupt();
 void simulate_timer_interrupt(float sampleTime);
 
 void simulate_monome_connect();
