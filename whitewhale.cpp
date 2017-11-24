@@ -80,6 +80,24 @@ struct WhiteLight : ModuleLightWidget {
     }
 };
 
+struct USBAJack : OpaqueWidget {
+    USBAJack() {
+    }
+
+    void draw(NVGcontext *vg) override
+    {
+        nvgBeginPath(vg);
+        nvgRect(vg, 0, 0, 40, 16);
+        nvgFillColor(vg, nvgRGB(0,0,0));
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, 4, 4, 32, 4);
+        nvgFillColor(vg, nvgRGB(120,120,120));
+        nvgFill(vg);
+    }
+};
+
 struct WhiteWhale : Module {
 
     enum ParamIds {
@@ -154,7 +172,7 @@ void WhiteWhale::step() {
         vgpio_set(B08, externalClock);
         simulate_external_clock_interrupt();
     }
-	bool frontButton = !params[BUTTON_PARAM].value > 0;
+	bool frontButton = params[BUTTON_PARAM].value == 0;
 	if (frontButton != vgpio_get(NMI))
 	{
 		vgpio_set(NMI, frontButton);
@@ -207,6 +225,7 @@ WhiteWhaleWidget::WhiteWhaleWidget() {
 
     addChild(createScrew<ScrewSilver>(Vec(0, 0)));
     addChild(createScrew<ScrewSilver>(Vec(0, 365)));
+    addChild(createScrew<USBAJack>(Vec(10, 337)));
 
     addParam(createParam<RoundSmallBlackKnob>(Vec(12, 30), module, WhiteWhale::PARAM_PARAM, 0.0, 1.0, 0.5));
     addParam(createParam<RoundSmallBlackKnob>(Vec(12, 250), module, WhiteWhale::CLOCK_PARAM, 0.0, 1.0, 0.5));
