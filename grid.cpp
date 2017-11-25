@@ -69,6 +69,10 @@ struct MonomePad : ParamWidget {
 
     MonomePad() : ParamWidget() {
     }
+
+    Grid128Widget* getGrid() {
+        return dynamic_cast<Grid128Widget*>(parent);
+    }
         
     void setKeyAddress(int x, int y, uint8_t* ledByte)
     {
@@ -100,29 +104,46 @@ struct MonomePad : ParamWidget {
     void onMouseDown(EventMouseDown &e) override
     {
         e.target = this;
+        e.consumed = true;
         setValue(1.0);
     }
 
     void onMouseUp(EventMouseUp &e) override
     {
         e.target = this;
+        e.consumed = true;
         setValue(0.0);
     }
 
     void onDragStart(EventDragStart &e) override
     {
-        setValue(1.0);
-        guiCursorLock();
+        getGrid()->padsTouchedThisDrag.clear();
+        getGrid()->padsTouchedThisDrag.insert(this);
     }
 
     void onDragEnd(EventDragEnd &e) override
     {
         setValue(0.0);
-        guiCursorUnlock();
+        getGrid()->padsTouchedThisDrag.clear();
     }
 
     void onDragMove(EventDragMove &e) override
     {
+    }
+
+    void onDragLeave(EventDragEnter &e) override
+    {
+        setValue(0.0);
+    }
+
+    void onDragEnter(EventDragEnter &e) override
+    {
+        auto ret = getGrid()->padsTouchedThisDrag.insert(this);
+        if (ret.second) 
+        {
+            // this button wasn't already in the touched set
+            setValue(1.0);
+        }
     }
 };
 
