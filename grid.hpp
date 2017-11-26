@@ -3,10 +3,6 @@
 
 using namespace rack;
 
-////////////////////
-// module widgets
-////////////////////
-
 struct MonomeKey;
 
 struct Grid128Widget : ModuleWidget {

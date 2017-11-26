@@ -58,21 +58,6 @@ typedef const struct {
 extern whale_set w;
 extern nvram_data_t flashy;
 
-// Plugin definition
-
-Plugin *plugin;
-
-void init(rack::Plugin *p) {
-    plugin = p;
-    p->slug = "Monome";
-#ifdef VERSION
-    p->version = TOSTRING(VERSION);
-#endif
-    p->website = "https://github.com/monome/whitewhale";
-
-    p->addModel(createModel<WhiteWhaleWidget>("Monome", "WW", "White Whale", SEQUENCER_TAG));
-    p->addModel(createModel<Grid128Widget>("Monome", "Grid128", "Grid 128", SEQUENCER_TAG));
-}
 
 struct WhiteLight : ModuleLightWidget {
     WhiteLight() {
@@ -254,10 +239,8 @@ WhiteWhaleWidget::WhiteWhaleWidget() {
     box.size = Vec(15*6, 380);
 
     {
-        //auto panel = new SVGPanel();
         auto panel = new LightPanel();
         panel->box.size = box.size;
-        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
         addChild(panel);
     }
 
