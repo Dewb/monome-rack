@@ -2,6 +2,7 @@
 #include "timers.h"
 #include "events.h"
 #include "monome.h"
+#include <string.h>
 
 int gpioBlock[8];
 uint16_t adcBlock[4];
@@ -51,6 +52,41 @@ uint16_t vdac_get(int channel)
 void vdac_set(int channel, uint16_t value)
 {
     dacBlock[channel] = value;
+}
+
+#define VSERIAL_BUFFER_SIZE 72
+#define VSERIAL_MAX_MESSAGES 12
+
+uint8_t* vserial_buffer = NULL;
+int vserial_read_index = 0;
+int vserial_write_index = 0;
+
+void vserial_reset()
+{
+    if (vserial_buffer == NULL)
+    {
+        vserial_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
+    }
+    vserial_read_index = 0;
+    vserial_write_index = 0;
+}
+
+uint8_t *vserial_read()
+{
+    if (vserial_read_index >= vserial_write_index)
+    {
+        return NULL;
+    }
+
+    return vserial_buffer + VSERIAL_BUFFER_SIZE * vserial_read_index++;
+}
+void vserial_write(uint8_t *buf, uint32_t byteCount)
+{
+    if (vserial_buffer)
+    {
+        uint8_t* dest = vserial_buffer + VSERIAL_BUFFER_SIZE * vserial_write_index++;
+        memcpy(dest, buf, byteCount <= VSERIAL_BUFFER_SIZE ? byteCount : VSERIAL_BUFFER_SIZE);
+    }
 }
 
 void simulate_clock_normal_interrupt()

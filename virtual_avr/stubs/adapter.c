@@ -126,7 +126,10 @@ void init_i2c_master(void) {}
 void register_interrupts() {;;}
 
 void ftdi_read(void) {;;}
-void ftdi_write(u8* data, u32 bytes) {;;}
+void ftdi_write(u8* data, u32 bytes) 
+{
+    vserial_write(data, bytes);
+}
 
 typedef void uhc_device_t;
 void ftdi_change(uhc_device_t* dev, u8 plug) {;;}

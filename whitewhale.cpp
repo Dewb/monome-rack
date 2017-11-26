@@ -136,6 +136,7 @@ struct WhiteWhale : Module {
     }
 
     void step() override;
+    void updateGridQuadrant(int x, int y, uint8_t* leds);
 
     json_t *toJson() override {
         json_t *rootJ = json_object();
@@ -158,6 +159,8 @@ struct WhiteWhale : Module {
 
 
 void WhiteWhale::step() {
+
+    vserial_reset();
 
     // Convert clock input jack to GPIO signals for normal connection and value
     bool clockNormal = !inputs[CLOCK_INPUT].active;
@@ -207,6 +210,41 @@ void WhiteWhale::step() {
     outputs[CVA_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
     outputs[CVB_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
 
+    // Update LEDs on connected grid(s)
+    uint8_t* msg = vserial_read();
+    while (msg)
+    {
+        if (msg[0] == 0x1A)
+        {
+            // Grid quadrant update
+            uint8_t x = msg[1];
+            uint8_t y = msg[2];
+            uint8_t leds[64];
+            for(int i=0; i<32; i++)
+            {
+                leds[2*i+0] = msg[3+i] >> 4;
+                leds[2*i+1] = msg[3+i] & 0xF;
+            }
+            updateGridQuadrant(x, y, leds);
+        }
+        msg = vserial_read();
+    }
+
+}
+
+uint8_t virtualMonomeLedBuffer[256];
+
+void WhiteWhale::updateGridQuadrant(int x, int y, uint8_t* leds)
+{
+    uint8_t* ptr = virtualMonomeLedBuffer + y*16 + x;
+    for(int i=0; i<8; i++)
+    {
+        for(int j=0; j<8; j++)
+        {
+            *ptr++ = *leds++;
+        }
+        ptr += 8;
+    }
 }
 
 

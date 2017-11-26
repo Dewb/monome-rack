@@ -2,7 +2,7 @@
 #include "virtual_gpio.h"
 
 // cheat for now by accessing the module's LED buffer directly
-extern uint8_t monomeLedBuffer[256];
+extern uint8_t virtualMonomeLedBuffer[256];
 
 
 template<size_t GRID_X, size_t GRID_Y>
@@ -216,7 +216,7 @@ Grid128Widget::Grid128Widget() {
             int n = i | (j << 4);
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
-            key->setKeyAddress(x, y, monomeLedBuffer + n);
+            key->setKeyAddress(x, y, virtualMonomeLedBuffer + n);
             key->box.size = Vec(button_size, button_size);
             addParam(key);
         }
