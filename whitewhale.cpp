@@ -1,6 +1,7 @@
 #include "whitewhale.hpp"
 #include "grid.hpp"
 
+
 #include "virtual_gpio.h"
 #include "base64.h"
 #include "types.h"
@@ -59,31 +60,7 @@ extern whale_set w;
 extern nvram_data_t flashy;
 
 
-struct WhiteLight : ModuleLightWidget {
-    WhiteLight() {
-        addBaseColor(COLOR_WHITE);
-    }
-};
-
-struct USBAJack : OpaqueWidget {
-    USBAJack() {
-    }
-
-    void draw(NVGcontext *vg) override
-    {
-        nvgBeginPath(vg);
-        nvgRect(vg, 0, 0, 40, 16);
-        nvgFillColor(vg, nvgRGB(0,0,0));
-        nvgFill(vg);
-
-        nvgBeginPath(vg);
-        nvgRect(vg, 4, 4, 32, 4);
-        nvgFillColor(vg, nvgRGB(120,120,120));
-        nvgFill(vg);
-    }
-};
-
-struct WhiteWhale : Module {
+struct WhiteWhale : MonomeModuleBase {
 
     enum ParamIds {
         CLOCK_PARAM,
@@ -116,12 +93,16 @@ struct WhiteWhale : Module {
         NUM_LIGHTS
     };
 
-    WhiteWhale() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
+    WhiteWhale() : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
         main();
     }
 
     void step() override;
-    void updateGridQuadrant(int x, int y, uint8_t* leds);
+
+    void onGridKeyPressed(uint8_t x, uint8_t y, uint8_t val) override
+    {
+        simulate_monome_key(x, y, val);
+    }
 
     json_t *toJson() override {
         json_t *rootJ = json_object();
@@ -195,43 +176,54 @@ void WhiteWhale::step() {
     outputs[CVA_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
     outputs[CVB_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
 
-    // Update LEDs on connected grid(s)
-    uint8_t* msg = vserial_read();
-    while (msg)
+    // Update LEDs on connected grid
+    if (gridConnection)
     {
-        if (msg[0] == 0x1A)
+        uint8_t* msg = vserial_read();
+        while (msg)
         {
-            // Grid quadrant update
-            uint8_t x = msg[1];
-            uint8_t y = msg[2];
-            uint8_t leds[64];
-            for(int i=0; i<32; i++)
+            if (msg[0] == 0x1A)
             {
-                leds[2*i+0] = msg[3+i] >> 4;
-                leds[2*i+1] = msg[3+i] & 0xF;
+                // Grid quadrant update
+                uint8_t x = msg[1];
+                uint8_t y = msg[2];
+                uint8_t leds[64];
+                for(int i=0; i<32; i++)
+                {
+                    leds[2*i+0] = msg[3+i] >> 4;
+                    leds[2*i+1] = msg[3+i] & 0xF;
+                }
+                gridConnection->updateQuadrant(x, y, leds);
             }
-            updateGridQuadrant(x, y, leds);
+            msg = vserial_read();
         }
-        msg = vserial_read();
     }
-
 }
 
-uint8_t virtualMonomeLedBuffer[256];
 
-void WhiteWhale::updateGridQuadrant(int x, int y, uint8_t* leds)
+struct WhiteLight : ModuleLightWidget
 {
-    uint8_t* ptr = virtualMonomeLedBuffer + y*16 + x;
-    for(int i=0; i<8; i++)
+    WhiteLight()
     {
-        for(int j=0; j<8; j++)
-        {
-            *ptr++ = *leds++;
-        }
-        ptr += 8;
+        addBaseColor(COLOR_WHITE);
     }
-}
+};
 
+struct USBAJack : TransparentWidget
+{
+    void draw(NVGcontext *vg) override
+    {
+        nvgBeginPath(vg);
+        nvgRect(vg, 0, 0, 40, 16);
+        nvgFillColor(vg, nvgRGB(0, 0, 0));
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRect(vg, 4, 4, 32, 4);
+        nvgFillColor(vg, nvgRGB(120, 120, 120));
+        nvgFill(vg);
+    }
+};
 
 WhiteWhaleWidget::WhiteWhaleWidget() {
     WhiteWhale *module = new WhiteWhale();
@@ -275,4 +267,73 @@ void WhiteWhaleWidget::randomize()
 {
     // don't randomize params, just randomize module core
     module->randomize();
+}
+
+struct MonomeConnectionItem : MenuItem
+{
+    MonomeModuleBase* module;
+    GridConnection* connection;
+
+    ~MonomeConnectionItem()
+    {
+        if (connection)
+        {
+            delete connection;
+        }
+    }
+
+    void onAction(EventAction &e) override
+    {
+        module->setGridConnection(connection);
+        connection = NULL;
+    }
+};
+
+Menu *WhiteWhaleWidget::createContextMenu()
+{
+    Menu *menu = ModuleWidget::createContextMenu();
+
+    auto module = static_cast<MonomeModuleBase *>(this->module);
+
+    menu->addChild(construct<MenuEntry>());
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Physical Grids"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "    (no devices connected)"));
+
+    /*
+    {   
+        auto *connectionItem = new MonomeConnectionItem();
+        connectionItem->text = "m56000505 Monome 256";
+        connectionItem->rightText = "✔";
+        connectionItem->module = static_cast<MonomeModuleBase*>(this->module);
+        connectionItem->connection = new SerialOSCGridConnection();
+        menu->addChild(connectionItem);
+    }
+*/
+
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Virtual Grids"));
+
+    // enumerate modules
+    int virtualGridCount = 0;
+    for (Widget *w : gRackWidget->moduleContainer->children)
+    {
+        Grid128Widget *gridWidget = dynamic_cast<Grid128Widget*>(w);
+        if (gridWidget)
+        {
+            auto connection = new RackGridConnection(module, dynamic_cast<Grid<16,8>*>(gridWidget->module));
+            auto *connectionItem = new MonomeConnectionItem();
+            connectionItem->text = "    Virtual Grid " + std::to_string(virtualGridCount);
+            connectionItem->rightText = module->gridConnection == connection ? "✔" : "";
+            connectionItem->module = module;
+            connectionItem->connection = connection;
+            menu->addChild(connectionItem);
+            virtualGridCount++;
+        }
+    }
+
+    if (virtualGridCount == 0)
+    {
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "   (no virtual grids in rack)"));
+    }
+
+    return menu;
 }

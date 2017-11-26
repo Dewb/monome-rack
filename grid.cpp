@@ -1,65 +1,6 @@
 #include "grid.hpp"
 #include "virtual_gpio.h"
 
-// cheat for now by accessing the module's LED buffer directly
-extern uint8_t virtualMonomeLedBuffer[256];
-
-
-template<size_t GRID_X, size_t GRID_Y>
-struct Grid : Module {
-
-    enum ParamIds {
-        NUM_PARAMS = GRID_X * GRID_Y
-    };
-    enum InputIds {
-        NUM_INPUTS
-    };
-    enum OutputIds {
-        NUM_OUTPUTS
-    };
-    enum LightIds {
-        NUM_LIGHTS = GRID_X * GRID_Y
-    };
-
-    const int X = GRID_X;
-    const int Y = GRID_Y;
-    bool pressedState[GRID_X * GRID_Y];
-
-    Grid() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) 
-    {
-        simulate_monome_connect();
-    }
-
-    void step() override {
-        for (size_t i = 0; i < GRID_X; i++)
-        {
-            for (size_t j = 0; j < GRID_Y; j++)
-            {
-                int n = i | (j << 4);
-                if ((params[n].value > 0) != pressedState[n])
-                {
-                    simulate_monome_key(i, j, params[n].value > 0 ? 1 : 0);
-                    pressedState[n] = params[n].value > 0;
-                }
-            }
-        }
-    }
-
-    json_t *toJson() override {
-        json_t *rootJ = json_object();
-        return rootJ;
-    }
-
-    void fromJson(json_t *rootJ) override {
-    }
-
-    void reset() override {
-    }
-
-    void randomize() override {
-    }
-};
-
 
 struct MonomeKey : ParamWidget {
 
@@ -193,10 +134,8 @@ Grid128Widget::Grid128Widget() {
     box.size = Vec(15*48, 380);
 
     {
-        //auto panel = new SVGPanel();
         auto panel = new LightPanel();
         panel->box.size = box.size;
-        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
         addChild(panel);
     }
 
@@ -216,7 +155,7 @@ Grid128Widget::Grid128Widget() {
             int n = i | (j << 4);
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
-            key->setKeyAddress(x, y, virtualMonomeLedBuffer + n);
+            key->setKeyAddress(x, y, module->ledBuffer + n);
             key->box.size = Vec(button_size, button_size);
             addParam(key);
         }
