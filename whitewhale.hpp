@@ -1,11 +1,11 @@
 #include "rack.hpp"
+#include "monomemodulebase.hpp"
 
 using namespace rack;
 
-struct WhiteWhaleWidget : ModuleWidget {
+struct WhiteWhaleWidget : MonomeModuleBaseWidget {
     WhiteWhaleWidget();
     void randomize() override;
-    Menu* createContextMenu() override;
 };
 
 

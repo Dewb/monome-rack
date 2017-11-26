@@ -50,7 +50,7 @@ struct Grid : Module
                     int n = i | (j << 4);
                     if ((params[n].value > 0) != pressedState[n])
                     {
-                        connectedModule->onGridKeyPressed(i, j, params[n].value > 0 ? 1 : 0);
+                        connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
                         pressedState[n] = params[n].value > 0;
                     }
                 }

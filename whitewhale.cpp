@@ -99,11 +99,6 @@ struct WhiteWhale : MonomeModuleBase {
 
     void step() override;
 
-    void onGridKeyPressed(uint8_t x, uint8_t y, uint8_t val) override
-    {
-        simulate_monome_key(x, y, val);
-    }
-
     json_t *toJson() override {
         json_t *rootJ = json_object();
         json_object_set_new(rootJ, "current", json_string(base64_encode((unsigned char*)&w, sizeof(whale_set)).c_str()));
@@ -269,71 +264,3 @@ void WhiteWhaleWidget::randomize()
     module->randomize();
 }
 
-struct MonomeConnectionItem : MenuItem
-{
-    MonomeModuleBase* module;
-    GridConnection* connection;
-
-    ~MonomeConnectionItem()
-    {
-        if (connection)
-        {
-            delete connection;
-        }
-    }
-
-    void onAction(EventAction &e) override
-    {
-        module->setGridConnection(connection);
-        connection = NULL;
-    }
-};
-
-Menu *WhiteWhaleWidget::createContextMenu()
-{
-    Menu *menu = ModuleWidget::createContextMenu();
-
-    auto module = static_cast<MonomeModuleBase *>(this->module);
-
-    menu->addChild(construct<MenuEntry>());
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Physical Grids"));
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "    (no devices connected)"));
-
-    /*
-    {   
-        auto *connectionItem = new MonomeConnectionItem();
-        connectionItem->text = "m56000505 Monome 256";
-        connectionItem->rightText = "✔";
-        connectionItem->module = static_cast<MonomeModuleBase*>(this->module);
-        connectionItem->connection = new SerialOSCGridConnection();
-        menu->addChild(connectionItem);
-    }
-*/
-
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Virtual Grids"));
-
-    // enumerate modules
-    int virtualGridCount = 0;
-    for (Widget *w : gRackWidget->moduleContainer->children)
-    {
-        Grid128Widget *gridWidget = dynamic_cast<Grid128Widget*>(w);
-        if (gridWidget)
-        {
-            auto connection = new RackGridConnection(module, dynamic_cast<Grid<16,8>*>(gridWidget->module));
-            auto *connectionItem = new MonomeConnectionItem();
-            connectionItem->text = "    Virtual Grid " + std::to_string(virtualGridCount);
-            connectionItem->rightText = module->gridConnection == connection ? "✔" : "";
-            connectionItem->module = module;
-            connectionItem->connection = connection;
-            menu->addChild(connectionItem);
-            virtualGridCount++;
-        }
-    }
-
-    if (virtualGridCount == 0)
-    {
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "   (no virtual grids in rack)"));
-    }
-
-    return menu;
-}
