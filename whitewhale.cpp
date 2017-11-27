@@ -100,13 +100,14 @@ struct WhiteWhale : MonomeModuleBase {
     void step() override;
 
     json_t *toJson() override {
-        json_t *rootJ = json_object();
+        json_t *rootJ = MonomeModuleBase::toJson();
         json_object_set_new(rootJ, "current", json_string(base64_encode((unsigned char*)&w, sizeof(whale_set)).c_str()));
         json_object_set_new(rootJ, "flash", json_string(base64_encode((unsigned char*)&flashy, sizeof(nvram_data_t)).c_str()));
         return rootJ;
     }
 
     void fromJson(json_t *rootJ) override {
+        MonomeModuleBase::fromJson(rootJ);
         memcpy((void*)&w, base64_decode(json_string_value(json_object_get(rootJ, "current"))).c_str(), sizeof(whale_set));
         memcpy((void*)&flashy, base64_decode(json_string_value(json_object_get(rootJ, "flash"))).c_str(), sizeof(nvram_data_t));
     }
@@ -120,6 +121,8 @@ struct WhiteWhale : MonomeModuleBase {
 
 
 void WhiteWhale::step() {
+
+    MonomeModuleBase::step();
 
     vserial_reset();
 
@@ -188,7 +191,12 @@ void WhiteWhale::step() {
                     leds[2*i+0] = msg[3+i] >> 4;
                     leds[2*i+1] = msg[3+i] & 0xF;
                 }
-                gridConnection->updateQuadrant(x, y, leds);
+
+                // connection could be lost mid-update, re-check
+                if (gridConnection)
+                {
+                    gridConnection->updateQuadrant(x, y, leds);
+                }
             }
             msg = vserial_read();
         }

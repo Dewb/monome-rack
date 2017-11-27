@@ -10,16 +10,18 @@ using namespace rack;
 struct MonomeGrid : Module
 {
     MonomeModuleBase* connectedModule = NULL;
+    MonomeDevice device;
+
     uint8_t ledBuffer[GRID_MAX_SIZE];
     bool pressedState[GRID_MAX_SIZE];
-    unsigned width;
-    unsigned height;
 
     MonomeGrid(unsigned w, unsigned h);
 
     void step() override;
     void reset() override;
     void randomize() override;
+    json_t *toJson() override;
+    void fromJson(json_t *rootJ) override;
 
     void updateQuadrant(int x, int y, uint8_t *leds);
 };

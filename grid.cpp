@@ -1,11 +1,22 @@
+#include <random>
+#include <sstream>
+#include <iomanip>
+
 #include "grid.hpp"
 #include "virtual_gpio.h"
+
 
 MonomeGrid::MonomeGrid(unsigned w, unsigned h) 
 : Module(w * h, 0, 0, 0)
 {
-    width = w;
-    height = h;
+    device.width = w;
+    device.height = h;
+    device.port = 0;
+    device.rotation = 0;
+    device.id = "mv000000";
+    device.prefix = "";
+    device.type = "virtual " + std::to_string(w * h);
+
     memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
 }
 
@@ -13,9 +24,9 @@ void MonomeGrid::step()
 {
     if (connectedModule)
     {
-        for (size_t i = 0; i < width; i++)
+        for (int i = 0; i < device.width; i++)
         {
-            for (size_t j = 0; j < height; j++)
+            for (int j = 0; j < device.height; j++)
             {
                 int n = i | (j << 4);
                 if ((params[n].value > 0) != pressedState[n])
@@ -38,6 +49,18 @@ void MonomeGrid::reset()
 
 void MonomeGrid::randomize()
 {
+}
+
+json_t *MonomeGrid::toJson()
+{
+    json_t *rootJ = json_object();
+    json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
+    return rootJ;
+}
+
+void MonomeGrid::fromJson(json_t *rootJ)
+{
+    device.id = json_string_value(json_object_get(rootJ, "deviceId"));   
 }
 
 void MonomeGrid::updateQuadrant(int x, int y, uint8_t *leds)
@@ -178,11 +201,48 @@ struct MonomeKey : ParamWidget {
     }
 };
 
+std::string getUniqueVirtualDeviceId()
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 999999);
 
-MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h) {
+    bool uniqueIdFound = false;
+    while (true)
+    {
+        std::ostringstream ss;
+        ss << "mv" << std::setw(6) << std::setfill('0') << dis(gen);
+        uniqueIdFound = true;
+
+        // enumerate modules
+        for (Widget *w : gRackWidget->moduleContainer->children)
+        {
+            MonomeGridWidget *gridWidget = dynamic_cast<MonomeGridWidget *>(w);
+            if (gridWidget)
+            {
+                auto gridModule = dynamic_cast<MonomeGrid *>(gridWidget->module);
+                if (gridModule->device.id == ss.str())
+                {
+                    uniqueIdFound = false;
+                    break;
+                }
+            }
+        }
+
+        if (uniqueIdFound)
+        {
+            return ss.str();
+        }
+    }
+}
+
+MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
+{
 
     auto *module = new MonomeGrid(w, h);
+    module->device.id = getUniqueVirtualDeviceId();
     setModule(module);
+
     box.size = Vec(15 * (3 * w), 47.5 * h);
 
     {
@@ -194,13 +254,13 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h) {
     Vec margins(20, 20);
     int spacing = 9;
 
-    int max_width = (box.size.x - margins.x * 2 - (module->width - 1) * spacing) / module->width;
-    int max_height = (box.size.y - margins.y * 2 - (module->height - 1) * spacing) / module->height;
+    int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
+    int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
     int button_size = max_width; // max_width > max_height ? max_width : max_height;
 
-    for (unsigned i = 0; i < module->width; i++)
+    for (unsigned i = 0; i < w; i++)
     {
-        for (unsigned j = 0; j < module->height; j++)
+        for (unsigned j = 0; j < h; j++)
         {
             int x = margins.x + i * (button_size + spacing);
             int y = margins.y + j * (button_size + spacing);
@@ -214,7 +274,8 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h) {
     }
 }
 
-json_t *MonomeGridWidget::toJson() {
+json_t *MonomeGridWidget::toJson()
+{
     json_t *rootJ = json_object();
 
     // manufacturer
@@ -222,75 +283,107 @@ json_t *MonomeGridWidget::toJson() {
     // model
     json_object_set_new(rootJ, "model", json_string(model->slug.c_str()));
     // pos
-    json_t *posJ = json_pack("[f, f]", (double) box.pos.x, (double) box.pos.y);
+    json_t *posJ = json_pack("[f, f]", (double)box.pos.x, (double)box.pos.y);
     json_object_set_new(rootJ, "pos", posJ);
 
+    // no param serialization
+
+    // data
+    if (module)
+    {
+        json_t *dataJ = module->toJson();
+        if (dataJ)
+        {
+            json_object_set_new(rootJ, "data", dataJ);
+        }
+    }
     return rootJ;
 }
 
-void MonomeGridWidget::fromJson(json_t *rootJ)
+void MonomeGridWidget::fromJson(json_t * rootJ)
 {
     // pos
     json_t *posJ = json_object_get(rootJ, "pos");
     double x, y;
     json_unpack(posJ, "[F, F]", &x, &y);
     box.pos = Vec(x, y);
+
+    // no param deserialization
+
+    // data
+    json_t *dataJ = json_object_get(rootJ, "data");
+    if (dataJ && module)
+    {
+        module->fromJson(dataJ);
+    }
 }
 
 void MonomeGridWidget::clearHeldKeys()
 {
-    for(auto p : params) {
+    for (auto p : params)
+    {
         p->setValue(MonomeKey::OFF);
     }
 }
 
-void MonomeGridWidget::onMouseDown(EventMouseDown &e)
+void MonomeGridWidget::onMouseDown(EventMouseDown & e)
 {
     ModuleWidget::onMouseDown(e);
     if (e.consumed)
         return;
 
-    if (e.button == 1) {
+    if (e.button == 1)
+    {
         createContextMenu();
         e.consumed = true;
         e.target = this;
     }
 
-    if (e.button == 0 && guiIsModPressed()) { 
+    if (e.button == 0 && guiIsModPressed())
+    {
         clearHeldKeys();
         e.target = this;
         e.consumed = true;
     }
 }
 
-struct CloneMenuItem : MenuItem {
+struct CloneMenuItem : MenuItem
+{
     ModuleWidget *moduleWidget;
-    void onAction(EventAction &e) override {
+    void onAction(EventAction &e) override
+    {
         gRackWidget->cloneModule(moduleWidget);
     }
 };
 
-struct DeleteMenuItem : MenuItem {
+struct DeleteMenuItem : MenuItem
+{
     ModuleWidget *moduleWidget;
-    void onAction(EventAction &e) override {
+    void onAction(EventAction &e) override
+    {
         gRackWidget->deleteModule(moduleWidget);
         moduleWidget->finalizeEvents();
         delete moduleWidget;
     }
 };
 
-struct GridReleaseHeldKeysItem : MenuItem {
+struct GridReleaseHeldKeysItem : MenuItem
+{
     MonomeGridWidget *grid;
-    void onAction(EventAction &e) override {
+    void onAction(EventAction &e) override
+    {
         grid->clearHeldKeys();
     }
 };
 
-Menu *MonomeGridWidget::createContextMenu() {
+Menu *MonomeGridWidget::createContextMenu()
+{
     Menu *menu = gScene->createMenu();
 
+    auto gridModule = dynamic_cast<MonomeGrid *>(module);
+
     MenuLabel *menuLabel = new MenuLabel();
-    menuLabel->text = model->manufacturer + " " + model->name;
+    menuLabel->text = model->manufacturer + " " + model->name + " (" + gridModule->device.id + ")";
     menu->addChild(menuLabel);
 
     auto *cloneItem = new CloneMenuItem();
