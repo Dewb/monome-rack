@@ -1,4 +1,4 @@
-#include "virtual_gpio.h"
+#include "mock_hardware.h"
 #include "timers.h"
 #include "events.h"
 #include "monome.h"

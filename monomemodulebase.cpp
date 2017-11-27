@@ -1,9 +1,9 @@
 #include "monomemodulebase.hpp"
 #include "grid.hpp"
-#include "virtual_gpio.h"
+#include "mock_hardware.h"
 
 
-GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice const* d)
+GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice *const d)
 : module(controlledModule)
 , device(d)
 {

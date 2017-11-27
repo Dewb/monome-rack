@@ -1,5 +1,5 @@
 #include "types.h"
-#include "virtual_gpio.h"
+#include "mock_hardware.h"
 #include <string.h>
 
 

@@ -2,7 +2,7 @@
 #include "grid.hpp"
 
 
-#include "virtual_gpio.h"
+#include "mock_hardware.h"
 #include "base64.h"
 #include "types.h"
 #include <string.h>

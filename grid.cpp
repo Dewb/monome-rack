@@ -3,7 +3,7 @@
 #include <iomanip>
 
 #include "grid.hpp"
-#include "virtual_gpio.h"
+#include "mock_hardware.h"
 
 
 MonomeGrid::MonomeGrid(unsigned w, unsigned h) 
