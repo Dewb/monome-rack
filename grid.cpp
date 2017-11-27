@@ -83,8 +83,8 @@ struct MonomeKey : ParamWidget {
     void draw(NVGcontext *vg) override
     {
         uint8_t val = *ledAddress;
-        NVGcolor color1 = nvgRGB(val * 14 + 31, val * 13 + 31, val * 11 + 16);
-        NVGcolor color2 = nvgRGB(val * 12 + 31, val * 11 + 15, val * 10 + 8);
+        NVGcolor color1 = nvgRGB(val * 11 + 90, val * 11 + 63, val * 8 + 48);
+        NVGcolor color2 = nvgRGB(val * 12 + 48, val * 12 + 31, val * 4 + 16);
 
         if (value == HELD) 
         {
@@ -95,7 +95,7 @@ struct MonomeKey : ParamWidget {
         }
 
         nvgBeginPath(vg);
-        auto paint = nvgBoxGradient(vg, 0, 0, box.size.x, box.size.y, box.size.x * 0.5, box.size.x * 1.2, color1, color2);
+        auto paint = nvgBoxGradient(vg, 0, 0, box.size.x, box.size.y, box.size.x * 0.4, box.size.x * 1.2, color1, color2);
         nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 4);
         if (val > 0)
         {
