@@ -5,99 +5,30 @@
 
 using namespace rack;
 
+#define GRID_MAX_SIZE 256
 
-template <size_t GRID_X, size_t GRID_Y>
-struct Grid : Module
+struct MonomeGrid : Module
 {
-
-    enum ParamIds
-    {
-        NUM_PARAMS = GRID_X * GRID_Y
-    };
-    enum InputIds
-    {
-        NUM_INPUTS
-    };
-    enum OutputIds
-    {
-        NUM_OUTPUTS
-    };
-    enum LightIds
-    {
-        NUM_LIGHTS = GRID_X * GRID_Y
-    };
-
-    const int X = GRID_X;
-    const int Y = GRID_Y;
-    bool pressedState[GRID_X * GRID_Y];
-
     MonomeModuleBase* connectedModule = NULL;
-    uint8_t ledBuffer[256];
+    uint8_t ledBuffer[GRID_MAX_SIZE];
+    bool pressedState[GRID_MAX_SIZE];
+    unsigned width;
+    unsigned height;
 
-    Grid() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
-    {
-        memset(ledBuffer, 0, sizeof(uint8_t) * 256);
-    }
+    MonomeGrid(unsigned w, unsigned h);
 
-    void step() override
-    {
-        if (connectedModule)
-        {
-            for (size_t i = 0; i < GRID_X; i++)
-            {
-                for (size_t j = 0; j < GRID_Y; j++)
-                {
-                    int n = i | (j << 4);
-                    if ((params[n].value > 0) != pressedState[n])
-                    {
-                        connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
-                        pressedState[n] = params[n].value > 0;
-                    }
-                }
-            }
-        }
-        else
-        {
-            memset(ledBuffer, 0, sizeof(uint8_t) * 256);
-        }
-    }
+    void step() override;
+    void reset() override;
+    void randomize() override;
 
-    json_t *toJson() override
-    {
-        json_t *rootJ = json_object();
-        return rootJ;
-    }
-
-    void fromJson(json_t *rootJ) override
-    {
-    }
-
-    void reset() override
-    {
-    }
-
-    void randomize() override
-    {
-    }
-
-    void updateQuadrant(int x, int y, uint8_t *leds)
-    {
-        uint8_t *ptr = ledBuffer + y * 16 + x;
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                *ptr++ = *leds++;
-            }
-            ptr += 8;
-        }
-    }
+    void updateQuadrant(int x, int y, uint8_t *leds);
 };
 
 struct MonomeKey;
 
-struct Grid128Widget : ModuleWidget {
-    Grid128Widget();
+struct MonomeGridWidget : ModuleWidget {
+
+    MonomeGridWidget(unsigned w, unsigned h);
 
     json_t* toJson() override;
     void fromJson(json_t *rootJ) override;
@@ -111,4 +42,8 @@ protected:
     std::unordered_set<MonomeKey*> keysTouchedThisDrag;
 };
 
-
+template<unsigned width, unsigned height>
+struct MonomeGridWidgetTemplate : MonomeGridWidget
+{
+    MonomeGridWidgetTemplate() : MonomeGridWidget(width, height) {}
+};

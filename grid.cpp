@@ -1,6 +1,57 @@
 #include "grid.hpp"
 #include "virtual_gpio.h"
 
+MonomeGrid::MonomeGrid(unsigned w, unsigned h) 
+: Module(w * h, 0, 0, 0)
+{
+    width = w;
+    height = h;
+    memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+}
+
+void MonomeGrid::step()
+{
+    if (connectedModule)
+    {
+        for (size_t i = 0; i < width; i++)
+        {
+            for (size_t j = 0; j < height; j++)
+            {
+                int n = i | (j << 4);
+                if ((params[n].value > 0) != pressedState[n])
+                {
+                    connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
+                    pressedState[n] = params[n].value > 0;
+                }
+            }
+        }
+    }
+    else
+    {
+        memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+    }
+}
+
+void MonomeGrid::reset()
+{
+}
+
+void MonomeGrid::randomize()
+{
+}
+
+void MonomeGrid::updateQuadrant(int x, int y, uint8_t *leds)
+{
+    uint8_t *ptr = ledBuffer + y * 16 + x;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            *ptr++ = *leds++;
+        }
+        ptr += 8;
+    }
+}
 
 struct MonomeKey : ParamWidget {
 
@@ -17,8 +68,9 @@ struct MonomeKey : ParamWidget {
     MonomeKey() : ParamWidget() {
     }
 
-    Grid128Widget* getGrid() {
-        return dynamic_cast<Grid128Widget*>(parent);
+    MonomeGridWidget *getGrid()
+    {
+        return dynamic_cast<MonomeGridWidget*>(parent);
     }
         
     void setKeyAddress(int x, int y, uint8_t* ledByte)
@@ -127,11 +179,11 @@ struct MonomeKey : ParamWidget {
 };
 
 
-Grid128Widget::Grid128Widget() {
+MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h) {
 
-    auto *module = new Grid<16, 8>();
+    auto *module = new MonomeGrid(w, h);
     setModule(module);
-    box.size = Vec(15*48, 380);
+    box.size = Vec(15 * (3 * w), 47.5 * h);
 
     {
         auto panel = new LightPanel();
@@ -142,19 +194,19 @@ Grid128Widget::Grid128Widget() {
     Vec margins(20, 20);
     int spacing = 9;
 
-    int max_width = (box.size.x - margins.x * 2 - (module->X - 1) * spacing) / module->X;
-    int max_height = (box.size.y - margins.y * 2 - (module->Y - 1) * spacing) / module->Y;
-    int button_size = max_width > max_height ? max_width : max_height;
+    int max_width = (box.size.x - margins.x * 2 - (module->width - 1) * spacing) / module->width;
+    int max_height = (box.size.y - margins.y * 2 - (module->height - 1) * spacing) / module->height;
+    int button_size = max_width; // max_width > max_height ? max_width : max_height;
 
-    for(int i = 0; i < module->X; i++) 
+    for (unsigned i = 0; i < module->width; i++)
     {
-        for(int j = 0; j < module->Y; j++)
+        for (unsigned j = 0; j < module->height; j++)
         {
             int x = margins.x + i * (button_size + spacing);
             int y = margins.y + j * (button_size + spacing);
             int n = i | (j << 4);
 
-            MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
+            MonomeKey *key = (MonomeKey *)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
             key->setKeyAddress(x, y, module->ledBuffer + n);
             key->box.size = Vec(button_size, button_size);
             addParam(key);
@@ -162,7 +214,7 @@ Grid128Widget::Grid128Widget() {
     }
 }
 
-json_t *Grid128Widget::toJson() {
+json_t *MonomeGridWidget::toJson() {
     json_t *rootJ = json_object();
 
     // manufacturer
@@ -172,11 +224,12 @@ json_t *Grid128Widget::toJson() {
     // pos
     json_t *posJ = json_pack("[f, f]", (double) box.pos.x, (double) box.pos.y);
     json_object_set_new(rootJ, "pos", posJ);
-    
+
     return rootJ;
 }
 
-void Grid128Widget::fromJson(json_t *rootJ) {
+void MonomeGridWidget::fromJson(json_t *rootJ)
+{
     // pos
     json_t *posJ = json_object_get(rootJ, "pos");
     double x, y;
@@ -184,15 +237,16 @@ void Grid128Widget::fromJson(json_t *rootJ) {
     box.pos = Vec(x, y);
 }
 
-void Grid128Widget::clearHeldKeys() {
+void MonomeGridWidget::clearHeldKeys()
+{
     for(auto p : params) {
         p->setValue(MonomeKey::OFF);
     }
 }
 
-void Grid128Widget::onMouseDown(EventMouseDown &e)
+void MonomeGridWidget::onMouseDown(EventMouseDown &e)
 {
-    Widget::onMouseDown(e);
+    ModuleWidget::onMouseDown(e);
     if (e.consumed)
         return;
 
@@ -226,13 +280,13 @@ struct DeleteMenuItem : MenuItem {
 };
 
 struct GridReleaseHeldKeysItem : MenuItem {
-    Grid128Widget* grid;
+    MonomeGridWidget *grid;
     void onAction(EventAction &e) override {
         grid->clearHeldKeys();
     }
 };
 
-Menu *Grid128Widget::createContextMenu() {
+Menu *MonomeGridWidget::createContextMenu() {
     Menu *menu = gScene->createMenu();
 
     MenuLabel *menuLabel = new MenuLabel();

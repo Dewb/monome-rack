@@ -8,7 +8,7 @@ GridConnection::GridConnection(MonomeModuleBase* controlledModule)
     module = controlledModule;
 }
 
-RackGridConnection::RackGridConnection(MonomeModuleBase* controlledModule, Grid<16, 8> *gridModule)
+RackGridConnection::RackGridConnection(MonomeModuleBase* controlledModule, MonomeGrid *gridModule)
 : GridConnection(controlledModule)
 {
     grid = gridModule;
@@ -172,10 +172,10 @@ Menu *MonomeModuleBaseWidget::createContextMenu()
     int virtualGridCount = 0;
     for (Widget *w : gRackWidget->moduleContainer->children)
     {
-        Grid128Widget *gridWidget = dynamic_cast<Grid128Widget *>(w);
+        MonomeGridWidget *gridWidget = dynamic_cast<MonomeGridWidget *>(w);
         if (gridWidget)
         {
-            auto connection = new RackGridConnection(module, dynamic_cast<Grid<16, 8> *>(gridWidget->module));
+            auto connection = new RackGridConnection(module, dynamic_cast<MonomeGrid*>(gridWidget->module));
             auto *connectionItem = new MonomeConnectionItem();
             connectionItem->text = "    Virtual Grid " + std::to_string(virtualGridCount);
             connectionItem->rightText = connectionPtrIsEqual(module->gridConnection, connection) ? "✔" : "";

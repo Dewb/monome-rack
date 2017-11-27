@@ -4,8 +4,7 @@
 #pragma once
 using namespace rack;
 
-template <size_t GRID_X, size_t GRID_Y> struct Grid;
-
+struct MonomeGrid;
 struct MonomeModuleBase;
 
 struct GridConnection
@@ -22,8 +21,8 @@ struct GridConnection
 
 struct RackGridConnection : GridConnection
 {
-    RackGridConnection(MonomeModuleBase *controlledModule, Grid<16, 8> *gridModule);
-    Grid<16,8> *grid;
+    RackGridConnection(MonomeModuleBase *controlledModule, MonomeGrid *gridModule);
+    MonomeGrid *grid;
     
     void connect() override;
     void disconnect() override;
