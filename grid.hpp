@@ -35,12 +35,14 @@ struct MonomeGridWidget : ModuleWidget {
     json_t* toJson() override;
     void fromJson(json_t *rootJ) override;
     Menu *createContextMenu() override;
+    void onDragEnter(EventDragEnter &e) override;
     void onMouseDown(EventMouseDown &e) override;
 
     void clearHeldKeys();
 
 protected:
     friend struct MonomeKey;
+    bool isDraggingKeys;
     std::unordered_set<MonomeKey*> keysTouchedThisDrag;
 };
 

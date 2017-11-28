@@ -173,30 +173,34 @@ struct MonomeKey : ParamWidget {
     {
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->keysTouchedThisDrag.insert(this);
+        getGrid()->isDraggingKeys = true;
     }
 
     void onDragEnd(EventDragEnd &e) override
     {
         endPress();
         getGrid()->keysTouchedThisDrag.clear();
-    }
-
-    void onDragMove(EventDragMove &e) override
-    {
+        getGrid()->isDraggingKeys = false;
     }
 
     void onDragLeave(EventDragEnter &e) override
     {
-        endPress();
+        if (getGrid()->isDraggingKeys)
+        {
+            endPress();
+        }
     }
 
     void onDragEnter(EventDragEnter &e) override
     {
-        auto ret = getGrid()->keysTouchedThisDrag.insert(this);
-        if (ret.second) 
+        if (getGrid()->isDraggingKeys)
         {
-            // this button wasn't already in the touched set
-            beginPress();
+            auto ret = getGrid()->keysTouchedThisDrag.insert(this);
+            if (ret.second) 
+            {
+                // this button wasn't already in the touched set
+                beginPress();
+            }
         }
     }
 };
@@ -272,6 +276,8 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
             addParam(key);
         }
     }
+
+    isDraggingKeys = false;
 }
 
 json_t *MonomeGridWidget::toJson()
@@ -326,24 +332,31 @@ void MonomeGridWidget::clearHeldKeys()
     }
 }
 
+void MonomeGridWidget::onDragEnter(EventDragEnter &e) 
+{
+    // Disable key drag-tapping if this drag began anyhwere but on a child key of this module
+    if (e.origin->parent != this)
+    {
+        isDraggingKeys = false;
+    }
+}
+
 void MonomeGridWidget::onMouseDown(EventMouseDown & e)
 {
     ModuleWidget::onMouseDown(e);
-    if (e.consumed)
+
+    if (e.target == this && e.button == 0 && guiIsModPressed())
+    {
+        clearHeldKeys();
+        e.consumed = true;
         return;
+    }
 
     if (e.button == 1)
     {
         createContextMenu();
         e.consumed = true;
         e.target = this;
-    }
-
-    if (e.button == 0 && guiIsModPressed())
-    {
-        clearHeldKeys();
-        e.target = this;
-        e.consumed = true;
     }
 }
 
