@@ -15,7 +15,7 @@ void vdac_set(int channel, uint16_t value);
 
 void vserial_reset();
 uint8_t* vserial_read();
-void vserial_write(uint8_t *buf, uint32_t byteCount);
+void vserial_write(uint8_t* buf, uint32_t byteCount);
 
 void simulate_clock_normal_interrupt();
 void simulate_external_clock_interrupt();

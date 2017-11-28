@@ -1,5 +1,5 @@
-#include "rack.hpp"
 #include "monomemodulebase.hpp"
+#include "rack.hpp"
 
 #include <unordered_set>
 
@@ -20,23 +20,23 @@ struct MonomeGrid : Module
     void step() override;
     void reset() override;
     void randomize() override;
-    json_t *toJson() override;
-    void fromJson(json_t *rootJ) override;
+    json_t* toJson() override;
+    void fromJson(json_t* rootJ) override;
 
-    void updateQuadrant(int x, int y, uint8_t *leds);
+    void updateQuadrant(int x, int y, uint8_t* leds);
 };
 
 struct MonomeKey;
 
-struct MonomeGridWidget : ModuleWidget {
-
+struct MonomeGridWidget : ModuleWidget
+{
     MonomeGridWidget(unsigned w, unsigned h);
 
     json_t* toJson() override;
-    void fromJson(json_t *rootJ) override;
-    Menu *createContextMenu() override;
-    void onDragEnter(EventDragEnter &e) override;
-    void onMouseDown(EventMouseDown &e) override;
+    void fromJson(json_t* rootJ) override;
+    Menu* createContextMenu() override;
+    void onDragEnter(EventDragEnter& e) override;
+    void onMouseDown(EventMouseDown& e) override;
 
     void clearHeldKeys();
 
@@ -46,8 +46,11 @@ protected:
     std::unordered_set<MonomeKey*> keysTouchedThisDrag;
 };
 
-template<unsigned width, unsigned height>
+template <unsigned width, unsigned height>
 struct MonomeGridWidgetTemplate : MonomeGridWidget
 {
-    MonomeGridWidgetTemplate() : MonomeGridWidget(width, height) {}
+    MonomeGridWidgetTemplate()
+        : MonomeGridWidget(width, height)
+    {
+    }
 };

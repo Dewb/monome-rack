@@ -1,9 +1,9 @@
-#include "whitewhale.hpp"
 #include "grid.hpp"
+#include "whitewhale.hpp"
 
-Plugin *plugin;
+Plugin* plugin;
 
-void init(rack::Plugin *p)
+void init(rack::Plugin* p)
 {
     plugin = p;
     p->slug = "monome";

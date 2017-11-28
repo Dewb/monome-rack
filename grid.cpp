@@ -1,13 +1,12 @@
+#include <iomanip>
 #include <random>
 #include <sstream>
-#include <iomanip>
 
 #include "grid.hpp"
 #include "mock_hardware.h"
 
-
-MonomeGrid::MonomeGrid(unsigned w, unsigned h) 
-: Module(w * h, 0, 0, 0)
+MonomeGrid::MonomeGrid(unsigned w, unsigned h)
+    : Module(w * h, 0, 0, 0)
 {
     device.width = w;
     device.height = h;
@@ -51,21 +50,21 @@ void MonomeGrid::randomize()
 {
 }
 
-json_t *MonomeGrid::toJson()
+json_t* MonomeGrid::toJson()
 {
-    json_t *rootJ = json_object();
+    json_t* rootJ = json_object();
     json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
     return rootJ;
 }
 
-void MonomeGrid::fromJson(json_t *rootJ)
+void MonomeGrid::fromJson(json_t* rootJ)
 {
-    device.id = json_string_value(json_object_get(rootJ, "deviceId"));   
+    device.id = json_string_value(json_object_get(rootJ, "deviceId"));
 }
 
-void MonomeGrid::updateQuadrant(int x, int y, uint8_t *leds)
+void MonomeGrid::updateQuadrant(int x, int y, uint8_t* leds)
 {
-    uint8_t *ptr = ledBuffer + y * 16 + x;
+    uint8_t* ptr = ledBuffer + y * 16 + x;
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -76,7 +75,8 @@ void MonomeGrid::updateQuadrant(int x, int y, uint8_t *leds)
     }
 }
 
-struct MonomeKey : ParamWidget {
+struct MonomeKey : ParamWidget
+{
 
     uint8_t* ledAddress;
     int key_x;
@@ -88,14 +88,16 @@ struct MonomeKey : ParamWidget {
         HELD
     } KeyPressState;
 
-    MonomeKey() : ParamWidget() {
+    MonomeKey()
+        : ParamWidget()
+    {
     }
 
-    MonomeGridWidget *getGrid()
+    MonomeGridWidget* getGrid()
     {
         return dynamic_cast<MonomeGridWidget*>(parent);
     }
-        
+
     void setKeyAddress(int x, int y, uint8_t* ledByte)
     {
         ledAddress = ledByte;
@@ -103,13 +105,13 @@ struct MonomeKey : ParamWidget {
         key_y = y;
     }
 
-    void draw(NVGcontext *vg) override
+    void draw(NVGcontext* vg) override
     {
         uint8_t val = *ledAddress;
         NVGcolor color1 = nvgRGB(val * 11 + 90, val * 11 + 63, val * 8 + 48);
         NVGcolor color2 = nvgRGB(val * 12 + 48, val * 12 + 31, val * 4 + 16);
 
-        if (value == HELD) 
+        if (value == HELD)
         {
             nvgBeginPath(vg);
             nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 6);
@@ -123,20 +125,23 @@ struct MonomeKey : ParamWidget {
         if (val > 0)
         {
             nvgFillPaint(vg, paint);
-        } 
+        }
         else
         {
-            nvgFillColor(vg, nvgRGB(0,0,0));
+            nvgFillColor(vg, nvgRGB(0, 0, 0));
         }
         nvgFill(vg);
     }
 
     void beginPress()
     {
-        if (guiIsModPressed() && value != HELD) {
+        if (guiIsModPressed() && value != HELD)
+        {
             // hold key down
             setValue(HELD);
-        } else {
+        }
+        else
+        {
             setValue(PRESSED);
         }
     }
@@ -149,41 +154,43 @@ struct MonomeKey : ParamWidget {
         }
     }
 
-    void onMouseDown(EventMouseDown &e) override
+    void onMouseDown(EventMouseDown& e) override
     {
-        if (e.button == 1) { 
-            return; 
+        if (e.button == 1)
+        {
+            return;
         }
         e.target = this;
         e.consumed = true;
         beginPress();
     }
 
-    void onMouseUp(EventMouseUp &e) override
+    void onMouseUp(EventMouseUp& e) override
     {
-        if (e.button == 1) { 
-            return; 
+        if (e.button == 1)
+        {
+            return;
         }
         e.target = this;
         e.consumed = true;
         endPress();
     }
 
-    void onDragStart(EventDragStart &e) override
+    void onDragStart(EventDragStart& e) override
     {
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->keysTouchedThisDrag.insert(this);
         getGrid()->isDraggingKeys = true;
     }
 
-    void onDragEnd(EventDragEnd &e) override
+    void onDragEnd(EventDragEnd& e) override
     {
         endPress();
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->isDraggingKeys = false;
     }
 
-    void onDragLeave(EventDragEnter &e) override
+    void onDragLeave(EventDragEnter& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
@@ -191,12 +198,12 @@ struct MonomeKey : ParamWidget {
         }
     }
 
-    void onDragEnter(EventDragEnter &e) override
+    void onDragEnter(EventDragEnter& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
             auto ret = getGrid()->keysTouchedThisDrag.insert(this);
-            if (ret.second) 
+            if (ret.second)
             {
                 // this button wasn't already in the touched set
                 beginPress();
@@ -219,12 +226,12 @@ std::string getUniqueVirtualDeviceId()
         uniqueIdFound = true;
 
         // enumerate modules
-        for (Widget *w : gRackWidget->moduleContainer->children)
+        for (Widget* w : gRackWidget->moduleContainer->children)
         {
-            MonomeGridWidget *gridWidget = dynamic_cast<MonomeGridWidget *>(w);
+            MonomeGridWidget* gridWidget = dynamic_cast<MonomeGridWidget*>(w);
             if (gridWidget)
             {
-                auto gridModule = dynamic_cast<MonomeGrid *>(gridWidget->module);
+                auto gridModule = dynamic_cast<MonomeGrid*>(gridWidget->module);
                 if (gridModule->device.id == ss.str())
                 {
                     uniqueIdFound = false;
@@ -243,7 +250,7 @@ std::string getUniqueVirtualDeviceId()
 MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
 {
 
-    auto *module = new MonomeGrid(w, h);
+    auto* module = new MonomeGrid(w, h);
     module->device.id = getUniqueVirtualDeviceId();
     setModule(module);
 
@@ -259,7 +266,7 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
     int spacing = 9;
 
     int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
-    int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
+    //int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
     int button_size = max_width; // max_width > max_height ? max_width : max_height;
 
     for (unsigned i = 0; i < w; i++)
@@ -270,7 +277,7 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
             int y = margins.y + j * (button_size + spacing);
             int n = i | (j << 4);
 
-            MonomeKey *key = (MonomeKey *)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
+            MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
             key->setKeyAddress(x, y, module->ledBuffer + n);
             key->box.size = Vec(button_size, button_size);
             addParam(key);
@@ -280,16 +287,16 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
     isDraggingKeys = false;
 }
 
-json_t *MonomeGridWidget::toJson()
+json_t* MonomeGridWidget::toJson()
 {
-    json_t *rootJ = json_object();
+    json_t* rootJ = json_object();
 
     // manufacturer
     json_object_set_new(rootJ, "plugin", json_string(model->plugin->slug.c_str()));
     // model
     json_object_set_new(rootJ, "model", json_string(model->slug.c_str()));
     // pos
-    json_t *posJ = json_pack("[f, f]", (double)box.pos.x, (double)box.pos.y);
+    json_t* posJ = json_pack("[f, f]", (double)box.pos.x, (double)box.pos.y);
     json_object_set_new(rootJ, "pos", posJ);
 
     // no param serialization
@@ -297,7 +304,7 @@ json_t *MonomeGridWidget::toJson()
     // data
     if (module)
     {
-        json_t *dataJ = module->toJson();
+        json_t* dataJ = module->toJson();
         if (dataJ)
         {
             json_object_set_new(rootJ, "data", dataJ);
@@ -306,10 +313,10 @@ json_t *MonomeGridWidget::toJson()
     return rootJ;
 }
 
-void MonomeGridWidget::fromJson(json_t * rootJ)
+void MonomeGridWidget::fromJson(json_t* rootJ)
 {
     // pos
-    json_t *posJ = json_object_get(rootJ, "pos");
+    json_t* posJ = json_object_get(rootJ, "pos");
     double x, y;
     json_unpack(posJ, "[F, F]", &x, &y);
     box.pos = Vec(x, y);
@@ -317,7 +324,7 @@ void MonomeGridWidget::fromJson(json_t * rootJ)
     // no param deserialization
 
     // data
-    json_t *dataJ = json_object_get(rootJ, "data");
+    json_t* dataJ = json_object_get(rootJ, "data");
     if (dataJ && module)
     {
         module->fromJson(dataJ);
@@ -332,7 +339,7 @@ void MonomeGridWidget::clearHeldKeys()
     }
 }
 
-void MonomeGridWidget::onDragEnter(EventDragEnter &e) 
+void MonomeGridWidget::onDragEnter(EventDragEnter& e)
 {
     // Disable key drag-tapping if this drag began anyhwere but on a child key of this module
     if (e.origin->parent != this)
@@ -341,7 +348,7 @@ void MonomeGridWidget::onDragEnter(EventDragEnter &e)
     }
 }
 
-void MonomeGridWidget::onMouseDown(EventMouseDown & e)
+void MonomeGridWidget::onMouseDown(EventMouseDown& e)
 {
     ModuleWidget::onMouseDown(e);
 
@@ -362,8 +369,8 @@ void MonomeGridWidget::onMouseDown(EventMouseDown & e)
 
 struct CloneMenuItem : MenuItem
 {
-    ModuleWidget *moduleWidget;
-    void onAction(EventAction &e) override
+    ModuleWidget* moduleWidget;
+    void onAction(EventAction& e) override
     {
         gRackWidget->cloneModule(moduleWidget);
     }
@@ -371,8 +378,8 @@ struct CloneMenuItem : MenuItem
 
 struct DeleteMenuItem : MenuItem
 {
-    ModuleWidget *moduleWidget;
-    void onAction(EventAction &e) override
+    ModuleWidget* moduleWidget;
+    void onAction(EventAction& e) override
     {
         gRackWidget->deleteModule(moduleWidget);
         moduleWidget->finalizeEvents();
@@ -382,30 +389,30 @@ struct DeleteMenuItem : MenuItem
 
 struct GridReleaseHeldKeysItem : MenuItem
 {
-    MonomeGridWidget *grid;
-    void onAction(EventAction &e) override
+    MonomeGridWidget* grid;
+    void onAction(EventAction& e) override
     {
         grid->clearHeldKeys();
     }
 };
 
-Menu *MonomeGridWidget::createContextMenu()
+Menu* MonomeGridWidget::createContextMenu()
 {
-    Menu *menu = gScene->createMenu();
+    Menu* menu = gScene->createMenu();
 
-    auto gridModule = dynamic_cast<MonomeGrid *>(module);
+    auto gridModule = dynamic_cast<MonomeGrid*>(module);
 
-    MenuLabel *menuLabel = new MenuLabel();
+    MenuLabel* menuLabel = new MenuLabel();
     menuLabel->text = model->manufacturer + " " + model->name + " (" + gridModule->device.id + ")";
     menu->addChild(menuLabel);
 
-    auto *cloneItem = new CloneMenuItem();
+    auto* cloneItem = new CloneMenuItem();
     cloneItem->text = "Duplicate";
     cloneItem->rightText = GUI_MOD_KEY_NAME "+D";
     cloneItem->moduleWidget = this;
     menu->addChild(cloneItem);
 
-    auto *deleteItem = new DeleteMenuItem();
+    auto* deleteItem = new DeleteMenuItem();
     deleteItem->text = "Delete";
     deleteItem->rightText = "Backspace/Delete";
     deleteItem->moduleWidget = this;
@@ -413,7 +420,7 @@ Menu *MonomeGridWidget::createContextMenu()
 
     menu->addChild(construct<MenuEntry>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Actions"));
-    auto *releaseItem = new GridReleaseHeldKeysItem();
+    auto* releaseItem = new GridReleaseHeldKeysItem();
     releaseItem->text = "Release held keys";
     releaseItem->rightText = GUI_MOD_KEY_NAME "+Click";
     releaseItem->grid = this;

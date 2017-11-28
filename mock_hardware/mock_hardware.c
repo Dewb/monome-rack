@@ -1,37 +1,94 @@
 #include "mock_hardware.h"
-#include "timers.h"
 #include "events.h"
 #include "monome.h"
+#include "timers.h"
 #include <string.h>
 
 int gpioBlock[8];
 uint16_t adcBlock[4];
 uint16_t dacBlock[2];
 
+#define VSERIAL_BUFFER_SIZE 72
+#define VSERIAL_MAX_MESSAGES 12
+
+uint8_t* vserial_buffer = NULL;
+int vserial_read_index = 0;
+int vserial_write_index = 0;
+
+float phase = 0.0;
+float clockRate = 0.001; // 1 ms
 
 int vgpio_get(uint32_t pin)
 {
-    if (pin == B00) { return gpioBlock[0]; }
-    if (pin == B01) { return gpioBlock[1]; }
-    if (pin == B02) { return gpioBlock[2]; }
-    if (pin == B03) { return gpioBlock[3]; }
-    if (pin == B08) { return gpioBlock[4]; }
-    if (pin == B09) { return gpioBlock[5]; }
-    if (pin == B10) { return gpioBlock[6]; }
-    if (pin == NMI) { return gpioBlock[7]; }
+    if (pin == B00)
+    {
+        return gpioBlock[0];
+    }
+    if (pin == B01)
+    {
+        return gpioBlock[1];
+    }
+    if (pin == B02)
+    {
+        return gpioBlock[2];
+    }
+    if (pin == B03)
+    {
+        return gpioBlock[3];
+    }
+    if (pin == B08)
+    {
+        return gpioBlock[4];
+    }
+    if (pin == B09)
+    {
+        return gpioBlock[5];
+    }
+    if (pin == B10)
+    {
+        return gpioBlock[6];
+    }
+    if (pin == NMI)
+    {
+        return gpioBlock[7];
+    }
     return 0;
 }
 
 void vgpio_set(uint32_t pin, int value)
 {
-    if (pin == B00) { gpioBlock[0] = !!value; }
-    if (pin == B01) { gpioBlock[1] = !!value; }
-    if (pin == B02) { gpioBlock[2] = !!value; }
-    if (pin == B03) { gpioBlock[3] = !!value; }
-    if (pin == B08) { gpioBlock[4] = !!value; }
-    if (pin == B09) { gpioBlock[5] = !!value; }
-    if (pin == B10) { gpioBlock[6] = !!value; }
-    if (pin == NMI) { gpioBlock[7] = !!value; }
+    if (pin == B00)
+    {
+        gpioBlock[0] = !!value;
+    }
+    if (pin == B01)
+    {
+        gpioBlock[1] = !!value;
+    }
+    if (pin == B02)
+    {
+        gpioBlock[2] = !!value;
+    }
+    if (pin == B03)
+    {
+        gpioBlock[3] = !!value;
+    }
+    if (pin == B08)
+    {
+        gpioBlock[4] = !!value;
+    }
+    if (pin == B09)
+    {
+        gpioBlock[5] = !!value;
+    }
+    if (pin == B10)
+    {
+        gpioBlock[6] = !!value;
+    }
+    if (pin == NMI)
+    {
+        gpioBlock[7] = !!value;
+    }
 }
 
 uint16_t vadc_get(int channel)
@@ -54,13 +111,6 @@ void vdac_set(int channel, uint16_t value)
     dacBlock[channel] = value;
 }
 
-#define VSERIAL_BUFFER_SIZE 72
-#define VSERIAL_MAX_MESSAGES 12
-
-uint8_t* vserial_buffer = NULL;
-int vserial_read_index = 0;
-int vserial_write_index = 0;
-
 void vserial_reset()
 {
     if (vserial_buffer == NULL)
@@ -71,7 +121,7 @@ void vserial_reset()
     vserial_write_index = 0;
 }
 
-uint8_t *vserial_read()
+uint8_t* vserial_read()
 {
     if (vserial_read_index >= vserial_write_index)
     {
@@ -80,7 +130,7 @@ uint8_t *vserial_read()
 
     return vserial_buffer + VSERIAL_BUFFER_SIZE * vserial_read_index++;
 }
-void vserial_write(uint8_t *buf, uint32_t byteCount)
+void vserial_write(uint8_t* buf, uint32_t byteCount)
 {
     if (vserial_buffer)
     {
@@ -112,9 +162,6 @@ void simulate_front_button_interrupt()
     e.data = vgpio_get(NMI);
     event_post(&e);
 }
-
-float phase = 0.0;
-float clockRate = 0.001; // 1 ms
 
 void simulate_timer_interrupt(float sampleTime)
 {
