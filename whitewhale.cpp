@@ -8,7 +8,7 @@
 #include <string.h>
 
 // hardware interface points
-extern "C" int main(void);
+extern "C" void initialize_module(void);
 extern "C" void check_events(void);
 
 // memory state to save
@@ -94,7 +94,7 @@ struct WhiteWhale : MonomeModuleBase {
     };
 
     WhiteWhale() : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {
-        main();
+        initialize_module();
     }
 
     void step() override;
