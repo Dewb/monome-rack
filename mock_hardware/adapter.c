@@ -1,5 +1,6 @@
 #include "mock_hardware.h"
 #include "types.h"
+#include <stdio.h>
 #include <string.h>
 
 typedef enum {
@@ -121,7 +122,6 @@ void* flashc_memcpy(void* dst, const void* src, size_t nbytes, bool erase)
     return dst;
 }
 
-void init_dbg_rs232(int hertz) {}
 void init_gpio() {}
 
 void init_spi() {}
@@ -153,3 +153,12 @@ void sysclk_init() {}
 
 void clock_null(uint8_t phase) {}
 volatile clock_pulse_t clock_pulse = &clock_null;
+
+void init_dbg_rs232(long pba_hz) {}
+
+void print_dbg(const char* str) { fprintf(stderr, "%s", str); }
+void print_dbg_char(int c) { fprintf(stderr, "%d", c); }
+void print_dbg_ulong(unsigned long n) { fprintf(stderr, "%ld", n); }
+void print_dbg_char_hex(unsigned char n) { fprintf(stderr, "%x", n); }
+void print_dbg_short_hex(unsigned short n) { fprintf(stderr, "%d", n); }
+void print_dbg_hex(unsigned long n) { fprintf(stderr, "%lx", n); }
