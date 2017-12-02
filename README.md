@@ -1,4 +1,4 @@
-monome-rack -- VCVRack plugin for monome hardware
+monome-rack — VCVRack plugin for monome hardware
 ---
 
 ### What is this?
@@ -10,7 +10,7 @@ This is a work-in-progress repo for a plugin package for the [VCVRack open-sourc
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), a flexible 16x8 grid controller
 * The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
    * Uses either a virtual grid, or a real grid connected via serialosc
-   * Currently limited to one instance per rack, see issues below
+   * Currently limited to one instance per rack, see [issues](#issues) below
 
 ### Who did this?
 
@@ -18,7 +18,7 @@ Original hardware and firmware code in linked submodules is by [monome](monome.o
 
 @dewb wrote the virtual grid code, the initial mock hardware code, and ported white whale. 
 
-Additional community contributions and feedback are very welcome! Discuss either on [issues here](issues) or on the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
+Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues) or in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
 
 
 ## Issues
@@ -37,10 +37,10 @@ For more, see [the discussion thread here](https://llllllll.co/t/white-whale-in-
 
 For now, this is a source-only plugin, no binary package is provided. The plugin has been built and tested on OS X 10.12 and Windows 10. Linux is currently untested.
 
-1. Clone [VCVRack](https://github.com/VCVRack/Rack) and follow its build instructions.
+1. Clone [VCVRack](https://github.com/VCVRack/Rack) 0.5.0 or later and follow its build instructions.
 2. Clone this repo into the `plugins` folder under VCVRack.
-4. Clone submodules with `git submodule update --init --recursive`
-5. Build with `make` or open in Visual Studio Code and select `Tasks > Run Build Task`
+4. Change into the `monome-rack` folder and clone submodules with `git submodule update --init --recursive`
+5. Build with `make` or open the monome-rack folder in Visual Studio Code and select `Tasks > Run Build Task`.
 
 ## License
 
