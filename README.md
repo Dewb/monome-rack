@@ -12,6 +12,15 @@ This is a work-in-progress repo for a plugin package for the [VCVRack open-sourc
    * Uses either a virtual grid, or a real grid connected via serialosc
    * Currently limited to one instance per rack, see [issues](#issues) below
 
+### Why is this?
+
+In order of importance, the initial goals of this project were/are:
+
+* Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
+* Allow monome users to practice and experiment while traveling light or otherwise away from their hardware
+* Bring new users into the monome ecosystem
+* "Because it was there"
+
 ### Who did this?
 
 Original hardware and firmware code in linked submodules is by [monome](monome.org). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
@@ -24,10 +33,10 @@ Additional community contributions and feedback are very welcome! Discuss either
 ## Issues
 
 * The state of working memory and the flash memory are persisted to the VCVRack patch, but something is wrong with the preset glyphs.
-* The WW code is designed to run by itself in a microcontroller and stores state in a lot of file-scope static variables. Running this code unaltered in a Rack plugin means that every plugin instance shares the same state variables, so using more than one WW module in a patch does not work as expected. 
+* The WW firmware code is designed to run by itself in a microcontroller and stores state in a lot of file-scope static variables. Running this code unaltered in a Rack plugin means that every plugin instance shares the same state variables, so using more than one WW module in a patch does not work as expected. 
 * Unplugging a real monome’s USB cable while it’s connected to a virtual module causes a crash.
-* The AVR mock_hardware library is a simple collection of egregious hacks. It needs a redesign before it gets extended much further, i.e. to other module firmwares.
-* Currently, for both virtual and physical grids, only modern varibright 128 models are supported. Adding virtual 64/256 grids should be easy; the widget code can already handle them, the FTDI hacks just need to be improved to do proper device identification. I’d also like to support non-varibright and other older models for better compatibility testing. And maybe a virtual 512?
+* The `mock_hardware` library that bridges between the C++ API of VCVRack and the C API of the AVR microcontroller is a simple collection of egregious hacks. It needs a redesign before it gets extended much further, i.e. to other module firmwares.
+* Currently, for both virtual and physical grids, only modern varibright 128 models are supported. Adding virtual 64/256/512 grids should be straightforward; the widget code is already implemented, the FTDI hacks just need to be extended to do proper device identification. It's also a goal to support non-varibright and other older models, in both hardware and software, for better compatibility testing. 
 * No performance analysis has been done. Changes were made with intent to be efficient, and initial testing sounds good, but no deep study of the timing or the CPU utilitization has been performed yet. There is likely room for improvement.
 
 For more, see [the discussion thread here](https://llllllll.co/t/white-whale-in-vcvrack/10337).
