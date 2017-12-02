@@ -3,7 +3,7 @@ monome-rack — VCVRack plugin for monome hardware
 
 ### What is this?
 
-This is a work-in-progress repo for a plugin package for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [https://monome.org](monome). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
+This is a work-in-progress repo for a plugin package for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
 
 <img width="75%" alt="white whale and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33520884-380980be-d791-11e7-9259-ce5879837f8b.png">
 
