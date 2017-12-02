@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../../Rack",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/../..",
+            "environment": [
+                { "name": "DYLD_FALLBACK_LIBRARY_PATH", "value": "dep/lib" },
+                { "name": "LD_LIBRARY_PATH", "value": "dep/lib" }
+            ],
+            "externalConsole": false,
+            "MIMode": "lldb"
+        }
+    ]
+}
