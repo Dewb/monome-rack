@@ -5,14 +5,14 @@ monome-rack — VCVRack plugin for monome hardware
 
 This is a work-in-progress repo for a plugin package for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by monome. This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
 
+<img width="75%" alt="white whale and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33520884-380980be-d791-11e7-9259-ce5879837f8b.png">
+
 ### What is included?
 
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), a flexible 16x8 grid controller
 * The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
    * Uses either a virtual grid, or a real grid connected via serialosc
    * Currently limited to one instance per rack, see [issues](#issues) below
-
-![white whale and virtual grid in VCVRack](https://user-images.githubusercontent.com/712405/33520799-fbdd1e30-d78f-11e7-96ef-f3effc5edacd.png)
 
 ### Why is this?
 
