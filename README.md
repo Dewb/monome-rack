@@ -12,6 +12,8 @@ This is a work-in-progress repo for a plugin package for the [VCVRack open-sourc
    * Uses either a virtual grid, or a real grid connected via serialosc
    * Currently limited to one instance per rack, see [issues](#issues) below
 
+![white whale and virtual grid in VCVRack](https://user-images.githubusercontent.com/712405/33520799-fbdd1e30-d78f-11e7-96ef-f3effc5edacd.png)
+
 ### Why is this?
 
 In order of importance, the initial goals of this project were/are:
