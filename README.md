@@ -17,7 +17,7 @@ This is a work-in-progress repo for a plugin package for the [VCVRack open-sourc
 In order of importance, the initial goals of this project were/are:
 
 * Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
-* Allow monome users to practice and experiment while traveling light or otherwise away from their hardware
+* Allow monome users to practice, experiment, and/or record while traveling light or otherwise away from their hardware
 * Bring new users into the monome ecosystem
 * "Because it was there"
 
