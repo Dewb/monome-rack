@@ -25,7 +25,7 @@ In order of importance, the initial goals of this project were/are:
 
 Original hardware and firmware code in linked submodules is by [monome](monome.org). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
 
-@dewb wrote the virtual grid code, the initial mock hardware code, and ported white whale. 
+[@dewb](https://github.com/Dewb) wrote the virtual grid module, the initial mock hardware layer, and ported white whale. 
 
 Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues) or in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
 
