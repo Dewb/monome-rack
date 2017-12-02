@@ -1,0 +1,4 @@
+[submodule "firmware/whitewhale"]
+	path = firmware/whitewhale
+	url = https://github.com/Dewb/whitewhale
+	branch = vcvrack_pr
