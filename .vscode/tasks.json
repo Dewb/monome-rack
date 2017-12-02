@@ -6,7 +6,7 @@
         {
             "label": "Build Rack plugin",
             "type": "shell",
-            "command": "make -f Makefile-Rack",
+            "command": "make",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -18,7 +18,7 @@
         {
             "label": "Clean Rack plugin",
             "type": "shell",
-            "command": "make -f Makefile-Rack clean",
+            "command": "make clean",
             "problemMatcher": [
                 "$gcc"
             ],

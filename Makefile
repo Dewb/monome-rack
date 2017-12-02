@@ -1,39 +1,44 @@
+SHELL:=/bin/bash -O extglob
+
 FLAGS = \
 	-DNULL=0 \
 	-o0 \
 	-D__AVR32_UC3B0256__ \
 	-Werror=implicit-function-declaration \
-	-Irack \
-	-Irack/mock_hardware \
-	-Irack/mock_hardware/stubs \
-	-Irack/lib/base64 \
-	-Irack/lib/oscpack \
-	-Irack/lib/serialosc \
-	-Ilibavr32/src \
-	-Ilibavr32/conf \
-	-Ilibavr32/conf/trilogy \
-	-Isrc
+	-Isrc \
+	-Isrc/common \
+	-Isrc/grid \
+	-Isrc/whitewhale \
+	-Isrc/common/mock_hardware \
+	-Isrc/common/mock_hardware/stubs \
+	-Ilib/base64 \
+	-Ilib/oscpack \
+	-Ilib/serialosc \
+	-Ifirmware/whitewhale/libavr32/src \
+	-Ifirmware/whitewhale/libavr32/conf \
+	-Ifirmware/whitewhale/libavr32/conf/trilogy \
 	
 SOURCES = \
-	$(wildcard src/*.c) \
-	$(wildcard rack/mock_hardware/*.c) \
-	rack/lib/base64/base64.cpp \
-	$(wildcard rack/lib/oscpack/ip/*.cpp) \
-	$(wildcard rack/lib/oscpack/osc/*.cpp) \
-	$(wildcard rack/lib/serialosc/*.cpp) \
-	libavr32/src/events.c \
-	libavr32/src/timers.c \
-	libavr32/src/monome.c \
-	libavr32/src/util.c \
-	$(wildcard rack/*.cpp)
+	$(wildcard firmware/whitewhale/src/*.c) \
+	$(wildcard src/common/mock_hardware/*.c) \
+	lib/base64/base64.cpp \
+	$(wildcard lib/oscpack/ip/*.cpp) \
+	$(wildcard lib/oscpack/osc/*.cpp) \
+	$(wildcard lib/serialosc/*.cpp) \
+	firmware/whitewhale/libavr32/src/events.c \
+	firmware/whitewhale/libavr32/src/timers.c \
+	firmware/whitewhale/libavr32/src/monome.c \
+	firmware/whitewhale/libavr32/src/util.c \
+	$(wildcard src/*.cpp) \
+	$(wildcard src/**/*.cpp)
 
 include ../../arch.mk
 
 ifeq ($(ARCH), win)
-	SOURCES += $(wildcard rack/lib/oscpack/ip/win32/*.cpp) 
+	SOURCES += $(wildcard lib/oscpack/ip/win32/*.cpp) 
 	LDFLAGS += -lws2_32 -lwinmm
 else
-	SOURCES += $(wildcard rack/lib/oscpack/ip/posix/*.cpp) 
+	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
 
 include ../../plugin.mk
