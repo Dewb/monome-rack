@@ -18,6 +18,39 @@ int vserial_write_index = 0;
 float phase = 0.0;
 float clockRate = 0.001; // 1 ms
 
+// hardware interface points
+extern void initialize_module(void);
+extern void check_events(void);
+
+void hardware_init()
+{
+    initialize_module();
+}
+
+void hardware_step()
+{
+    vserial_reset();
+}
+
+void triggerInterrupt(int interrupt)
+{
+    switch (interrupt)
+    {
+        case 0: // system clock
+            process_timers();
+            break;
+        case 1: // clock jack normal
+            simulate_clock_normal_interrupt();
+            break;
+        case 2: // external clock rising edge
+            simulate_external_clock_interrupt();
+            break;
+        case 3: // front button pressed
+            simulate_front_button_interrupt();
+            break;
+    }
+}
+
 int vgpio_get(uint32_t pin)
 {
     if (pin == B00)
@@ -161,16 +194,6 @@ void simulate_front_button_interrupt()
     e.type = kEventFront;
     e.data = vgpio_get(NMI);
     event_post(&e);
-}
-
-void simulate_timer_interrupt(float sampleTime)
-{
-    phase += sampleTime;
-    if (phase > clockRate)
-    {
-        phase -= clockRate;
-        process_timers();
-    }
 }
 
 void simulate_monome_connect()

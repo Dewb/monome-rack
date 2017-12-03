@@ -1,15 +1,11 @@
 #include "whitewhale.hpp"
+#include "firmwaremanager.hpp"
 #include "grid.hpp"
 #include "monomewidgets.hpp"
 
 #include "base64.h"
-#include "mock_hardware.h"
 #include "types.h"
 #include <string.h>
-
-// hardware interface points
-extern "C" void initialize_module(void);
-extern "C" void check_events(void);
 
 // memory state to save
 typedef enum {
@@ -71,6 +67,7 @@ extern nvram_data_t flashy;
 
 struct WhiteWhale : MonomeModuleBase
 {
+    FirmwareManager firmware;
 
     enum ParamIds
     {
@@ -110,7 +107,8 @@ struct WhiteWhale : MonomeModuleBase
     WhiteWhale()
         : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
     {
-        initialize_module();
+        firmware.load("firmware/whitewhale");
+        firmware.init();
     }
 
     void step() override;
@@ -118,16 +116,16 @@ struct WhiteWhale : MonomeModuleBase
     json_t* toJson() override
     {
         json_t* rootJ = MonomeModuleBase::toJson();
-        json_object_set_new(rootJ, "current", json_string(base64_encode((unsigned char*)&w, sizeof(whale_set)).c_str()));
-        json_object_set_new(rootJ, "flash", json_string(base64_encode((unsigned char*)&flashy, sizeof(nvram_data_t)).c_str()));
+        //json_object_set_new(rootJ, "current", json_string(base64_encode((unsigned char*)&w, sizeof(whale_set)).c_str()));
+        //json_object_set_new(rootJ, "flash", json_string(base64_encode((unsigned char*)&flashy, sizeof(nvram_data_t)).c_str()));
         return rootJ;
     }
 
     void fromJson(json_t* rootJ) override
     {
         MonomeModuleBase::fromJson(rootJ);
-        memcpy((void*)&w, base64_decode(json_string_value(json_object_get(rootJ, "current"))).c_str(), sizeof(whale_set));
-        memcpy((void*)&flashy, base64_decode(json_string_value(json_object_get(rootJ, "flash"))).c_str(), sizeof(nvram_data_t));
+        //memcpy((void*)&w, base64_decode(json_string_value(json_object_get(rootJ, "current"))).c_str(), sizeof(whale_set));
+        //memcpy((void*)&flashy, base64_decode(json_string_value(json_object_get(rootJ, "flash"))).c_str(), sizeof(nvram_data_t));
     }
 
     void reset() override
@@ -143,60 +141,60 @@ void WhiteWhale::step()
 {
     MonomeModuleBase::step();
 
-    vserial_reset();
+    firmware.step();
 
     // Convert clock input jack to GPIO signals for normal connection and value
     bool clockNormal = !inputs[CLOCK_INPUT].active;
-    if (clockNormal != vgpio_get(B09))
+    if (clockNormal != firmware.getGPIO(B09))
     {
-        vgpio_set(B09, clockNormal);
-        simulate_clock_normal_interrupt();
+        firmware.setGPIO(B09, clockNormal);
+        firmware.triggerInterrupt(1);
     }
     bool externalClock = inputs[CLOCK_INPUT].value > 0;
-    if (externalClock != vgpio_get(B08))
+    if (externalClock != firmware.getGPIO(B08))
     {
-        vgpio_set(B08, externalClock);
-        simulate_external_clock_interrupt();
+        firmware.setGPIO(B08, externalClock);
+        firmware.triggerInterrupt(2);
     }
     bool frontButton = params[BUTTON_PARAM].value == 0;
-    if (frontButton != vgpio_get(NMI))
+    if (frontButton != firmware.getGPIO(NMI))
     {
-        vgpio_set(NMI, frontButton);
-        simulate_front_button_interrupt();
+        firmware.setGPIO(NMI, frontButton);
+        firmware.triggerInterrupt(3);
     }
 
     // Convert knob float parameters to 12-bit ADC values
-    vadc_set(0, params[CLOCK_PARAM].value * 0xFFF);
-    vadc_set(1, params[PARAM_PARAM].value * 0xFFF);
+    firmware.setADC(0, params[CLOCK_PARAM].value * 0xFFF);
+    firmware.setADC(1, params[PARAM_PARAM].value * 0xFFF);
 
     // Advance software timers
-    simulate_timer_interrupt(engineGetSampleTime());
+    firmware.advanceClock(engineGetSampleTime());
 
     // Pump event loop
-    check_events();
+    firmware.step();
 
     // Update lights from GPIO
-    lights[CLOCK_LIGHT].setBrightnessSmooth(vgpio_get(B10));
-    lights[TRIG1_LIGHT].setBrightnessSmooth(vgpio_get(B00));
-    lights[TRIG2_LIGHT].setBrightnessSmooth(vgpio_get(B01));
-    lights[TRIG3_LIGHT].setBrightnessSmooth(vgpio_get(B02));
-    lights[TRIG4_LIGHT].setBrightnessSmooth(vgpio_get(B03));
-    lights[CVA_LIGHT].value = vdac_get(0) / 65536.0;
-    lights[CVB_LIGHT].value = vdac_get(1) / 65536.0;
+    lights[CLOCK_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
+    lights[TRIG1_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
+    lights[TRIG2_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
+    lights[TRIG3_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
+    lights[TRIG4_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
+    lights[CVA_LIGHT].value = firmware.getDAC(0) / 65536.0;
+    lights[CVB_LIGHT].value = firmware.getDAC(1) / 65536.0;
 
     // Update output jacks from GPIO & DAC
-    outputs[CLOCK_OUTPUT].value = vgpio_get(B10) * 8.0;
-    outputs[TRIG1_OUTPUT].value = vgpio_get(B00) * 8.0;
-    outputs[TRIG2_OUTPUT].value = vgpio_get(B01) * 8.0;
-    outputs[TRIG3_OUTPUT].value = vgpio_get(B02) * 8.0;
-    outputs[TRIG4_OUTPUT].value = vgpio_get(B03) * 8.0;
-    outputs[CVA_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
-    outputs[CVB_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
+    outputs[CLOCK_OUTPUT].value = firmware.getGPIO(B10) * 8.0;
+    outputs[TRIG1_OUTPUT].value = firmware.getGPIO(B00) * 8.0;
+    outputs[TRIG2_OUTPUT].value = firmware.getGPIO(B01) * 8.0;
+    outputs[TRIG3_OUTPUT].value = firmware.getGPIO(B02) * 8.0;
+    outputs[TRIG4_OUTPUT].value = firmware.getGPIO(B03) * 8.0;
+    outputs[CVA_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
+    outputs[CVB_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
 
     // Update LEDs on connected grid
     if (gridConnection)
     {
-        uint8_t* msg = vserial_read();
+        uint8_t* msg = firmware.readSerial(0);
         while (msg)
         {
             if (msg[0] == 0x1A)
@@ -217,7 +215,7 @@ void WhiteWhale::step()
                     gridConnection->updateQuadrant(x, y, leds);
                 }
             }
-            msg = vserial_read();
+            msg = firmware.readSerial(0);
         }
     }
 }

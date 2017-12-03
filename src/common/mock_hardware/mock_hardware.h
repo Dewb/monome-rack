@@ -4,6 +4,11 @@
 extern "C" {
 #endif
 
+void hardware_init();
+void hardware_step();
+
+void triggerInterrupt(int interrupt);
+
 int vgpio_get(uint32_t pin);
 void vgpio_set(uint32_t pin, int value);
 
