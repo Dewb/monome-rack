@@ -2,3 +2,6 @@
 	path = firmware/whitewhale
 	url = https://github.com/Dewb/whitewhale
 	branch = vcvrack_pr
+[submodule "firmware/teletype"]
+	path = firmware/teletype
+	url = https://github.com/monome/teletype

@@ -1,5 +1,6 @@
 #include "whitewhale.hpp"
 #include "grid.hpp"
+#include "monomewidgets.hpp"
 
 #include "base64.h"
 #include "mock_hardware.h"
@@ -220,30 +221,6 @@ void WhiteWhale::step()
         }
     }
 }
-
-struct WhiteLight : ModuleLightWidget
-{
-    WhiteLight()
-    {
-        addBaseColor(COLOR_WHITE);
-    }
-};
-
-struct USBAJack : TransparentWidget
-{
-    void draw(NVGcontext* vg) override
-    {
-        nvgBeginPath(vg);
-        nvgRect(vg, 0, 0, 40, 16);
-        nvgFillColor(vg, nvgRGB(0, 0, 0));
-        nvgFill(vg);
-
-        nvgBeginPath(vg);
-        nvgRect(vg, 4, 4, 32, 4);
-        nvgFillColor(vg, nvgRGB(120, 120, 120));
-        nvgFill(vg);
-    }
-};
 
 WhiteWhaleWidget::WhiteWhaleWidget()
 {

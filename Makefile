@@ -9,6 +9,7 @@ FLAGS = \
 	-Isrc/common \
 	-Isrc/grid \
 	-Isrc/whitewhale \
+	-Isrc/teletype \
 	-Isrc/common/mock_hardware \
 	-Isrc/common/mock_hardware/stubs \
 	-Ilib/base64 \
