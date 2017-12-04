@@ -8,6 +8,8 @@ using namespace std;
 struct FirmwareManager
 {
     FirmwareManager();
+    ~FirmwareManager();
+
     bool load(string firmwarePath);
 
     void init();

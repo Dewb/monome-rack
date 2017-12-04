@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <unistd.h>
 
 void warn(const char* format, ...)
 {
@@ -18,10 +19,13 @@ void warn(const char* format, ...)
 
 #if ARCH_LIN
 #define LIB_EXTENSION ".so"
+#define MODULE_HANDLE_TYPE void*
 #elif ARCH_WIN
 #define LIB_EXTENSION ".dll"
+#define MODULE_HANDLE_TYPE HINSTANCE
 #elif ARCH_MAC
 #define LIB_EXTENSION ".dylib"
+#define MODULE_HANDLE_TYPE void*
 #endif
 
 #if ARCH_WIN
@@ -74,62 +78,79 @@ struct FirmwareManagerImpl
     float clockPeriod;
     float clockPhase;
 
+    char* tempLibraryPath;
+    MODULE_HANDLE_TYPE handle;
+
     FirmwareManagerImpl()
     {
         clockPhase = 0.0;
         clockPeriod = 0.001;
+        tempLibraryPath = (char*)malloc(128);
+        strncpy(tempLibraryPath, "module-firmwareXXXXXX", 128);
+    }
+
+    ~FirmwareManagerImpl()
+    {
+#if ARCH_WIN
+        FreeLibrary(handle);
+#elif ARCH_LIN || ARCH_MAC
+        dlclose(handle);
+#endif
+
+        unlink(tempLibraryPath);
+        free(tempLibraryPath);
     }
 
     bool load(string firmwarePath)
     {
         string librarySource;
         librarySource = firmwarePath + LIB_EXTENSION;
-        char libraryFilename[] = "module-firmwareXXXXXX";
-        mkstemp(libraryFilename);
-        warn("Creating new temporary firmware instance at %s", libraryFilename);
+
+        mkstemp(tempLibraryPath);
+        warn("Creating new temporary firmware instance at %s", tempLibraryPath);
 
         {
             std::ifstream src(librarySource, std::ios::binary);
-            std::ofstream dst(libraryFilename, std::ios::binary);
+            std::ofstream dst(tempLibraryPath, std::ios::binary);
             dst << src.rdbuf();
         }
 
 #if ARCH_WIN
 
         SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        HINSTANCE handle = LoadLibrary(libraryFilename);
+        handle = LoadLibrary(tempLibraryPath);
         SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", libraryFilename, error);
+            warn("Failed to load library %s: %d", tempLibraryPath, error);
             return false;
         }
 
 #elif ARCH_LIN || ARCH_MAC
 
-        void* handle = dlopen(libraryFilename, RTLD_NOW | RTLD_LOCAL);
+        handle = dlopen(tempLibraryPath, RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", libraryFilename, dlerror());
+            warn("Failed to load library %s: %s", tempLibraryPath, dlerror());
             return false;
         }
 
 #endif
 
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_init);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_step);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_getGPIO);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_setGPIO);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_getDAC);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_setADC);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_readSerial);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeSerial);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_triggerInterrupt);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_readNVRAM);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeNVRAM);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_readVRAM);
-        GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeVRAM);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_init);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_step);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_getGPIO);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_setGPIO);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_getDAC);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_setADC);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readSerial);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeSerial);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_triggerInterrupt);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readNVRAM);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeNVRAM);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readVRAM);
+        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeVRAM);
 
         return true;
     }
@@ -137,6 +158,11 @@ struct FirmwareManagerImpl
 
 FirmwareManager::FirmwareManager()
 {
+}
+
+FirmwareManager::~FirmwareManager()
+{
+    delete impl;
 }
 
 bool FirmwareManager::load(string modulePath)
