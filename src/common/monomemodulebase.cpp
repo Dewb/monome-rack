@@ -113,7 +113,11 @@ void MonomeModuleBase::deviceRemoved(const std::string& id)
 
 void MonomeModuleBase::buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state)
 {
-    //simulate_monome_key(x, y, state);
+    uint8_t msg[4] = { 0xF0, 0, 0, 0 };
+    msg[1] = (uint8_t)x;
+    msg[2] = (uint8_t)y;
+    msg[3] = state ? 1 : 0;
+    firmware.writeSerial(0, msg, sizeof(uint8_t) * 4);
 }
 
 void MonomeModuleBase::step()

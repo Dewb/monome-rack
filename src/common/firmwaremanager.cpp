@@ -1,6 +1,10 @@
 #include "firmwaremanager.hpp"
 #include "util.hpp"
 
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+
 void warn(const char* format, ...)
 {
     va_list args;
@@ -25,24 +29,24 @@ void warn(const char* format, ...)
 #include <direct.h>
 #include <windows.h>
 
-#define GET_PROC_ADDRESS(libname, handle, name)                           \
-    fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name);       \
-    if (!fw_fn_##name)                                                    \
-    {                                                                     \
-        warn("Failed to read symbol '" #name "' in %s", libname.c_str()); \
-        return false;                                                     \
+#define GET_PROC_ADDRESS(libname, handle, name)                     \
+    fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
+    if (!fw_fn_##name)                                              \
+    {                                                               \
+        warn("Failed to read symbol '" #name "' in %s", libname);   \
+        return false;                                               \
     }
 
 #elif ARCH_LIN || ARCH_MAC
 
 #include <dlfcn.h>
 
-#define GET_PROC_ADDRESS(libname, handle, name)                           \
-    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name);                \
-    if (!fw_fn_##name)                                                    \
-    {                                                                     \
-        warn("Failed to read symbol '" #name "' in %s", libname.c_str()); \
-        return false;                                                     \
+#define GET_PROC_ADDRESS(libname, handle, name)                   \
+    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name);        \
+    if (!fw_fn_##name)                                            \
+    {                                                             \
+        warn("Failed to read symbol '" #name "' in %s", libname); \
+        return false;                                             \
     }
 
 #endif
@@ -62,6 +66,10 @@ struct FirmwareManagerImpl
     DECLARE_PROC(uint8_t*, hardware_readSerial, (int bus))
     DECLARE_PROC(void, hardware_writeSerial, (int bus, uint8_t* buf, uint32_t byteCount))
     DECLARE_PROC(void, hardware_triggerInterrupt, (int interrupt))
+    DECLARE_PROC(void, hardware_readNVRAM, (void** ptr, uint32_t* bytes))
+    DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
+    DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
+    DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
 
     float clockPeriod;
     float clockPhase;
@@ -74,27 +82,36 @@ struct FirmwareManagerImpl
 
     bool load(string firmwarePath)
     {
-        string libraryFilename;
-        libraryFilename = firmwarePath + LIB_EXTENSION;
+        string librarySource;
+        librarySource = firmwarePath + LIB_EXTENSION;
+        char libraryFilename[] = "module-firmwareXXXXXX";
+        mkstemp(libraryFilename);
+        warn("Creating new temporary firmware instance at %s", libraryFilename);
+
+        {
+            std::ifstream src(librarySource, std::ios::binary);
+            std::ofstream dst(libraryFilename, std::ios::binary);
+            dst << src.rdbuf();
+        }
 
 #if ARCH_WIN
 
         SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        HINSTANCE handle = LoadLibrary(libraryFilename.c_str());
+        HINSTANCE handle = LoadLibrary(libraryFilename);
         SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", libraryFilename.c_str(), error);
+            warn("Failed to load library %s: %d", libraryFilename, error);
             return false;
         }
 
 #elif ARCH_LIN || ARCH_MAC
 
-        void* handle = dlopen(libraryFilename.c_str(), RTLD_NOW | RTLD_LOCAL);
+        void* handle = dlopen(libraryFilename, RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", libraryFilename.c_str(), dlerror());
+            warn("Failed to load library %s: %s", libraryFilename, dlerror());
             return false;
         }
 
@@ -109,6 +126,10 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(libraryFilename, handle, hardware_readSerial);
         GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeSerial);
         GET_PROC_ADDRESS(libraryFilename, handle, hardware_triggerInterrupt);
+        GET_PROC_ADDRESS(libraryFilename, handle, hardware_readNVRAM);
+        GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeNVRAM);
+        GET_PROC_ADDRESS(libraryFilename, handle, hardware_readVRAM);
+        GET_PROC_ADDRESS(libraryFilename, handle, hardware_writeVRAM);
 
         return true;
     }
@@ -231,5 +252,37 @@ void FirmwareManager::advanceClock(float seconds)
             impl->clockPhase -= impl->clockPeriod;
             impl->fw_fn_hardware_triggerInterrupt(0);
         }
+    }
+}
+
+void FirmwareManager::readNVRAM(void** ptr, uint32_t* size)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_readNVRAM(ptr, size);
+    }
+}
+
+void FirmwareManager::writeNVRAM(const void* ptr, uint32_t size)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_writeNVRAM(ptr, size);
+    }
+}
+
+void FirmwareManager::readVRAM(void** ptr, uint32_t* size)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_readVRAM(ptr, size);
+    }
+}
+
+void FirmwareManager::writeVRAM(const void* ptr, uint32_t size)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_writeVRAM(ptr, size);
     }
 }

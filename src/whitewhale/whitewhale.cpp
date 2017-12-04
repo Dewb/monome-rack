@@ -1,5 +1,4 @@
 #include "whitewhale.hpp"
-#include "firmwaremanager.hpp"
 #include "grid.hpp"
 #include "monomewidgets.hpp"
 
@@ -19,68 +18,8 @@
 #define B10 42
 #define NMI 13
 
-// memory state to save
-typedef enum {
-    mTrig,
-    mMap,
-    mSeries
-} edit_modes;
-
-typedef enum {
-    mForward = 0,
-    mReverse,
-    mDrunk,
-    mRandom,
-    mPing,
-    mPingRep
-} step_modes;
-
-typedef enum {
-    mPingFwd = 1,
-    mPingRev = -1
-} ping_direction;
-
-typedef struct
-{
-    uint8_t loop_start, loop_end, loop_len, loop_dir;
-    uint16_t step_choice;
-    uint8_t cv_mode[2];
-    uint8_t tr_mode;
-    step_modes step_mode;
-    ping_direction ping_dir;
-    uint8_t steps[16];
-    uint8_t step_probs[16];
-    uint16_t cv_values[16];
-    uint16_t cv_steps[2][16];
-    uint16_t cv_curves[2][16];
-    uint8_t cv_probs[2][16];
-} whale_pattern;
-
-typedef struct
-{
-    whale_pattern wp[16];
-    uint16_t series_list[64];
-    uint8_t series_start, series_end;
-    uint8_t tr_mute[4];
-    uint8_t cv_mute[2];
-} whale_set;
-
-typedef struct
-{
-    uint8_t fresh;
-    edit_modes edit_mode;
-    uint8_t preset_select;
-    uint8_t glyph[8][8];
-    whale_set w[8];
-} nvram_data_t;
-
-extern whale_set w;
-extern nvram_data_t flashy;
-
 struct WhiteWhale : MonomeModuleBase
 {
-    FirmwareManager firmware;
-
     enum ParamIds
     {
         CLOCK_PARAM,
@@ -128,16 +67,50 @@ struct WhiteWhale : MonomeModuleBase
     json_t* toJson() override
     {
         json_t* rootJ = MonomeModuleBase::toJson();
-        //json_object_set_new(rootJ, "current", json_string(base64_encode((unsigned char*)&w, sizeof(whale_set)).c_str()));
-        //json_object_set_new(rootJ, "flash", json_string(base64_encode((unsigned char*)&flashy, sizeof(nvram_data_t)).c_str()));
+
+        void* data;
+        uint32_t size;
+
+        firmware.readNVRAM(&data, &size);
+        json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+
+        firmware.readVRAM(&data, &size);
+        json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+
         return rootJ;
     }
 
     void fromJson(json_t* rootJ) override
     {
         MonomeModuleBase::fromJson(rootJ);
-        //memcpy((void*)&w, base64_decode(json_string_value(json_object_get(rootJ, "current"))).c_str(), sizeof(whale_set));
-        //memcpy((void*)&flashy, base64_decode(json_string_value(json_object_get(rootJ, "flash"))).c_str(), sizeof(nvram_data_t));
+
+        void* data;
+        uint32_t size;
+        json_t* jd;
+
+        jd = json_object_get(rootJ, "nvram");
+        if (jd)
+        {
+            string decoded = base64_decode(json_string_value(jd));
+
+            firmware.readNVRAM(&data, &size);
+            if (size == decoded.length())
+            {
+                firmware.writeNVRAM((void*)decoded.c_str(), size);
+            }
+        }
+
+        jd = json_object_get(rootJ, "vram");
+        if (jd)
+        {
+            string decoded = base64_decode(json_string_value(jd));
+
+            firmware.readVRAM(&data, &size);
+            if (size == decoded.length())
+            {
+                firmware.writeVRAM((void*)decoded.c_str(), size);
+            }
+        }
     }
 
     void reset() override
@@ -152,8 +125,6 @@ struct WhiteWhale : MonomeModuleBase
 void WhiteWhale::step()
 {
     MonomeModuleBase::step();
-
-    firmware.step();
 
     // Convert clock input jack to GPIO signals for normal connection and value
     bool clockNormal = !inputs[CLOCK_INPUT].active;

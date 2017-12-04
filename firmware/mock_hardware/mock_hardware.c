@@ -9,8 +9,8 @@ int gpioBlock[8];
 uint16_t adcBlock[4];
 uint16_t dacBlock[2];
 
-#define VSERIAL_BUFFER_SIZE 256
-#define VSERIAL_MAX_MESSAGES 128
+#define VSERIAL_BUFFER_SIZE 128
+#define VSERIAL_MAX_MESSAGES 32
 
 uint8_t* vserial_out_buffer = NULL;
 int vserial_out_read_index = 0;
@@ -22,6 +22,11 @@ int vserial_in_write_index = 0;
 
 float phase = 0.0;
 float clockRate = 0.001; // 1 ms
+
+void* nvram_ptr;
+void* vram_ptr;
+uint32_t nvram_size;
+uint32_t vram_size;
 
 // hardware interface points
 extern void initialize_module(void);
@@ -69,13 +74,25 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
 
 void hardware_init()
 {
+    hardware_initSerial();
     initialize_module();
     simulate_monome_connect();
 }
 
 void hardware_step()
 {
+    uint8_t* msg = hardware_readSerial_internal(0);
+    while (msg)
+    {
+        if (msg[0] == 0xF0)
+        {
+            simulate_monome_key(msg[1], msg[2], msg[3]);
+        }
+        msg = hardware_readSerial_internal(0);
+    }
+
     hardware_resetSerial();
+
     check_events();
 }
 
@@ -191,19 +208,25 @@ void hardware_setDAC(int channel, uint16_t value)
     dacBlock[channel] = value;
 }
 
-void hardware_resetSerial()
+void hardware_initSerial()
 {
     if (vserial_in_buffer == NULL)
     {
         vserial_in_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
     }
-    vserial_in_read_index = 0;
-    vserial_in_write_index = 0;
 
     if (vserial_out_buffer == NULL)
     {
         vserial_out_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
     }
+
+    hardware_resetSerial();
+}
+
+void hardware_resetSerial()
+{
+    vserial_in_read_index = 0;
+    vserial_in_write_index = 0;
     vserial_out_read_index = 0;
     vserial_out_write_index = 0;
 }
@@ -252,4 +275,38 @@ void hardware_writeSerial(int bus, uint8_t* buf, uint32_t byteCount)
     {
         fprintf(stderr, "Cannot write to incoming serial line, buffer full.");
     }
+}
+
+void hardware_declareNVRAM(const void* ptr, uint32_t size)
+{
+    nvram_ptr = ptr;
+    nvram_size = size;
+}
+
+void hardware_readNVRAM(void** ptr, uint32_t* size)
+{
+    *ptr = nvram_ptr;
+    *size = nvram_size;
+}
+
+void hardware_writeNVRAM(const void* src, uint32_t size)
+{
+    memcpy(nvram_ptr, src, nvram_size >= size ? size : nvram_size);
+}
+
+void hardware_declareVRAM(const void* ptr, uint32_t size)
+{
+    vram_ptr = ptr;
+    vram_size = size;
+}
+
+void hardware_readVRAM(void** ptr, uint32_t* size)
+{
+    *ptr = vram_ptr;
+    *size = vram_size;
+}
+
+void hardware_writeVRAM(const void* src, uint32_t size)
+{
+    memcpy(vram_ptr, src, vram_size >= size ? size : vram_size);
 }

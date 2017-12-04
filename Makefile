@@ -7,7 +7,6 @@ FLAGS = \
 	-Isrc/common \
 	-Isrc/grid \
 	-Isrc/whitewhale \
-	-Isrc/teletype \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 

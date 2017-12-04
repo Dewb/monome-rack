@@ -1,4 +1,5 @@
 #include "SerialOsc.h"
+#include "firmwaremanager.hpp"
 #include "rack.hpp"
 
 #pragma once
@@ -47,6 +48,8 @@ struct SerialOscGridConnection : GridConnection
 
 struct MonomeModuleBase : Module, SerialOsc::Listener
 {
+    FirmwareManager firmware;
+
     MonomeModuleBase(int numParams, int numInputs, int numOutputs, int numLights);
 
     // SerialOsc::Listener methods

@@ -1,6 +1,8 @@
 #include <cstdint>
 #include <string>
 
+#pragma once
+
 using namespace std;
 
 struct FirmwareManager
@@ -24,6 +26,11 @@ struct FirmwareManager
 
     void setClockPeriod(float seconds);
     void advanceClock(float seconds);
+
+    void readNVRAM(void** ptr, uint32_t* size);
+    void writeNVRAM(const void* ptr, uint32_t size);
+    void readVRAM(void** ptr, uint32_t* size);
+    void writeVRAM(const void* ptr, uint32_t size);
 
     struct FirmwareManagerImpl* impl;
 };
