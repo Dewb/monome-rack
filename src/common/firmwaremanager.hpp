@@ -3,8 +3,6 @@
 
 using namespace std;
 
-#include "conf_board.h"
-
 struct FirmwareManager
 {
     FirmwareManager();

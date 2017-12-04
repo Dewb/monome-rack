@@ -26,25 +26,25 @@ volatile uint8_t clock_external;
 
 void gpio_set_gpio_pin(u32 pin)
 {
-    vgpio_set(pin, 1);
+    hardware_setGPIO(pin, 1);
 }
 
 void gpio_clr_gpio_pin(u32 pin)
 {
-    vgpio_set(pin, 0);
+    hardware_setGPIO(pin, 0);
 }
 
 int gpio_get_pin_value(u32 pin)
 {
-    return vgpio_get(pin);
+    return hardware_getGPIO(pin);
 }
 
 void adc_convert(u16* adc)
 {
-    adc[0] = vadc_get(0);
-    adc[1] = vadc_get(1);
-    adc[2] = vadc_get(2);
-    adc[3] = vadc_get(3);
+    adc[0] = hardware_getADC(0);
+    adc[1] = hardware_getADC(1);
+    adc[2] = hardware_getADC(2);
+    adc[3] = hardware_getADC(3);
 }
 
 void spi_write(u32 chip, u32 byte)
@@ -72,7 +72,7 @@ void spi_write(u32 chip, u32 byte)
         case WRITING_CVA_LOW:
         {
             spi_word |= byte;
-            vdac_set(0, spi_word);
+            hardware_setDAC(0, spi_word);
             spi_dac_state = WAITING;
             break;
         }
@@ -85,7 +85,7 @@ void spi_write(u32 chip, u32 byte)
         case WRITING_CVB_LOW:
         {
             spi_word |= byte;
-            vdac_set(1, spi_word);
+            hardware_setDAC(0, spi_word);
             spi_dac_state = WAITING;
             break;
         }
@@ -137,7 +137,7 @@ void register_interrupts() {}
 void ftdi_read(void) {}
 void ftdi_write(u8* data, u32 bytes)
 {
-    vserial_write(data, bytes);
+    hardware_writeSerial_internal(0, data, bytes);
 }
 
 void ftdi_change(uhc_device_t* dev, u8 plug) {}

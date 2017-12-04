@@ -4,8 +4,20 @@
 #include "monomewidgets.hpp"
 
 #include "base64.h"
-#include "types.h"
 #include <string.h>
+
+#define B00 32
+#define B01 33
+#define B02 34
+#define B03 35
+#define B04 36
+#define B05 37
+#define B06 38
+#define B07 39
+#define B08 40
+#define B09 41
+#define B10 42
+#define NMI 13
 
 // memory state to save
 typedef enum {
@@ -30,35 +42,35 @@ typedef enum {
 
 typedef struct
 {
-    u8 loop_start, loop_end, loop_len, loop_dir;
-    u16 step_choice;
-    u8 cv_mode[2];
-    u8 tr_mode;
+    uint8_t loop_start, loop_end, loop_len, loop_dir;
+    uint16_t step_choice;
+    uint8_t cv_mode[2];
+    uint8_t tr_mode;
     step_modes step_mode;
     ping_direction ping_dir;
-    u8 steps[16];
-    u8 step_probs[16];
-    u16 cv_values[16];
-    u16 cv_steps[2][16];
-    u16 cv_curves[2][16];
-    u8 cv_probs[2][16];
+    uint8_t steps[16];
+    uint8_t step_probs[16];
+    uint16_t cv_values[16];
+    uint16_t cv_steps[2][16];
+    uint16_t cv_curves[2][16];
+    uint8_t cv_probs[2][16];
 } whale_pattern;
 
 typedef struct
 {
     whale_pattern wp[16];
-    u16 series_list[64];
-    u8 series_start, series_end;
-    u8 tr_mute[4];
-    u8 cv_mute[2];
+    uint16_t series_list[64];
+    uint8_t series_start, series_end;
+    uint8_t tr_mute[4];
+    uint8_t cv_mute[2];
 } whale_set;
 
 typedef struct
 {
-    u8 fresh;
+    uint8_t fresh;
     edit_modes edit_mode;
-    u8 preset_select;
-    u8 glyph[8][8];
+    uint8_t preset_select;
+    uint8_t glyph[8][8];
     whale_set w[8];
 } nvram_data_t;
 
@@ -107,7 +119,7 @@ struct WhiteWhale : MonomeModuleBase
     WhiteWhale()
         : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
     {
-        firmware.load("firmware/whitewhale");
+        firmware.load("./plugins/monome-rack/build/firmware/whitewhale");
         firmware.init();
     }
 

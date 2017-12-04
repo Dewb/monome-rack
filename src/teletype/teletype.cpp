@@ -1,17 +1,26 @@
 #include "teletype.hpp"
+#include "firmwaremanager.hpp"
 #include "grid.hpp"
 #include "monomewidgets.hpp"
 
-#include "mock_hardware.h"
-#include "types.h"
 #include <string.h>
 
-// hardware interface points
-extern "C" void initialize_module(void);
-extern "C" void check_events(void);
+#define B00 32
+#define B01 33
+#define B02 34
+#define B03 35
+#define B04 36
+#define B05 37
+#define B06 38
+#define B07 39
+#define B08 40
+#define B09 41
+#define B10 42
+#define NMI 13
 
 struct Teletype : MonomeModuleBase
 {
+    FirmwareManager firmware;
 
     enum ParamIds
     {
@@ -84,48 +93,46 @@ void Teletype::step()
 {
     MonomeModuleBase::step();
 
-    vserial_reset();
-
     bool frontButton = params[BUTTON_PARAM].value == 0;
-    if (frontButton != vgpio_get(NMI))
+    if (frontButton != firmware.getGPIO(NMI))
     {
-        vgpio_set(NMI, frontButton);
-        simulate_front_button_interrupt();
+        firmware.setGPIO(NMI, frontButton);
+        firmware.triggerInterrupt(2);
     }
 
     // Convert knob float parameters to 12-bit ADC values
-    vadc_set(0, params[PARAM_PARAM].value * 0xFFF);
+    firmware.setADC(0, params[PARAM_PARAM].value * 0xFFF);
 
     // Advance software timers
-    simulate_timer_interrupt(engineGetSampleTime());
+    firmware.advanceClock(engineGetSampleTime());
 
     // Pump event loop
     //check_events();
 
     // Update lights from GPIO
-    lights[TRIGA_LIGHT].setBrightnessSmooth(vgpio_get(B00));
-    lights[TRIGB_LIGHT].setBrightnessSmooth(vgpio_get(B01));
-    lights[TRIGC_LIGHT].setBrightnessSmooth(vgpio_get(B02));
-    lights[TRIGD_LIGHT].setBrightnessSmooth(vgpio_get(B03));
-    lights[CV1_LIGHT].value = vdac_get(0) / 65536.0;
-    lights[CV2_LIGHT].value = vdac_get(1) / 65536.0;
-    lights[CV3_LIGHT].value = vdac_get(0) / 65536.0;
-    lights[CV4_LIGHT].value = vdac_get(1) / 65536.0;
+    lights[TRIGA_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
+    lights[TRIGB_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
+    lights[TRIGC_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
+    lights[TRIGD_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
+    lights[CV1_LIGHT].value = firmware.getDAC(0) / 65536.0;
+    lights[CV2_LIGHT].value = firmware.getDAC(1) / 65536.0;
+    lights[CV3_LIGHT].value = firmware.getDAC(0) / 65536.0;
+    lights[CV4_LIGHT].value = firmware.getDAC(1) / 65536.0;
 
     // Update output jacks from GPIO & DAC
-    outputs[TRIGA_OUTPUT].value = vgpio_get(B00) * 8.0;
-    outputs[TRIGB_OUTPUT].value = vgpio_get(B01) * 8.0;
-    outputs[TRIGC_OUTPUT].value = vgpio_get(B02) * 8.0;
-    outputs[TRIGD_OUTPUT].value = vgpio_get(B03) * 8.0;
-    outputs[CV1_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
-    outputs[CV2_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
-    outputs[CV3_OUTPUT].value = 10.0 * vdac_get(0) / 65536.0;
-    outputs[CV4_OUTPUT].value = 10.0 * vdac_get(1) / 65536.0;
+    outputs[TRIGA_OUTPUT].value = firmware.getGPIO(B00) * 8.0;
+    outputs[TRIGB_OUTPUT].value = firmware.getGPIO(B01) * 8.0;
+    outputs[TRIGC_OUTPUT].value = firmware.getGPIO(B02) * 8.0;
+    outputs[TRIGD_OUTPUT].value = firmware.getGPIO(B03) * 8.0;
+    outputs[CV1_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
+    outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
+    outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
+    outputs[CV4_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
 
     // Update LEDs on connected grid
     if (gridConnection)
     {
-        uint8_t* msg = vserial_read();
+        uint8_t* msg = firmware.readSerial(0);
         while (msg)
         {
             if (msg[0] == 0x1A)
@@ -146,7 +153,7 @@ void Teletype::step()
                     gridConnection->updateQuadrant(x, y, leds);
                 }
             }
-            msg = vserial_read();
+            msg = firmware.readSerial(0);
         }
     }
 }
@@ -187,7 +194,7 @@ TeletypeWidget::TeletypeWidget()
 
     addChild(createScrew<TeletypeScreen>(Vec(31, 202)));
 
-    addParam(createParam<RoundSmallBlackKnob>(Vec(220   , 56), module, Teletype::PARAM_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<RoundSmallBlackKnob>(Vec(220, 56), module, Teletype::PARAM_PARAM, 0.0, 1.0, 0.5));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(118, 112), module, Teletype::TRIGA_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(158, 112), module, Teletype::TRIGB_LIGHT));

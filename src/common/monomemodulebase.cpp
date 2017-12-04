@@ -1,6 +1,5 @@
 #include "monomemodulebase.hpp"
 #include "grid.hpp"
-#include "mock_hardware.h"
 
 GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const d)
     : module(controlledModule)
@@ -92,7 +91,7 @@ void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
     gridConnection->connect();
     unresolvedConnectionId = "";
 
-    simulate_monome_connect();
+    //simulate_monome_connect();
 }
 
 void MonomeModuleBase::deviceFound(const MonomeDevice* const device)
@@ -114,7 +113,7 @@ void MonomeModuleBase::deviceRemoved(const std::string& id)
 
 void MonomeModuleBase::buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state)
 {
-    simulate_monome_key(x, y, state);
+    //simulate_monome_key(x, y, state);
 }
 
 void MonomeModuleBase::step()

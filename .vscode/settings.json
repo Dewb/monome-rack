@@ -4,5 +4,15 @@
     "editor.formatOnType": true,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "C_Cpp.clang_format_style": "{ BasedOnStyle: WebKit, BreakBeforeBraces: Allman, IndentCaseLabels: true }"
+    "C_Cpp.clang_format_style": "{ BasedOnStyle: WebKit, BreakBeforeBraces: Allman, IndentCaseLabels: true }",
+    "files.associations": {
+        "ios": "cpp",
+        "random": "cpp",
+        "*.ipp": "cpp",
+        "typeinfo": "cpp",
+        "stdexcept": "cpp",
+        "string": "cpp",
+        "chrono": "cpp",
+        "istream": "cpp"
+    }
 }
