@@ -44,6 +44,8 @@ protected:
     friend struct MonomeKey;
     bool isDraggingKeys;
     std::unordered_set<MonomeKey*> keysTouchedThisDrag;
+
+    Vec margins;
 };
 
 template <unsigned width, unsigned height>

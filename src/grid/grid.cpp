@@ -261,7 +261,9 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
         addChild(panel);
     }
 
-    Vec margins(20, 20);
+    margins.x = 20;
+    margins.y = 20;
+
     int spacing = 9;
 
     int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
@@ -351,11 +353,27 @@ void MonomeGridWidget::onMouseDown(EventMouseDown& e)
 {
     ModuleWidget::onMouseDown(e);
 
-    if (e.target == this && e.button == 0 && guiIsModPressed())
+    if (e.target == this && e.button == 0)
     {
-        clearHeldKeys();
-        e.consumed = true;
-        return;
+        if (guiIsModPressed())
+        {
+            clearHeldKeys();
+            e.consumed = true;
+            return;
+        }
+        else
+        {
+            // Allow drag only at edges of module
+            if (e.pos.x < margins.x || e.pos.x > box.size.x - margins.x || e.pos.y < margins.y || e.pos.y > box.size.y - margins.y)
+            {
+                return;
+            }
+            else
+            {
+                e.consumed = true;
+                e.target = NULL;
+            }
+        }
     }
 
     if (e.button == 1)
