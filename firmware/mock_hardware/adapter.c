@@ -85,7 +85,7 @@ void spi_write(u32 chip, u32 byte)
         case WRITING_CVB_LOW:
         {
             spi_word |= byte;
-            hardware_setDAC(0, spi_word);
+            hardware_setDAC(1, spi_word);
             spi_dac_state = WAITING;
             break;
         }
