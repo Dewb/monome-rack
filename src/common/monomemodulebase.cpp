@@ -1,6 +1,8 @@
 #include "monomemodulebase.hpp"
 #include "grid.hpp"
 
+#include "base64.h"
+
 GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const d)
     : module(controlledModule)
     , device(d)
@@ -170,6 +172,15 @@ json_t* MonomeModuleBase::toJson()
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
 
+    void* data;
+    uint32_t size;
+
+    firmware.readNVRAM(&data, &size);
+    json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+
+    firmware.readVRAM(&data, &size);
+    json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+
     return rootJ;
 }
 
@@ -181,6 +192,34 @@ void MonomeModuleBase::fromJson(json_t* rootJ)
     if (id)
     {
         unresolvedConnectionId = json_string_value(id);
+    }
+
+    void* data;
+    uint32_t size;
+    json_t* jd;
+
+    jd = json_object_get(rootJ, "nvram");
+    if (jd)
+    {
+        string decoded = base64_decode(json_string_value(jd));
+
+        firmware.readNVRAM(&data, &size);
+        if (size == decoded.length())
+        {
+            firmware.writeNVRAM((void*)decoded.c_str(), size);
+        }
+    }
+
+    jd = json_object_get(rootJ, "vram");
+    if (jd)
+    {
+        string decoded = base64_decode(json_string_value(jd));
+
+        firmware.readVRAM(&data, &size);
+        if (size == decoded.length())
+        {
+            firmware.writeVRAM((void*)decoded.c_str(), size);
+        }
     }
 }
 

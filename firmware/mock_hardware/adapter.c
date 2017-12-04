@@ -34,6 +34,16 @@ void gpio_clr_gpio_pin(u32 pin)
     hardware_setGPIO(pin, 0);
 }
 
+void gpio_set_pin_high(u32 pin)
+{
+    hardware_setGPIO(pin, 1);
+}
+
+void gpio_set_pin_low(u32 pin)
+{
+    hardware_setGPIO(pin, 0);
+}
+
 int gpio_get_pin_value(u32 pin)
 {
     return hardware_getGPIO(pin);
@@ -162,3 +172,41 @@ void print_dbg_ulong(unsigned long n) { fprintf(stderr, "%ld", n); }
 void print_dbg_char_hex(unsigned char n) { fprintf(stderr, "%x", n); }
 void print_dbg_short_hex(unsigned short n) { fprintf(stderr, "%d", n); }
 void print_dbg_hex(unsigned long n) { fprintf(stderr, "%lx", n); }
+
+int i2c_master_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+
+u64 get_ticks(void)
+{
+    return tcTicks;
+}
+
+void hid_change(uhc_device_t* dev, u8 plug) {}
+u8 hid_get_byte_flag(u8 byte)
+{
+    return 0;
+}
+void hid_parse_frame(u8* frame, u8 size) {}
+const u8* hid_get_frame_data(void)
+{
+    return 0;
+}
+
+const u32 hid_get_frame_dirty(void)
+{
+    return 0;
+}
+
+void hid_clear_frame_dirty(void) {}
+const u8 hid_get_frame_size(void) {}
+
+void init_oled(void) {}
+void screen_draw_region(u8 x, u8 y, u8 w, u8 h, u8* data) {}
+void screen_draw_region_offset(u8 x, u8 y, u8 w, u8 h, u32 len, u8* data, u32 off) {}
+void screen_clear(void) {}
+void screen_startup(void) {}
+
+u8 irqs_pause(void) { return 0; }
+void irqs_resume(u8 irq_flags) {}
+
+void tele_usb_disk() {}

@@ -7,6 +7,7 @@ FLAGS = \
 	-Isrc/common \
 	-Isrc/grid \
 	-Isrc/whitewhale \
+	-Isrc/teletype \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
@@ -34,6 +35,7 @@ FLAGS := $(filter-out -MMD,$(FLAGS))
 
 firmwares:
 	cd firmware && $(MAKE) -f whitewhale.mk
+	cd firmware && $(MAKE) -f teletype.mk
 
 all: firmwares
 
