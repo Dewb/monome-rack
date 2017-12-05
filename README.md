@@ -11,7 +11,6 @@ This plugin includes:
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), a flexible 16x8 grid controller
 * The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
    * Uses either a virtual grid, or a real grid connected via serialosc
-   * Currently limited to one instance per rack, see [issues](#issues) below
 
 ### Why is this?
 
