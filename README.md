@@ -5,11 +5,6 @@ monome-rack — VCVRack plugin for monome hardware
 
 This is a work-in-progress repo for a plugin package for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
 
-This plugin has been built and tested on the following platforms:
-* Mac OS X 10.12.6
-* Windows 10 (with Msys2)
-* Ubuntu 16.04
-
 <img width="75%" alt="white whale and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33520884-380980be-d791-11e7-9259-ce5879837f8b.png">
 
 This plugin includes:
@@ -33,14 +28,19 @@ The firmware for the monome modules are written in C for the AVR32 platform. (Fo
 
 ### How do I use this?
 
-1. Build the library using [the instructions below](#how-do-I-build-this) -- no binary release is provided yet.
+1. Build the library using [the instructions below](#how-do-I-build-this) -- no binary package is provided yet.
 2. Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
 3. Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
 4. Start reading the [white whale manual](https://monome.org/docs/modular/whitewhale/)!
 
 ### How do I build this?
 
-For now, this is a source-only plugin, no binary package is provided. The plugin has been built and tested on OS X 10.12.6, Windows 10 with Msys2, and Ubuntu 16.04.
+For now, this is a source-only plugin, no binary package is provided. 
+
+This plugin has been built and tested on the following platforms:
+* Mac OS X 10.12.6
+* Windows 10 (with Msys2)
+* Ubuntu 16.04
 
 1. Clone [VCVRack](https://github.com/VCVRack/Rack) 0.5.0 or later and follow its build instructions.
 2. Clone this repo into the `plugins` folder under VCVRack.
