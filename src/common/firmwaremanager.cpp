@@ -27,24 +27,26 @@ using namespace rack;
 #include <direct.h>
 #include <windows.h>
 
-#define GET_PROC_ADDRESS(libname, handle, name)                     \
+#define GET_PROC_ADDRESS(handle, name)                              \
     fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
     if (!fw_fn_##name)                                              \
     {                                                               \
-        warn("Failed to read symbol '" #name "' in %s", libname);   \
+        warn("Failed to find symbol '" #name "'");                  \
         return false;                                               \
     }
 
 #elif ARCH_LIN || ARCH_MAC
 
 #include <dlfcn.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-#define GET_PROC_ADDRESS(libname, handle, name)                   \
-    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name);        \
-    if (!fw_fn_##name)                                            \
-    {                                                             \
-        warn("Failed to read symbol '" #name "' in %s", libname); \
-        return false;                                             \
+#define GET_PROC_ADDRESS(handle, name)                     \
+    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
+    if (!fw_fn_##name)                                     \
+    {                                                      \
+        warn("Failed to find symbol '" #name "'");         \
+        return false;                                      \
     }
 
 #endif
@@ -101,13 +103,15 @@ struct FirmwareManagerImpl
         librarySource = firmwarePath + LIB_EXTENSION;
 
         bool success = false;
+
+#if ARCH_WIN
         char* tempdir = 0;
         (tempdir = getenv("TMPDIR")) || (tempdir = getenv("TMP")) || (tempdir = getenv("TEMP")) || (tempdir = getenv("TEMPDIR")) || (tempdir = getenv("LOCALAPPDATA"));
 
         if (tempdir != 0)
         {
-            char name[255];
-            if (tmpnam_s(name, 255) == 0)
+            char* name = tmpnam(NULL);
+            if (name != 0)
             {
                 tempLibraryFolder = tempdir;
                 if (tempLibraryFolder.back() != PATH_SEPARATOR && name[0] != PATH_SEPARATOR)
@@ -122,6 +126,21 @@ struct FirmwareManagerImpl
                 }
             }
         }
+
+#elif ARCH_LIN || ARCH_MAC
+
+        char* name = tmpnam(NULL);
+        if (name != 0)
+        {
+            tempLibraryFolder = name;
+
+            if (mkdir(tempLibraryFolder.c_str(), 0777) == 0)
+            {
+                success = true;
+            }
+        }
+
+#endif
 
         if (!success)
         {
@@ -146,34 +165,34 @@ struct FirmwareManagerImpl
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", tempLibraryFile, error);
+            warn("Failed to load library %s: %d", tempLibraryFile.c_str(), error);
             return false;
         }
 
 #elif ARCH_LIN || ARCH_MAC
 
-        handle = dlopen(tempLibraryFile, RTLD_NOW | RTLD_LOCAL);
+        handle = dlopen(tempLibraryFile.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", tempLibraryFile, dlerror());
+            warn("Failed to load library %s: %s", tempLibraryFile.c_str(), dlerror());
             return false;
         }
 
 #endif
 
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_init);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_step);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_getGPIO);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_setGPIO);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_getDAC);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_setADC);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readSerial);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeSerial);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_triggerInterrupt);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readNVRAM);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeNVRAM);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readVRAM);
-        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeVRAM);
+        GET_PROC_ADDRESS(handle, hardware_init);
+        GET_PROC_ADDRESS(handle, hardware_step);
+        GET_PROC_ADDRESS(handle, hardware_getGPIO);
+        GET_PROC_ADDRESS(handle, hardware_setGPIO);
+        GET_PROC_ADDRESS(handle, hardware_getDAC);
+        GET_PROC_ADDRESS(handle, hardware_setADC);
+        GET_PROC_ADDRESS(handle, hardware_readSerial);
+        GET_PROC_ADDRESS(handle, hardware_writeSerial);
+        GET_PROC_ADDRESS(handle, hardware_triggerInterrupt);
+        GET_PROC_ADDRESS(handle, hardware_readNVRAM);
+        GET_PROC_ADDRESS(handle, hardware_writeNVRAM);
+        GET_PROC_ADDRESS(handle, hardware_readVRAM);
+        GET_PROC_ADDRESS(handle, hardware_writeVRAM);
 
         return true;
     }
