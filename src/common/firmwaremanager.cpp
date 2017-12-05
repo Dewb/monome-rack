@@ -4,27 +4,21 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
-#include <unistd.h>
+#include <stdlib.h>
 
-void warn(const char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    fprintf(stderr, "[warning] ");
-    vfprintf(stderr, format, args);
-    fprintf(stderr, "\n");
-    fflush(stderr);
-    va_end(args);
-}
+using namespace rack;
 
 #if ARCH_LIN
 #define LIB_EXTENSION ".so"
+#define PATH_SEPARATOR '/'
 #define MODULE_HANDLE_TYPE void*
 #elif ARCH_WIN
 #define LIB_EXTENSION ".dll"
+#define PATH_SEPARATOR '\\'
 #define MODULE_HANDLE_TYPE HINSTANCE
 #elif ARCH_MAC
 #define LIB_EXTENSION ".dylib"
+#define PATH_SEPARATOR '/'
 #define MODULE_HANDLE_TYPE void*
 #endif
 
@@ -78,15 +72,15 @@ struct FirmwareManagerImpl
     float clockPeriod;
     float clockPhase;
 
-    char* tempLibraryPath;
+    string tempLibraryFolder;
+    string tempLibraryFile;
+
     MODULE_HANDLE_TYPE handle;
 
     FirmwareManagerImpl()
     {
         clockPhase = 0.0;
         clockPeriod = 0.001;
-        tempLibraryPath = (char*)malloc(128);
-        strncpy(tempLibraryPath, "module-firmwareXXXXXX", 128);
     }
 
     ~FirmwareManagerImpl()
@@ -97,8 +91,8 @@ struct FirmwareManagerImpl
         dlclose(handle);
 #endif
 
-        unlink(tempLibraryPath);
-        free(tempLibraryPath);
+        unlink(tempLibraryFile.c_str());
+        rmdir(tempLibraryFolder.c_str());
     }
 
     bool load(string firmwarePath)
@@ -106,51 +100,80 @@ struct FirmwareManagerImpl
         string librarySource;
         librarySource = firmwarePath + LIB_EXTENSION;
 
-        mkstemp(tempLibraryPath);
-        warn("Creating new temporary firmware instance at %s", tempLibraryPath);
+        bool success = false;
+        char* tempdir = 0;
+        (tempdir = getenv("TMPDIR")) || (tempdir = getenv("TMP")) || (tempdir = getenv("TEMP")) || (tempdir = getenv("TEMPDIR")) || (tempdir = getenv("LOCALAPPDATA"));
 
+        if (tempdir != 0)
+        {
+            char name[255];
+            if (tmpnam_s(name, 255) == 0)
+            {
+                tempLibraryFolder = tempdir;
+                if (tempLibraryFolder.back() != PATH_SEPARATOR && name[0] != PATH_SEPARATOR)
+                {
+                    tempLibraryFolder += PATH_SEPARATOR;
+                }
+                tempLibraryFolder += string(name);
+
+                if (mkdir(tempLibraryFolder.c_str()) == 0)
+                {
+                    success = true;
+                }
+            }
+        }
+
+        if (!success)
+        {
+            warn("Could not create temporary folder for firmware");
+            return false;
+        }
+
+        tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
+
+        info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
         {
             std::ifstream src(librarySource, std::ios::binary);
-            std::ofstream dst(tempLibraryPath, std::ios::binary);
+            std::ofstream dst(tempLibraryFile, std::ios::binary);
             dst << src.rdbuf();
         }
 
 #if ARCH_WIN
 
         SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        handle = LoadLibrary(tempLibraryPath);
+        handle = LoadLibrary(tempLibraryFile.c_str());
         SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", tempLibraryPath, error);
+            warn("Failed to load library %s: %d", tempLibraryFile, error);
             return false;
         }
 
 #elif ARCH_LIN || ARCH_MAC
 
-        handle = dlopen(tempLibraryPath, RTLD_NOW | RTLD_LOCAL);
+        handle = dlopen(tempLibraryFile, RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", tempLibraryPath, dlerror());
+            warn("Failed to load library %s: %s", tempLibraryFile, dlerror());
             return false;
         }
 
 #endif
 
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_init);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_step);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_getGPIO);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_setGPIO);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_getDAC);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_setADC);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readSerial);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeSerial);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_triggerInterrupt);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readNVRAM);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeNVRAM);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_readVRAM);
-        GET_PROC_ADDRESS(tempLibraryPath, handle, hardware_writeVRAM);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_init);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_step);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_getGPIO);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_setGPIO);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_getDAC);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_setADC);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readSerial);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeSerial);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_triggerInterrupt);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readNVRAM);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeNVRAM);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_readVRAM);
+        GET_PROC_ADDRESS(tempLibraryFile, handle, hardware_writeVRAM);
 
         return true;
     }
