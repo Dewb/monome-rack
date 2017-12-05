@@ -4,6 +4,7 @@ FLAGS = \
 	-DNULL=0 \
 	-o0 \
 	-D__AVR32_UC3B0256__ \
+	-fPIC \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
 	-Imock_hardware/stubs \

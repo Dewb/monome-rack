@@ -1,2 +1,4 @@
 build
 plugin.dylib
+plugin.dll
+plugin.so

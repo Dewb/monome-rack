@@ -250,7 +250,7 @@ void hardware_writeSerial_internal(int bus, uint8_t* buf, uint32_t byteCount)
     }
     else
     {
-        fprintf(stderr, "Cannot write to outgoing serial line, buffer full.");
+        //fprintf(stderr, "Cannot write to outgoing serial line, buffer full.\n");
     }
 }
 
@@ -273,7 +273,7 @@ void hardware_writeSerial(int bus, uint8_t* buf, uint32_t byteCount)
     }
     else
     {
-        fprintf(stderr, "Cannot write to incoming serial line, buffer full.");
+        //fprintf(stderr, "Cannot write to incoming serial line, buffer full.\n");
     }
 }
 
