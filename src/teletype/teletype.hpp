@@ -6,4 +6,6 @@ using namespace rack;
 struct TeletypeWidget : MonomeModuleBaseWidget
 {
     TeletypeWidget();
+
+    void onKey(EventKey& e) override;
 };

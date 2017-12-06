@@ -84,6 +84,11 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
     event_post(&ev);
 }
 
+void simulate_hid_event(uint8_t* msg)
+{
+    
+}
+
 void hardware_init()
 {
     hardware_initSerial();
@@ -99,6 +104,10 @@ void hardware_step()
         if (msg[0] == 0xF0)
         {
             simulate_monome_key(msg[1], msg[2], msg[3]);
+        }
+        if (msg[0] == 0xF5)
+        {
+            simulate_hid_event(msg);
         }
         msg = hardware_readSerial_internal(0);
     }

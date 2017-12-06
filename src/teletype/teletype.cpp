@@ -1,4 +1,5 @@
 #include "teletype.hpp"
+#include "screen.hpp"
 #include "firmwaremanager.hpp"
 #include "grid.hpp"
 #include "monomewidgets.hpp"
@@ -163,53 +164,6 @@ void Teletype::step()
     }
 }
 
-struct TeletypeScreen : OpaqueWidget
-{
-    uint8_t* buffer;
-    int pixel_x;
-    int pixel_y;
-    TeletypeScreen(uint8_t* buffer, int x, int y)
-        : buffer(buffer)
-        , pixel_x(x)
-        , pixel_y(y)
-    {
-    }
-
-    void drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
-    {
-        nvgBeginPath(vg);
-        nvgRect(vg, x, y, width * 0.96, height * 0.96);
-        nvgFillColor(vg, nvgRGB(data ? data * 13 + 48 : 0, data ? data * 13 + 48 : 0, 0));
-        nvgFill(vg);
-    }
-
-    void draw(NVGcontext* vg) override
-    {
-        int width = 208;
-        int height = 108;
-        int margin = 4;
-
-        float pixel_width = (width - 2 * margin) / (pixel_x * 1.0);
-        float pixel_height = (height - 2 * margin) / (pixel_y * 1.0);
-
-        nvgBeginPath(vg);
-        nvgRect(vg, 0, 0, width, height);
-        nvgFillColor(vg, nvgRGB(0, 0, 0));
-        nvgFill(vg);
-
-        uint8_t* ptr = buffer;
-        for (int j = 0; j < pixel_y; j++)
-        {
-            for (int i = 0; i < pixel_x; i++)
-            {
-                float x = margin + i * pixel_width;
-                float y = margin + j * pixel_height;
-
-                drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
-            }
-        }
-    }
-};
 
 TeletypeWidget::TeletypeWidget()
 {
@@ -240,6 +194,7 @@ TeletypeWidget::TeletypeWidget()
 
     auto screen = new TeletypeScreen(ptr, width, height);
     screen->box.pos = Vec(31, 202);
+    screen->box.size = Vec(208, 108);
     addChild(screen);
 
     addParam(createParam<RoundSmallBlackKnob>(Vec(220, 56), module, Teletype::PARAM_PARAM, 0.0, 1.0, 0.5));
@@ -270,4 +225,10 @@ TeletypeWidget::TeletypeWidget()
     addOutput(createOutput<PJ301MPort>(Vec(150, 156), module, Teletype::CV2_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(190, 156), module, Teletype::CV3_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(230, 156), module, Teletype::CV4_OUTPUT));
+}
+
+void TeletypeWidget::onKey(EventKey& e)
+{
+    uint8_t msg[4] = { 0xF5, 0, 0, 0 };
+    static_cast<Teletype*>(module)->firmware.writeSerial(0, msg, sizeof(uint8_t) * 4);
 }

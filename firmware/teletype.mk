@@ -31,6 +31,7 @@ SOURCES = \
 	teletype/libavr32/src/font.c \
 	teletype/libavr32/src/kbd.c \
 	teletype/libavr32/src/region.c \
+	teletype/libavr32/src/usb/hid/hid.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
 	mock_hardware/adapter.c \
 	mock_hardware/mock_hardware.c

@@ -24,6 +24,7 @@ volatile uint8_t tcOverflow = 0;
 typedef void (*clock_pulse_t)(uint8_t phase);
 volatile uint8_t clock_external;
 
+
 void gpio_set_gpio_pin(u32 pin)
 {
     hardware_setGPIO(pin, true);
@@ -181,24 +182,6 @@ u64 get_ticks(void)
     return tcTicks;
 }
 
-void hid_change(uhc_device_t* dev, u8 plug) {}
-u8 hid_get_byte_flag(u8 byte)
-{
-    return 0;
-}
-void hid_parse_frame(u8* frame, u8 size) {}
-const u8* hid_get_frame_data(void)
-{
-    return 0;
-}
-
-const u32 hid_get_frame_dirty(void)
-{
-    return 0;
-}
-
-void hid_clear_frame_dirty(void) {}
-const u8 hid_get_frame_size(void) {}
 
 void init_oled(void) {}
 void screen_startup(void) {}
