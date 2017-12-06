@@ -15,8 +15,8 @@ struct FirmwareManager
     void init();
     void step();
 
-    uint8_t getGPIO(uint32_t pin) const;
-    void setGPIO(uint32_t pin, uint8_t value);
+    bool getGPIO(uint32_t pin) const;
+    void setGPIO(uint32_t pin, bool value);
 
     uint16_t getDAC(int channel);
     void setADC(int channel, uint16_t value);
