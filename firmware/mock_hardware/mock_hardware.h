@@ -29,3 +29,5 @@ void hardware_writeFlash(const void* ptr, uint32_t size);
 
 void hardware_readVolatile(void** ptr, uint32_t* size);
 void hardware_writeVolatile(const void* ptr, uint32_t size);
+
+void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);

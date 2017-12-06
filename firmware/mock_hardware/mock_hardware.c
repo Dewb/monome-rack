@@ -23,10 +23,14 @@ int vserial_in_write_index = 0;
 float phase = 0.0;
 float clockRate = 0.001; // 1 ms
 
-void* nvram_ptr;
-void* vram_ptr;
-uint32_t nvram_size;
-uint32_t vram_size;
+void* nvram_ptr = NULL;
+void* vram_ptr = NULL;
+uint32_t nvram_size = 0;
+uint32_t vram_size = 0;
+
+uint8_t* screenBuffer = NULL;
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
 
 // hardware interface points
 extern void initialize_module(void);
@@ -309,4 +313,41 @@ void hardware_readVRAM(void** ptr, uint32_t* size)
 void hardware_writeVRAM(const void* src, uint32_t size)
 {
     memcpy(vram_ptr, src, vram_size >= size ? size : vram_size);
+}
+
+void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
+{
+    if (!screenBuffer)
+    {
+        screenBuffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+        memset(screenBuffer, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+
+        // initialize a distinctive pattern for debugging purposes
+        for (int j = 0; j < SCREEN_HEIGHT; j++)
+        {
+            for (int i = 0; i < SCREEN_WIDTH; i++)
+            {
+                if ((j / 16) % 2)
+                {
+                    screenBuffer[i + SCREEN_WIDTH * j] = i % 16;
+                }
+                else
+                {
+                    screenBuffer[i + SCREEN_WIDTH * j] = 15 - (i % 16);
+                }
+            }
+        }
+    }
+    if (ptr)
+    {
+        *ptr = screenBuffer;
+    }
+    if (width)
+    {
+        *width = 128;
+    }
+    if (height)
+    {
+        *height = 64;
+    }
 }
