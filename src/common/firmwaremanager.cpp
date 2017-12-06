@@ -59,8 +59,8 @@ struct FirmwareManagerImpl
 {
     DECLARE_PROC(void, hardware_init, ())
     DECLARE_PROC(void, hardware_step, ())
-    DECLARE_PROC(uint8_t, hardware_getGPIO, (uint32_t pin))
-    DECLARE_PROC(void, hardware_setGPIO, (uint32_t pin, uint8_t value))
+    DECLARE_PROC(bool, hardware_getGPIO, (uint32_t pin))
+    DECLARE_PROC(void, hardware_setGPIO, (uint32_t pin, bool value))
     DECLARE_PROC(uint16_t, hardware_getDAC, (int channel))
     DECLARE_PROC(void, hardware_setADC, (int channel, uint16_t value))
     DECLARE_PROC(uint8_t*, hardware_readSerial, (int bus))
@@ -234,7 +234,7 @@ void FirmwareManager::step()
     }
 }
 
-uint8_t FirmwareManager::getGPIO(uint32_t pin) const
+bool FirmwareManager::getGPIO(uint32_t pin) const
 {
     if (impl)
     {
@@ -242,11 +242,11 @@ uint8_t FirmwareManager::getGPIO(uint32_t pin) const
     }
     else
     {
-        return 0;
+        return false;
     }
 }
 
-void FirmwareManager::setGPIO(uint32_t pin, uint8_t value)
+void FirmwareManager::setGPIO(uint32_t pin, bool value)
 {
     if (impl)
     {

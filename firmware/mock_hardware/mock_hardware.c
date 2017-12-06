@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int gpioBlock[8];
+#define GPIO_NUM_PINS 43
+bool gpioBlock[GPIO_NUM_PINS];
+
 uint16_t adcBlock[4];
 uint16_t dacBlock[2];
 
@@ -53,6 +55,12 @@ void simulate_front_button_interrupt()
     event_t e;
     e.type = kEventFront;
     e.data = hardware_getGPIO(NMI);
+    event_post(&e);
+}
+
+void simulate_trigger_interrupt(int pin)
+{
+    event_t e = { .type = kEventTrigger, .data = pin };
     event_post(&e);
 }
 
@@ -115,76 +123,32 @@ void hardware_triggerInterrupt(int interrupt)
     }
 }
 
-int hardware_getGPIO(uint32_t pin)
+bool hardware_getGPIO(uint32_t pin)
 {
-    if (pin == B00)
+    if (pin >= 0 && pin < GPIO_NUM_PINS)
     {
-        return gpioBlock[0];
+        return gpioBlock[pin];
     }
-    if (pin == B01)
-    {
-        return gpioBlock[1];
-    }
-    if (pin == B02)
-    {
-        return gpioBlock[2];
-    }
-    if (pin == B03)
-    {
-        return gpioBlock[3];
-    }
-    if (pin == B08)
-    {
-        return gpioBlock[4];
-    }
-    if (pin == B09)
-    {
-        return gpioBlock[5];
-    }
-    if (pin == B10)
-    {
-        return gpioBlock[6];
-    }
-    if (pin == NMI)
-    {
-        return gpioBlock[7];
-    }
-    return 0;
+    return false;
 }
 
-void hardware_setGPIO(uint32_t pin, int value)
+void hardware_setGPIO(uint32_t pin, bool value)
 {
-    if (pin == B00)
+    if (pin >= 0 && pin < GPIO_NUM_PINS)
     {
-        gpioBlock[0] = !!value;
-    }
-    if (pin == B01)
-    {
-        gpioBlock[1] = !!value;
-    }
-    if (pin == B02)
-    {
-        gpioBlock[2] = !!value;
-    }
-    if (pin == B03)
-    {
-        gpioBlock[3] = !!value;
-    }
-    if (pin == B08)
-    {
-        gpioBlock[4] = !!value;
-    }
-    if (pin == B09)
-    {
-        gpioBlock[5] = !!value;
-    }
-    if (pin == B10)
-    {
-        gpioBlock[6] = !!value;
-    }
-    if (pin == NMI)
-    {
-        gpioBlock[7] = !!value;
+        // Check for interrupt on pins A00-A07
+        bool changed = false;
+        if (pin < 8 && gpioBlock[pin] != value)
+        {
+            changed = true;
+        }
+
+        gpioBlock[pin] = value;
+
+        if (changed)
+        {
+            simulate_trigger_interrupt(pin);
+        }
     }
 }
 

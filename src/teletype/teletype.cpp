@@ -5,6 +5,14 @@
 
 #include <string.h>
 
+#define A00 0
+#define A01 1
+#define A02 2
+#define A03 3
+#define A04 4
+#define A05 5
+#define A06 6
+#define A07 7
 #define B00 32
 #define B01 33
 #define B02 34
@@ -16,6 +24,7 @@
 #define B08 40
 #define B09 41
 #define B10 42
+#define B11 43
 #define NMI 13
 
 struct Teletype : MonomeModuleBase
@@ -103,6 +112,15 @@ void Teletype::step()
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(0, params[PARAM_PARAM].value * 0xFFF);
 
+    firmware.setGPIO(A00, inputs[TRIG1_INPUT].value);
+    firmware.setGPIO(A01, inputs[TRIG2_INPUT].value);
+    firmware.setGPIO(A02, inputs[TRIG3_INPUT].value);
+    firmware.setGPIO(A03, inputs[TRIG4_INPUT].value);
+    firmware.setGPIO(A04, inputs[TRIG5_INPUT].value);
+    firmware.setGPIO(A05, inputs[TRIG6_INPUT].value);
+    firmware.setGPIO(A06, inputs[TRIG7_INPUT].value);
+    firmware.setGPIO(A07, inputs[TRIG8_INPUT].value);
+
     // Advance software timers
     firmware.advanceClock(engineGetSampleTime());
 
@@ -110,20 +128,20 @@ void Teletype::step()
     //check_events();
 
     // Update lights from GPIO
-    lights[TRIGA_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
-    lights[TRIGB_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
-    lights[TRIGC_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
-    lights[TRIGD_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
+    lights[TRIGA_LIGHT].setBrightnessSmooth(firmware.getGPIO(B08));
+    lights[TRIGB_LIGHT].setBrightnessSmooth(firmware.getGPIO(B09));
+    lights[TRIGC_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
+    lights[TRIGD_LIGHT].setBrightnessSmooth(firmware.getGPIO(B11));
     lights[CV1_LIGHT].value = firmware.getDAC(0) / 65536.0;
     lights[CV2_LIGHT].value = firmware.getDAC(1) / 65536.0;
     lights[CV3_LIGHT].value = firmware.getDAC(0) / 65536.0;
     lights[CV4_LIGHT].value = firmware.getDAC(1) / 65536.0;
 
     // Update output jacks from GPIO & DAC
-    outputs[TRIGA_OUTPUT].value = firmware.getGPIO(B00) * 8.0;
-    outputs[TRIGB_OUTPUT].value = firmware.getGPIO(B01) * 8.0;
-    outputs[TRIGC_OUTPUT].value = firmware.getGPIO(B02) * 8.0;
-    outputs[TRIGD_OUTPUT].value = firmware.getGPIO(B03) * 8.0;
+    outputs[TRIGA_OUTPUT].value = firmware.getGPIO(B08) * 8.0;
+    outputs[TRIGB_OUTPUT].value = firmware.getGPIO(B09) * 8.0;
+    outputs[TRIGC_OUTPUT].value = firmware.getGPIO(B10) * 8.0;
+    outputs[TRIGD_OUTPUT].value = firmware.getGPIO(B11) * 8.0;
     outputs[CV1_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
     outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;

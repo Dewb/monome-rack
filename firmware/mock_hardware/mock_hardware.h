@@ -5,8 +5,8 @@ void hardware_step();
 
 void hardware_triggerInterrupt(int interrupt);
 
-int hardware_getGPIO(uint32_t pin);
-void hardware_setGPIO(uint32_t pin, int value);
+bool hardware_getGPIO(uint32_t pin);
+void hardware_setGPIO(uint32_t pin, bool value);
 
 uint16_t hardware_getADC(int channel);
 void hardware_setADC(int channel, uint16_t value);
