@@ -23,7 +23,7 @@ This plugin has been built and tested on the following platforms:
 
 Instructions:
 
-* Clone [VCVRack](https://github.com/VCVRack/Rack) 0.5.0 or later and follow its build instructions for your platform.
+* Clone [VCVRack](https://github.com/VCVRack/Rack) and follow its build instructions for your platform. Build the master branch, not 0.5.0.
 * Clone this repo into the `plugins` folder under VCVRack.
 * Change into the `monome-rack` folder and clone submodules with `git submodule update --init --recursive`
 * Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
