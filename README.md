@@ -3,31 +3,18 @@ monome-rack — VCVRack plugin for monome hardware
 
 ### What is this?
 
-This is a work-in-progress repo for a plugin package for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
+This is a work-in-progress plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
 
 <img width="75%" alt="white whale and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33520884-380980be-d791-11e7-9259-ce5879837f8b.png">
 
 This plugin includes:
-* A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), a flexible 16x8 grid controller
+* A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument
 * The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
    * Uses either a virtual grid, or a real grid connected via serialosc
 
-### Why is this?
-
-In order of importance, the initial goals of this project were/are:
-
-* Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
-* Allow existing hardware users to practice, experiment, and/or record while traveling light
-* Expose new users to the monome philosophy and ecosystem
-* "Because it was there"
-
-### How does this work?
-
-The firmware for the monome modules are written in C for the AVR32 platform. (For more details, [go here](https://github.com/monome/libavr32).) In this project, these firmware projects are built into separate C shared libraries together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module that you load, so statics and globals work as expected within each module instance.
-
 ### How do I use this?
 
-For now, this is a *source-only plugin*, no binary package is provided. *You must also build VCVRack from source before you can compile plugins* -- the downloadable version will not work.
+For now, this is a *source-only plugin*, no binary package is provided. *You must also build VCVRack from source before you can compile plugins* -- this will not work with the downloadable version of VCVRack.
 
 This plugin has been built and tested on the following platforms:
 * Mac OS X 10.12.6
@@ -50,6 +37,19 @@ Now that you've built the plugin, let's get to patching:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial](https://vimeo.com/105368808)
 * Read the [white whale manual](https://monome.org/docs/modular/whitewhale/) again.
+
+### Why is this?
+
+In order of importance, the initial goals of this project were/are:
+
+* Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
+* Allow existing hardware users to practice, experiment, and/or record while traveling light
+* Expose new users to the monome philosophy and ecosystem
+* "Because it was there"
+
+### How does this work?
+
+The firmware for the monome modules are written in C for the AVR32 platform. (For more details, [go here](https://github.com/monome/libavr32).) In this project, these firmware projects are built into separate C shared libraries together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module that you load, so statics and globals work as expected within each module instance.
 
 ### Who did this?
 
