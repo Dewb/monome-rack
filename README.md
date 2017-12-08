@@ -53,7 +53,7 @@ The firmware for the monome modules are written in C for the AVR32 platform. (Fo
 
 ### Who did this?
 
-Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co) The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
+Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
 
 [Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale.
 
