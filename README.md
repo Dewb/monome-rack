@@ -44,7 +44,8 @@ In order of importance, the initial goals of this project were/are:
 
 * Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
 * Allow existing hardware users to practice, experiment, and/or record while traveling light
-* Expose new users to the monome philosophy and ecosystem
+* Expose new users to the monome hardware/software ecosystem
+* Accelerate development of completely new grid applications
 * "Because it was there"
 
 ### How does this work?
