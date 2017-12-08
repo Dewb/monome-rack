@@ -27,30 +27,35 @@ The firmware for the monome modules are written in C for the AVR32 platform. (Fo
 
 ### How do I use this?
 
-1. Build the library using [the instructions below](#how-do-I-build-this) -- no binary package is provided yet.
-2. Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
-3. Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
-4. Start reading the [white whale manual](https://monome.org/docs/modular/whitewhale/)!
-
-### How do I build this?
-
-For now, this is a source-only plugin, no binary package is provided. 
+For now, this is a *source-only plugin*, no binary package is provided. *You must also build VCVRack from source before you can compile plugins* -- the downloadable version will not work.
 
 This plugin has been built and tested on the following platforms:
 * Mac OS X 10.12.6
 * Windows 10 (with Msys2)
 * Ubuntu 16.04
 
-1. Clone [VCVRack](https://github.com/VCVRack/Rack) 0.5.0 or later and follow its build instructions for your platform.
-2. Clone this repo into the `plugins` folder under VCVRack.
-4. Change into the `monome-rack` folder and clone submodules with `git submodule update --init --recursive`
-5. Build with `make` or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
+Instructions:
+
+* Clone [VCVRack](https://github.com/VCVRack/Rack) 0.5.0 or later and follow its build instructions for your platform.
+* Clone this repo into the `plugins` folder under VCVRack.
+* Change into the `monome-rack` folder and clone submodules with `git submodule update --init --recursive`
+* Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
+
+Now that you've built the plugin, let's get to patching:
+
+* Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
+* Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
+* Read the [white whale manual](https://monome.org/docs/modular/whitewhale/).
+* Watch these videos:
+   * [white whale possibilities](https://vimeo.com/104881064)
+   * [white whale tutorial](https://vimeo.com/105368808)
+* Read the [white whale manual](https://monome.org/docs/modular/whitewhale/) again.
 
 ### Who did this?
 
-Original hardware and firmware code in linked submodules is by [monome](monome.org). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
+Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co) The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
 
-[@dewb](https://github.com/Dewb) wrote the virtual grid module, the initial mock hardware layer, and ported white whale. 
+[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale.
 
 Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues) or in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
 
