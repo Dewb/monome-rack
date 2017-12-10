@@ -164,10 +164,10 @@ void Meadowphysics::step()
     lights[TRIG2_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
     lights[TRIG3_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
     lights[TRIG4_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
-    lights[TRIG5_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
-    lights[TRIG6_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
-    lights[TRIG7_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
-    lights[TRIG8_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
+    lights[TRIG5_LIGHT].setBrightnessSmooth(firmware.getGPIO(B04));
+    lights[TRIG6_LIGHT].setBrightnessSmooth(firmware.getGPIO(B05));
+    lights[TRIG7_LIGHT].setBrightnessSmooth(firmware.getGPIO(B06));
+    lights[TRIG8_LIGHT].setBrightnessSmooth(firmware.getGPIO(B07));
 
     // Update output jacks from GPIO & DAC
     outputs[CLOCK_OUTPUT].value = firmware.getGPIO(B10) * 8.0;
@@ -175,10 +175,10 @@ void Meadowphysics::step()
     outputs[TRIG2_OUTPUT].value = firmware.getGPIO(B01) * 8.0;
     outputs[TRIG3_OUTPUT].value = firmware.getGPIO(B02) * 8.0;
     outputs[TRIG4_OUTPUT].value = firmware.getGPIO(B03) * 8.0;
-    outputs[TRIG1_OUTPUT].value = firmware.getGPIO(B04) * 8.0;
-    outputs[TRIG2_OUTPUT].value = firmware.getGPIO(B05) * 8.0;
-    outputs[TRIG3_OUTPUT].value = firmware.getGPIO(B06) * 8.0;
-    outputs[TRIG4_OUTPUT].value = firmware.getGPIO(B07) * 8.0;
+    outputs[TRIG5_OUTPUT].value = firmware.getGPIO(B04) * 8.0;
+    outputs[TRIG6_OUTPUT].value = firmware.getGPIO(B05) * 8.0;
+    outputs[TRIG7_OUTPUT].value = firmware.getGPIO(B06) * 8.0;
+    outputs[TRIG8_OUTPUT].value = firmware.getGPIO(B07) * 8.0;
 
     // Update LEDs on connected grid
     if (gridConnection)
