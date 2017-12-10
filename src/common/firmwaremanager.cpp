@@ -93,88 +93,100 @@ struct FirmwareManagerImpl
         dlclose(handle);
 #endif
 
-        unlink(tempLibraryFile.c_str());
-        rmdir(tempLibraryFolder.c_str());
+        if (!tempLibraryFile.empty()) {
+            unlink(tempLibraryFile.c_str());
+        }
+        if (!tempLibraryFolder.empty()) {
+            rmdir(tempLibraryFolder.c_str());
+        }
     }
 
     bool load(string firmwarePath)
     {
         string librarySource;
         librarySource = firmwarePath + LIB_EXTENSION;
-
-        bool success = false;
+        string libraryToLoad = librarySource;
+        
+        if (0)
+        {
+            bool success = false;
 
 #if ARCH_WIN
-        char* tempdir = 0;
-        (tempdir = getenv("TMPDIR")) || (tempdir = getenv("TMP")) || (tempdir = getenv("TEMP")) || (tempdir = getenv("TEMPDIR")) || (tempdir = getenv("LOCALAPPDATA"));
+            char* tempdir = 0;
+            (tempdir = getenv("TMPDIR")) || (tempdir = getenv("TMP")) || (tempdir = getenv("TEMP")) || (tempdir = getenv("TEMPDIR")) || (tempdir = getenv("LOCALAPPDATA"));
 
-        if (tempdir != 0)
-        {
+            if (tempdir != 0)
+            {
+                char* name = tmpnam(NULL);
+                if (name != 0)
+                {
+                    tempLibraryFolder = tempdir;
+                    if (tempLibraryFolder.back() != PATH_SEPARATOR && name[0] != PATH_SEPARATOR)
+                    {
+                        tempLibraryFolder += PATH_SEPARATOR;
+                    }
+                    tempLibraryFolder += string(name);
+
+                    if (mkdir(tempLibraryFolder.c_str()) == 0)
+                    {
+                        success = true;
+                    }
+                }
+            }
+
+#elif ARCH_LIN || ARCH_MAC
+
             char* name = tmpnam(NULL);
             if (name != 0)
             {
-                tempLibraryFolder = tempdir;
-                if (tempLibraryFolder.back() != PATH_SEPARATOR && name[0] != PATH_SEPARATOR)
-                {
-                    tempLibraryFolder += PATH_SEPARATOR;
-                }
-                tempLibraryFolder += string(name);
+                tempLibraryFolder = name;
 
-                if (mkdir(tempLibraryFolder.c_str()) == 0)
+                if (mkdir(tempLibraryFolder.c_str(), 0777) == 0)
                 {
                     success = true;
                 }
             }
-        }
-
-#elif ARCH_LIN || ARCH_MAC
-
-        char* name = tmpnam(NULL);
-        if (name != 0)
-        {
-            tempLibraryFolder = name;
-
-            if (mkdir(tempLibraryFolder.c_str(), 0777) == 0)
-            {
-                success = true;
-            }
-        }
 
 #endif
 
-        if (!success)
-        {
-            warn("Could not create temporary folder for firmware");
-            return false;
+            if (!success)
+            {
+                warn("Could not create temporary folder for firmware");
+                return false;
+            }
+
+            tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
+
+            info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
+            {
+                std::ifstream src(librarySource, std::ios::binary);
+                std::ofstream dst(tempLibraryFile, std::ios::binary);
+                dst << src.rdbuf();
+            }
+
+            libraryToLoad = tempLibraryFile;
         }
 
-        tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
-
-        info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
-        {
-            std::ifstream src(librarySource, std::ios::binary);
-            std::ofstream dst(tempLibraryFile, std::ios::binary);
-            dst << src.rdbuf();
-        }
+        info("Loading module firmware from %s", libraryToLoad.c_str());
 
 #if ARCH_WIN
 
         SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        handle = LoadLibrary(tempLibraryFile.c_str());
+        handle = LoadLibrary(libraryToLoad.c_str());
         SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", tempLibraryFile.c_str(), error);
+            warn("Failed to load library %s: %d", libraryToLoad.c_str(), error);
             return false;
         }
 
 #elif ARCH_LIN || ARCH_MAC
 
-        handle = dlopen(tempLibraryFile.c_str(), RTLD_NOW | RTLD_LOCAL);
+        handle = dlopen(libraryToLoad.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", tempLibraryFile.c_str(), dlerror());
+            warn("Failed to load library %s: %s", libraryToLoad.c_str(), dlerror());
             return false;
         }
 
