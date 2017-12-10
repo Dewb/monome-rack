@@ -107,23 +107,26 @@ void spi_unselectChip(u32 arg1, u32 arg2){};
 
 void* flashc_memset64(void* dst, uint64_t src, size_t nbytes, bool erase)
 {
-    memcpy(dst, &src, sizeof(uint64_t));
+    (*(uint64_t*)dst) = src;
     return dst;
 }
 
 void* flashc_memset32(void* dst, uint32_t src, size_t nbytes, bool erase)
 {
-    return flashc_memset64(dst, src | (uint64_t)src << 32, nbytes, erase);
+    (*(uint32_t*)dst) = src;
+    return dst;
 }
 
 void* flashc_memset16(void* dst, uint16_t src, size_t nbytes, bool erase)
 {
-    return flashc_memset32(dst, src | (uint32_t)src << 16, nbytes, erase);
+    (*(uint16_t*)dst) = src;
+    return dst;
 }
 
 void* flashc_memset8(void* dst, uint8_t src, size_t nbytes, bool erase)
 {
-    return flashc_memset16(dst, src | (uint16_t)src << 8, nbytes, erase);
+    (*(uint8_t*)dst) = src;
+    return dst;
 }
 
 void* flashc_memcpy(void* dst, const void* src, size_t nbytes, bool erase)

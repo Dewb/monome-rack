@@ -823,27 +823,6 @@ static inline int_fast8_t ilog2(uint32_t x)
  */
 #define Max(a, b)           (((a) > (b)) ?  (a) : (b))
 
-/*! \brief Takes the absolute value of \a a.
- *
- * \param a Input value.
- *
- * \return Absolute value of \a a.
- *
- * \note More optimized if only used with values unknown at compile time.
- */
-#if (defined __GNUC__)
-  #define abs(a) \
-  (\
-    {\
-      int __value = (a);\
-      __asm__ ("abs\t%0" : "+r" (__value) :  : "cc");\
-      __value;\
-    }\
-  )
-#elif (defined __ICCAVR32__)
-  #define abs(a)      Abs(a)
-#endif
-
 /*! \brief Takes the minimal value of \a a and \a b.
  *
  * \param a Input value.
