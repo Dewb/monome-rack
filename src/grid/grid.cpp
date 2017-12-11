@@ -201,10 +201,18 @@ struct MonomeKey : ParamWidget
     {
         if (getGrid()->isDraggingKeys)
         {
-            auto ret = getGrid()->keysTouchedThisDrag.insert(this);
-            if (ret.second)
+            // disable single-press-per-drag enforcement for now, it's good for WW but bad for ES
+            if (0)
             {
-                // this button wasn't already in the touched set
+                auto ret = getGrid()->keysTouchedThisDrag.insert(this);
+                if (ret.second)
+                {
+                    // this button wasn't already in the touched set
+                    beginPress();
+                }
+            }
+            else
+            {
                 beginPress();
             }
         }
