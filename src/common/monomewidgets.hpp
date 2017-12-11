@@ -2,6 +2,8 @@
 
 using namespace rack;
 
+extern Plugin* plugin;
+
 struct WhiteLight : ModuleLightWidget
 {
     WhiteLight();
@@ -10,4 +12,9 @@ struct WhiteLight : ModuleLightWidget
 struct USBAJack : TransparentWidget
 {
     void draw(NVGcontext* vg) override;
+};
+
+struct MonomeKnob : RoundKnob
+{
+    MonomeKnob();
 };

@@ -210,36 +210,38 @@ WhiteWhaleWidget::WhiteWhaleWidget()
     box.size = Vec(15 * 6, 380);
 
     {
+        //auto panel = new SVGPanel();
+        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
         auto panel = new LightPanel();
+        //panel->backgroundImage = Image::load(assetPlugin(plugin, "res/whitewhale.jpg"));
         panel->box.size = box.size;
         addChild(panel);
     }
 
     addChild(createScrew<ScrewSilver>(Vec(0, 0)));
     addChild(createScrew<ScrewSilver>(Vec(0, 365)));
-    addChild(createScrew<USBAJack>(Vec(10, 337)));
+    addChild(createScrew<USBAJack>(Vec(10, 338)));
 
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 30), module, WhiteWhale::PARAM_PARAM, 0.0, 1.0, 0.5));
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 250), module, WhiteWhale::CLOCK_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<TL1105>(Vec(62, 336), module, WhiteWhale::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addParam(createParam<MonomeKnob>(Vec(12, 30), module, WhiteWhale::PARAM_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<MonomeKnob>(Vec(12, 230), module, WhiteWhale::CLOCK_PARAM, 0.0, 1.0, 0.5));
 
-    addParam(createParam<TL1105>(Vec(62, 337), module, WhiteWhale::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 80), module, WhiteWhale::TRIG1_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 118), module, WhiteWhale::TRIG2_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 156), module, WhiteWhale::TRIG3_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 194), module, WhiteWhale::TRIG4_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 282), module, WhiteWhale::CLOCK_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 118), module, WhiteWhale::CVA_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 156), module, WhiteWhale::CVB_LIGHT));
 
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 286), module, WhiteWhale::CLOCK_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 84), module, WhiteWhale::TRIG1_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 122), module, WhiteWhale::TRIG2_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 160), module, WhiteWhale::TRIG3_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 198), module, WhiteWhale::TRIG4_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(3.4, 122), module, WhiteWhale::CVA_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(3.4, 160), module, WhiteWhale::CVB_LIGHT));
-
-    addInput(createInput<PJ301MPort>(Vec(14.4, 298 - 3.15), module, WhiteWhale::CLOCK_INPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 298 - 3.15), module, WhiteWhale::CLOCK_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 95 - 6.15), module, WhiteWhale::TRIG1_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 133 - 6.15), module, WhiteWhale::TRIG2_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 171 - 6.15), module, WhiteWhale::TRIG3_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 209 - 6.15), module, WhiteWhale::TRIG4_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 110 - 4.15), module, WhiteWhale::CVA_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 148 - 4.15), module, WhiteWhale::CVB_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 82), module, WhiteWhale::TRIG1_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 120), module, WhiteWhale::TRIG2_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 158), module, WhiteWhale::TRIG3_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 196), module, WhiteWhale::TRIG4_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 100), module, WhiteWhale::CVA_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 138), module, WhiteWhale::CVB_OUTPUT));
+    addInput(createInput<PJ301MPort>(Vec(13, 286), module, WhiteWhale::CLOCK_INPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, WhiteWhale::CLOCK_OUTPUT));
 }
 
 void WhiteWhaleWidget::randomize()

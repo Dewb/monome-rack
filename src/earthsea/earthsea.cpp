@@ -190,32 +190,34 @@ EarthseaWidget::EarthseaWidget()
     box.size = Vec(15 * 6, 380);
 
     {
+        //auto panel = new SVGPanel();
+        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/earthsea.svg")));
         auto panel = new LightPanel();
+        //panel->backgroundImage = Image::load(assetPlugin(plugin, "res/earthsea.jpg"));
         panel->box.size = box.size;
         addChild(panel);
     }
 
     addChild(createScrew<ScrewSilver>(Vec(0, 0)));
     addChild(createScrew<ScrewSilver>(Vec(0, 365)));
-    addChild(createScrew<USBAJack>(Vec(10, 337)));
+    addChild(createScrew<USBAJack>(Vec(10, 338)));
 
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 30), module, Earthsea::CV1_PARAM, 0.0, 1.0, 0.5));
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 106), module, Earthsea::CV2_PARAM, 0.0, 1.0, 0.5));
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 182), module, Earthsea::CV3_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<TL1105>(Vec(62, 336), module, Earthsea::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addParam(createParam<MonomeKnob>(Vec(12, 30), module, Earthsea::CV1_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<MonomeKnob>(Vec(12, 116), module, Earthsea::CV2_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<MonomeKnob>(Vec(12, 202), module, Earthsea::CV3_PARAM, 0.0, 1.0, 0.5));
 
-    addParam(createParam<TL1105>(Vec(62, 337), module, Earthsea::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 78), module, Earthsea::CV1_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 162), module, Earthsea::CV2_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 244), module, Earthsea::CV3_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 282), module, Earthsea::POS_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 286), module, Earthsea::EDGE_LIGHT));
 
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 84), module, Earthsea::CV1_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 160), module, Earthsea::CV2_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 236), module, Earthsea::CV3_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 286), module, Earthsea::POS_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(3.4, 286), module, Earthsea::EDGE_LIGHT));
-
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 89), module, Earthsea::CV1_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 165), module, Earthsea::CV2_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 241), module, Earthsea::CV3_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 295), module, Earthsea::POS_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 268), module, Earthsea::EDGE_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 82), module, Earthsea::CV1_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 166), module, Earthsea::CV2_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 248), module, Earthsea::CV3_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, Earthsea::POS_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 268), module, Earthsea::EDGE_OUTPUT));
 }
 
 void EarthseaWidget::randomize()

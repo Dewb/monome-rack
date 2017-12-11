@@ -151,7 +151,7 @@ void Meadowphysics::step()
 
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(0, params[CLOCK_PARAM].value * 0xFFF);
-    
+
     // Advance software timers
     firmware.advanceClock(engineGetSampleTime());
 
@@ -216,39 +216,41 @@ MeadowphysicsWidget::MeadowphysicsWidget()
     box.size = Vec(15 * 6, 380);
 
     {
+        //auto panel = new SVGPanel();
+        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/meadowphysics.svg")));
         auto panel = new LightPanel();
+        //panel->backgroundImage = Image::load(assetPlugin(plugin, "res/meadowphysics.jpg"));
         panel->box.size = box.size;
         addChild(panel);
     }
 
     addChild(createScrew<ScrewSilver>(Vec(0, 0)));
     addChild(createScrew<ScrewSilver>(Vec(0, 365)));
-    addChild(createScrew<USBAJack>(Vec(10, 337)));
+    addChild(createScrew<USBAJack>(Vec(10, 338)));
 
-    addParam(createParam<RoundSmallBlackKnob>(Vec(12, 250), module, Meadowphysics::CLOCK_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<TL1105>(Vec(62, 336), module, Meadowphysics::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addParam(createParam<MonomeKnob>(Vec(12, 230), module, Meadowphysics::CLOCK_PARAM, 0.0, 1.0, 0.5));
 
-    addParam(createParam<TL1105>(Vec(62, 337), module, Meadowphysics::BUTTON_PARAM, 0.0, 1.0, 0.0));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 72), module, Meadowphysics::TRIG1_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 72), module, Meadowphysics::TRIG2_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 110), module, Meadowphysics::TRIG3_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 110), module, Meadowphysics::TRIG4_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 148), module, Meadowphysics::TRIG5_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 148), module, Meadowphysics::TRIG6_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 186), module, Meadowphysics::TRIG7_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 186), module, Meadowphysics::TRIG8_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 282), module, Meadowphysics::CLOCK_LIGHT));
 
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 286), module, Meadowphysics::CLOCK_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(3.4, 84), module, Meadowphysics::TRIG1_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 84), module, Meadowphysics::TRIG2_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(3.4, 122), module, Meadowphysics::TRIG3_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 122), module, Meadowphysics::TRIG4_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(3.4, 160), module, Meadowphysics::TRIG5_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 160), module, Meadowphysics::TRIG6_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(3.4, 198), module, Meadowphysics::TRIG7_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 198), module, Meadowphysics::TRIG8_LIGHT));
-
-    addInput(createInput<PJ301MPort>(Vec(14.4, 295), module, Meadowphysics::CLOCK_INPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 295), module, Meadowphysics::CLOCK_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 68), module, Meadowphysics::TRIG1_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 89), module, Meadowphysics::TRIG2_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 106), module, Meadowphysics::TRIG3_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 127), module, Meadowphysics::TRIG4_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 144), module, Meadowphysics::TRIG5_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 165), module, Meadowphysics::TRIG6_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(15.85, 182), module, Meadowphysics::TRIG7_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(52.4, 203), module, Meadowphysics::TRIG8_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 54), module, Meadowphysics::TRIG1_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 75), module, Meadowphysics::TRIG2_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 92), module, Meadowphysics::TRIG3_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 111), module, Meadowphysics::TRIG4_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 130), module, Meadowphysics::TRIG5_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 149), module, Meadowphysics::TRIG6_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 168), module, Meadowphysics::TRIG7_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 187), module, Meadowphysics::TRIG8_OUTPUT));
+    addInput(createInput<PJ301MPort>(Vec(13, 286), module, Meadowphysics::CLOCK_INPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, Meadowphysics::CLOCK_OUTPUT));
 }
 
 void MeadowphysicsWidget::randomize()
