@@ -2,9 +2,6 @@
 #include "grid.hpp"
 #include "monomewidgets.hpp"
 
-#include "base64.h"
-#include <string.h>
-
 #define B00 32
 #define B01 33
 #define B02 34
@@ -63,63 +60,6 @@ struct WhiteWhale : MonomeModuleBase
     }
 
     void step() override;
-
-    json_t* toJson() override
-    {
-        json_t* rootJ = MonomeModuleBase::toJson();
-
-        void* data;
-        uint32_t size;
-
-        firmware.readNVRAM(&data, &size);
-        json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
-
-        firmware.readVRAM(&data, &size);
-        json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
-
-        return rootJ;
-    }
-
-    void fromJson(json_t* rootJ) override
-    {
-        MonomeModuleBase::fromJson(rootJ);
-
-        void* data;
-        uint32_t size;
-        json_t* jd;
-
-        jd = json_object_get(rootJ, "nvram");
-        if (jd)
-        {
-            string decoded = base64_decode(json_string_value(jd));
-
-            firmware.readNVRAM(&data, &size);
-            if (size == decoded.length())
-            {
-                firmware.writeNVRAM((void*)decoded.c_str(), size);
-            }
-        }
-
-        jd = json_object_get(rootJ, "vram");
-        if (jd)
-        {
-            string decoded = base64_decode(json_string_value(jd));
-
-            firmware.readVRAM(&data, &size);
-            if (size == decoded.length())
-            {
-                firmware.writeVRAM((void*)decoded.c_str(), size);
-            }
-        }
-    }
-
-    void reset() override
-    {
-    }
-
-    void randomize() override
-    {
-    }
 };
 
 void WhiteWhale::step()
