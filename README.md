@@ -12,16 +12,16 @@ This is a work-in-progress. [Here's the roadmap to get to a binary release on th
 
 This plugin currently includes:
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument
-* [white whale](https://monome.org/docs/modular/whitewhale/) Grid-enabled Probabilistic Step Sequencer
-   * 16-step sequencer with a focus on live-manipulation and controlled variations
+* The [white whale](https://monome.org/docs/modular/whitewhale/) "Grid-enabled Probabilistic Step Sequencer"
+   * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
-   * controlled by internal or external clock
-* [meadowphysics](https://monome.org/docs/modular/meadowphysics/) Grid-enabled Rhizomatic Cascading Counter
-   * rule-based polyrhythmic event sequencer
+   * Controlled by internal or external clock
+* The [meadowphysics](https://monome.org/docs/modular/meadowphysics/) "Grid-enabled Rhizomatic Cascading Counter"
+   * An event sequencer for polyrhythms and rule-based evolving patterns.
    * 8 trigger outs
-   * controlled by internal or external clock
-* [earthsea](https://monome.org/docs/modular/earthsea/) Grid-enabled Shape-Memory Pattern Instrument
-   * live keyboard and looper
+   * Controlled by internal or external clock
+* The [earthsea](https://monome.org/docs/modular/earthsea/) "Grid-enabled Shape-Memory Pattern Instrument"
+   * A live keyboard that can sequence melodies and recall CV with gestures.
    * 1 trigger out, 4 CV outs
    
 All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/).
