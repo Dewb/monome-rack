@@ -11,8 +11,19 @@ This is a work-in-progress. [Here's the roadmap to get to a binary release on th
 
 This plugin currently includes:
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument
-* The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
-   * Uses either a virtual grid, or a real grid connected via serialosc
+* [white whale](https://monome.org/docs/modular/whitewhale/) Grid-enabled Probabilistic Step Sequencer
+   * 16-step sequencer with a focus on live-manipulation and controlled variations
+   * 4 trigger outs, 2 CV outs
+   * controlled by internal or external clock
+* [meadowphysics](https://monome.org/docs/modular/meadowphysics/) Grid-enabled Rhizomatic Cascading Counter
+   * rule-based polyrhythmic event sequencer
+   * 8 trigger outs
+   * controlled by internal or external clock
+* [earthsea](https://monome.org/docs/modular/earthsea/) Grid-enabled Shape-Memory Pattern Instrument
+   * live keyboard and looper
+   * 1 trigger out, 4 CV outs
+   
+All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/).
 
 ### How do I use this?
 
@@ -34,11 +45,21 @@ Now that you've built the plugin, let's get to patching:
 
 * Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
 * Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
-* Read the [white whale manual](https://monome.org/docs/modular/whitewhale/).
+* Read the manuals for the modules:
+   * [white whale manual](https://monome.org/docs/modular/whitewhale/)
+   * [meadowphysics manual](https://monome.org/docs/modular/meadowphysics/)
+   * [earthsea manual](https://monome.org/docs/modular/earthsea/)
 * Watch these videos:
    * [white whale possibilities](https://vimeo.com/104881064)
-   * [white whale tutorial](https://vimeo.com/105368808)
-* Read the [white whale manual](https://monome.org/docs/modular/whitewhale/) again.
+   * [white whale tutorial part 1](https://vimeo.com/105368808)
+   * [white whale tutorial part 2](https://vimeo.com/105368874)
+   * [white whale tutorial part 3](https://vimeo.com/105408057)
+   * [white whale tutorial part 4](https://vimeo.com/105408747)
+   * [meadowphysics possibilities](https://vimeo.com/107582557)
+   * [meadowphysics tutorial](https://vimeo.com/107586549)
+   * [meadowphysics two](https://vimeo.com/146731772)
+   * [earthsea introduction](https://vimeo.com/113231441)
+* Read the manuals again, watch the videos again, repeat.
 
 ### Why is this?
 
