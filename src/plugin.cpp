@@ -2,6 +2,7 @@
 //#include "teletype.hpp"
 #include "whitewhale.hpp"
 #include "meadowphysics.hpp"
+#include "earthsea.hpp"
 
 Plugin* plugin;
 
@@ -16,6 +17,7 @@ void init(rack::Plugin* p)
 
     p->addModel(createModel<WhiteWhaleWidget>("monome", "whitewhale", "white whale", SEQUENCER_TAG, CLOCK_TAG, EXTERNAL_TAG));
     p->addModel(createModel<MeadowphysicsWidget>("monome", "meadowphysics", "meadowphysics", SEQUENCER_TAG, CLOCK_TAG, EXTERNAL_TAG));
+    p->addModel(createModel<EarthseaWidget>("monome", "earthsea", "earthsea", SEQUENCER_TAG, EXTERNAL_TAG));
 
     //p->addModel(createModel<MonomeGridWidgetTemplate< 8,  8>>("monome", "grid64", "virtual grid 64", CONTROLLER_TAG));
     p->addModel(createModel<MonomeGridWidgetTemplate<16, 8>>("monome", "grid128", "virtual grid 128", CONTROLLER_TAG));

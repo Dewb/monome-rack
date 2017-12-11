@@ -8,6 +8,7 @@ FLAGS = \
 	-Isrc/grid \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
+	-Isrc/earthsea \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
@@ -36,6 +37,7 @@ FLAGS := $(filter-out -MMD,$(FLAGS))
 firmwares:
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
+	cd firmware && $(MAKE) -f earthsea.mk
 
 all: firmwares
 

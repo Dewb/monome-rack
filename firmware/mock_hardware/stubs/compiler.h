@@ -800,6 +800,7 @@ static inline int_fast8_t ilog2(uint32_t x)
  * \note More optimized if only used with values known at compile time.
  */
 #define Abs(a)              (((a) <  0 ) ? -(a) : (a))
+#define abs(a)              (((a) <  0 ) ? -(a) : (a))
 
 /*! \brief Takes the minimal value of \a a and \a b.
  *
@@ -811,6 +812,7 @@ static inline int_fast8_t ilog2(uint32_t x)
  * \note More optimized if only used with values known at compile time.
  */
 #define Min(a, b)           (((a) < (b)) ?  (a) : (b))
+#define min(a, b)           (((a) < (b)) ?  (a) : (b))
 
 /*! \brief Takes the maximal value of \a a and \a b.
  *
@@ -822,50 +824,7 @@ static inline int_fast8_t ilog2(uint32_t x)
  * \note More optimized if only used with values known at compile time.
  */
 #define Max(a, b)           (((a) > (b)) ?  (a) : (b))
-
-/*! \brief Takes the minimal value of \a a and \a b.
- *
- * \param a Input value.
- * \param b Input value.
- *
- * \return Minimal value of \a a and \a b.
- *
- * \note More optimized if only used with values unknown at compile time.
- */
-#if (defined __GNUC__)
-  #define min(a, b) \
-  (\
-    {\
-      int __value, __arg_a = (a), __arg_b = (b);\
-      __asm__ ("min\t%0, %1, %2" : "=r" (__value) : "r" (__arg_a), "r" (__arg_b));\
-      __value;\
-    }\
-  )
-#elif (defined __ICCAVR32__)
-  #define min(a, b)   __min(a, b)
-#endif
-
-/*! \brief Takes the maximal value of \a a and \a b.
- *
- * \param a Input value.
- * \param b Input value.
- *
- * \return Maximal value of \a a and \a b.
- *
- * \note More optimized if only used with values unknown at compile time.
- */
-#if (defined __GNUC__)
-  #define max(a, b) \
-  (\
-    {\
-      int __value, __arg_a = (a), __arg_b = (b);\
-      __asm__ ("max\t%0, %1, %2" : "=r" (__value) : "r" (__arg_a), "r" (__arg_b));\
-      __value;\
-    }\
-  )
-#elif (defined __ICCAVR32__)
-  #define max(a, b)   __max(a, b)
-#endif
+#define max(a, b)           (((a) > (b)) ?  (a) : (b))
 
 //! @}
 

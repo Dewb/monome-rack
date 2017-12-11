@@ -10,3 +10,7 @@
 	path = firmware/meadowphysics
 	url = https://github.com/Dewb/meadowphysics
 	branch = vcvrack
+[submodule "firmware/earthsea"]
+	path = firmware/earthsea
+	url = https://github.com/Dewb/earthsea
+	branch = vcvrack
