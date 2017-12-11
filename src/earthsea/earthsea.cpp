@@ -190,16 +190,12 @@ EarthseaWidget::EarthseaWidget()
     box.size = Vec(15 * 6, 380);
 
     {
-        //auto panel = new SVGPanel();
-        //panel->setBackground(SVG::load(assetPlugin(plugin, "res/earthsea.svg")));
-        auto panel = new LightPanel();
-        //panel->backgroundImage = Image::load(assetPlugin(plugin, "res/earthsea.jpg"));
+        auto panel = new SVGPanel();
+        panel->setBackground(SVG::load(assetPlugin(plugin, "res/earthsea.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
 
-    addChild(createScrew<ScrewSilver>(Vec(0, 0)));
-    addChild(createScrew<ScrewSilver>(Vec(0, 365)));
     addChild(createScrew<USBAJack>(Vec(10, 338)));
 
     addParam(createParam<TL1105>(Vec(62, 336), module, Earthsea::BUTTON_PARAM, 0.0, 1.0, 0.0));
