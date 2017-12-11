@@ -7,7 +7,8 @@ This is a plugin for the [VCVRack open-source virtual modular synthesizer](https
 
 This is a work-in-progress. [Here's the roadmap to get to a binary release on the package manager.](https://github.com/Dewb/monome-rack/projects/1) If you're not using the source version of VCV Rack, and you're not comfortable with git and make, you might want to wait until the binary release.
 
-<img width="75%" alt="white whale and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33520884-380980be-d791-11e7-9259-ce5879837f8b.png">
+<img width="75%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
+
 
 This plugin currently includes:
 * A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument
