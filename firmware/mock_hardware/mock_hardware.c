@@ -9,7 +9,7 @@
 bool gpioBlock[GPIO_NUM_PINS];
 
 uint16_t adcBlock[4];
-uint16_t dacBlock[2];
+uint16_t dacBlock[4];
 
 #define VSERIAL_BUFFER_SIZE 128
 #define VSERIAL_MAX_MESSAGES 32
