@@ -7,21 +7,21 @@ This is a plugin for the [VCVRack open-source virtual modular synthesizer](https
 
 This is a work-in-progress. [Here's the roadmap to get to a binary release on the package manager.](https://github.com/Dewb/monome-rack/projects/1) If you're not using the source version of VCV Rack, and you're not comfortable with git and make, you might want to wait until the binary release.
 
-<img width="75%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
+<img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
 
 
 This plugin currently includes:
-* A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument
+* A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument.
 * The [white whale](https://monome.org/docs/modular/whitewhale/) "Grid-enabled Probabilistic Step Sequencer"
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
    * Controlled by internal or external clock
 * The [meadowphysics](https://monome.org/docs/modular/meadowphysics/) "Grid-enabled Rhizomatic Cascading Counter"
-   * An event sequencer for polyrhythms and rule-based evolving patterns.
+   * An event sequencer for polyrhythms and rule-based evolving patterns
    * 8 trigger outs
    * Controlled by internal or external clock
 * The [earthsea](https://monome.org/docs/modular/earthsea/) "Grid-enabled Shape-Memory Pattern Instrument"
-   * A live keyboard that can sequence melodies and recall CV with gestures.
+   * A live keyboard that can sequence melodies and recall CV with gestures
    * 1 trigger out, 4 CV outs
    
 All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/).
