@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
+#include <unordered_set>
 
 using namespace rack;
 
@@ -79,6 +80,8 @@ struct FirmwareManagerImpl
 
     MODULE_HANDLE_TYPE handle;
 
+    static std::unordered_set<string> alreadyLoadedPaths;
+
     FirmwareManagerImpl()
     {
         clockPhase = 0.0;
@@ -93,10 +96,12 @@ struct FirmwareManagerImpl
         dlclose(handle);
 #endif
 
-        if (!tempLibraryFile.empty()) {
+        if (!tempLibraryFile.empty())
+        {
             unlink(tempLibraryFile.c_str());
         }
-        if (!tempLibraryFolder.empty()) {
+        if (!tempLibraryFolder.empty())
+        {
             rmdir(tempLibraryFolder.c_str());
         }
     }
@@ -106,8 +111,9 @@ struct FirmwareManagerImpl
         string librarySource;
         librarySource = firmwarePath + LIB_EXTENSION;
         string libraryToLoad = librarySource;
-        
-        if (0)
+
+        // If we have already loaded this firmware at least once, create a temp copy so it will have its own address space
+        if (alreadyLoadedPaths.find(libraryToLoad) != alreadyLoadedPaths.end())
         {
             bool success = false;
 
@@ -166,6 +172,11 @@ struct FirmwareManagerImpl
 
             libraryToLoad = tempLibraryFile;
         }
+        else
+        {
+            // first time load, record it.
+            alreadyLoadedPaths.insert(libraryToLoad);
+        }
 
         info("Loading module firmware from %s", libraryToLoad.c_str());
 
@@ -209,6 +220,8 @@ struct FirmwareManagerImpl
         return true;
     }
 };
+
+std::unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
 
 FirmwareManager::FirmwareManager()
 {
