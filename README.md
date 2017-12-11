@@ -24,7 +24,7 @@ This plugin currently includes:
    * A live keyboard that can sequence melodies and recall CV with gestures
    * 1 trigger out, 4 CV outs
    
-All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/).
+All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/). Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
 
 ### How do I use this?
 
