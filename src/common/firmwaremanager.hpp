@@ -5,6 +5,12 @@
 
 using namespace std;
 
+typedef enum {
+    FTDI_BUS,
+    HID_BUS,
+    NUM_BUSES
+} serial_bus_t;
+
 struct FirmwareManager
 {
     FirmwareManager();
@@ -21,8 +27,9 @@ struct FirmwareManager
     uint16_t getDAC(int channel);
     void setADC(int channel, uint16_t value);
 
-    uint8_t* readSerial(int bus);
-    void writeSerial(int bus, uint8_t* buf, uint32_t byteCount);
+    void serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial);
+    void readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount);
+    void writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount);
 
     void triggerInterrupt(int interrupt);
 

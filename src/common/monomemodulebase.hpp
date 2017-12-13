@@ -19,6 +19,7 @@ struct GridConnection
     virtual void disconnect() = 0;
     virtual void processInput() = 0;
     virtual void updateQuadrant(int x, int y, uint8_t* leds) = 0;
+    virtual void clearAll() = 0;
 };
 
 struct RackGridConnection : GridConnection
@@ -30,6 +31,7 @@ struct RackGridConnection : GridConnection
     void disconnect() override;
     void processInput() override;
     void updateQuadrant(int x, int y, uint8_t* leds) override;
+    void clearAll() override;
 
     inline bool operator==(const RackGridConnection& other) const;
 };
@@ -42,6 +44,7 @@ struct SerialOscGridConnection : GridConnection
     void disconnect() override;
     void processInput() override;
     void updateQuadrant(int x, int y, uint8_t* leds) override;
+    void clearAll() override;
 
     inline bool operator==(const SerialOscGridConnection& other) const;
 };
@@ -64,6 +67,7 @@ struct MonomeModuleBase : Module, SerialOsc::Listener
 
     ~MonomeModuleBase();
     void setGridConnection(GridConnection* newConnection);
+    virtual void readSerialMessages();
 
     SerialOsc* serialOscDriver;
     GridConnection* gridConnection;

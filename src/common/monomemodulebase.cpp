@@ -33,6 +33,11 @@ void RackGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
     grid->updateQuadrant(x, y, leds);
 }
 
+void RackGridConnection::clearAll()
+{
+    grid->clearAll();
+}
+
 bool RackGridConnection::operator==(const RackGridConnection& other) const
 {
     return (this->grid == other.grid && this->module == other.module);
@@ -61,6 +66,11 @@ void SerialOscGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
     module->serialOscDriver->sendDeviceLedLevelMapCommand(device, x, y, leds);
 }
 
+void SerialOscGridConnection::clearAll()
+{
+    module->serialOscDriver->sendDeviceLedAllCommand(device, false);
+}
+
 bool SerialOscGridConnection::operator==(const SerialOscGridConnection& other) const
 {
     return (this->device == other.device && this->module == other.module);
@@ -84,15 +94,41 @@ void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
 {
     if (gridConnection)
     {
+        gridConnection->clearAll();
         gridConnection->disconnect();
         delete gridConnection;
     }
 
     gridConnection = newConnection;
-    gridConnection->connect();
-    unresolvedConnectionId = "";
 
-    //simulate_monome_connect();
+    if (gridConnection)
+    {
+        gridConnection->connect();
+        unresolvedConnectionId = "";
+
+        string id = gridConnection->device->id;
+        string wide_id;
+        for (int i = 0; i < id.length(); i++)
+        {
+            if (i == 1 && id[1] == 'v')
+                i++;
+
+            wide_id.append(id, i, 1);
+            wide_id.append(" ");
+        }
+
+        firmware.serialConnectionChange(FTDI_BUS, 1, "m o n o m e", "p r o d u c t", wide_id.c_str());
+
+        uint8_t buf[6] = { 0, 1, 0, 0, 0, 0 };
+        buf[2] = (gridConnection->device->width * gridConnection->device->height) / 64;
+        firmware.writeSerial(FTDI_BUS, buf, 6);
+        uint8_t buf2[2] = { 0, 0 };
+        firmware.writeSerial(FTDI_BUS, buf2, 2);
+    }
+    else
+    {
+        firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
+    }
 }
 
 void MonomeModuleBase::deviceFound(const MonomeDevice* const device)
@@ -118,7 +154,59 @@ void MonomeModuleBase::buttonPressMessageReceived(MonomeDevice* device, int x, i
     msg[1] = (uint8_t)x;
     msg[2] = (uint8_t)y;
     msg[3] = state ? 1 : 0;
-    firmware.writeSerial(0, msg, sizeof(uint8_t) * 4);
+    firmware.writeSerial(FTDI_BUS, msg, 4);
+}
+
+void MonomeModuleBase::readSerialMessages()
+{
+    uint8_t* msg;
+    uint32_t count;
+    firmware.readSerial(FTDI_BUS, &msg, &count);
+    while (msg)
+    {
+        if (msg[0] == 0x1A && count >= 35)
+        {
+            // mext protocol quadrant update
+            uint8_t x = msg[1];
+            uint8_t y = msg[2];
+            uint8_t leds[64];
+            for (int i = 0; i < 32; i++)
+            {
+                leds[2 * i + 0] = msg[3 + i] >> 4;
+                leds[2 * i + 1] = msg[3 + i] & 0xF;
+            }
+
+            if (gridConnection)
+            {
+                gridConnection->updateQuadrant(x, y, leds);
+            }
+        }
+        else if ((msg[0] & 0x80) == 0x80 && count >= 9)
+        {
+            // series protocol quadrant update
+            int x = (msg[0] & 0x1) * 8;
+            int y = (msg[0] & 0x2) * 8;
+            uint8_t leds[64];
+            for (int j = 0; j < 8; j++)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    leds[i + 8 * j] = (msg[1 + j] & (0x1 << i)) ? 15 : 0;
+                }
+            }
+
+            if (gridConnection)
+            {
+                gridConnection->updateQuadrant(x, y, leds);
+            }
+        }
+        else if (msg[0] == 0x01)
+        {
+            // device info request
+            // ignore, we stuffed the response in the message queue in advance
+        }
+        firmware.readSerial(FTDI_BUS, &msg, &count);
+    }
 }
 
 void MonomeModuleBase::step()

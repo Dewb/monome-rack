@@ -15,7 +15,7 @@ MonomeGrid::MonomeGrid(unsigned w, unsigned h)
     device.prefix = "";
     device.type = "virtual " + std::to_string(w * h);
 
-    memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+    clearAll();
 }
 
 void MonomeGrid::step()
@@ -26,7 +26,7 @@ void MonomeGrid::step()
         {
             for (int j = 0; j < device.height; j++)
             {
-                int n = i | (j << 4);
+                int n = i + (j * device.width);
                 if ((params[n].value > 0) != pressedState[n])
                 {
                     connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
@@ -37,7 +37,7 @@ void MonomeGrid::step()
     }
     else
     {
-        memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+        clearAll();
     }
 }
 
@@ -74,12 +74,18 @@ void MonomeGrid::updateQuadrant(int x, int y, uint8_t* leds)
     }
 }
 
+void MonomeGrid::clearAll()
+{
+    memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+}
+
 struct MonomeKey : ParamWidget
 {
-
     uint8_t* ledAddress;
     int key_x;
     int key_y;
+    int index;
+    GridTheme theme;
 
     typedef enum {
         OFF,
@@ -110,6 +116,12 @@ struct MonomeKey : ParamWidget
         NVGcolor color1 = nvgRGB(val * 11 + 90, val * 11 + 63, val * 8 + 48);
         NVGcolor color2 = nvgRGB(val * 12 + 48, val * 12 + 31, val * 4 + 16);
 
+        if (theme == MonoRed)
+        {
+            color1 = val > 0 ? nvgRGB(240, 140, 30) : nvgRGB(0, 0, 0);
+            color2 = val > 0 ? nvgRGB(250, 60, 20) : nvgRGB(0, 0, 0);
+        }
+
         if (value == HELD)
         {
             nvgBeginPath(vg);
@@ -130,6 +142,16 @@ struct MonomeKey : ParamWidget
             nvgFillColor(vg, nvgRGB(0, 0, 0));
         }
         nvgFill(vg);
+
+        /*
+        std::stringstream label;
+        label << index;
+        nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+        nvgFillColor(vg, nvgRGB(0, 0, 0));
+        nvgText(vg, box.size.x / 2, box.size.y / 2, label.str().c_str(), NULL);
+        nvgFillColor(vg, nvgRGB(255, 255, 255));
+        nvgText(vg, box.size.x / 2 - 1, box.size.y / 2 - 1, label.str().c_str(), NULL);
+        */
     }
 
     void beginPress()
@@ -194,6 +216,7 @@ struct MonomeKey : ParamWidget
         if (getGrid()->isDraggingKeys)
         {
             endPress();
+            getGrid()->keysTouchedThisDrag.erase(this);
         }
     }
 
@@ -201,25 +224,17 @@ struct MonomeKey : ParamWidget
     {
         if (getGrid()->isDraggingKeys)
         {
-            // disable single-press-per-drag enforcement for now, it's good for WW but bad for ES
-            if (0)
+            auto ret = getGrid()->keysTouchedThisDrag.insert(this);
+            if (ret.second)
             {
-                auto ret = getGrid()->keysTouchedThisDrag.insert(this);
-                if (ret.second)
-                {
-                    // this button wasn't already in the touched set
-                    beginPress();
-                }
-            }
-            else
-            {
+                // this button wasn't already in the touched set
                 beginPress();
             }
         }
     }
 };
 
-std::string getUniqueVirtualDeviceId()
+std::string getUniqueVirtualDeviceId(std::string prefix)
 {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -229,7 +244,7 @@ std::string getUniqueVirtualDeviceId()
     while (true)
     {
         std::ostringstream ss;
-        ss << "mv" << std::setw(6) << std::setfill('0') << dis(gen);
+        ss << prefix << std::setw(6) << std::setfill('0') << dis(gen);
         uniqueIdFound = true;
 
         // enumerate modules
@@ -254,14 +269,21 @@ std::string getUniqueVirtualDeviceId()
     }
 }
 
-MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
+MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h, unsigned model)
 {
+    if (model > 5)
+    {
+        model = 5;
+    }
+    string models[6] = { "mv40h", "mv64-", "mv128-", "mv256-", "mv512", "mv" };
 
     auto* module = new MonomeGrid(w, h);
-    module->device.id = getUniqueVirtualDeviceId();
+    module->device.id = getUniqueVirtualDeviceId(models[model]);
     setModule(module);
 
-    box.size = Vec(15 * (3 * w), 47.5 * h);
+    theme = model == 5 ? VariYellow : MonoRed;
+
+    box.size = Vec(43.125 * w + 30, 47.5 * h);
 
     {
         auto panel = new LightPanel();
@@ -269,14 +291,14 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
         addChild(panel);
     }
 
-    margins.x = 20;
-    margins.y = 20;
+    margins.x = 15;
+    margins.y = 15;
 
-    int spacing = 9;
+    int spacing = 8;
 
-    int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
-    //int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
-    int button_size = max_width; // max_width > max_height ? max_width : max_height;
+    //int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
+    int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
+    int button_size = max_height; // max_width > max_height ? max_width : max_height;
 
     for (unsigned i = 0; i < w; i++)
     {
@@ -284,11 +306,13 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h)
         {
             int x = margins.x + i * (button_size + spacing);
             int y = margins.y + j * (button_size + spacing);
-            int n = i | (j << 4);
+            int n = i + j * w;
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
-            key->setKeyAddress(x, y, module->ledBuffer + n);
+            key->setKeyAddress(x, y, module->ledBuffer + i + j * 16);
             key->box.size = Vec(button_size, button_size);
+            key->index = n;
+            key->theme = theme;
             addParam(key);
         }
     }

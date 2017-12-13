@@ -1,5 +1,11 @@
 #include <conf_board.h>
 
+typedef enum {
+    FTDI_BUS,
+    HID_BUS,
+    NUM_BUSES
+} serial_bus_t;
+
 void hardware_init();
 void hardware_step();
 
@@ -15,12 +21,16 @@ uint16_t hardware_getDAC(int channel);
 void hardware_setDAC(int channel, uint16_t value);
 
 void hardware_initSerial();
-void hardware_resetSerial();
-uint8_t* hardware_readSerial(int bus);
-void hardware_writeSerial(int bus, uint8_t* buf, uint32_t byteCount);
+void hardware_resetSerialIn();
+void hardware_resetSerialOut();
 
-uint8_t* hardware_readSerial_internal(int bus);
-void hardware_writeSerial_internal(int bus, uint8_t* buf, uint32_t byteCount);
+void hardware_serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial);
+
+void hardware_readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount);
+void hardware_writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount);
+
+void hardware_readSerial_internal(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount);
+void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byteCount);
 
 void hardware_triggerInterrupt();
 

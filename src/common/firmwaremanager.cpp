@@ -64,8 +64,9 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_setGPIO, (uint32_t pin, bool value))
     DECLARE_PROC(uint16_t, hardware_getDAC, (int channel))
     DECLARE_PROC(void, hardware_setADC, (int channel, uint16_t value))
-    DECLARE_PROC(uint8_t*, hardware_readSerial, (int bus))
-    DECLARE_PROC(void, hardware_writeSerial, (int bus, uint8_t* buf, uint32_t byteCount))
+    DECLARE_PROC(void, hardware_serialConnectionChange, (serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial))
+    DECLARE_PROC(void, hardware_readSerial, (serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount))
+    DECLARE_PROC(void, hardware_writeSerial, (serial_bus_t bus, uint8_t* buf, uint32_t byteCount))
     DECLARE_PROC(void, hardware_triggerInterrupt, (int interrupt))
     DECLARE_PROC(void, hardware_readNVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
@@ -209,6 +210,7 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_setGPIO);
         GET_PROC_ADDRESS(handle, hardware_getDAC);
         GET_PROC_ADDRESS(handle, hardware_setADC);
+        GET_PROC_ADDRESS(handle, hardware_serialConnectionChange);
         GET_PROC_ADDRESS(handle, hardware_readSerial);
         GET_PROC_ADDRESS(handle, hardware_writeSerial);
         GET_PROC_ADDRESS(handle, hardware_triggerInterrupt);
@@ -299,19 +301,28 @@ void FirmwareManager::setADC(int channel, uint16_t value)
     }
 }
 
-uint8_t* FirmwareManager::readSerial(int bus)
+void FirmwareManager::serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_readSerial(bus);
-    }
-    else
-    {
-        return NULL;
+        return impl->fw_fn_hardware_serialConnectionChange(bus, connected, manufacturer, product, serial);
     }
 }
 
-void FirmwareManager::writeSerial(int bus, uint8_t* buf, uint32_t byteCount)
+void FirmwareManager::readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_readSerial(bus, pbuf, pcount);
+    }
+    else
+    {
+        *pbuf = NULL;
+        *pcount = 0;
+    }
+}
+
+void FirmwareManager::writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
 {
     if (impl)
     {

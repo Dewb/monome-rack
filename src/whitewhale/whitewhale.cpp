@@ -114,33 +114,7 @@ void WhiteWhale::step()
     outputs[CVA_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CVB_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
 
-    // Update LEDs on connected grid
-    if (gridConnection)
-    {
-        uint8_t* msg = firmware.readSerial(0);
-        while (msg)
-        {
-            if (msg[0] == 0x1A)
-            {
-                // Grid quadrant update
-                uint8_t x = msg[1];
-                uint8_t y = msg[2];
-                uint8_t leds[64];
-                for (int i = 0; i < 32; i++)
-                {
-                    leds[2 * i + 0] = msg[3 + i] >> 4;
-                    leds[2 * i + 1] = msg[3 + i] & 0xF;
-                }
-
-                // connection could be lost mid-update, re-check
-                if (gridConnection)
-                {
-                    gridConnection->updateQuadrant(x, y, leds);
-                }
-            }
-            msg = firmware.readSerial(0);
-        }
-    }
+    readSerialMessages();
 }
 
 WhiteWhaleWidget::WhiteWhaleWidget()

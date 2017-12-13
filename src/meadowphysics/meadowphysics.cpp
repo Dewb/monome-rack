@@ -120,33 +120,7 @@ void Meadowphysics::step()
     outputs[TRIG7_OUTPUT].value = firmware.getGPIO(B06) * 8.0;
     outputs[TRIG8_OUTPUT].value = firmware.getGPIO(B07) * 8.0;
 
-    // Update LEDs on connected grid
-    if (gridConnection)
-    {
-        uint8_t* msg = firmware.readSerial(0);
-        while (msg)
-        {
-            if (msg[0] == 0x1A)
-            {
-                // Grid quadrant update
-                uint8_t x = msg[1];
-                uint8_t y = msg[2];
-                uint8_t leds[64];
-                for (int i = 0; i < 32; i++)
-                {
-                    leds[2 * i + 0] = msg[3 + i] >> 4;
-                    leds[2 * i + 1] = msg[3 + i] & 0xF;
-                }
-
-                // connection could be lost mid-update, re-check
-                if (gridConnection)
-                {
-                    gridConnection->updateQuadrant(x, y, leds);
-                }
-            }
-            msg = firmware.readSerial(0);
-        }
-    }
+    readSerialMessages();
 }
 
 MeadowphysicsWidget::MeadowphysicsWidget()

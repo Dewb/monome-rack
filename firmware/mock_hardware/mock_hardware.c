@@ -17,10 +17,12 @@ uint16_t dacBlock[4];
 uint8_t* vserial_out_buffer = NULL;
 int vserial_out_read_index = 0;
 int vserial_out_write_index = 0;
+uint32_t vserial_out_message_size[VSERIAL_MAX_MESSAGES];
 
 uint8_t* vserial_in_buffer = NULL;
 int vserial_in_read_index = 0;
 int vserial_in_write_index = 0;
+uint32_t vserial_in_message_size[VSERIAL_MAX_MESSAGES];
 
 float phase = 0.0;
 float clockRate = 0.001; // 1 ms
@@ -33,6 +35,8 @@ uint32_t vram_size;
 // hardware interface points
 extern void initialize_module(void);
 extern void check_events(void);
+
+extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
 
 void simulate_clock_normal_interrupt()
 {
@@ -84,24 +88,28 @@ void hardware_init()
 {
     hardware_initSerial();
     initialize_module();
-    simulate_monome_connect();
 }
 
 void hardware_step()
 {
-    uint8_t* msg = hardware_readSerial_internal(0);
+    uint8_t* msg;
+    uint32_t count;
+
+    hardware_resetSerialOut();
+
+    check_events();
+
+    hardware_readSerial_internal(FTDI_BUS, &msg, &count);
     while (msg)
     {
-        if (msg[0] == 0xF0)
+        if (msg[0] == 0xF0 && count >= 4)
         {
             simulate_monome_key(msg[1], msg[2], msg[3]);
         }
-        msg = hardware_readSerial_internal(0);
+        hardware_readSerial_internal(FTDI_BUS, &msg, &count);
     }
 
-    hardware_resetSerial();
-
-    check_events();
+    hardware_resetSerialIn();
 }
 
 void hardware_triggerInterrupt(int interrupt)
@@ -184,33 +192,57 @@ void hardware_initSerial()
         vserial_out_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
     }
 
-    hardware_resetSerial();
+    hardware_resetSerialIn();
+    hardware_resetSerialOut();
 }
 
-void hardware_resetSerial()
+void hardware_resetSerialIn()
 {
     vserial_in_read_index = 0;
     vserial_in_write_index = 0;
+}
+
+void hardware_resetSerialOut()
+{
     vserial_out_read_index = 0;
     vserial_out_write_index = 0;
 }
 
-uint8_t* hardware_readSerial(int bus)
+void hardware_serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial)
+{
+    if (bus == FTDI_BUS)
+    {
+        mock_ftdi_change(connected, manufacturer, product, serial);
+    }
+    else if (bus == HID_BUS)
+    {
+    }
+}
+
+void hardware_readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
 {
     if (vserial_out_read_index >= vserial_out_write_index)
     {
-        return NULL;
+        *pbuf = NULL;
+        *pcount = 0;
     }
+    else
+    {
 
-    return vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_read_index++;
+        *pbuf = vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_read_index;
+        *pcount = vserial_out_message_size[vserial_out_read_index];
+        vserial_out_read_index++;
+    }
 }
 
-void hardware_writeSerial_internal(int bus, uint8_t* buf, uint32_t byteCount)
+void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
 {
     if (vserial_out_buffer && vserial_out_write_index < VSERIAL_MAX_MESSAGES)
     {
-        uint8_t* dest = vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_write_index++;
+        uint8_t* dest = vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_write_index;
         memcpy(dest, buf, byteCount <= VSERIAL_BUFFER_SIZE ? byteCount : VSERIAL_BUFFER_SIZE);
+        vserial_out_message_size[vserial_out_write_index] = byteCount;
+        vserial_out_write_index++;
     }
     else
     {
@@ -218,22 +250,29 @@ void hardware_writeSerial_internal(int bus, uint8_t* buf, uint32_t byteCount)
     }
 }
 
-uint8_t* hardware_readSerial_internal(int bus)
+void hardware_readSerial_internal(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
 {
     if (vserial_in_read_index >= vserial_in_write_index)
     {
-        return NULL;
+        *pbuf = NULL;
+        *pcount = 0;
     }
-
-    return vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_read_index++;
+    else
+    {
+        *pbuf = vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_read_index;
+        *pcount = vserial_in_message_size[vserial_in_read_index];
+        vserial_in_read_index++;
+    }
 }
 
-void hardware_writeSerial(int bus, uint8_t* buf, uint32_t byteCount)
+void hardware_writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
 {
     if (vserial_in_buffer && vserial_in_write_index < VSERIAL_MAX_MESSAGES)
     {
-        uint8_t* dest = vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_write_index++;
+        uint8_t* dest = vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_write_index;
         memcpy(dest, buf, byteCount <= VSERIAL_BUFFER_SIZE ? byteCount : VSERIAL_BUFFER_SIZE);
+        vserial_in_message_size[vserial_in_write_index] = byteCount;
+        vserial_in_write_index++;
     }
     else
     {
