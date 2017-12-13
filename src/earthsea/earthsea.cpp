@@ -132,6 +132,4 @@ EarthseaWidget::EarthseaWidget()
 
 void EarthseaWidget::randomize()
 {
-    // don't randomize params, just randomize module core
-    module->randomize();
 }

@@ -156,6 +156,4 @@ WhiteWhaleWidget::WhiteWhaleWidget()
 
 void WhiteWhaleWidget::randomize()
 {
-    // don't randomize params, just randomize module core
-    module->randomize();
 }

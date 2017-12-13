@@ -41,14 +41,6 @@ void MonomeGrid::step()
     }
 }
 
-void MonomeGrid::reset()
-{
-}
-
-void MonomeGrid::randomize()
-{
-}
-
 json_t* MonomeGrid::toJson()
 {
     json_t* rootJ = json_object();
@@ -318,6 +310,10 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h, unsigned model)
     }
 
     isDraggingKeys = false;
+}
+
+void MonomeGridWidget::randomize()
+{
 }
 
 json_t* MonomeGridWidget::toJson()

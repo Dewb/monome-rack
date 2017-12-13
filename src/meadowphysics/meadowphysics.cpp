@@ -165,6 +165,4 @@ MeadowphysicsWidget::MeadowphysicsWidget()
 
 void MeadowphysicsWidget::randomize()
 {
-    // don't randomize params, just randomize module core
-    module->randomize();
 }

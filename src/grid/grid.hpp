@@ -18,8 +18,7 @@ struct MonomeGrid : Module
     MonomeGrid(unsigned w, unsigned h);
 
     void step() override;
-    void reset() override;
-    void randomize() override;
+
     json_t* toJson() override;
     void fromJson(json_t* rootJ) override;
 
@@ -43,6 +42,7 @@ struct MonomeGridWidget : ModuleWidget
     Menu* createContextMenu() override;
     void onDragEnter(EventDragEnter& e) override;
     void onMouseDown(EventMouseDown& e) override;
+    void randomize() override;
 
     void clearHeldKeys();
 
