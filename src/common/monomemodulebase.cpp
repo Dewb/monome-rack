@@ -263,11 +263,17 @@ json_t* MonomeModuleBase::toJson()
     uint32_t size;
 
     firmware.readNVRAM(&data, &size);
-    json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+    if(data && size > 0)
+    {
+        json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+    }
 
     firmware.readVRAM(&data, &size);
-    json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
-
+    if (data && size > 0)
+    {
+        json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
+    }
+    
     return rootJ;
 }
 
@@ -291,7 +297,7 @@ void MonomeModuleBase::fromJson(json_t* rootJ)
         string decoded = base64_decode(json_string_value(jd));
 
         firmware.readNVRAM(&data, &size);
-        if (size == decoded.length())
+        if (data && size == decoded.length())
         {
             firmware.writeNVRAM((void*)decoded.c_str(), size);
         }
@@ -303,7 +309,7 @@ void MonomeModuleBase::fromJson(json_t* rootJ)
         string decoded = base64_decode(json_string_value(jd));
 
         firmware.readVRAM(&data, &size);
-        if (size == decoded.length())
+        if (data && size == decoded.length())
         {
             firmware.writeVRAM((void*)decoded.c_str(), size);
         }
