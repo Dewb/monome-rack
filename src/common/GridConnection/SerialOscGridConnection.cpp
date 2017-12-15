@@ -1,6 +1,6 @@
+#include "MonomeModuleBase.hpp"
 #include "SerialOscGridConnection.hpp"
-#include "monomemodulebase.hpp"
-#include "grid.hpp"
+#include "VirtualGridModule.hpp"
 
 
 SerialOscGridConnection::SerialOscGridConnection(MonomeModuleBase* module, const MonomeDevice* const device)

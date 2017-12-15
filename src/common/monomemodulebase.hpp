@@ -1,13 +1,25 @@
-#include "GridConnection.hpp"
-#include "firmwaremanager.hpp"
-#include "rack.hpp"
+#include "FirmwareManager.hpp"
 #include "SerialOsc.h"
+#include "rack.hpp"
 
 #pragma once
-using namespace rack;
 
+#define B00 32
+#define B01 33
+#define B02 34
+#define B03 35
+#define B04 36
+#define B05 37
+#define B06 38
+#define B07 39
+#define B08 40
+#define B09 41
+#define B10 42
+#define NMI 13
 
-struct MonomeModuleBase : Module, SerialOsc::Listener
+struct GridConnection;
+
+struct MonomeModuleBase : rack::Module, SerialOsc::Listener
 {
     FirmwareManager firmware;
 
@@ -33,7 +45,3 @@ struct MonomeModuleBase : Module, SerialOsc::Listener
     std::string unresolvedConnectionId;
 };
 
-struct MonomeModuleBaseWidget : ModuleWidget
-{
-    Menu* createContextMenu() override;
-};

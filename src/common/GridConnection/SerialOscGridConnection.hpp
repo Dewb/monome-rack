@@ -1,5 +1,7 @@
 #include "GridConnection.hpp"
 
+#pragma once
+
 struct SerialOscGridConnection : GridConnection
 {
     SerialOscGridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const device);

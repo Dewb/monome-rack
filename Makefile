@@ -6,7 +6,7 @@ FLAGS = \
 	-Isrc \
 	-Isrc/common \
 	-Isrc/common/GridConnection \
-	-Isrc/grid \
+	-Isrc/virtualgrid \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
 	-Isrc/earthsea \

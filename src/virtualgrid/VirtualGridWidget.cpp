@@ -1,77 +1,13 @@
+#include "VirtualGridModule.hpp"
+#include "VirtualGridWidget.hpp"
+
 #include <iomanip>
 #include <random>
 #include <sstream>
 
-#include "grid.hpp"
+using namespace rack;
 
-MonomeGrid::MonomeGrid(unsigned w, unsigned h)
-    : Module(w * h, 0, 0, 0)
-{
-    device.width = w;
-    device.height = h;
-    device.port = 0;
-    device.rotation = 0;
-    device.id = "mv000000";
-    device.prefix = "";
-    device.type = "virtual " + std::to_string(w * h);
-
-    clearAll();
-}
-
-void MonomeGrid::step()
-{
-    if (connectedModule)
-    {
-        for (int i = 0; i < device.width; i++)
-        {
-            for (int j = 0; j < device.height; j++)
-            {
-                int n = i + (j * device.width);
-                if ((params[n].value > 0) != pressedState[n])
-                {
-                    connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
-                    pressedState[n] = params[n].value > 0;
-                }
-            }
-        }
-    }
-    else
-    {
-        clearAll();
-    }
-}
-
-json_t* MonomeGrid::toJson()
-{
-    json_t* rootJ = json_object();
-    json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
-    return rootJ;
-}
-
-void MonomeGrid::fromJson(json_t* rootJ)
-{
-    device.id = json_string_value(json_object_get(rootJ, "deviceId"));
-}
-
-void MonomeGrid::updateQuadrant(int x, int y, uint8_t* leds)
-{
-    uint8_t* ptr = ledBuffer + y * 16 + x;
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            *ptr++ = *leds++;
-        }
-        ptr += 8;
-    }
-}
-
-void MonomeGrid::clearAll()
-{
-    memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
-}
-
-struct MonomeKey : ParamWidget
+struct MonomeKey : rack::ParamWidget
 {
     uint8_t* ledAddress;
     int key_x;
@@ -90,9 +26,9 @@ struct MonomeKey : ParamWidget
     {
     }
 
-    MonomeGridWidget* getGrid()
+    VirtualGridWidget* getGrid()
     {
-        return dynamic_cast<MonomeGridWidget*>(parent);
+        return dynamic_cast<VirtualGridWidget*>(parent);
     }
 
     void setKeyAddress(int x, int y, uint8_t* ledByte)
@@ -148,7 +84,7 @@ struct MonomeKey : ParamWidget
 
     void beginPress()
     {
-        if (guiIsModPressed() && value != HELD)
+        if (rack::guiIsModPressed() && value != HELD)
         {
             // hold key down
             setValue(HELD);
@@ -167,7 +103,7 @@ struct MonomeKey : ParamWidget
         }
     }
 
-    void onMouseDown(EventMouseDown& e) override
+    void onMouseDown(rack::EventMouseDown& e) override
     {
         if (e.button == 1)
         {
@@ -178,7 +114,7 @@ struct MonomeKey : ParamWidget
         beginPress();
     }
 
-    void onMouseUp(EventMouseUp& e) override
+    void onMouseUp(rack::EventMouseUp& e) override
     {
         if (e.button == 1)
         {
@@ -189,21 +125,21 @@ struct MonomeKey : ParamWidget
         endPress();
     }
 
-    void onDragStart(EventDragStart& e) override
+    void onDragStart(rack::EventDragStart& e) override
     {
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->keysTouchedThisDrag.insert(this);
         getGrid()->isDraggingKeys = true;
     }
 
-    void onDragEnd(EventDragEnd& e) override
+    void onDragEnd(rack::EventDragEnd& e) override
     {
         endPress();
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->isDraggingKeys = false;
     }
 
-    void onDragLeave(EventDragEnter& e) override
+    void onDragLeave(rack::EventDragEnter& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
@@ -212,7 +148,7 @@ struct MonomeKey : ParamWidget
         }
     }
 
-    void onDragEnter(EventDragEnter& e) override
+    void onDragEnter(rack::EventDragEnter& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
@@ -240,12 +176,12 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
         uniqueIdFound = true;
 
         // enumerate modules
-        for (Widget* w : gRackWidget->moduleContainer->children)
+        for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
         {
-            MonomeGridWidget* gridWidget = dynamic_cast<MonomeGridWidget*>(w);
+            VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
             if (gridWidget)
             {
-                auto gridModule = dynamic_cast<MonomeGrid*>(gridWidget->module);
+                auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
                 if (gridModule->device.id == ss.str())
                 {
                     uniqueIdFound = false;
@@ -261,15 +197,15 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
     }
 }
 
-MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h, unsigned model)
+VirtualGridWidget::VirtualGridWidget(unsigned w, unsigned h, unsigned model)
 {
     if (model > 5)
     {
         model = 5;
     }
-    string models[6] = { "mv40h", "mv64-", "mv128-", "mv256-", "mv512", "mv" };
+    std::string models[6] = { "mv40h", "mv64-", "mv128-", "mv256-", "mv512", "mv" };
 
-    auto* module = new MonomeGrid(w, h);
+    auto* module = new VirtualGridModule(w, h);
     module->device.id = getUniqueVirtualDeviceId(models[model]);
     setModule(module);
 
@@ -312,11 +248,11 @@ MonomeGridWidget::MonomeGridWidget(unsigned w, unsigned h, unsigned model)
     isDraggingKeys = false;
 }
 
-void MonomeGridWidget::randomize()
+void VirtualGridWidget::randomize()
 {
 }
 
-json_t* MonomeGridWidget::toJson()
+json_t* VirtualGridWidget::toJson()
 {
     json_t* rootJ = json_object();
 
@@ -342,7 +278,7 @@ json_t* MonomeGridWidget::toJson()
     return rootJ;
 }
 
-void MonomeGridWidget::fromJson(json_t* rootJ)
+void VirtualGridWidget::fromJson(json_t* rootJ)
 {
     // pos
     json_t* posJ = json_object_get(rootJ, "pos");
@@ -360,7 +296,7 @@ void MonomeGridWidget::fromJson(json_t* rootJ)
     }
 }
 
-void MonomeGridWidget::clearHeldKeys()
+void VirtualGridWidget::clearHeldKeys()
 {
     for (auto p : params)
     {
@@ -368,7 +304,7 @@ void MonomeGridWidget::clearHeldKeys()
     }
 }
 
-void MonomeGridWidget::onDragEnter(EventDragEnter& e)
+void VirtualGridWidget::onDragEnter(EventDragEnter& e)
 {
     // Disable key drag-tapping if this drag began anyhwere but on a child key of this module
     if (e.origin->parent != this)
@@ -377,7 +313,7 @@ void MonomeGridWidget::onDragEnter(EventDragEnter& e)
     }
 }
 
-void MonomeGridWidget::onMouseDown(EventMouseDown& e)
+void VirtualGridWidget::onMouseDown(EventMouseDown& e)
 {
     ModuleWidget::onMouseDown(e);
 
@@ -434,18 +370,18 @@ struct DeleteMenuItem : MenuItem
 
 struct GridReleaseHeldKeysItem : MenuItem
 {
-    MonomeGridWidget* grid;
+    VirtualGridWidget* grid;
     void onAction(EventAction& e) override
     {
         grid->clearHeldKeys();
     }
 };
 
-Menu* MonomeGridWidget::createContextMenu()
+Menu* VirtualGridWidget::createContextMenu()
 {
     Menu* menu = gScene->createMenu();
 
-    auto gridModule = dynamic_cast<MonomeGrid*>(module);
+    auto gridModule = dynamic_cast<VirtualGridModule*>(module);
 
     MenuLabel* menuLabel = new MenuLabel();
     menuLabel->text = model->manufacturer + " " + model->name + " (" + gridModule->device.id + ")";

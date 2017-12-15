@@ -1,4 +1,4 @@
-#include "firmwaremanager.hpp"
+#include "FirmwareManager.hpp"
 #include "util.hpp"
 
 #include <cstdio>
@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <unordered_set>
 
-using namespace rack;
+using namespace std;
 
 #if ARCH_LIN
 #define LIB_EXTENSION ".so"
@@ -32,7 +32,7 @@ using namespace rack;
     fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
     if (!fw_fn_##name)                                              \
     {                                                               \
-        warn("Failed to find symbol '" #name "'");                  \
+        rack::warn("Failed to find symbol '" #name "'");                  \
         return false;                                               \
     }
 
@@ -46,7 +46,7 @@ using namespace rack;
     fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
     if (!fw_fn_##name)                                     \
     {                                                      \
-        warn("Failed to find symbol '" #name "'");         \
+        rack::warn("Failed to find symbol '" #name "'");         \
         return false;                                      \
     }
 
@@ -76,12 +76,12 @@ struct FirmwareManagerImpl
     float clockPeriod;
     float clockPhase;
 
-    string tempLibraryFolder;
-    string tempLibraryFile;
+    std::string tempLibraryFolder;
+    std::string tempLibraryFile;
 
     MODULE_HANDLE_TYPE handle;
 
-    static std::unordered_set<string> alreadyLoadedPaths;
+    static std::unordered_set<std::string> alreadyLoadedPaths;
 
     FirmwareManagerImpl()
     {
@@ -107,11 +107,11 @@ struct FirmwareManagerImpl
         }
     }
 
-    bool load(string firmwarePath)
+    bool load(std::string firmwarePath)
     {
-        string librarySource;
+        std::string librarySource;
         librarySource = firmwarePath + LIB_EXTENSION;
-        string libraryToLoad = librarySource;
+        std::string libraryToLoad = librarySource;
 
         // If we have already loaded this firmware at least once, create a temp copy so it will have its own address space
         if (alreadyLoadedPaths.find(libraryToLoad) != alreadyLoadedPaths.end())
@@ -158,13 +158,13 @@ struct FirmwareManagerImpl
 
             if (!success)
             {
-                warn("Could not create temporary folder for firmware");
+                rack::warn("Could not create temporary folder for firmware");
                 return false;
             }
 
             tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
 
-            info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
+            rack::info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
             {
                 std::ifstream src(librarySource, std::ios::binary);
                 std::ofstream dst(tempLibraryFile, std::ios::binary);
@@ -179,7 +179,7 @@ struct FirmwareManagerImpl
             alreadyLoadedPaths.insert(libraryToLoad);
         }
 
-        info("Loading module firmware from %s", libraryToLoad.c_str());
+        rack::info("Loading module firmware from %s", libraryToLoad.c_str());
 
 #if ARCH_WIN
 
@@ -198,7 +198,7 @@ struct FirmwareManagerImpl
         handle = dlopen(libraryToLoad.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            warn("Failed to load library %s: %s", libraryToLoad.c_str(), dlerror());
+            rack::warn("Failed to load library %s: %s", libraryToLoad.c_str(), dlerror());
             return false;
         }
 
@@ -223,7 +223,7 @@ struct FirmwareManagerImpl
     }
 };
 
-std::unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
+unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
 
 FirmwareManager::FirmwareManager()
 {

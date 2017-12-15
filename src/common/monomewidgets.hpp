@@ -1,20 +1,18 @@
 #include "rack.hpp"
 
-using namespace rack;
+#pragma once
 
-extern Plugin* plugin;
-
-struct WhiteLight : ModuleLightWidget
+struct WhiteLight : rack::ModuleLightWidget
 {
     WhiteLight();
 };
 
-struct USBAJack : TransparentWidget
+struct USBAJack : rack::TransparentWidget
 {
     void draw(NVGcontext* vg) override;
 };
 
-struct MonomeKnob : RoundKnob
+struct MonomeKnob : rack::RoundKnob
 {
     MonomeKnob();
 };

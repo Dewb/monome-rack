@@ -1,7 +1,6 @@
-#include "monomemodulebase.hpp"
-#include "rack.hpp"
+#include "MonomeModuleBaseWidget.hpp"
 
-using namespace rack;
+#pragma once
 
 struct WhiteWhaleWidget : MonomeModuleBaseWidget
 {

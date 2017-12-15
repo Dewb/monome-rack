@@ -1,5 +1,5 @@
 #include "GridConnection.hpp"
-#include "monomemodulebase.hpp"
+#include "MonomeModuleBase.hpp"
 
 GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const d)
     : module(controlledModule)

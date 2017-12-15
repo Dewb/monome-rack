@@ -1,9 +1,11 @@
-#include "monomemodulebase.hpp"
-#include "base64.h"
-#include "grid.hpp"
+#include "MonomeModuleBase.hpp"
 #include "SerialOscGridConnection.hpp"
 #include "VirtualGridConnection.hpp"
+#include "base64.h"
+#include "VirtualGridModule.hpp"
+#include "VirtualGridWidget.hpp"
 
+using namespace std;
 
 MonomeModuleBase::MonomeModuleBase(int numParams, int numInputs, int numOutputs, int numLights)
     : Module(numParams, numInputs, numOutputs, numLights)
@@ -159,15 +161,15 @@ void MonomeModuleBase::step()
             }
 
             // enumerate modules
-            for (Widget* w : gRackWidget->moduleContainer->children)
+            for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
             {
-                MonomeGridWidget* gridWidget = dynamic_cast<MonomeGridWidget*>(w);
+                VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
                 if (gridWidget)
                 {
-                    auto gridModule = dynamic_cast<MonomeGrid*>(gridWidget->module);
+                    auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
                     if (gridModule->device.id == unresolvedConnectionId)
                     {
-                        auto connection = new RackGridConnection(this, gridModule);
+                        auto connection = new VirtualGridConnection(this, gridModule);
                         setGridConnection(connection);
                         return;
                     }
@@ -245,85 +247,3 @@ void MonomeModuleBase::fromJson(json_t* rootJ)
     }
 }
 
-struct MonomeConnectionItem : MenuItem
-{
-    MonomeModuleBase* module;
-    GridConnection* connection;
-
-    ~MonomeConnectionItem()
-    {
-        if (connection)
-        {
-            delete connection;
-        }
-    }
-
-    void onAction(EventAction& e) override
-    {
-        module->setGridConnection(connection);
-        connection = NULL;
-    }
-};
-
-template <typename C>
-bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
-{
-    C* castPtr = static_cast<C*>(genericPtr);
-    if (castPtr == NULL || specificPtr == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        return *castPtr == *specificPtr;
-    }
-}
-
-Menu* MonomeModuleBaseWidget::createContextMenu()
-{
-    Menu* menu = ModuleWidget::createContextMenu();
-
-    auto module = static_cast<MonomeModuleBase*>(this->module);
-
-    menu->addChild(construct<MenuEntry>());
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
-
-    // enumerate detected serialosc devices
-    int deviceCount = 0;
-    for (MonomeDevice* device : module->serialOscDriver->getDevices())
-    {
-        auto connection = new SerialOscGridConnection(module, device);
-        auto* connectionItem = new MonomeConnectionItem();
-        connectionItem->text = device->type + " (" + device->id + ")";
-        connectionItem->rightText = connectionPtrIsEqual(module->gridConnection, connection) ? "✔" : "";
-        connectionItem->module = module;
-        connectionItem->connection = connection;
-        menu->addChild(connectionItem);
-        deviceCount++;
-    }
-
-    // enumerate modules
-    for (Widget* w : gRackWidget->moduleContainer->children)
-    {
-        MonomeGridWidget* gridWidget = dynamic_cast<MonomeGridWidget*>(w);
-        if (gridWidget)
-        {
-            auto gridModule = dynamic_cast<MonomeGrid*>(gridWidget->module);
-            auto connection = new RackGridConnection(module, gridModule);
-            auto* connectionItem = new MonomeConnectionItem();
-            connectionItem->text = gridModule->device.type + " (" + gridModule->device.id + ")";
-            connectionItem->rightText = connectionPtrIsEqual(module->gridConnection, connection) ? "✔" : "";
-            connectionItem->module = module;
-            connectionItem->connection = connection;
-            menu->addChild(connectionItem);
-            deviceCount++;
-        }
-    }
-
-    if (deviceCount == 0)
-    {
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "(no physical or virtual devices found)"));
-    }
-
-    return menu;
-}

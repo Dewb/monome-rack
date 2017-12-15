@@ -1,38 +1,38 @@
 #include "VirtualGridConnection.hpp"
-#include "monomemodulebase.hpp"
-#include "grid.hpp"
+#include "MonomeModuleBase.hpp"
+#include "VirtualGridModule.hpp"
 
-RackGridConnection::RackGridConnection(MonomeModuleBase* controlledModule, MonomeGrid* gridModule)
+VirtualGridConnection::VirtualGridConnection(MonomeModuleBase* controlledModule, VirtualGridModule* gridModule)
     : GridConnection(controlledModule, &gridModule->device)
 {
     grid = gridModule;
 }
 
-void RackGridConnection::connect()
+void VirtualGridConnection::connect()
 {
     grid->connectedModule = module;
 }
 
-void RackGridConnection::disconnect()
+void VirtualGridConnection::disconnect()
 {
     grid->connectedModule = NULL;
 }
 
-void RackGridConnection::processInput()
+void VirtualGridConnection::processInput()
 {
 }
 
-void RackGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
+void VirtualGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
 {
     grid->updateQuadrant(x, y, leds);
 }
 
-void RackGridConnection::clearAll()
+void VirtualGridConnection::clearAll()
 {
     grid->clearAll();
 }
 
-bool RackGridConnection::operator==(const RackGridConnection& other) const
+bool VirtualGridConnection::operator==(const VirtualGridConnection& other) const
 {
     return (this->grid == other.grid && this->module == other.module);
 }

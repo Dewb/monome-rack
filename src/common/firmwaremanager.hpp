@@ -3,8 +3,6 @@
 
 #pragma once
 
-using namespace std;
-
 typedef enum {
     FTDI_BUS,
     HID_BUS,
@@ -16,7 +14,7 @@ struct FirmwareManager
     FirmwareManager();
     ~FirmwareManager();
 
-    bool load(string firmwarePath);
+    bool load(std::string firmwarePath);
 
     void init();
     void step();

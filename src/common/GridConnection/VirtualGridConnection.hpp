@@ -1,11 +1,13 @@
 #include "GridConnection.hpp"
 
-struct MonomeGrid;
+#pragma once
 
-struct RackGridConnection : GridConnection
+struct VirtualGridModule;
+
+struct VirtualGridConnection : GridConnection
 {
-    RackGridConnection(MonomeModuleBase* controlledModule, MonomeGrid* gridModule);
-    MonomeGrid* grid;
+    VirtualGridConnection(MonomeModuleBase* controlledModule, VirtualGridModule* gridModule);
+    VirtualGridModule* grid;
 
     void connect() override;
     void disconnect() override;
@@ -13,5 +15,5 @@ struct RackGridConnection : GridConnection
     void updateQuadrant(int x, int y, uint8_t* leds) override;
     void clearAll() override;
 
-    bool operator==(const RackGridConnection& other) const;
+    bool operator==(const VirtualGridConnection& other) const;
 };
