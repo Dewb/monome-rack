@@ -3,45 +3,65 @@ monome-rack — VCVRack plugin for monome hardware
 
 ### What is this?
 
-This is a plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port and no support, warranty, or affiliation is implied.
+This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port, and no support guarantees, warranty, or affiliation is implied from any organization mentioned in this document.
 
-This is a work-in-progress. [Here's the roadmap to get to a binary release on the package manager.](https://github.com/Dewb/monome-rack/projects/1) If you're not using the source version of VCV Rack, and you're not comfortable with git and make, you might want to wait until the binary release.
+This plugin is still in development. [The release roadmap is here](https://github.com/Dewb/monome-rack/projects/1). If you're not using the source version of VCV Rack, and you're not comfortable with `git` and `make`, you might want to consider waiting for the first official binary release.
 
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
 
 
 This plugin currently includes:
-* A virtual version of the venerable [grid 128](https://monome.org/docs/grid/), an open, interactive 16x8 grid instrument.
-* The [white whale](https://monome.org/docs/modular/whitewhale/) "Grid-enabled Probabilistic Step Sequencer"
+* Virtual versions of the venerable [monome grid 64 and 128](https://monome.org/docs/grid/), a series of open, interactive grid instruments, in 8x8 and 16x8 versions.
+* The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
    * Controlled by internal or external clock
-* The [meadowphysics](https://monome.org/docs/modular/meadowphysics/) "Grid-enabled Rhizomatic Cascading Counter"
+* The [meadowphysics](https://monome.org/docs/modular/meadowphysics/) grid-enabled rhizomatic cascading counter
    * An event sequencer for polyrhythms and rule-based evolving patterns
    * 8 trigger outs
    * Controlled by internal or external clock
-* The [earthsea](https://monome.org/docs/modular/earthsea/) "Grid-enabled Shape-Memory Pattern Instrument"
+* The [earthsea](https://monome.org/docs/modular/earthsea/) grid-enabled shape-memory pattern instrument
    * A live keyboard that can sequence melodies and recall CV with gestures
    * 1 trigger out, 4 CV outs
    
-All three of the modules can connect to either a virtual grid or a real hardware grid controller through [serialosc](https://monome.org/docs/setup/). Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
+All three of the modules can connect to either a virtual grid or a real hardware grid controller ([serialosc](https://monome.org/docs/setup/) is required to use real hardware, but is not needed for virtual grids.) 
+
+ Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
 
 ### How do I use this?
 
 For now, this is a *source-only plugin*, no binary package is provided. *You must also build VCVRack from source before you can compile plugins* -- this will not work with the downloadable version of VCVRack.
 
-This plugin has been built and tested on the following platforms:
+This plugin has been built and tested on the following platforms, though [bugs and issues](/../../issues) still exist.
 * Mac OS X 10.12.6
 * Windows 10 (with Msys2)
 * Ubuntu 16.04
 
 Instructions:
 
-* Clone [VCVRack](https://github.com/VCVRack/Rack) and follow its build instructions for your platform. Build the master branch, not 0.5.0.
+* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v0.5` branch. Run and test Rack to make sure it works as expected.
+   ```bash
+   $ git clone -b v0.5 https://github.com/VCVRack/Rack
+   $ cd Rack
+   $ git submodule update --init --recursive
+   $ make dep
+   $ make
+   $ make run
+   ``` 
 * Clone this repo into the `plugins` folder under VCVRack.
-* Change into the `monome-rack` folder and clone submodules with `git submodule update --init --recursive`
+   ```bash
+   $ cd plugins
+   $ git clone https://github.com/Dewb/monome-rack
+   ```
+* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
+   ```bash
+   $ cd monome-rack
+   $ git submodule update --init --recursive
+   ```
 * Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
-
+   ```bash
+   $ make
+   ```
 Now that you've built the plugin, let's get to patching:
 
 * Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
@@ -74,7 +94,7 @@ In order of importance, the initial goals of this project were/are:
 
 ### How does this work?
 
-The firmware for the monome modules are written in C for the AVR32 platform. (For more details, [go here](https://github.com/monome/libavr32).) In this project, these firmware projects are built into separate C shared libraries together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module that you load, so statics and globals work as expected within each module instance.
+The firmware for the monome modules are written in C for the AVR32 platform. ([More details here](https://github.com/monome/libavr32).) In this project, these firmware repos are built into separate C shared libraries, together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module that you load, so statics and globals work as expected within each module instance.
 
 ### Who did this?
 
