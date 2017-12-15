@@ -5,6 +5,7 @@ FLAGS = \
 	-Werror=implicit-function-declaration \
 	-Isrc \
 	-Isrc/common \
+	-Isrc/common/GridConnection \
 	-Isrc/grid \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
@@ -19,7 +20,8 @@ SOURCES = \
 	$(wildcard lib/oscpack/osc/*.cpp) \
 	$(wildcard lib/serialosc/*.cpp) \
 	$(wildcard src/*.cpp) \
-	$(wildcard src/**/*.cpp)
+	$(wildcard src/**/*.cpp) \
+	$(wildcard src/**/**/*.cpp) \
 
 include ../../arch.mk
 

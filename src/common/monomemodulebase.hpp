@@ -1,53 +1,11 @@
-#include "SerialOsc.h"
+#include "GridConnection.hpp"
 #include "firmwaremanager.hpp"
 #include "rack.hpp"
+#include "SerialOsc.h"
 
 #pragma once
 using namespace rack;
 
-struct MonomeGrid;
-struct MonomeModuleBase;
-
-struct GridConnection
-{
-    GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const device);
-    MonomeModuleBase* module;
-    const MonomeDevice* const device;
-
-    virtual ~GridConnection() {}
-    virtual void connect() = 0;
-    virtual void disconnect() = 0;
-    virtual void processInput() = 0;
-    virtual void updateQuadrant(int x, int y, uint8_t* leds) = 0;
-    virtual void clearAll() = 0;
-};
-
-struct RackGridConnection : GridConnection
-{
-    RackGridConnection(MonomeModuleBase* controlledModule, MonomeGrid* gridModule);
-    MonomeGrid* grid;
-
-    void connect() override;
-    void disconnect() override;
-    void processInput() override;
-    void updateQuadrant(int x, int y, uint8_t* leds) override;
-    void clearAll() override;
-
-    inline bool operator==(const RackGridConnection& other) const;
-};
-
-struct SerialOscGridConnection : GridConnection
-{
-    SerialOscGridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const device);
-
-    void connect() override;
-    void disconnect() override;
-    void processInput() override;
-    void updateQuadrant(int x, int y, uint8_t* leds) override;
-    void clearAll() override;
-
-    inline bool operator==(const SerialOscGridConnection& other) const;
-};
 
 struct MonomeModuleBase : Module, SerialOsc::Listener
 {

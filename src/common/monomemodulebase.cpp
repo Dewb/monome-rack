@@ -1,80 +1,9 @@
 #include "monomemodulebase.hpp"
 #include "base64.h"
 #include "grid.hpp"
+#include "SerialOscGridConnection.hpp"
+#include "VirtualGridConnection.hpp"
 
-GridConnection::GridConnection(MonomeModuleBase* controlledModule, const MonomeDevice* const d)
-    : module(controlledModule)
-    , device(d)
-{
-}
-
-RackGridConnection::RackGridConnection(MonomeModuleBase* controlledModule, MonomeGrid* gridModule)
-    : GridConnection(controlledModule, &gridModule->device)
-{
-    grid = gridModule;
-}
-
-void RackGridConnection::connect()
-{
-    grid->connectedModule = module;
-}
-
-void RackGridConnection::disconnect()
-{
-    grid->connectedModule = NULL;
-}
-
-void RackGridConnection::processInput()
-{
-}
-
-void RackGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
-{
-    grid->updateQuadrant(x, y, leds);
-}
-
-void RackGridConnection::clearAll()
-{
-    grid->clearAll();
-}
-
-bool RackGridConnection::operator==(const RackGridConnection& other) const
-{
-    return (this->grid == other.grid && this->module == other.module);
-}
-
-SerialOscGridConnection::SerialOscGridConnection(MonomeModuleBase* module, const MonomeDevice* const device)
-    : GridConnection(module, device)
-{
-}
-
-void SerialOscGridConnection::connect()
-{
-}
-
-void SerialOscGridConnection::disconnect()
-{
-    module->serialOscDriver->sendDeviceLedAllCommand(device, false);
-}
-
-void SerialOscGridConnection::processInput()
-{
-}
-
-void SerialOscGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
-{
-    module->serialOscDriver->sendDeviceLedLevelMapCommand(device, x, y, leds);
-}
-
-void SerialOscGridConnection::clearAll()
-{
-    module->serialOscDriver->sendDeviceLedAllCommand(device, false);
-}
-
-bool SerialOscGridConnection::operator==(const SerialOscGridConnection& other) const
-{
-    return (this->device == other.device && this->module == other.module);
-}
 
 MonomeModuleBase::MonomeModuleBase(int numParams, int numInputs, int numOutputs, int numLights)
     : Module(numParams, numInputs, numOutputs, numLights)
@@ -273,7 +202,7 @@ json_t* MonomeModuleBase::toJson()
     {
         json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
     }
-    
+
     return rootJ;
 }
 
