@@ -6,7 +6,7 @@
         {
             "label": "Build Rack plugin",
             "type": "shell",
-            "command": "make",
+            "command": "make -j4",
             "problemMatcher": [
                 "$gcc"
             ],
