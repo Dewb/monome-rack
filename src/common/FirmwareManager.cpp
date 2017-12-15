@@ -32,7 +32,7 @@ using namespace std;
     fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
     if (!fw_fn_##name)                                              \
     {                                                               \
-        rack::warn("Failed to find symbol '" #name "'");                  \
+        rack::warn("Failed to find symbol '" #name "'");            \
         return false;                                               \
     }
 
@@ -46,7 +46,7 @@ using namespace std;
     fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
     if (!fw_fn_##name)                                     \
     {                                                      \
-        rack::warn("Failed to find symbol '" #name "'");         \
+        rack::warn("Failed to find symbol '" #name "'");   \
         return false;                                      \
     }
 
@@ -189,7 +189,7 @@ struct FirmwareManagerImpl
         if (!handle)
         {
             int error = GetLastError();
-            warn("Failed to load library %s: %d", libraryToLoad.c_str(), error);
+            rack::warn("Failed to load library %s: %d", libraryToLoad.c_str(), error);
             return false;
         }
 
