@@ -223,6 +223,29 @@ void SerialOsc::sendDeviceLedRowCommand(const MonomeDevice* const device, int x_
     transmitSocket.Send(p.Data(), p.Size());
 }
 
+void SerialOsc::sendDeviceLedMapCommand(const MonomeDevice* const device, int x, int y, uint8_t* stateMap)
+{
+    UdpTransmitSocket transmitSocket(IpEndpointName(SERIALOSC_ADDRESS, device->port));
+    char buffer[OSC_BUFFER_SIZE];
+    osc::OutboundPacketStream p(buffer, OSC_BUFFER_SIZE);
+    std::string address = (device->prefix + "/grid/led/map");
+
+    p << osc::BeginBundleImmediate
+      << osc::BeginMessage(address.c_str())
+      << x
+      << y;
+
+    for (int i = 0; i < 8; i++)
+    {
+        p << stateMap[i];
+    }
+
+    p << osc::EndMessage
+      << osc::EndBundle;
+
+    transmitSocket.Send(p.Data(), p.Size());
+}
+
 void SerialOsc::sendDeviceLedLevelMapCommand(const MonomeDevice* const device, int x, int y, uint8_t* stateMap)
 {
     UdpTransmitSocket transmitSocket(IpEndpointName(SERIALOSC_ADDRESS, device->port));

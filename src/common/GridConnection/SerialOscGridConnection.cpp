@@ -43,6 +43,22 @@ void SerialOscGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
             module->serialOscDriver->sendDeviceLedRowCommand(device, 0, i, bits);
         }
     }
+    else if (device->protocol == PROTOCOL_SERIES)
+    {
+        uint8_t* p = leds;
+        uint8_t map[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (*p++)
+                {
+                    map[i] |= 1 << j;
+                }
+            }
+        }
+        module->serialOscDriver->sendDeviceLedMapCommand(device, x, y, map);
+    }
     else
     {
         module->serialOscDriver->sendDeviceLedLevelMapCommand(device, x, y, leds);
