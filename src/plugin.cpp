@@ -1,7 +1,7 @@
 #include "EarthseaWidget.hpp"
 #include "MeadowphysicsWidget.hpp"
-#include "WhiteWhaleWidget.hpp"
 #include "VirtualGridWidget.hpp"
+#include "WhiteWhaleWidget.hpp"
 
 using namespace rack;
 
@@ -23,7 +23,7 @@ void init(Plugin* p)
     p->addModel(createModel<VirtualGridWidgetTemplate<16, 8, 5>>("monome", "grid128", "virtual grid 128", CONTROLLER_TAG));
     p->addModel(createModel<VirtualGridWidgetTemplate<8, 8, 5>>("monome", "grid64", "virtual grid 64", CONTROLLER_TAG));
     p->addModel(createModel<VirtualGridWidgetTemplate<16, 8, 2>>("monome", "grid128series", "virtual grid 128 mono", CONTROLLER_TAG));
-    p->addModel(createModel<VirtualGridWidgetTemplate<8, 8, 1>>("monome", "grid64series", "virtual grid 64 mono", CONTROLLER_TAG));
+    p->addModel(createModel<VirtualGridWidgetTemplate<8, 8, 0>>("monome", "grid64series", "virtual grid 64 mono", CONTROLLER_TAG));
 
     //p->addModel(createModel<TeletypeWidget>("monome", "teletype", "teletype", SEQUENCER_TAG, FUNCTION_GENERATOR_TAG, UTILITY_TAG, RANDOM_TAG, EXTERNAL_TAG));
 }

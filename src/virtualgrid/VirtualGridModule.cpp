@@ -1,7 +1,6 @@
 #include "VirtualGridModule.hpp"
 #include "MonomeModuleBase.hpp"
 
-
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
     : Module(w * h, 0, 0, 0)
 {
@@ -51,9 +50,18 @@ void VirtualGridModule::fromJson(json_t* rootJ)
     device.id = json_string_value(json_object_get(rootJ, "deviceId"));
 }
 
-void VirtualGridModule::updateQuadrant(int x, int y, uint8_t* leds)
+void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
 {
-    uint8_t* ptr = ledBuffer + y * 16 + x;
+    uint8_t* ptr = ledBuffer + y * 16 + x_offset;
+    for (int i = 0; i < 8; i++)
+    {
+        *ptr++ = ((bitfield & (1 << i)) > 0) ? 104 : 0;
+    }
+}
+
+void VirtualGridModule::updateQuadrant(int x_offset, int y_offset, uint8_t* leds)
+{
+    uint8_t* ptr = ledBuffer + y_offset * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -68,4 +76,3 @@ void VirtualGridModule::clearAll()
 {
     memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
 }
-

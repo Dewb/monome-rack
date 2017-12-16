@@ -22,6 +22,11 @@ void VirtualGridConnection::processInput()
 {
 }
 
+void VirtualGridConnection::updateRow(int x_offset, int y, uint8_t bitfield)
+{
+    grid->updateRow(x_offset, y, bitfield);
+}
+
 void VirtualGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
 {
     grid->updateQuadrant(x, y, leds);

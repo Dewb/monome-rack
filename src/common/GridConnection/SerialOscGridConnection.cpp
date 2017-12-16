@@ -1,7 +1,6 @@
-#include "MonomeModuleBase.hpp"
 #include "SerialOscGridConnection.hpp"
+#include "MonomeModuleBase.hpp"
 #include "VirtualGridModule.hpp"
-
 
 SerialOscGridConnection::SerialOscGridConnection(MonomeModuleBase* module, const MonomeDevice* const device)
     : GridConnection(module, device)
@@ -21,9 +20,33 @@ void SerialOscGridConnection::processInput()
 {
 }
 
+void SerialOscGridConnection::updateRow(int x_offset, int y, uint8_t bitfield)
+{
+    module->serialOscDriver->sendDeviceLedRowCommand(device, x_offset, y, bitfield);
+}
+
 void SerialOscGridConnection::updateQuadrant(int x, int y, uint8_t* leds)
 {
-    module->serialOscDriver->sendDeviceLedLevelMapCommand(device, x, y, leds);
+    if (device->protocol == PROTOCOL_40H)
+    {
+        uint8_t* p = leds;
+        for (int i = 0; i < 8; i++)
+        {
+            uint8_t bits = 0;
+            for (int j = 0; j < 8; j++)
+            {
+                if (*p++)
+                {
+                    bits |= 1 << j;
+                }
+            }
+            module->serialOscDriver->sendDeviceLedRowCommand(device, 0, i, bits);
+        }
+    }
+    else
+    {
+        module->serialOscDriver->sendDeviceLedLevelMapCommand(device, x, y, leds);
+    }
 }
 
 void SerialOscGridConnection::clearAll()

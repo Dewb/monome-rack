@@ -1,5 +1,5 @@
-#include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
+#include "VirtualGridModule.hpp"
 
 #include <iomanip>
 #include <random>
@@ -10,8 +10,6 @@ using namespace rack;
 struct MonomeKey : rack::ParamWidget
 {
     uint8_t* ledAddress;
-    int key_x;
-    int key_y;
     int index;
     GridTheme theme;
 
@@ -31,11 +29,9 @@ struct MonomeKey : rack::ParamWidget
         return dynamic_cast<VirtualGridWidget*>(parent);
     }
 
-    void setKeyAddress(int x, int y, uint8_t* ledByte)
+    void setKeyAddress(uint8_t* ledByte)
     {
         ledAddress = ledByte;
-        key_x = x;
-        key_y = y;
     }
 
     void draw(NVGcontext* vg) override
@@ -73,7 +69,8 @@ struct MonomeKey : rack::ParamWidget
 
         /*
         std::stringstream label;
-        label << index;
+        //label << index;
+        label << ((uint64_t)ledAddress & 0xff);
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGB(0, 0, 0));
         nvgText(vg, box.size.x / 2, box.size.y / 2, label.str().c_str(), NULL);
@@ -228,16 +225,16 @@ VirtualGridWidget::VirtualGridWidget(unsigned w, unsigned h, unsigned model)
     int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
     int button_size = max_height; // max_width > max_height ? max_width : max_height;
 
-    for (unsigned i = 0; i < w; i++)
+    for (unsigned j = 0; j < h; j++)
     {
-        for (unsigned j = 0; j < h; j++)
+        for (unsigned i = 0; i < w; i++)
         {
             int x = margins.x + i * (button_size + spacing);
             int y = margins.y + j * (button_size + spacing);
             int n = i + j * w;
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
-            key->setKeyAddress(x, y, module->ledBuffer + i + j * 16);
+            key->setKeyAddress(module->ledBuffer + i + j * 16);
             key->box.size = Vec(button_size, button_size);
             key->index = n;
             key->theme = theme;

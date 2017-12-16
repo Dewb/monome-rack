@@ -1,9 +1,9 @@
 #include "MonomeModuleBase.hpp"
 #include "SerialOscGridConnection.hpp"
 #include "VirtualGridConnection.hpp"
-#include "base64.h"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
+#include "base64.h"
 
 using namespace std;
 
@@ -34,6 +34,7 @@ void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
 
     if (gridConnection)
     {
+        gridConnection->disconnect();
         gridConnection->connect();
         unresolvedConnectionId = "";
 
@@ -95,7 +96,23 @@ void MonomeModuleBase::readSerialMessages()
     firmware.readSerial(FTDI_BUS, &msg, &count);
     while (msg)
     {
-        if (msg[0] == 0x1A && count >= 35)
+        if ((msg[0] & 0xF0) == 0x70 && count >= 2)
+        {
+            // 40h protocol row update
+            uint8_t y = msg[0] & 0x0F;
+            uint8_t bitfield = msg[1];
+            if (gridConnection)
+            {
+                gridConnection->updateRow(0, y, bitfield);
+            }
+            if (count > 2) // there are more 0x7x two-byte commands in this serial message
+            {
+                msg += 2;
+                count -= 2;
+                continue;
+            }
+        }
+        else if (msg[0] == 0x1A && count >= 35)
         {
             // mext protocol quadrant update
             uint8_t x = msg[1];
@@ -194,7 +211,7 @@ json_t* MonomeModuleBase::toJson()
     uint32_t size;
 
     firmware.readNVRAM(&data, &size);
-    if(data && size > 0)
+    if (data && size > 0)
     {
         json_object_set_new(rootJ, "nvram", json_string(base64_encode((unsigned char*)data, size).c_str()));
     }
@@ -246,4 +263,3 @@ void MonomeModuleBase::fromJson(json_t* rootJ)
         }
     }
 }
-

@@ -50,9 +50,10 @@ public:
 	// Device messages
 	void sendDeviceLedCommand(const MonomeDevice * const device, int x, int y, bool state);
 	void sendDeviceLedAllCommand(const MonomeDevice * const device, bool state);
-	void sendDeviceLedLevelMapCommand(const MonomeDevice *const device, int x, int y, uint8_t *stateMap);
+	void sendDeviceLedRowCommand(const MonomeDevice* const device, int x_offset, int y, uint8_t stateBits);
+	void sendDeviceLedLevelMapCommand(const MonomeDevice* const device, int x, int y, uint8_t* stateMap);
 
-	// TODO : Add other device outgoing message types (row, map, etc)
+        // TODO : Add other device outgoing message types (row, map, etc)
 
 protected:
 	void runThread(void);

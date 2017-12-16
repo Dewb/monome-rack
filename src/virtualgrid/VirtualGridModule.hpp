@@ -1,5 +1,5 @@
-#include "rack.hpp"
 #include "SerialOsc.h"
+#include "rack.hpp"
 
 #pragma once
 
@@ -22,7 +22,7 @@ struct VirtualGridModule : rack::Module
     json_t* toJson() override;
     void fromJson(json_t* rootJ) override;
 
-    void updateQuadrant(int x, int y, uint8_t* leds);
+    void updateRow(int x_offset, int y, uint8_t bitfield);
+    void updateQuadrant(int x_offset, int y_offset, uint8_t* leds);
     void clearAll();
 };
-
