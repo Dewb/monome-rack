@@ -1,6 +1,5 @@
 #include "WhiteWhaleModule.hpp"
 
-
 WhiteWhaleModule::WhiteWhaleModule()
     : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
 {
@@ -8,10 +7,8 @@ WhiteWhaleModule::WhiteWhaleModule()
     firmware.init();
 }
 
-void WhiteWhaleModule::step()
+void WhiteWhaleModule::processInputs()
 {
-    MonomeModuleBase::step();
-
     // Convert clock input jack to GPIO signals for normal connection and value
     bool clockNormal = !inputs[CLOCK_INPUT].active;
     if (clockNormal != firmware.getGPIO(B09))
@@ -35,13 +32,10 @@ void WhiteWhaleModule::step()
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(0, params[CLOCK_PARAM].value * 0xFFF);
     firmware.setADC(1, params[PARAM_PARAM].value * 0xFFF);
+}
 
-    // Advance software timers
-    firmware.advanceClock(rack::engineGetSampleTime());
-
-    // Pump event loop
-    firmware.step();
-
+void WhiteWhaleModule::processOutputs()
+{
     // Update lights from GPIO
     lights[CLOCK_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
     lights[TRIG1_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
@@ -59,7 +53,4 @@ void WhiteWhaleModule::step()
     outputs[TRIG4_OUTPUT].value = firmware.getGPIO(B03) * 8.0;
     outputs[CVA_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CVB_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
-
-    readSerialMessages();
 }
-

@@ -8,10 +8,8 @@ MeadowphysicsModule::MeadowphysicsModule()
     firmware.init();
 }
 
-void MeadowphysicsModule::step()
+void MeadowphysicsModule::processInputs()
 {
-    MonomeModuleBase::step();
-
     // Convert clock input jack to GPIO signals for normal connection and value
     bool clockNormal = !inputs[CLOCK_INPUT].active;
     if (clockNormal != firmware.getGPIO(B09))
@@ -34,13 +32,10 @@ void MeadowphysicsModule::step()
 
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(0, params[CLOCK_PARAM].value * 0xFFF);
+}
 
-    // Advance software timers
-    firmware.advanceClock(rack::engineGetSampleTime());
-
-    // Pump event loop
-    firmware.step();
-
+void MeadowphysicsModule::processOutputs()
+{
     // Update lights from GPIO
     lights[CLOCK_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
     lights[TRIG1_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
@@ -62,7 +57,5 @@ void MeadowphysicsModule::step()
     outputs[TRIG6_OUTPUT].value = firmware.getGPIO(B05) * 8.0;
     outputs[TRIG7_OUTPUT].value = firmware.getGPIO(B06) * 8.0;
     outputs[TRIG8_OUTPUT].value = firmware.getGPIO(B07) * 8.0;
-
-    readSerialMessages();
 }
 

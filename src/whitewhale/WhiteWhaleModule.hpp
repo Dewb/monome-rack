@@ -43,5 +43,6 @@ struct WhiteWhaleModule : MonomeModuleBase
     };
 
     WhiteWhaleModule();
-    void step() override;
+    void processInputs() override;
+    void processOutputs() override;
 };

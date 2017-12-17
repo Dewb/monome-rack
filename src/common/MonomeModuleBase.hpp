@@ -35,8 +35,13 @@ struct MonomeModuleBase : rack::Module, SerialOsc::Listener
     json_t* toJson() override;
     void fromJson(json_t* rootJ) override;
 
+    // MonomeModuleBase virtual methods
+    virtual void processInputs() = 0;
+    virtual void processOutputs() = 0;
+
     ~MonomeModuleBase();
     void setGridConnection(GridConnection* newConnection);
+    void resolveSavedGridConnection();
     virtual void readSerialMessages();
 
     SerialOsc* serialOscDriver;
@@ -44,4 +49,3 @@ struct MonomeModuleBase : rack::Module, SerialOsc::Listener
     bool firstStep;
     std::string unresolvedConnectionId;
 };
-

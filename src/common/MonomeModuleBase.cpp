@@ -159,37 +159,57 @@ void MonomeModuleBase::readSerialMessages()
 
 void MonomeModuleBase::step()
 {
+    // Execute setup tasks that must be run after full Rack is deserialized from JSON
     if (firstStep)
     {
+        resolveSavedGridConnection();
         firstStep = false;
+    }
 
-        // Resolve connections from JSON after the entire rack has been deserialized
-        if (unresolvedConnectionId != "")
+    // Module-specific code to bind Rack inputs to GPIO/ADC
+    processInputs();
+
+    // Advance hardware timers
+    firmware.advanceClock(rack::engineGetSampleTime());
+
+    // Pump hardware event loop
+    firmware.step();
+
+    // Module-specific code to bind GPIO/DAC to Rack outputs & lights
+    processOutputs();
+
+    // Act on serial output from module to the outside world (grid LEDs, etc.)
+    readSerialMessages();
+}
+
+void MonomeModuleBase::resolveSavedGridConnection()
+{
+    // Resolve connections from JSON after the entire rack has been deserialized
+    if (unresolvedConnectionId != "")
+    {
+        // enumerate detected serialosc devices
+        for (MonomeDevice* device : serialOscDriver->getDevices())
         {
-            // enumerate detected serialosc devices
-            for (MonomeDevice* device : serialOscDriver->getDevices())
+            if (device->id == unresolvedConnectionId)
             {
-                if (device->id == unresolvedConnectionId)
+                auto connection = new SerialOscGridConnection(this, device);
+                setGridConnection(connection);
+                return;
+            }
+        }
+
+        // enumerate modules
+        for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
+        {
+            VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
+            if (gridWidget)
+            {
+                auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
+                if (gridModule->device.id == unresolvedConnectionId)
                 {
-                    auto connection = new SerialOscGridConnection(this, device);
+                    auto connection = new VirtualGridConnection(this, gridModule);
                     setGridConnection(connection);
                     return;
-                }
-            }
-
-            // enumerate modules
-            for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
-            {
-                VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
-                if (gridWidget)
-                {
-                    auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
-                    if (gridModule->device.id == unresolvedConnectionId)
-                    {
-                        auto connection = new VirtualGridConnection(this, gridModule);
-                        setGridConnection(connection);
-                        return;
-                    }
                 }
             }
         }

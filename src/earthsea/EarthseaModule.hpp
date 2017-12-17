@@ -39,5 +39,6 @@ struct EarthseaModule : MonomeModuleBase
     };
 
     EarthseaModule();
-    void step() override;
+    void processInputs() override;
+    void processOutputs() override;
 };

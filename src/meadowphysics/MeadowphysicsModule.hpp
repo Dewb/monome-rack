@@ -46,5 +46,6 @@ struct MeadowphysicsModule : MonomeModuleBase
     };
 
     MeadowphysicsModule();
-    void step() override;
+    void processInputs() override;
+    void processOutputs() override;
 };
