@@ -5,7 +5,7 @@ monome-rack — VCVRack plugin for monome hardware
 
 This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port, and no support guarantees, warranty, or affiliation is implied from any organization mentioned in this document.
 
-This plugin is still in development. [The release roadmap is here](https://github.com/Dewb/monome-rack/projects/1). If you're not using the source version of VCV Rack, and you're not comfortable with `git` and `make`, you might want to consider waiting for the first official binary release.
+This plugin is still in development. [The release roadmap is here](../../projects/1). If you're not using the source version of VCV Rack, and you're not comfortable with `git` and `make`, you might want to consider waiting for the first official binary release.
 
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
 
@@ -100,9 +100,13 @@ The firmware for the monome modules are written in C for the AVR32 platform. ([M
 
 Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
 
-[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale.
+[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale, meadowphysics, and earthsea.
 
 Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues) or in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
+
+### What's next?
+
+See the [release plan](../../projects/1).
 
 ## License
 
