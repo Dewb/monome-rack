@@ -1,9 +1,9 @@
-#include "MonomeModuleBase.hpp"
 #include "MonomeModuleBaseWidget.hpp"
+#include "MonomeModuleBase.hpp"
 #include "SerialOscGridConnection.hpp"
 #include "VirtualGridConnection.hpp"
-#include "VirtualGridWidget.hpp"
 #include "VirtualGridModule.hpp"
+#include "VirtualGridWidget.hpp"
 
 using namespace rack;
 
@@ -27,6 +27,17 @@ struct MonomeConnectionItem : rack::MenuItem
     }
 };
 
+// Copied from Rack AddModuleWindow.cpp, where it's otherwise inaccessible
+struct UrlItem : rack::MenuItem
+{
+    std::string url;
+    void onAction(EventAction& e) override
+    {
+        std::thread t(openBrowser, url);
+        t.detach();
+    }
+};
+
 template <typename C>
 bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
 {
@@ -43,7 +54,6 @@ bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
 
 MonomeModuleBaseWidget::MonomeModuleBaseWidget()
 {
-    
 }
 
 Menu* MonomeModuleBaseWidget::createContextMenu()
@@ -51,6 +61,11 @@ Menu* MonomeModuleBaseWidget::createContextMenu()
     rack::Menu* menu = ModuleWidget::createContextMenu();
 
     auto module = static_cast<MonomeModuleBase*>(this->module);
+
+    auto helpItem = new UrlItem();
+    helpItem->url = "https://github.com/Dewb/monome-rack/blob/master/README.md";
+    helpItem->text = "Help";
+    menu->addChild(helpItem);
 
     menu->addChild(construct<MenuEntry>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
