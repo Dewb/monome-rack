@@ -1,7 +1,6 @@
 SLUG = monome
 VERSION = 0.6.0
 
-
 SHELL:=/bin/bash -O extglob
 RACK_DIR ?= ../..
 
@@ -34,6 +33,8 @@ SOURCES += \
 	$(wildcard src/**/*.cpp) \
 	$(wildcard src/**/**/*.cpp) \
 
+include $(RACK_DIR)/arch.mk
+
 ifeq ($(ARCH), win)
 	SOURCES += $(wildcard lib/oscpack/ip/win32/*.cpp) 
 	LDFLAGS += -lws2_32 -lwinmm
@@ -52,5 +53,4 @@ all: firmwares
 # The compiled plugin is automatically added.
 DISTRIBUTABLES += $(wildcard LICENSE*) res firmware
 
-# Include the VCV Rack plugin Makefile framework
 include $(RACK_DIR)/plugin.mk
