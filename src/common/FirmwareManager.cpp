@@ -1,5 +1,5 @@
 #include "FirmwareManager.hpp"
-#include "util.hpp"
+#include "util/common.hpp"
 
 #include <cstdio>
 #include <fstream>

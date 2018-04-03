@@ -1,6 +1,11 @@
-SHELL:=/bin/bash -O extglob
+SLUG = monome
+VERSION = 0.6.0
 
-FLAGS = \
+
+SHELL:=/bin/bash -O extglob
+RACK_DIR ?= ../..
+
+FLAGS += \
 	-o0 \
 	-Werror=implicit-function-declaration \
 	-Isrc \
@@ -14,7 +19,13 @@ FLAGS = \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
 
-SOURCES = \
+FLAGS := $(filter-out -MMD,$(FLAGS))
+
+CFLAGS +=
+CXXFLAGS +=
+LDFLAGS +=
+
+SOURCES += \
 	lib/base64/base64.cpp \
 	$(wildcard lib/oscpack/ip/*.cpp) \
 	$(wildcard lib/oscpack/osc/*.cpp) \
@@ -23,18 +34,12 @@ SOURCES = \
 	$(wildcard src/**/*.cpp) \
 	$(wildcard src/**/**/*.cpp) \
 
-include ../../arch.mk
-
 ifeq ($(ARCH), win)
 	SOURCES += $(wildcard lib/oscpack/ip/win32/*.cpp) 
 	LDFLAGS += -lws2_32 -lwinmm
 else
 	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
-
-include ../../plugin.mk
-
-FLAGS := $(filter-out -MMD,$(FLAGS))
 
 firmwares:
 	cd firmware && $(MAKE) -f whitewhale.mk
@@ -43,8 +48,9 @@ firmwares:
 
 all: firmwares
 
-dist: all
-	mkdir -p dist/Monome
-	cp LICENSE* dist/Monome/
-	cp $(TARGET) dist/Monome/
-	cp -R res dist/Monome/
+# Add files to the ZIP package when running `make dist`
+# The compiled plugin is automatically added.
+DISTRIBUTABLES += $(wildcard LICENSE*) res firmware
+
+# Include the VCV Rack plugin Makefile framework
+include $(RACK_DIR)/plugin.mk

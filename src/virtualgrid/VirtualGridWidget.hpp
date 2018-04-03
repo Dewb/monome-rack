@@ -9,11 +9,11 @@ typedef enum {
 } GridTheme;
 
 struct MonomeKey;
-
+struct VirtualGridModule;
 
 struct VirtualGridWidget : rack::ModuleWidget
 {
-    VirtualGridWidget(unsigned w, unsigned h, unsigned model);
+    VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model);
 
     json_t* toJson() override;
     void fromJson(json_t* rootJ) override;
@@ -36,8 +36,8 @@ protected:
 template <unsigned width, unsigned height, unsigned modelIndex>
 struct VirtualGridWidgetTemplate : VirtualGridWidget
 {
-    VirtualGridWidgetTemplate()
-        : VirtualGridWidget(width, height, modelIndex)
+    VirtualGridWidgetTemplate(VirtualGridModule* module)
+        : VirtualGridWidget(module, width, height, modelIndex)
     {
     }
 };

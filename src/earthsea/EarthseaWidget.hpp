@@ -2,8 +2,10 @@
 
 #pragma once
 
+struct EarthseaModule;
+
 struct EarthseaWidget : MonomeModuleBaseWidget
 {
-    EarthseaWidget();
+    EarthseaWidget(EarthseaModule* module);
     void randomize() override;
 };

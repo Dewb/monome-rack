@@ -4,7 +4,7 @@ extern rack::Plugin* plugin;
 
 WhiteLight::WhiteLight()
 {
-    addBaseColor(COLOR_WHITE);
+    addBaseColor(rack::COLOR_WHITE);
 }
 
 void USBAJack::draw(NVGcontext* vg)
