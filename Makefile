@@ -18,8 +18,6 @@ FLAGS += \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
 
-FLAGS := $(filter-out -MMD,$(FLAGS))
-
 CFLAGS +=
 CXXFLAGS +=
 LDFLAGS +=
