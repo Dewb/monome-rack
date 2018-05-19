@@ -5,7 +5,6 @@ SHELL:=/bin/bash -O extglob
 RACK_DIR ?= ../..
 
 FLAGS += \
-	-o0 \
 	-Werror=implicit-function-declaration \
 	-Isrc \
 	-Isrc/common \
@@ -47,8 +46,6 @@ firmwares:
 
 all: firmwares
 
-# Add files to the ZIP package when running `make dist`
-# The compiled plugin is automatically added.
-DISTRIBUTABLES += $(wildcard LICENSE*) res firmware
+DISTRIBUTABLES += $(wildcard LICENSE*) res 
 
 include $(RACK_DIR)/plugin.mk

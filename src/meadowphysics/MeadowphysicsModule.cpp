@@ -1,10 +1,9 @@
 #include "MeadowphysicsModule.hpp"
 
-
 MeadowphysicsModule::MeadowphysicsModule()
     : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
 {
-    firmware.load("./plugins/monome-rack/build/firmware/meadowphysics");
+    firmware.load("meadowphysics");
     firmware.init();
 }
 
@@ -58,4 +57,3 @@ void MeadowphysicsModule::processOutputs()
     outputs[TRIG7_OUTPUT].value = firmware.getGPIO(B06) * 8.0;
     outputs[TRIG8_OUTPUT].value = firmware.getGPIO(B07) * 8.0;
 }
-

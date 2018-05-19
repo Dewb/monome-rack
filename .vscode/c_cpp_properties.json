@@ -60,7 +60,8 @@
             "includePath": [
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                 "${workspaceFolder}",
-                "${workspaceFolder}/../../include"
+                "${workspaceFolder}/../../include",
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -76,7 +77,9 @@
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
-            }
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
     ],
     "version": 3
