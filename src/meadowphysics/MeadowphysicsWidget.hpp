@@ -2,8 +2,10 @@
 
 #pragma once
 
+struct MeadowphysicsModule;
+
 struct MeadowphysicsWidget : MonomeModuleBaseWidget
 {
-    MeadowphysicsWidget();
+    MeadowphysicsWidget(MeadowphysicsModule* module);
     void randomize() override;
 };

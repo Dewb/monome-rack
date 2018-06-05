@@ -22,7 +22,7 @@ SOURCES = \
 	mock_hardware/adapter.c \
 	mock_hardware/mock_hardware.c
 
-TARGETNAME = ../build/firmware/whitewhale
+TARGETNAME = ../res/firmware/whitewhale
 
 include ../../../arch.mk
 

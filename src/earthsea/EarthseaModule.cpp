@@ -4,7 +4,7 @@
 EarthseaModule::EarthseaModule()
     : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
 {
-    firmware.load("./plugins/monome-rack/build/firmware/earthsea");
+    firmware.load("earthsea");
     firmware.init();
 }
 

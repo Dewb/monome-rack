@@ -1,7 +1,10 @@
-SHELL:=/bin/bash -O extglob
+SLUG = monome
+VERSION = 0.6.0
 
-FLAGS = \
-	-o0 \
+SHELL:=/bin/bash -O extglob
+RACK_DIR ?= ../..
+
+FLAGS += \
 	-Werror=implicit-function-declaration \
 	-Isrc \
 	-Isrc/common \
@@ -14,7 +17,11 @@ FLAGS = \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
 
-SOURCES = \
+CFLAGS +=
+CXXFLAGS +=
+LDFLAGS +=
+
+SOURCES += \
 	lib/base64/base64.cpp \
 	$(wildcard lib/oscpack/ip/*.cpp) \
 	$(wildcard lib/oscpack/osc/*.cpp) \
@@ -23,7 +30,7 @@ SOURCES = \
 	$(wildcard src/**/*.cpp) \
 	$(wildcard src/**/**/*.cpp) \
 
-include ../../arch.mk
+include $(RACK_DIR)/arch.mk
 
 ifeq ($(ARCH), win)
 	SOURCES += $(wildcard lib/oscpack/ip/win32/*.cpp) 
@@ -32,10 +39,6 @@ else
 	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
 
-include ../../plugin.mk
-
-FLAGS := $(filter-out -MMD,$(FLAGS))
-
 firmwares:
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
@@ -43,8 +46,6 @@ firmwares:
 
 all: firmwares
 
-dist: all
-	mkdir -p dist/Monome
-	cp LICENSE* dist/Monome/
-	cp $(TARGET) dist/Monome/
-	cp -R res dist/Monome/
+DISTRIBUTABLES += $(wildcard LICENSE*) res 
+
+include $(RACK_DIR)/plugin.mk

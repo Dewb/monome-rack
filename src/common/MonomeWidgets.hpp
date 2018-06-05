@@ -2,7 +2,7 @@
 
 #pragma once
 
-struct WhiteLight : rack::ModuleLightWidget
+struct WhiteLight : rack::GrayModuleLightWidget
 {
     WhiteLight();
 };

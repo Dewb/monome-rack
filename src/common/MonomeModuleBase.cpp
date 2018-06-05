@@ -40,7 +40,7 @@ void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
 
         string id = gridConnection->device->id;
         string wide_id;
-        for (int i = 0; i < id.length(); i++)
+        for (size_t i = 0; i < id.length(); i++)
         {
             if (i == 1 && id[1] == 'v')
                 i++;

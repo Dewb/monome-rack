@@ -33,7 +33,7 @@ struct UrlItem : rack::MenuItem
     std::string url;
     void onAction(EventAction& e) override
     {
-        std::thread t(openBrowser, url);
+        std::thread t(rack::systemOpenBrowser, url);
         t.detach();
     }
 };
@@ -52,7 +52,8 @@ bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
     }
 }
 
-MonomeModuleBaseWidget::MonomeModuleBaseWidget()
+MonomeModuleBaseWidget::MonomeModuleBaseWidget(MonomeModuleBase* module)
+: ModuleWidget(module)
 {
 }
 

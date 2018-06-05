@@ -3,3 +3,5 @@ plugin.dylib
 plugin.dll
 plugin.so
 .DS_Store
+res/firmware
+dist

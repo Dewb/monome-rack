@@ -3,7 +3,7 @@
 WhiteWhaleModule::WhiteWhaleModule()
     : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
 {
-    firmware.load("./plugins/monome-rack/build/firmware/whitewhale");
+    firmware.load("whitewhale");
     firmware.init();
 }
 

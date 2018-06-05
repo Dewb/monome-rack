@@ -1,5 +1,5 @@
 #include "FirmwareManager.hpp"
-#include "util.hpp"
+#include "rack.hpp"
 
 #include <cstdio>
 #include <fstream>
@@ -8,6 +8,8 @@
 #include <unordered_set>
 
 using namespace std;
+
+extern rack::Plugin* plugin;
 
 #if ARCH_LIN
 #define LIB_EXTENSION ".so"
@@ -107,10 +109,12 @@ struct FirmwareManagerImpl
         }
     }
 
-    bool load(std::string firmwarePath)
+    bool load(std::string firmwareName)
     {
+        using namespace rack;
+
         std::string librarySource;
-        librarySource = firmwarePath + LIB_EXTENSION;
+        librarySource = assetPlugin(plugin, "res/firmware/" + firmwareName + LIB_EXTENSION);
         std::string libraryToLoad = librarySource;
 
         // If we have already loaded this firmware at least once, create a temp copy so it will have its own address space
@@ -165,6 +169,7 @@ struct FirmwareManagerImpl
             tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
 
             rack::info("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
+
             {
                 std::ifstream src(librarySource, std::ios::binary);
                 std::ofstream dst(tempLibraryFile, std::ios::binary);

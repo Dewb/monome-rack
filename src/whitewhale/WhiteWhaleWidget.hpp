@@ -2,8 +2,10 @@
 
 #pragma once
 
+struct WhiteWhaleModule;
+
 struct WhiteWhaleWidget : MonomeModuleBaseWidget
 {
-    WhiteWhaleWidget();
+    WhiteWhaleWidget(WhiteWhaleModule* module);
     void randomize() override;
 };
