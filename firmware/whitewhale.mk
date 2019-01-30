@@ -24,7 +24,7 @@ SOURCES = \
 
 TARGETNAME = ../res/firmware/whitewhale
 
-include ../../../arch.mk
+include $(RACK_DIR)/arch.mk
 
 ifeq ($(ARCH), lin)
 	LDFLAGS += -shared

@@ -30,7 +30,7 @@ SOURCES = \
 
 TARGETNAME = ../res/firmware/earthsea
 
-include ../../../arch.mk
+include $(RACK_DIR)/arch.mk
 
 ifeq ($(ARCH), lin)
 	LDFLAGS += -shared
