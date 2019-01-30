@@ -10,11 +10,11 @@ LABEL "homepage"="TBD"
 LABEL "maintainer"="dewb"
 
 ENV CROSS_TRIPLE=x86_64-w64-mingw32
+
+RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
 ENV RACK_DIR=${GITHUB_WORKSPACE}/Rack-SDK
 ENV RACK_USER_DIR=${GITHUB_WORKSPACE}
 
-RUN echo ARCH_WIN := 1 > ${RACK_DIR}/arch.mk
-RUN echo ARCH := win >> ${RACK_DIR}/arch.mk
-
+RUN mkdir plugins
 
 ENTRYPOINT ["/usr/bin/crossbuild", "make", "install"]
