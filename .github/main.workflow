@@ -1,6 +1,6 @@
 workflow "Build on push" {
   on = "push"
-  resolves = ["VCVRackPluginBuilder"]
+  resolves = ["Build Windows"]
 }
 
 action "Submodules" {
