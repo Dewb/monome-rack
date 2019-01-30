@@ -3,13 +3,8 @@ workflow "Build on push" {
   resolves = ["Build Windows"]
 }
 
-action "Submodules" {
-  uses = "./.github/actions/submodules"
-}
-
 action "Build Linux" {
   uses = "./.github/actions/build_linux"
-  needs = ["Submodules"]
 }
 
 action "Build OS X" {
