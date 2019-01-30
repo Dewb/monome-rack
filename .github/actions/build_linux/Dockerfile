@@ -12,10 +12,7 @@ LABEL "maintainer"="dewb"
 RUN apt-get update
 RUN apt-get install -y build-essential cmake curl gcc g++ git make tar unzip zip libgl1-mesa-dev libglu1-mesa-dev
 
-RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
 ENV RACK_DIR=${GITHUB_WORKSPACE}/Rack-SDK
 ENV RACK_USER_DIR=${GITHUB_WORKSPACE}
-
-RUN mkdir plugins
 
 ENTRYPOINT ["make", "install"]

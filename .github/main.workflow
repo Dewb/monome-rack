@@ -7,9 +7,13 @@ action "Submodules" {
   uses = "./.github/actions/submodules"
 }
 
+action "Rack SDK" {
+  uses = "./.github/actions/rack_sdk"
+}
+
 action "Build Linux" {
   uses = "./.github/actions/build_linux"
-  needs = ["Submodules"]
+  needs = ["Submodules". "Rack SDK"]
 }
 
 action "Build OS X" {
