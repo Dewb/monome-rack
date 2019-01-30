@@ -20,4 +20,6 @@ RUN env
 RUN echo ARCH_LIN := 1 > ${RACK_DIR}/arch.mk
 RUN echo ARCH := lin >> ${RACK_DIR}/arch.mk
 
+RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
+
 ENTRYPOINT ["make", "install"]
