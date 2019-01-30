@@ -39,7 +39,7 @@ This plugin has been built and tested on the following platforms, though [bugs a
 
 Instructions:
 
-* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v0.5` branch. Run and test Rack to make sure it works as expected.
+* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v0.6` branch. Run and test Rack to make sure it works as expected.
    ```bash
    $ git clone -b v0.5 https://github.com/VCVRack/Rack
    $ cd Rack
