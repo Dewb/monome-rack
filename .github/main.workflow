@@ -13,11 +13,11 @@ action "Build Linux" {
 }
 
 action "Build OS X" {
-  uses = "./.github/actions/build_linux"
+  uses = "./.github/actions/build_osx"
   needs = ["Build Linux"]
 }
 
 action "Build Windows" {
-  uses = "./.github/actions/build_linux"
+  uses = "./.github/actions/build_win"
   needs = ["Build OS X"]
 }
