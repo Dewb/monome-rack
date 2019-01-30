@@ -1,7 +1,7 @@
-FROM ubuntu:16.04
+FROM multiarch/crossbuild
 
-LABEL "com.github.actions.name"="VCVRackPluginBuilder"
-LABEL "com.github.actions.description"="Builds a VCV Rack plugin"
+LABEL "com.github.actions.name"="VCVRackPluginBuilder-OSX"
+LABEL "com.github.actions.description"="Builds a VCV Rack plugin for OS X"
 LABEL "com.github.actions.icon"="headphones"
 LABEL "com.github.actions.color"="purple"
 
@@ -9,10 +9,12 @@ LABEL "repository"="TBD"
 LABEL "homepage"="TBD"
 LABEL "maintainer"="dewb"
 
-RUN apt-get update
-RUN apt-get install -y build-essential cmake curl gcc g++ git make tar unzip zip libgl1-mesa-dev libglu1-mesa-dev
+ENV CROSS_TRIPLE=x86_64-apple-darwin
 
 RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
 ENV RACK_DIR=${GITHUB_WORKSPACE}/Rack-SDK
+ENV RACK_USER_DIR=${GITHUB_WORKSPACE}
 
-ENTRYPOINT ["make", "dist"]
+RUN mkdir plugins
+
+ENTRYPOINT ["/usr/bin/crossbuild", "make", "install"]
