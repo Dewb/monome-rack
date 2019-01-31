@@ -1,4 +1,6 @@
 FROM multiarch/crossbuild
+USER root
+WORKDIR ${GITHUB_WORKSPACE}
 
 LABEL "com.github.actions.name"="VCVRackPluginBuilder-OSX"
 LABEL "com.github.actions.description"="Builds a VCV Rack plugin for OS X"
