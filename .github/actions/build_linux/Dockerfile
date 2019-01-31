@@ -9,6 +9,8 @@ LABEL "repository"="TBD"
 LABEL "homepage"="TBD"
 LABEL "maintainer"="dewb"
 
+RUN env
+
 RUN apt-get update
 RUN apt-get install -y build-essential cmake curl gcc g++ git make tar unzip zip libgl1-mesa-dev libglu1-mesa-dev
 

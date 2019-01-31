@@ -9,6 +9,8 @@ LABEL "repository"="TBD"
 LABEL "homepage"="TBD"
 LABEL "maintainer"="dewb"
 
+RUN env
+
 ENV CROSS_TRIPLE=x86_64-apple-darwin
 
 RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
