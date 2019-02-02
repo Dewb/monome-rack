@@ -3,13 +3,17 @@ workflow "Build on push" {
   resolves = ["Build Windows"]
 }
 
-action "Submodules" {
+action "Fetch Submodules" {
   uses = "./.github/actions/submodules"
+}
+
+action "Fetch Rack SDK" {
+  uses = "./.github/actions/rack_sdk"
 }
 
 action "Build Linux" {
   uses = "./.github/actions/build_linux"
-  needs = ["Submodules"]
+  needs = ["Fetch Submodules", "Fetch Rack SDK"]
 }
 
 action "Build OS X" {
