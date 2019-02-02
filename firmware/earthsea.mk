@@ -14,6 +14,9 @@ FLAGS = \
 	-Iearthsea/libavr32/conf \
 	-Iearthsea/libavr32/conf/trilogy \
 	
+CFLAGS += \
+	-std=c99
+	
 SOURCES = \
 	earthsea/src/main.c \
 	earthsea/libavr32/src/arp.c \

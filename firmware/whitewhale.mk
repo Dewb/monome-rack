@@ -13,6 +13,9 @@ FLAGS = \
 	-Iwhitewhale/libavr32/conf \
 	-Iwhitewhale/libavr32/conf/trilogy \
 	
+CFLAGS += \
+	-std=c99
+	
 SOURCES = \
 	whitewhale/src/main.c \
 	whitewhale/libavr32/src/events.c \

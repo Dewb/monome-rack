@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef enum {
+typedef enum
+{
     WAITING,
     WRITING_CHANNEL1_HIGH,
     WRITING_CHANNEL1_LOW,
