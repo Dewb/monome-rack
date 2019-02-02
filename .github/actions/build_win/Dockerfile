@@ -9,12 +9,7 @@ LABEL "repository"="TBD"
 LABEL "homepage"="TBD"
 LABEL "maintainer"="dewb"
 
-ENV CROSS_TRIPLE=x86_64-w64-mingw32
-ENV RACK_DIR=${GITHUB_WORKSPACE}/Rack-SDK
-ENV RACK_USER_DIR=${GITHUB_WORKSPACE}
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
 
-RUN echo ARCH_WIN := 1 > ${RACK_DIR}/arch.mk
-RUN echo ARCH := win >> ${RACK_DIR}/arch.mk
-
-
-ENTRYPOINT ["/usr/bin/crossbuild", "make", "install"]
+ENTRYPOINT ["/entrypoint.sh"]

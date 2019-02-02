@@ -12,7 +12,10 @@ FLAGS = \
 	-Imeadowphysics/libavr32/src \
 	-Imeadowphysics/libavr32/conf \
 	-Imeadowphysics/libavr32/conf/trilogy \
-	
+
+CFLAGS += \
+	-std=c99
+		
 SOURCES = \
 	meadowphysics/src/main.c \
 	meadowphysics/libavr32/src/events.c \
