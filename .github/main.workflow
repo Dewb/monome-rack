@@ -1,6 +1,6 @@
 workflow "Build on push" {
   on = "push"
-  resolves = ["Build Windows"]
+  resolves = ["Build Linux"]
 }
 
 action "Fetch Submodules" {
@@ -13,15 +13,15 @@ action "Fetch Rack SDK" {
 
 action "Build Linux" {
   uses = "./.github/actions/build_linux"
-  needs = ["Fetch Submodules", "Fetch Rack SDK"]
+  needs = ["Fetch Rack SDK", "Fetch Submodules"]
 }
 
 action "Build OS X" {
   uses = "./.github/actions/build_osx"
-  needs = ["Build Linux"]
+  needs = ["Fetch Rack SDK", "Fetch Submodules"]
 }
 
 action "Build Windows" {
   uses = "./.github/actions/build_win"
-  needs = ["Build OS X"]
+  needs = ["Fetch Rack SDK", "Fetch Submodules"]
 }

@@ -8,8 +8,7 @@ LABEL "com.github.actions.color"="gray-dark"
 RUN apt-get update
 RUN apt-get install -y curl unzip
 
-RUN env
+ADD entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
 
-RUN curl -L https://vcvrack.com/downloads/Rack-SDK-0.6.2.zip -o rack-sdk.zip && unzip rack-sdk.zip && rm rack-sdk.zip
-
-RUN mkdir plugins
+ENTRYPOINT ["/entrypoint.sh"]
