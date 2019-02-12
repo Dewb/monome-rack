@@ -1,6 +1,6 @@
 workflow "Build on push" {
   on = "push"
-  resolves = ["Build Linux"]
+  resolves = ["Tag Latest"]
 }
 
 action "Fetch Submodules" {
@@ -29,4 +29,5 @@ action "Build Windows" {
 action "Tag Latest" {
   uses = "./.github/actions/tag_latest"
   needs = ["Build Linux"]
+  secrets = ["GITHUB_TOKEN"]
 }
