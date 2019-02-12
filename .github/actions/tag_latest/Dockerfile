@@ -1,4 +1,4 @@
-FROM alpine/curl
+FROM jess/curl
 
 LABEL "com.github.actions.name"="Tag latest"
 LABEL "com.github.actions.description"="Delete and recreate the 'latest' tag on the head revision"
