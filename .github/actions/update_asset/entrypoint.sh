@@ -19,7 +19,7 @@ FILENAME=$(basename ${ASSET_PATH})
 # Get information about the release
 response=$(curl -i --header "Authorization: token ${GITHUB_TOKEN}" ${GITHUB_API_URL}/repos/${REPO}/releases/tags/${RELEASE_TAG})
 eval $(echo "${response}" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')
-[ "${id}" ] || { echo "Error: Failed to get release id for tag: ${TAG}"; exit 1; }
+[ "${id}" ] || { echo "Error: Failed to get release id for tag: ${RELEASE_TAG}"; exit 1; }
 RELEASE_ID="${id}"
 
 # If the release already has a file asset with this name, delete it

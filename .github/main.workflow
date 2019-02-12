@@ -9,6 +9,9 @@ action "Fetch Submodules" {
 
 action "Fetch Rack SDK" {
   uses = "./.github/actions/rack_sdk"
+  env = {
+    RACK_SDK_VERSION = "0.6.2"
+  }
 }
 
 action "Build Linux" {

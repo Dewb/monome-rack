@@ -1,4 +1,4 @@
-FROM jess/curl
+FROM ellerbrock/alpine-bash-curl-ssl
 
 LABEL "com.github.actions.name"="Update Release Asset"
 LABEL "com.github.actions.description"="Post a file as an asset in an existing release"
