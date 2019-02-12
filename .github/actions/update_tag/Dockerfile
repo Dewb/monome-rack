@@ -1,7 +1,7 @@
 FROM jess/curl
 
-LABEL "com.github.actions.name"="Tag latest"
-LABEL "com.github.actions.description"="Delete and recreate the 'latest' tag on the head revision"
+LABEL "com.github.actions.name"="Update tag"
+LABEL "com.github.actions.description"="Sets a tag to the head of a ref"
 LABEL "com.github.actions.icon"="tag"
 LABEL "com.github.actions.color"="gray-dark"
 

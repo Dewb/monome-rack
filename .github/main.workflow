@@ -1,6 +1,6 @@
-workflow "Build on push" {
+workflow "Build Latest" {
   on = "push"
-  resolves = ["Tag Latest"]
+  resolves = ["Upload Linux Release"]
 }
 
 action "Fetch Submodules" {
@@ -26,8 +26,22 @@ action "Build Windows" {
   needs = ["Fetch Rack SDK", "Fetch Submodules"]
 }
 
-action "Tag Latest" {
-  uses = "./.github/actions/tag_latest"
+action "Tag Head as Latest" {
+  uses = "./.github/actions/update_tag"
   needs = ["Build Linux"]
   secrets = ["GITHUB_TOKEN"]
+  env = {
+    TAG = "latest"
+    REF = "refs/heads/master"
+  }
+}
+
+action "Upload Linux Release" {
+  uses = "./github/actions/update_asset"
+  needs = ["Tag Head as Latest"]
+  secrets = ["GITHUB_TOKEN"]
+  env = {
+    ASSET_PATH = "plugins/monome-0.6.0-lin.zip"
+    RELEASE_TAG = "latest"
+  }
 }
