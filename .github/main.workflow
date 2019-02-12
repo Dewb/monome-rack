@@ -40,7 +40,7 @@ action "Tag Head as Latest" {
 }
 
 action "Upload Linux Release" {
-  uses = "./github/actions/update_asset"
+  uses = "./.github/actions/update_asset"
   needs = ["Tag Head as Latest"]
   secrets = ["GITHUB_TOKEN"]
   env = {
