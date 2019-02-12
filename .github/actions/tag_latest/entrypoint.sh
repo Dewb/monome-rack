@@ -13,10 +13,11 @@ fi
 # Update the "latest" tag
 TAG=latest
 REF=refs/heads/master
-curl -v \
+curl -i \
+    --fail \
     --header "Authorization: token ${GITHUB_TOKEN}" \
     --header "Content-Type: application/json" \
     --request PATCH \
-    --data '{ "sha":"${GITHUB_SHA}" }' \
-    ${GITHUB_API_URL}/repos/${REPO}/git/refs/${TAG}
+    --data "{ \"sha\": \"${GITHUB_SHA}\" }" \
+    ${GITHUB_API_URL}/repos/${REPO}/git/refs/tags/${TAG}
 
