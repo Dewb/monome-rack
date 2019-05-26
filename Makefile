@@ -1,6 +1,3 @@
-SLUG = monome
-VERSION = 0.6.0
-
 SHELL:=/bin/bash -O extglob
 RACK_DIR ?= ../..
 

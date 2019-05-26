@@ -5,3 +5,4 @@ plugin.so
 .DS_Store
 /res/firmware
 /dist
+.vscode/ipch

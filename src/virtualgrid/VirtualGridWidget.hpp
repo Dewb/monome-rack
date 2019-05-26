@@ -1,9 +1,10 @@
-#include "rack.hpp"
+#include "rack0.hpp"
 #include <unordered_set>
 
 #pragma once
 
-typedef enum {
+typedef enum
+{
     MonoRed,
     VariYellow
 } GridTheme;

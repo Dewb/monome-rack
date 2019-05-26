@@ -1,5 +1,5 @@
-#include "rack.hpp"
 #include "MonomeModuleBase.hpp"
+#include "rack0.hpp"
 
 #pragma once
 

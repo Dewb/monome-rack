@@ -1,0 +1,76 @@
+{
+  "slug": "monome",
+  "name": "monome",
+  "version": "1.0.0",
+  "license": "GPL-2.0",
+  "author": "",
+  "authorEmail": "",
+  "authorUrl": "github.com/Dewb/monome-rack",
+  "pluginUrl": "",
+  "manualUrl": "",
+  "sourceUrl": "github.com/Dewb/monome-rack",
+  "donateUrl": "",
+  "modules": [
+    {
+      "slug": "whitewhale",
+      "name": "whitewhale",
+      "description": "",
+      "tags": [
+        "sequencer",
+        "clock",
+        "external"
+      ]
+    },
+    {
+      "slug": "earthsea",
+      "name": "earthsea",
+      "description": "",
+      "tags": [
+        "sequencer",
+        "external"
+      ]
+    },
+    {
+      "slug": "meadowphysics",
+      "name": "meadowphysics",
+      "description": "",
+      "tags": [
+        "sequencer",
+        "clock",
+        "external"
+      ]
+    },
+    {
+      "slug": "grid128",
+      "name": "grid128",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
+    },
+    {
+      "slug": "grid64",
+      "name": "grid64",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
+    },
+    {
+      "slug": "grid128series",
+      "name": "grid128series",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
+    },
+    {
+      "slug": "grid64series",
+      "name": "grid64series",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
+    }
+  ]
+}

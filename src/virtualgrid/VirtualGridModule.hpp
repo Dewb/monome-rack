@@ -1,5 +1,5 @@
 #include "SerialOsc.h"
-#include "rack.hpp"
+#include "rack0.hpp"
 
 #pragma once
 
@@ -26,7 +26,6 @@ struct VirtualGridModule : rack::Module
     void updateQuadrant(int x_offset, int y_offset, uint8_t* leds);
     void clearAll();
 };
-
 
 template <unsigned width, unsigned height, unsigned modelIndex>
 struct VirtualGridModuleTemplate : VirtualGridModule
