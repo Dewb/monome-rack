@@ -32,8 +32,8 @@ struct MonomeModuleBase : rack::Module, SerialOsc::Listener
 
     // Rack module methods
     void step() override;
-    json_t* toJson() override;
-    void fromJson(json_t* rootJ) override;
+    json_t* dataToJson() override;
+    void dataFromJson(json_t* rootJ) override;
 
     // MonomeModuleBase virtual methods
     virtual void processInputs() = 0;

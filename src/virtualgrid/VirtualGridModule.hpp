@@ -19,8 +19,8 @@ struct VirtualGridModule : rack::Module
 
     void step() override;
 
-    json_t* toJson() override;
-    void fromJson(json_t* rootJ) override;
+    json_t* dataToJson() override;
+    void dataFromJson(json_t* rootJ) override;
 
     void updateRow(int x_offset, int y, uint8_t bitfield);
     void updateQuadrant(int x_offset, int y_offset, uint8_t* leds);

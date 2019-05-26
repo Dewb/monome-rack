@@ -216,7 +216,7 @@ void MonomeModuleBase::resolveSavedGridConnection()
     }
 }
 
-json_t* MonomeModuleBase::toJson()
+json_t* MonomeModuleBase::dataToJson()
 {
     std::string deviceId = unresolvedConnectionId;
     if (gridConnection)
@@ -245,7 +245,7 @@ json_t* MonomeModuleBase::toJson()
     return rootJ;
 }
 
-void MonomeModuleBase::fromJson(json_t* rootJ)
+void MonomeModuleBase::dataFromJson(json_t* rootJ)
 {
     delete gridConnection;
 

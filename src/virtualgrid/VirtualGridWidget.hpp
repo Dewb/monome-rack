@@ -16,8 +16,8 @@ struct VirtualGridWidget : rack::ModuleWidget
 {
     VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model);
 
-    json_t* toJson() override;
-    void fromJson(json_t* rootJ) override;
+    json_t* dataToJson() override;
+    void dataFromJson(json_t* rootJ) override;
     rack::Menu* createContextMenu() override;
     void onDragEnter(rack::EventDragEnter& e) override;
     void onMouseDown(rack::EventMouseDown& e) override;

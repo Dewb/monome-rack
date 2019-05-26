@@ -38,14 +38,14 @@ void VirtualGridModule::step()
     }
 }
 
-json_t* VirtualGridModule::toJson()
+json_t* VirtualGridModule::dataToJson()
 {
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
     return rootJ;
 }
 
-void VirtualGridModule::fromJson(json_t* rootJ)
+void VirtualGridModule::dataFromJson(json_t* rootJ)
 {
     device.id = json_string_value(json_object_get(rootJ, "deviceId"));
 }

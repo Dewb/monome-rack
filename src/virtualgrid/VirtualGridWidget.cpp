@@ -14,7 +14,8 @@ struct MonomeKey : rack::ParamWidget
     int index;
     GridTheme theme;
 
-    typedef enum {
+    typedef enum
+    {
         OFF,
         PRESSED,
         HELD
@@ -196,7 +197,7 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
 }
 
 VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model)
-: ModuleWidget(module)
+    : ModuleWidget(module)
 {
     if (model > 5)
     {
@@ -232,7 +233,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             int y = margins.y + j * (button_size + spacing);
             int n = i + j * w;
 
-            MonomeKey* key = (MonomeKey*)ParamWidget::create<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
+            MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
             key->setKeyAddress(module->ledBuffer + i + j * 16);
             key->box.size = Vec(button_size, button_size);
             key->index = n;
@@ -248,7 +249,7 @@ void VirtualGridWidget::randomize()
 {
 }
 
-json_t* VirtualGridWidget::toJson()
+json_t* VirtualGridWidget::dataToJson()
 {
     json_t* rootJ = json_object();
 
@@ -265,7 +266,7 @@ json_t* VirtualGridWidget::toJson()
     // data
     if (module)
     {
-        json_t* dataJ = module->toJson();
+        json_t* dataJ = module->dataToJson();
         if (dataJ)
         {
             json_object_set_new(rootJ, "data", dataJ);
@@ -274,7 +275,7 @@ json_t* VirtualGridWidget::toJson()
     return rootJ;
 }
 
-void VirtualGridWidget::fromJson(json_t* rootJ)
+void VirtualGridWidget::dataFromJson(json_t* rootJ)
 {
     // pos
     json_t* posJ = json_object_get(rootJ, "pos");
@@ -288,7 +289,7 @@ void VirtualGridWidget::fromJson(json_t* rootJ)
     json_t* dataJ = json_object_get(rootJ, "data");
     if (dataJ && module)
     {
-        module->fromJson(dataJ);
+        module->dataFromJson(dataJ);
     }
 }
 
@@ -373,7 +374,7 @@ struct GridReleaseHeldKeysItem : MenuItem
     }
 };
 
-Menu* VirtualGridWidget::createContextMenu()
+Menu* VirtualGridcreateWidgetContextMenu()
 {
     Menu* menu = gScene->createMenu();
 

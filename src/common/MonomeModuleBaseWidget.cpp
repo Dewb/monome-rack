@@ -53,13 +53,13 @@ bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
 }
 
 MonomeModuleBaseWidget::MonomeModuleBaseWidget(MonomeModuleBase* module)
-: ModuleWidget(module)
+    : ModuleWidget(module)
 {
 }
 
-Menu* MonomeModuleBaseWidget::createContextMenu()
+Menu* MonomeModuleBasecreateWidgetContextMenu()
 {
-    rack::Menu* menu = ModuleWidget::createContextMenu();
+    rack::Menu* menu = ModulecreateWidgetContextMenu();
 
     auto module = static_cast<MonomeModuleBase*>(this->module);
 
