@@ -27,20 +27,6 @@ struct MonomeConnectionItem : rack::ui::MenuItem
     }
 };
 
-template <typename C>
-bool connectionPtrIsEqual(GridConnection* genericPtr, C* specificPtr)
-{
-    C* castPtr = static_cast<C*>(genericPtr);
-    if (castPtr == NULL || specificPtr == NULL)
-    {
-        return false;
-    }
-    else
-    {
-        return *castPtr == *specificPtr;
-    }
-}
-
 MonomeModuleBaseWidget::MonomeModuleBaseWidget()
 {
 }
@@ -61,7 +47,7 @@ void MonomeModuleBaseWidget::appendContextMenu(rack::Menu* menu)
         auto connection = new SerialOscGridConnection(m, device);
         auto* connectionItem = new MonomeConnectionItem();
         connectionItem->text = device->type + " (" + device->id + ")";
-        connectionItem->rightText = connectionPtrIsEqual(m->gridConnection, connection) ? "✔" : "";
+        connectionItem->rightText = (m->gridConnection && m->gridConnection->device->id == connection->device->id) ? "✔" : "";
         connectionItem->module = m;
         connectionItem->connection = connection;
         menu->addChild(connectionItem);
@@ -78,7 +64,7 @@ void MonomeModuleBaseWidget::appendContextMenu(rack::Menu* menu)
             auto connection = new VirtualGridConnection(m, gridModule);
             auto* connectionItem = new MonomeConnectionItem();
             connectionItem->text = gridModule->device.type + " (" + gridModule->device.id + ")";
-            connectionItem->rightText = false ? "✔" : "";
+            connectionItem->rightText = (m->gridConnection && m->gridConnection->device->id == connection->device->id) ? "✔" : "";
             connectionItem->module = m;
             connectionItem->connection = connection;
             menu->addChild(connectionItem);

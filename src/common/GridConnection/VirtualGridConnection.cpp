@@ -15,6 +15,10 @@ void VirtualGridConnection::connect()
 
 void VirtualGridConnection::disconnect()
 {
+    if (grid->connectedModule)
+    {
+        grid->connectedModule->gridConnection = NULL;
+    }
     grid->connectedModule = NULL;
 }
 

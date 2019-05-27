@@ -183,7 +183,6 @@ void MonomeModuleBase::process(const ProcessArgs& args)
 
 void MonomeModuleBase::resolveSavedGridConnection()
 {
-    /* 
     // Resolve connections from JSON after the entire rack has been deserialized
     if (unresolvedConnectionId != "")
     {
@@ -199,7 +198,7 @@ void MonomeModuleBase::resolveSavedGridConnection()
         }
 
         // enumerate modules
-        for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
+        for (rack::Widget* w : rack::APP->scene->rack->moduleContainer->children)
         {
             VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
             if (gridWidget)
@@ -214,7 +213,6 @@ void MonomeModuleBase::resolveSavedGridConnection()
             }
         }
     }
-    */
 }
 
 json_t* MonomeModuleBase::dataToJson()

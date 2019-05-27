@@ -180,9 +180,7 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
         uniqueIdFound = true;
 
         // enumerate modules
-        /* 
-        TODO: reenable
-        for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
+        for (rack::Widget* w : rack::APP->scene->rack->moduleContainer->children)
         {
             VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
             if (gridWidget)
@@ -195,7 +193,6 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
                 }
             }
         }
-        */
 
         if (uniqueIdFound)
         {
@@ -214,7 +211,11 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     }
     std::string models[6] = { "mv40h", "mv64-", "mv128-", "mv256-", "mv512", "mv" };
 
-    //module->device.id = getUniqueVirtualDeviceId(models[model]);
+    if (module)
+    {
+        module->device.id = getUniqueVirtualDeviceId(models[model]);
+    }
+
     theme = model == 5 ? VariYellow : MonoRed;
 
     box.size = Vec(43.125 * w + 30, 47.5 * h);
