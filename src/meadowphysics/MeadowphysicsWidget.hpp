@@ -7,5 +7,4 @@ struct MeadowphysicsModule;
 struct MeadowphysicsWidget : MonomeModuleBaseWidget
 {
     MeadowphysicsWidget(MeadowphysicsModule* module);
-    void randomize() override;
 };

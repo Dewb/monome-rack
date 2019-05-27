@@ -1,6 +1,6 @@
 #include "MonomeWidgets.hpp"
 
-extern rack::Plugin* plugin;
+extern rack::Plugin* pluginInstance;
 
 WhiteLight::WhiteLight()
 {
@@ -22,6 +22,6 @@ void USBAJack::draw(NVGcontext* vg)
 
 MonomeKnob::MonomeKnob()
 {
-    setSVG(rack::SVG::load(assetPlugin(plugin, "res/MonomeKnob.svg")));
+    setSVG(rack::SVG::load(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
     box.size = rack::Vec(42, 42);
 }

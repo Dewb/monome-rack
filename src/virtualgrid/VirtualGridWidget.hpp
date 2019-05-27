@@ -12,18 +12,15 @@ typedef enum
 struct MonomeKey;
 struct VirtualGridModule;
 
-struct VirtualGridWidget : rack::ModuleWidget
+struct VirtualGridWidget : rack::app::ModuleWidget
 {
     VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model);
 
-    json_t* dataToJson() override;
-    void dataFromJson(json_t* rootJ) override;
-    rack::Menu* createContextMenu() override;
-    void onDragEnter(rack::EventDragEnter& e) override;
-    void onMouseDown(rack::EventMouseDown& e) override;
-    void randomize() override;
+    void onDragEnter(const rack::event::DragEnter& e) override;
+    void onDragStart(const rack::event::DragStart& e) override;
 
     void clearHeldKeys();
+    void appendContextMenu(rack::ui::Menu* menu) override;
 
 protected:
     friend struct MonomeKey;

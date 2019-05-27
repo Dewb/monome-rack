@@ -15,8 +15,6 @@ void init(Plugin* p)
 {
     pluginInstance = p;
 
-    p->website = "https://github.com/Dewb/monome-rack";
-
     Model* modelWhiteWhale = createModel<WhiteWhaleModule, WhiteWhaleWidget>("whitewhale");
     Model* modelMeadowphysics = createModel<MeadowphysicsModule, MeadowphysicsWidget>("meadowphysics");
     Model* modelEarthsea = createModel<EarthseaModule, EarthseaWidget>("earthsea");

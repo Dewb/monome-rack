@@ -5,9 +5,7 @@
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 
-using namespace rack;
-
-struct MonomeConnectionItem : rack::MenuItem
+struct MonomeConnectionItem : rack::ui::MenuItem
 {
     MonomeModuleBase* module;
     GridConnection* connection;
@@ -20,21 +18,20 @@ struct MonomeConnectionItem : rack::MenuItem
         }
     }
 
-    void onAction(rack::EventAction& e) override
+    void onAction(const rack::event::Action& e) override
     {
         module->setGridConnection(connection);
         connection = NULL;
     }
 };
 
-// Copied from Rack AddModuleWindow.cpp, where it's otherwise inaccessible
-struct UrlItem : rack::MenuItem
+struct UrlItem : rack::ui::MenuItem
 {
     std::string url;
-    void onAction(EventAction& e) override
+    void onAction(const rack::event::Action& e) override
     {
-        std::thread t(rack::systemOpenBrowser, url);
-        t.detach();
+        //std::thread t(rack::systemOpenBrowser, url);
+        //t.detach();
     }
 };
 
@@ -57,12 +54,12 @@ MonomeModuleBaseWidget::MonomeModuleBaseWidget(MonomeModuleBase* module)
 {
 }
 
-Menu* MonomeModuleBasecreateWidgetContextMenu()
+void MonomeModuleBaseWidget::appendContextMenu(rack::Menu* menu)
 {
-    rack::Menu* menu = ModulecreateWidgetContextMenu();
-
-    auto module = static_cast<MonomeModuleBase*>(this->module);
-
+    /*
+    MonomeModuleBase* m = dynamic_cast<MonomeModuleBase*>(module);
+    assert(m);
+    
     auto helpItem = new UrlItem();
     helpItem->url = "https://github.com/Dewb/monome-rack/blob/master/README.md";
     helpItem->text = "Help";
@@ -107,6 +104,5 @@ Menu* MonomeModuleBasecreateWidgetContextMenu()
     {
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, "(no physical or virtual devices found)"));
     }
-
-    return menu;
+*/
 }

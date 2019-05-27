@@ -7,5 +7,4 @@ struct EarthseaModule;
 struct EarthseaWidget : MonomeModuleBaseWidget
 {
     EarthseaWidget(EarthseaModule* module);
-    void randomize() override;
 };

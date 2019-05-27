@@ -9,7 +9,7 @@
 
 using namespace std;
 
-extern rack::Plugin* plugin;
+extern rack::Plugin* pluginInstance;
 
 #if ARCH_LIN
 #define LIB_EXTENSION ".so"
@@ -114,7 +114,7 @@ struct FirmwareManagerImpl
         using namespace rack;
 
         std::string librarySource;
-        librarySource = assetPlugin(plugin, "res/firmware/" + firmwareName + LIB_EXTENSION);
+        librarySource = rack::asset::plugin(pluginInstance, "res/firmware/" + firmwareName + LIB_EXTENSION);
         std::string libraryToLoad = librarySource;
 
         // If we have already loaded this firmware at least once, create a temp copy so it will have its own address space

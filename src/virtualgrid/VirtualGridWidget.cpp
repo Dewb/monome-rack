@@ -8,7 +8,7 @@
 
 using namespace rack;
 
-struct MonomeKey : rack::ParamWidget
+struct MonomeKey : rack::app::ParamWidget
 {
     uint8_t* ledAddress;
     int index;
@@ -38,7 +38,7 @@ struct MonomeKey : rack::ParamWidget
 
     void draw(NVGcontext* vg) override
     {
-        uint8_t val = *ledAddress;
+        uint8_t val = ledAddress != NULL ? *ledAddress : 0;
         NVGcolor color1 = nvgRGB(val * 11 + 90, val * 11 + 63, val * 8 + 48);
         NVGcolor color2 = nvgRGB(val * 12 + 48, val * 12 + 31, val * 4 + 16);
 
@@ -48,7 +48,7 @@ struct MonomeKey : rack::ParamWidget
             color2 = val > 0 ? nvgRGB(250, 60, 20) : nvgRGB(0, 0, 0);
         }
 
-        if (value == HELD)
+        if (paramQuantity && paramQuantity->getValue() == HELD)
         {
             nvgBeginPath(vg);
             nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 6);
@@ -83,62 +83,66 @@ struct MonomeKey : rack::ParamWidget
 
     void beginPress()
     {
-        if (rack::windowIsModPressed() && value != HELD)
+        if (paramQuantity)
         {
-            // hold key down
-            setValue(HELD);
-        }
-        else
-        {
-            setValue(PRESSED);
+            float value = paramQuantity->getValue();
+
+            if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL && value != HELD)
+            {
+                // hold key down
+                paramQuantity->setValue(HELD);
+            }
+            else
+            {
+                paramQuantity->setValue(PRESSED);
+            }
         }
     }
 
     void endPress()
     {
-        if (value != HELD)
+        if (paramQuantity)
         {
-            setValue(OFF);
+            if (paramQuantity->getValue() != HELD)
+            {
+                paramQuantity->setValue(OFF);
+            }
         }
     }
 
-    void onMouseDown(rack::EventMouseDown& e) override
+    void onButton(const rack::event::Button& e) override
     {
-        if (e.button == 1)
+        if (e.button != GLFW_MOUSE_BUTTON_LEFT)
         {
             return;
         }
-        e.target = this;
-        e.consumed = true;
-        beginPress();
-    }
+        e.consume(this);
 
-    void onMouseUp(rack::EventMouseUp& e) override
-    {
-        if (e.button == 1)
+        if (e.action == GLFW_PRESS)
         {
-            return;
+            beginPress();
         }
-        e.target = this;
-        e.consumed = true;
-        endPress();
+        else
+        {
+            endPress();
+        }
     }
 
-    void onDragStart(rack::EventDragStart& e) override
+    void onDragStart(const rack::event::DragStart& e) override
     {
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->keysTouchedThisDrag.insert(this);
         getGrid()->isDraggingKeys = true;
     }
 
-    void onDragEnd(rack::EventDragEnd& e) override
+    void onDragEnd(const rack::event::DragEnd& e) override
     {
         endPress();
         getGrid()->keysTouchedThisDrag.clear();
         getGrid()->isDraggingKeys = false;
     }
 
-    void onDragLeave(rack::EventDragEnter& e) override
+    void onDragLeave(const rack::event::DragLeave& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
@@ -147,7 +151,7 @@ struct MonomeKey : rack::ParamWidget
         }
     }
 
-    void onDragEnter(rack::EventDragEnter& e) override
+    void onDragEnter(const rack::event::DragEnter& e) override
     {
         if (getGrid()->isDraggingKeys)
         {
@@ -175,6 +179,8 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
         uniqueIdFound = true;
 
         // enumerate modules
+        /* 
+        TODO: reenable
         for (rack::Widget* w : rack::gRackWidget->moduleContainer->children)
         {
             VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
@@ -188,6 +194,7 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
                 }
             }
         }
+        */
 
         if (uniqueIdFound)
         {
@@ -205,16 +212,10 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     }
     std::string models[6] = { "mv40h", "mv64-", "mv128-", "mv256-", "mv512", "mv" };
 
-    module->device.id = getUniqueVirtualDeviceId(models[model]);
+    //module->device.id = getUniqueVirtualDeviceId(models[model]);
     theme = model == 5 ? VariYellow : MonoRed;
 
     box.size = Vec(43.125 * w + 30, 47.5 * h);
-
-    {
-        auto panel = new LightPanel();
-        panel->box.size = box.size;
-        addChild(panel);
-    }
 
     margins.x = 15;
     margins.y = 15;
@@ -234,7 +235,10 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             int n = i + j * w;
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
-            key->setKeyAddress(module->ledBuffer + i + j * 16);
+            if (module)
+            {
+                key->setKeyAddress(module->ledBuffer + i + j * 16);
+            }
             key->box.size = Vec(button_size, button_size);
             key->index = n;
             key->theme = theme;
@@ -245,63 +249,18 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     isDraggingKeys = false;
 }
 
-void VirtualGridWidget::randomize()
-{
-}
-
-json_t* VirtualGridWidget::dataToJson()
-{
-    json_t* rootJ = json_object();
-
-    // manufacturer
-    json_object_set_new(rootJ, "plugin", json_string(model->plugin->slug.c_str()));
-    // model
-    json_object_set_new(rootJ, "model", json_string(model->slug.c_str()));
-    // pos
-    json_t* posJ = json_pack("[f, f]", (double)box.pos.x, (double)box.pos.y);
-    json_object_set_new(rootJ, "pos", posJ);
-
-    // no param serialization
-
-    // data
-    if (module)
-    {
-        json_t* dataJ = module->dataToJson();
-        if (dataJ)
-        {
-            json_object_set_new(rootJ, "data", dataJ);
-        }
-    }
-    return rootJ;
-}
-
-void VirtualGridWidget::dataFromJson(json_t* rootJ)
-{
-    // pos
-    json_t* posJ = json_object_get(rootJ, "pos");
-    double x, y;
-    json_unpack(posJ, "[F, F]", &x, &y);
-    box.pos = Vec(x, y);
-
-    // no param deserialization
-
-    // data
-    json_t* dataJ = json_object_get(rootJ, "data");
-    if (dataJ && module)
-    {
-        module->dataFromJson(dataJ);
-    }
-}
-
 void VirtualGridWidget::clearHeldKeys()
 {
     for (auto p : params)
     {
-        p->setValue(MonomeKey::OFF);
+        if (p->paramQuantity)
+        {
+            p->paramQuantity->setValue(MonomeKey::OFF);
+        }
     }
 }
 
-void VirtualGridWidget::onDragEnter(EventDragEnter& e)
+void VirtualGridWidget::onDragEnter(const event::DragEnter& e)
 {
     // Disable key drag-tapping if this drag began anyhwere but on a child key of this module
     if (e.origin->parent != this)
@@ -310,21 +269,22 @@ void VirtualGridWidget::onDragEnter(EventDragEnter& e)
     }
 }
 
-void VirtualGridWidget::onMouseDown(EventMouseDown& e)
+void VirtualGridWidget::onDragStart(const event::DragStart& e)
 {
-    ModuleWidget::onMouseDown(e);
+    ModuleWidget::onDragStart(e);
 
-    if (e.target == this && e.button == 0)
+    if (e.getTarget() == this && e.button == GLFW_MOUSE_BUTTON_LEFT)
     {
-        if (rack::windowIsModPressed())
+        if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL)
         {
             clearHeldKeys();
-            e.consumed = true;
+            e.consume(this);
             return;
         }
         else
         {
             // Allow drag only at edges of module
+            /* TODO: fix 
             if (e.pos.x < margins.x || e.pos.x > box.size.x - margins.x || e.pos.y < margins.y || e.pos.y > box.size.y - margins.y)
             {
                 return;
@@ -334,75 +294,26 @@ void VirtualGridWidget::onMouseDown(EventMouseDown& e)
                 e.consumed = true;
                 e.target = NULL;
             }
+            */
         }
     }
-
-    if (e.button == 1)
-    {
-        createContextMenu();
-        e.consumed = true;
-        e.target = this;
-    }
 }
-
-struct CloneMenuItem : MenuItem
-{
-    ModuleWidget* moduleWidget;
-    void onAction(EventAction& e) override
-    {
-        gRackWidget->cloneModule(moduleWidget);
-    }
-};
-
-struct DeleteMenuItem : MenuItem
-{
-    ModuleWidget* moduleWidget;
-    void onAction(EventAction& e) override
-    {
-        gRackWidget->deleteModule(moduleWidget);
-        moduleWidget->finalizeEvents();
-        delete moduleWidget;
-    }
-};
 
 struct GridReleaseHeldKeysItem : MenuItem
 {
     VirtualGridWidget* grid;
-    void onAction(EventAction& e) override
+    void onAction(const event::Action& e) override
     {
         grid->clearHeldKeys();
     }
 };
 
-Menu* VirtualGridcreateWidgetContextMenu()
+void VirtualGridWidget::appendContextMenu(Menu* menu)
 {
-    Menu* menu = gScene->createMenu();
+    VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
+    assert(grid);
 
-    auto gridModule = dynamic_cast<VirtualGridModule*>(module);
-
-    MenuLabel* menuLabel = new MenuLabel();
-    menuLabel->text = model->name + " (" + gridModule->device.id + ")";
-    menu->addChild(menuLabel);
-
-    auto* cloneItem = new CloneMenuItem();
-    cloneItem->text = "Duplicate";
-    cloneItem->rightText = WINDOW_MOD_KEY_NAME "+D";
-    cloneItem->moduleWidget = this;
-    menu->addChild(cloneItem);
-
-    auto* deleteItem = new DeleteMenuItem();
-    deleteItem->text = "Delete";
-    deleteItem->rightText = "Backspace/Delete";
-    deleteItem->moduleWidget = this;
-    menu->addChild(deleteItem);
-
-    menu->addChild(construct<MenuEntry>());
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Actions"));
-    auto* releaseItem = new GridReleaseHeldKeysItem();
-    releaseItem->text = "Release held keys";
-    releaseItem->rightText = WINDOW_MOD_KEY_NAME "+Click";
-    releaseItem->grid = this;
-    menu->addChild(releaseItem);
-
-    return menu;
+    menu->addChild(construct<MenuLabel>());
+    menu->addChild(construct<GridReleaseHeldKeysItem>(&MenuItem::text, "Release Held Keys", &MenuItem::rightText, "Ctrl+Click", &GridReleaseHeldKeysItem::grid, this));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + grid->device.id + ")"));
 }

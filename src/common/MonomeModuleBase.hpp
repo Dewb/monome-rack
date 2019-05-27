@@ -19,7 +19,7 @@
 
 struct GridConnection;
 
-struct MonomeModuleBase : rack::Module, SerialOsc::Listener
+struct MonomeModuleBase : rack::engine::Module, SerialOsc::Listener
 {
     FirmwareManager firmware;
 

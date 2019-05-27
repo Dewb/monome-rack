@@ -184,6 +184,7 @@ void MonomeModuleBase::step()
 
 void MonomeModuleBase::resolveSavedGridConnection()
 {
+    /* 
     // Resolve connections from JSON after the entire rack has been deserialized
     if (unresolvedConnectionId != "")
     {
@@ -214,6 +215,7 @@ void MonomeModuleBase::resolveSavedGridConnection()
             }
         }
     }
+    */
 }
 
 json_t* MonomeModuleBase::dataToJson()

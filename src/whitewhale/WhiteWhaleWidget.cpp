@@ -11,7 +11,7 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
 
     {
         auto panel = new SVGPanel();
-        panel->setBackground(SVG::load(assetPlugin(plugin, "res/whitewhale.svg")));
+        panel->setBackground(SVG::load(rack::asset::plugin(pluginInstance, "res/whitewhale.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
@@ -38,8 +38,4 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
     addOutput(createPort<PJ301MPort>(Vec(13, 138), PortWidget::OUTPUT, module, WhiteWhaleModule::CVB_OUTPUT));
     addInput(createPort<PJ301MPort>(Vec(13, 286), PortWidget::INPUT, module, WhiteWhaleModule::CLOCK_INPUT));
     addOutput(createPort<PJ301MPort>(Vec(50, 286), PortWidget::OUTPUT, module, WhiteWhaleModule::CLOCK_OUTPUT));
-}
-
-void WhiteWhaleWidget::randomize()
-{
 }

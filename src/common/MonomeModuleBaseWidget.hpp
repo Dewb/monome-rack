@@ -3,10 +3,11 @@
 
 #pragma once
 
-extern rack::Plugin* plugin;
+extern rack::Plugin* pluginInstance;
 
-struct MonomeModuleBaseWidget : rack::ModuleWidget
+struct MonomeModuleBaseWidget : rack::app::ModuleWidget
 {
     MonomeModuleBaseWidget(MonomeModuleBase* module);
-    rack::Menu* createContextMenu() override;
+
+    virtual void appendContextMenu(rack::ui::Menu* menu) override;
 };

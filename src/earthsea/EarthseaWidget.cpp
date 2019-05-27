@@ -11,7 +11,7 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
 
     {
         auto panel = new SVGPanel();
-        panel->setBackground(SVG::load(assetPlugin(plugin, "res/earthsea.svg")));
+        panel->setBackground(SVG::load(rack::asset::plugin(pluginInstance, "res/earthsea.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
@@ -34,8 +34,4 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
     addOutput(createPort<PJ301MPort>(Vec(50, 248), PortWidget::OUTPUT, module, EarthseaModule::CV3_OUTPUT));
     addOutput(createPort<PJ301MPort>(Vec(50, 286), PortWidget::OUTPUT, module, EarthseaModule::POS_OUTPUT));
     addOutput(createPort<PJ301MPort>(Vec(13, 268), PortWidget::OUTPUT, module, EarthseaModule::EDGE_OUTPUT));
-}
-
-void EarthseaWidget::randomize()
-{
 }

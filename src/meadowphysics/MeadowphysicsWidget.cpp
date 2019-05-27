@@ -11,7 +11,7 @@ MeadowphysicsWidget::MeadowphysicsWidget(MeadowphysicsModule* module)
 
     {
         auto panel = new SVGPanel();
-        panel->setBackground(SVG::load(assetPlugin(plugin, "res/meadowphysics.svg")));
+        panel->setBackground(SVG::load(rack::asset::plugin(pluginInstance, "res/meadowphysics.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
@@ -41,8 +41,4 @@ MeadowphysicsWidget::MeadowphysicsWidget(MeadowphysicsModule* module)
     addOutput(createPort<PJ301MPort>(Vec(50, 187), PortWidget::OUTPUT, module, MeadowphysicsModule::TRIG8_OUTPUT));
     addInput(createPort<PJ301MPort>(Vec(13, 286), PortWidget::INPUT, module, MeadowphysicsModule::CLOCK_INPUT));
     addOutput(createPort<PJ301MPort>(Vec(50, 286), PortWidget::OUTPUT, module, MeadowphysicsModule::CLOCK_OUTPUT));
-}
-
-void MeadowphysicsWidget::randomize()
-{
 }
