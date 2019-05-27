@@ -1,4 +1,4 @@
-#include "rack0.hpp"
+#include "rack.hpp"
 
 #pragma once
 
@@ -9,7 +9,7 @@ struct WhiteLight : rack::GrayModuleLightWidget
 
 struct USBAJack : rack::TransparentWidget
 {
-    void draw(NVGcontext* vg) override;
+    void draw(const DrawArgs& args) override;
 };
 
 struct MonomeKnob : rack::RoundKnob

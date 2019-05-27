@@ -7,8 +7,7 @@
 
 using namespace std;
 
-MonomeModuleBase::MonomeModuleBase(int numParams, int numInputs, int numOutputs, int numLights)
-    : Module(numParams, numInputs, numOutputs, numLights)
+MonomeModuleBase::MonomeModuleBase()
 {
     gridConnection = NULL;
     serialOscDriver = new SerialOsc("rack", 13000);
@@ -157,7 +156,7 @@ void MonomeModuleBase::readSerialMessages()
     }
 }
 
-void MonomeModuleBase::step()
+void MonomeModuleBase::process(const ProcessArgs& args)
 {
     // Execute setup tasks that must be run after full Rack is deserialized from JSON
     if (firstStep)
@@ -170,7 +169,7 @@ void MonomeModuleBase::step()
     processInputs();
 
     // Advance hardware timers
-    firmware.advanceClock(rack::engineGetSampleTime());
+    firmware.advanceClock(args.sampleTime);
 
     // Pump hardware event loop
     firmware.step();

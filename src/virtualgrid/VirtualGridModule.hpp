@@ -1,5 +1,5 @@
 #include "SerialOsc.h"
-#include "rack0.hpp"
+#include "rack.hpp"
 
 #pragma once
 
@@ -17,7 +17,7 @@ struct VirtualGridModule : rack::Module
 
     VirtualGridModule(unsigned w, unsigned h);
 
-    void step() override;
+    void process(const ProcessArgs &args) override;
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;

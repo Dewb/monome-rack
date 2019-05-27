@@ -11,16 +11,16 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
 
     {
         auto panel = new SVGPanel();
-        panel->setBackground(SVG::load(rack::asset::plugin(pluginInstance, "res/whitewhale.svg")));
+        panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/whitewhale.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
 
     addChild(createWidget<USBAJack>(Vec(10, 338)));
 
-    addParam(createParam<TL1105>(Vec(62, 336), module, WhiteWhaleModule::BUTTON_PARAM, 0.0, 1.0, 0.0));
-    addParam(createParam<MonomeKnob>(Vec(14, 32), module, WhiteWhaleModule::PARAM_PARAM, 0.0, 1.0, 0.5));
-    addParam(createParam<MonomeKnob>(Vec(14, 232), module, WhiteWhaleModule::CLOCK_PARAM, 0.0, 1.0, 0.5));
+    addParam(createParam<TL1105>(Vec(62, 336), module, WhiteWhaleModule::BUTTON_PARAM));
+    addParam(createParam<MonomeKnob>(Vec(14, 32), module, WhiteWhaleModule::PARAM_PARAM));
+    addParam(createParam<MonomeKnob>(Vec(14, 232), module, WhiteWhaleModule::CLOCK_PARAM));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(77, 80), module, WhiteWhaleModule::TRIG1_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(77, 118), module, WhiteWhaleModule::TRIG2_LIGHT));
@@ -30,12 +30,12 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
     addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 118), module, WhiteWhaleModule::CVA_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 156), module, WhiteWhaleModule::CVB_LIGHT));
 
-    addOutput(createPort<PJ301MPort>(Vec(50, 82), PortWidget::OUTPUT, module, WhiteWhaleModule::TRIG1_OUTPUT));
-    addOutput(createPort<PJ301MPort>(Vec(50, 120), PortWidget::OUTPUT, module, WhiteWhaleModule::TRIG2_OUTPUT));
-    addOutput(createPort<PJ301MPort>(Vec(50, 158), PortWidget::OUTPUT, module, WhiteWhaleModule::TRIG3_OUTPUT));
-    addOutput(createPort<PJ301MPort>(Vec(50, 196), PortWidget::OUTPUT, module, WhiteWhaleModule::TRIG4_OUTPUT));
-    addOutput(createPort<PJ301MPort>(Vec(13, 100), PortWidget::OUTPUT, module, WhiteWhaleModule::CVA_OUTPUT));
-    addOutput(createPort<PJ301MPort>(Vec(13, 138), PortWidget::OUTPUT, module, WhiteWhaleModule::CVB_OUTPUT));
-    addInput(createPort<PJ301MPort>(Vec(13, 286), PortWidget::INPUT, module, WhiteWhaleModule::CLOCK_INPUT));
-    addOutput(createPort<PJ301MPort>(Vec(50, 286), PortWidget::OUTPUT, module, WhiteWhaleModule::CLOCK_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 82), module, WhiteWhaleModule::TRIG1_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 120), module, WhiteWhaleModule::TRIG2_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 158), module, WhiteWhaleModule::TRIG3_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 196), module, WhiteWhaleModule::TRIG4_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 100), module, WhiteWhaleModule::CVA_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 138), module, WhiteWhaleModule::CVB_OUTPUT));
+    addInput(createInput<PJ301MPort>(Vec(13, 286), module, WhiteWhaleModule::CLOCK_INPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, WhiteWhaleModule::CLOCK_OUTPUT));
 }

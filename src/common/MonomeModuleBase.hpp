@@ -1,6 +1,6 @@
 #include "FirmwareManager.hpp"
 #include "SerialOsc.h"
-#include "rack0.hpp"
+#include "rack.hpp"
 
 #pragma once
 
@@ -23,7 +23,7 @@ struct MonomeModuleBase : rack::engine::Module, SerialOsc::Listener
 {
     FirmwareManager firmware;
 
-    MonomeModuleBase(int numParams, int numInputs, int numOutputs, int numLights);
+    MonomeModuleBase();
 
     // SerialOsc::Listener methods
     void deviceFound(const MonomeDevice* const device) override;
@@ -31,7 +31,7 @@ struct MonomeModuleBase : rack::engine::Module, SerialOsc::Listener
     void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) override;
 
     // Rack module methods
-    void step() override;
+    void process(const ProcessArgs &args) override;
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
 

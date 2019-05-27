@@ -2,8 +2,18 @@
 #include "MonomeModuleBase.hpp"
 
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
-    : Module(w * h, 0, 0, 0)
 {
+    config(w * h, 0, 0, 0);
+
+    for (unsigned j = 0; j < h; j++)
+    {
+        for (unsigned i = 0; i < w; i++)
+        {
+            int n = i + j * w;
+            configParam(n, 0.0, 2.0, 0.0);
+        }
+    }
+
     device.width = w;
     device.height = h;
     device.port = 0;
@@ -15,7 +25,7 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
     clearAll();
 }
 
-void VirtualGridModule::step()
+void VirtualGridModule::process(const ProcessArgs& args)
 {
     if (connectedModule)
     {

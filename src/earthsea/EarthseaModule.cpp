@@ -2,15 +2,21 @@
 #include "MonomeWidgets.hpp"
 
 EarthseaModule::EarthseaModule()
-    : MonomeModuleBase(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS)
 {
+    config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
+
+    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0);
+    configParam(CV1_PARAM, 0.0, 1.0, 0.5);
+    configParam(CV2_PARAM, 0.0, 1.0, 0.5);
+    configParam(CV3_PARAM, 0.0, 1.0, 0.5);
+
     firmware.load("earthsea");
     firmware.init();
 }
 
 void EarthseaModule::processInputs()
 {
-    bool frontButton = params[BUTTON_PARAM].value == 0;
+    bool frontButton = params[BUTTON_PARAM].getValue() == 0;
     if (frontButton != firmware.getGPIO(NMI))
     {
         firmware.setGPIO(NMI, frontButton);
@@ -18,9 +24,9 @@ void EarthseaModule::processInputs()
     }
 
     // Convert knob float parameters to 12-bit ADC values
-    firmware.setADC(0, params[CV1_PARAM].value * 0xFFF);
-    firmware.setADC(1, params[CV2_PARAM].value * 0xFFF);
-    firmware.setADC(2, params[CV3_PARAM].value * 0xFFF);
+    firmware.setADC(0, params[CV1_PARAM].getValue() * 0xFFF);
+    firmware.setADC(1, params[CV2_PARAM].getValue() * 0xFFF);
+    firmware.setADC(2, params[CV3_PARAM].getValue() * 0xFFF);
 }
 
 void EarthseaModule::processOutputs()
@@ -34,9 +40,9 @@ void EarthseaModule::processOutputs()
     lights[EDGE_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
 
     // Update output jacks from GPIO & DAC
-    outputs[CV1_OUTPUT].value = 10.0 * firmware.getDAC(2) / 65536.0;
-    outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(3) / 65536.0;
-    outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
-    outputs[POS_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
-    outputs[EDGE_OUTPUT].value = firmware.getGPIO(B00) * 8.0;
+    outputs[CV1_OUTPUT].setVoltage(10.0 * firmware.getDAC(2) / 65536.0);
+    outputs[CV2_OUTPUT].setVoltage(10.0 * firmware.getDAC(3) / 65536.0);
+    outputs[CV3_OUTPUT].setVoltage(10.0 * firmware.getDAC(0) / 65536.0);
+    outputs[POS_OUTPUT].setVoltage(10.0 * firmware.getDAC(1) / 65536.0);
+    outputs[EDGE_OUTPUT].setVoltage(firmware.getGPIO(B00) * 8.0);
 }

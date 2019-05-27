@@ -36,8 +36,9 @@ struct MonomeKey : rack::app::ParamWidget
         ledAddress = ledByte;
     }
 
-    void draw(NVGcontext* vg) override
+    void draw(const DrawArgs& args) override
     {
+        auto vg = args.vg;
         uint8_t val = ledAddress != NULL ? *ledAddress : 0;
         NVGcolor color1 = nvgRGB(val * 11 + 90, val * 11 + 63, val * 8 + 48);
         NVGcolor color2 = nvgRGB(val * 12 + 48, val * 12 + 31, val * 4 + 16);
@@ -234,7 +235,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             int y = margins.y + j * (button_size + spacing);
             int n = i + j * w;
 
-            MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n, 0, 2.0, 0);
+            MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n);
             if (module)
             {
                 key->setKeyAddress(module->ledBuffer + i + j * 16);
