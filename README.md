@@ -5,7 +5,7 @@ monome-rack — VCVRack plugin for monome hardware
 
 This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port, and no support guarantees, warranty, or affiliation is implied from any organization mentioned in this document.
 
-This plugin is still in development. [The release roadmap is here](../../projects/1). If you're not using the source version of VCV Rack, and you're not comfortable with `git` and `make`, you might want to consider waiting for the first official binary release.
+This plugin is still in development. [The release roadmap is here](../../projects/1). If you're not comfortable with testing prerelease software, you might want to consider waiting for plugin to appear on the package manager.
 
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
 
@@ -30,18 +30,41 @@ Through the virtual grid, all features of each module are accessible, but some f
 
 ### How do I use this?
 
-For now, this is a *source-only plugin*, no binary package is provided. *You must also build VCVRack from source before you can compile plugins* -- this will not work with the downloadable version of VCVRack.
+For now, this is a *source-only plugin*, no official binary package is provided. You must either build VCVRack from source or download the Rack SDK.
+
+If you're adventurous we now have experimental CI builds on the [Releases page](../../releases).
 
 This plugin has been built and tested on the following platforms, though [bugs and issues](/../../issues) still exist.
-* Mac OS X 10.12.6
-* Windows 10 (with Msys2)
-* Ubuntu 16.04
+* Mac OS X 10.13 (with Rack 1.0)
+* Windows 10 (with Msys2) (with Rack 0.6, 1.0 TBD)
+* Ubuntu 16.04 (with Rack 0.6, 1.0 TBD)
 
-Instructions:
+#### To build with the Rack SDK:
 
-* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v0.6` branch. Run and test Rack to make sure it works as expected.
+* Clone this repo.
    ```bash
-   $ git clone -b v0.5 https://github.com/VCVRack/Rack
+   $ git clone https://github.com/Dewb/monome-rack
+   ```
+* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
+   ```bash
+   $ cd monome-rack
+   $ git submodule update --init --recursive
+   ```
+* Download the Rack SDK.
+   ```bash
+   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.dev.ddf06a9.zip
+   $ unzip Rack-SDK-1.dev.ddf06a9.zip
+   ```
+* Build with `make`.
+   ```bash
+   $ RACK_DIR=$(PWD)/Rack-SDK make
+   ```
+
+#### To build with the complete VCV Rack source:
+
+* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v1` branch. Run and test Rack to make sure it works as expected.
+   ```bash
+   $ git clone -b v1 https://github.com/VCVRack/Rack
    $ cd Rack
    $ git submodule update --init --recursive
    $ make dep
