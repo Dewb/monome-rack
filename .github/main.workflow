@@ -44,7 +44,7 @@ action "Upload Linux Release" {
   needs = ["Tag Head as Latest"]
   secrets = ["GITHUB_TOKEN"]
   env = {
-    ASSET_PATH = "plugins/monome-0.6.0-lin.zip"
+    ASSET_PATH = "plugins/monome-1.0.0-pre-lin.zip"
     RELEASE_TAG = "latest"
   }
 }
