@@ -5,8 +5,9 @@
 using namespace rack;
 
 MeadowphysicsWidget::MeadowphysicsWidget(MeadowphysicsModule* module)
-    : MonomeModuleBaseWidget(module)
 {
+    setModule(module);
+
     box.size = Vec(15 * 6, 380);
 
     {

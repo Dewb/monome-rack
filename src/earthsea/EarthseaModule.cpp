@@ -5,10 +5,10 @@ EarthseaModule::EarthseaModule()
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0);
-    configParam(CV1_PARAM, 0.0, 1.0, 0.5);
-    configParam(CV2_PARAM, 0.0, 1.0, 0.5);
-    configParam(CV3_PARAM, 0.0, 1.0, 0.5);
+    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
+    configParam(CV1_PARAM, 0.0, 1.0, 0.5, "CV 1");
+    configParam(CV2_PARAM, 0.0, 1.0, 0.5, "CV 2");
+    configParam(CV3_PARAM, 0.0, 1.0, 0.5, "CV 3");
 
     firmware.load("earthsea");
     firmware.init();

@@ -7,7 +7,7 @@ extern rack::Plugin* pluginInstance;
 
 struct MonomeModuleBaseWidget : rack::app::ModuleWidget
 {
-    MonomeModuleBaseWidget(MonomeModuleBase* module);
+    MonomeModuleBaseWidget();
 
     virtual void appendContextMenu(rack::ui::Menu* menu) override;
 };

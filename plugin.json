@@ -5,16 +5,16 @@
   "license": "GPL-2.0",
   "author": "",
   "authorEmail": "",
-  "authorUrl": "github.com/Dewb/monome-rack",
+  "authorUrl": "",
   "pluginUrl": "",
-  "manualUrl": "",
-  "sourceUrl": "github.com/Dewb/monome-rack",
+  "manualUrl": "https://monome.org/docs/modular/",
+  "sourceUrl": "https://github.com/Dewb/monome-rack",
   "donateUrl": "",
   "modules": [
     {
       "slug": "whitewhale",
       "name": "whitewhale",
-      "description": "",
+      "description": "grid-enabled probabilistic step sequencer",
       "tags": [
         "sequencer",
         "clock",
@@ -24,7 +24,7 @@
     {
       "slug": "earthsea",
       "name": "earthsea",
-      "description": "",
+      "description": "grid-enabled shape-memory pattern instrument",
       "tags": [
         "sequencer",
         "external"
@@ -33,7 +33,7 @@
     {
       "slug": "meadowphysics",
       "name": "meadowphysics",
-      "description": "",
+      "description": "grid-enabled rhizomatic cascading counter",
       "tags": [
         "sequencer",
         "clock",

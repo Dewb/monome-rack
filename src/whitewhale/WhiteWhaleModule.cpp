@@ -3,9 +3,9 @@
 WhiteWhaleModule::WhiteWhaleModule()
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0);
-    configParam(PARAM_PARAM, 0.0, 1.0, 0.5);
-    configParam(CLOCK_PARAM, 0.0, 1.0, 0.5);
+    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
+    configParam(PARAM_PARAM, 0.0, 1.0, 0.5, "Param");
+    configParam(CLOCK_PARAM, 0.0, 1.0, 0.5, "Clock");
 
     firmware.load("whitewhale");
     firmware.init();

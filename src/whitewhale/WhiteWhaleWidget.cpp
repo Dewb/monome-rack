@@ -5,12 +5,13 @@
 using namespace rack;
 
 WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
-    : MonomeModuleBaseWidget(module)
 {
+    setModule(module);
+
     box.size = Vec(15 * 6, 380);
 
     {
-        auto panel = new SVGPanel();
+        auto panel = new rack::SvgPanel();
         panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/whitewhale.svg")));
         panel->box.size = box.size;
         addChild(panel);

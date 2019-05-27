@@ -3,7 +3,7 @@
 
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 {
-    config(w * h, 0, 0, 0);
+    config(w * h, 0, 0, w * h);
 
     for (unsigned j = 0; j < h; j++)
     {
@@ -39,6 +39,7 @@ void VirtualGridModule::process(const ProcessArgs& args)
                     connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
                     pressedState[n] = params[n].value > 0;
                 }
+                lights[n].setBrightness(ledBuffer[n] / 255.0);
             }
         }
     }

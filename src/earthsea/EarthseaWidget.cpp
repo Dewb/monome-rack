@@ -5,8 +5,9 @@
 using namespace rack;
 
 EarthseaWidget::EarthseaWidget(EarthseaModule* module)
-    : MonomeModuleBaseWidget(module)
 {
+    setModule(module);
+
     box.size = Vec(15 * 6, 380);
 
     {

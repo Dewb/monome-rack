@@ -22,7 +22,7 @@ struct MonomeKey : rack::app::ParamWidget
     } KeyPressState;
 
     MonomeKey()
-        : ParamWidget()
+        : ledAddress(NULL)
     {
     }
 
@@ -205,8 +205,9 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
 }
 
 VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model)
-    : ModuleWidget(module)
 {
+    setModule(module);
+
     if (model > 5)
     {
         model = 5;
@@ -248,6 +249,15 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     }
 
     isDraggingKeys = false;
+}
+
+void VirtualGridWidget::draw(const DrawArgs& args)
+{
+    nvgBeginPath(args.vg);
+    nvgRect(args.vg, 0.0, 0.0, box.size.x, box.size.y);
+    nvgFillColor(args.vg, nvgRGB(0xe6, 0xe6, 0xe6));
+    nvgFill(args.vg);
+    Widget::draw(args);
 }
 
 void VirtualGridWidget::clearHeldKeys()

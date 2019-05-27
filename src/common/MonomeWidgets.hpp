@@ -2,17 +2,19 @@
 
 #pragma once
 
-struct WhiteLight : rack::GrayModuleLightWidget
+using namespace rack;
+
+struct WhiteLight : rack::componentlibrary::GrayModuleLightWidget
 {
     WhiteLight();
 };
 
-struct USBAJack : rack::TransparentWidget
+struct USBAJack : TransparentWidget
 {
     void draw(const DrawArgs& args) override;
 };
 
-struct MonomeKnob : rack::RoundKnob
+struct MonomeKnob : rack::componentlibrary::RoundKnob
 {
     MonomeKnob();
 };
