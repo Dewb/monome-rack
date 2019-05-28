@@ -5,6 +5,8 @@
 #include <set>
 #include <stdint.h>
 
+struct SerialOscInterface;
+
 struct Grid
 {
     virtual ~Grid();
@@ -31,6 +33,7 @@ struct GridConnectionManager
 
     void connect(Grid* grid, GridConsumer* consumer);
     bool isConnected(GridConsumer* consumer);
+    bool isConnected(std::string id);
     void disconnect(Grid* grid);
     void disconnect(GridConsumer* consumer);
 
@@ -39,6 +42,8 @@ struct GridConnectionManager
     const std::set<Grid*>& getGrids();
 
     static GridConnectionManager* get();
+
+    SerialOscInterface* serialOscInterface;
 
 private:
     GridConnectionManager();

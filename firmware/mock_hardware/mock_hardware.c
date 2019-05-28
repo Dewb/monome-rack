@@ -68,9 +68,41 @@ void simulate_trigger_interrupt(int pin)
     event_post(&e);
 }
 
-void simulate_monome_connect()
+extern void set_funcs();
+extern void monome_connect_write_event();
+
+// protocol enumeration
+typedef enum
 {
-    check_monome_device_desc("m o n o m e", "", "m X X X X X X X X X");
+    eProtocol40h, /// 40h and arduinome protocol (pre-2007)
+    eProtocolSeries, /// series protocol (2007-2011)
+    eProtocolMext, /// extended protocol (2011 - ? ), arcs + grids
+    eProtocolNumProtocols // dummy and count
+} eMonomeProtocol;
+
+typedef struct e_monomeDesc
+{
+    eMonomeProtocol protocol;
+    eMonomeDevice device;
+    u8 cols; // number of columns
+    u8 rows; // number of rows
+    u8 encs; // number of encoders
+    u8 tilt; // has tilt (??)
+    u8 vari; // is variable brightness, true/false
+} monomeDesc;
+
+extern monomeDesc mdesc;
+
+static void simulate_monome_setup_mext(int rows, int cols)
+{
+    mdesc.protocol = eProtocolMext;
+    mdesc.vari = 1;
+    mdesc.device = eDeviceGrid;
+    mdesc.rows = rows;
+    mdesc.cols = cols;
+    mdesc.tilt = 1;
+    set_funcs();
+    monome_connect_write_event();
 }
 
 void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
@@ -212,7 +244,8 @@ void hardware_serialConnectionChange(serial_bus_t bus, uint8_t connected, const 
 {
     if (bus == FTDI_BUS)
     {
-        mock_ftdi_change(connected, manufacturer, product, serial);
+        //mock_ftdi_change(connected, manufacturer, product, serial);
+        simulate_monome_setup_mext(8, 16);
     }
     else if (bus == HID_BUS)
     {

@@ -20,10 +20,10 @@ SOURCES = \
 	meadowphysics/src/main.c \
 	meadowphysics/libavr32/src/events.c \
 	meadowphysics/libavr32/src/timers.c \
-	meadowphysics/libavr32/src/monome.c \
 	meadowphysics/libavr32/src/util.c \
 	mock_hardware/adapter.c \
-	mock_hardware/mock_hardware.c
+	mock_hardware/mock_hardware.c \
+	mock_hardware/monome.c 
 
 TARGETNAME = ../res/firmware/meadowphysics
 

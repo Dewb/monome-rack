@@ -15,7 +15,7 @@ FLAGS += \
 	-Ilib/serialosc 
 
 CFLAGS +=
-CXXFLAGS +=
+CXXFLAGS += 
 LDFLAGS +=
 
 SOURCES += \

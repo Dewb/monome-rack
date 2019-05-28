@@ -20,10 +20,10 @@ SOURCES = \
 	whitewhale/src/main.c \
 	whitewhale/libavr32/src/events.c \
 	whitewhale/libavr32/src/timers.c \
-	whitewhale/libavr32/src/monome.c \
 	whitewhale/libavr32/src/util.c \
 	mock_hardware/adapter.c \
-	mock_hardware/mock_hardware.c
+	mock_hardware/mock_hardware.c \
+	mock_hardware/monome.c 
 
 TARGETNAME = ../res/firmware/whitewhale
 

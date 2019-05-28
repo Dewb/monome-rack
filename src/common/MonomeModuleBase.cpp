@@ -42,20 +42,20 @@ void MonomeModuleBase::gridConnected(Grid* newConnection)
         uint8_t buf[6] = { 0, 1, 0, 0, 0, 0 };
         buf[2] = (gridConnection->getDevice().width * gridConnection->getDevice().height) / 64;
         firmware.writeSerial(FTDI_BUS, buf, 6);
-        uint8_t buf2[2] = { 0, 0 };
-        firmware.writeSerial(FTDI_BUS, buf2, 2);
+        uint8_t buf2[6] = { 0, 0, 0, 0, 0, 0 };
+        firmware.writeSerial(FTDI_BUS, buf2, 6);
     }
 }
 
 void MonomeModuleBase::gridDisconnected()
 {
     gridConnection = nullptr;
-    firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
+    //firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
 }
 
 void MonomeModuleBase::gridButtonEvent(int x, int y, bool state)
 {
-    uint8_t msg[4] = { 0xF0, 0, 0, 0 };
+    uint8_t msg[6] = { 0xF0, 0, 0, 0 };
     msg[1] = (uint8_t)x;
     msg[2] = (uint8_t)y;
     msg[3] = state ? 1 : 0;
@@ -190,8 +190,6 @@ json_t* MonomeModuleBase::dataToJson()
 
 void MonomeModuleBase::dataFromJson(json_t* rootJ)
 {
-    delete gridConnection;
-
     json_t* id = json_object_get(rootJ, "connectedDeviceId");
     if (id)
     {

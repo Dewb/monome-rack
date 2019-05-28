@@ -1,4 +1,5 @@
 #include "GridConnection.hpp"
+#include "SerialOscInterface.hpp"
 
 Grid::~Grid()
 {
@@ -26,7 +27,7 @@ void GridConnectionManager::registerGridConsumer(GridConsumer* consumer)
     // Check if this consumer had a saved connection to an already-registered grid
     for (auto grid : grids)
     {
-        if (consumer->gridGetLastDeviceId() == grid->getDevice().id)
+        if (!isConnected(grid->getDevice().id) && consumer->gridGetLastDeviceId() == grid->getDevice().id)
         {
             connect(grid, consumer);
             return;
@@ -59,12 +60,12 @@ void GridConnectionManager::deregisterGridConsumer(GridConsumer* consumer)
 
 void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
 {
-    auto iter = consumerToGridMap.find(consumer);
-    if (iter != consumerToGridMap.end() && iter->second == grid)
-    {
-        // This connection is already established, ignore.
-        return;
-    }
+    //auto iter = consumerToGridMap.find(consumer);
+    // if (iter != consumerToGridMap.end() && iter->second == grid)
+    // {
+    //     // This connection is already established, ignore.
+    //     return;
+    // }
     disconnect(consumer);
     disconnect(grid);
     consumerToGridMap[consumer] = grid;
@@ -75,6 +76,11 @@ void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
 bool GridConnectionManager::isConnected(GridConsumer* consumer)
 {
     return consumerToGridMap.find(consumer) != consumerToGridMap.end();
+}
+
+bool GridConnectionManager::isConnected(std::string id)
+{
+    return idToConsumerMap.find(id) != idToConsumerMap.end();
 }
 
 void GridConnectionManager::disconnect(Grid* grid)
@@ -118,6 +124,7 @@ const std::set<Grid*>& GridConnectionManager::getGrids()
 
 GridConnectionManager::GridConnectionManager()
 {
+    serialOscInterface = new SerialOscInterface();
 }
 
 GridConnectionManager* GridConnectionManager::instance = nullptr;

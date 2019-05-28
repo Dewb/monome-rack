@@ -1,40 +1,5 @@
 #include "SerialOscGrid.hpp"
-#include "MonomeModuleBase.hpp"
-#include "SerialOsc.h"
-
-struct SerialOscInterface : public SerialOsc::Listener
-{
-    SerialOscInterface()
-    {
-        driver = new SerialOsc("rack", 13000);
-        driver->start(this);
-    }
-
-    ~SerialOscInterface()
-    {
-        driver->stop();
-        delete driver;
-    }
-
-    // SerialOsc::Listener methods
-    void deviceFound(const MonomeDevice* const device) override
-    {
-        GridConnectionManager::get()->registerGrid(new SerialOscGrid(device));
-    }
-
-    void deviceRemoved(const std::string& id) override
-    {
-        GridConnectionManager::get()->deregisterGrid(id, true);
-    }
-    void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) override
-    {
-        GridConnectionManager::get()->dispatchButtonMessage(device, x, y, state);
-    }
-
-    SerialOsc* driver;
-};
-
-SerialOscInterface gSerialOscInterface;
+#include "SerialOscInterface.hpp"
 
 SerialOscGrid::SerialOscGrid(const MonomeDevice* const _device)
     : device(*_device)
@@ -48,7 +13,7 @@ const MonomeDevice& SerialOscGrid::getDevice()
 
 void SerialOscGrid::updateRow(int x_offset, int y, uint8_t bitfield)
 {
-    gSerialOscInterface.driver->sendDeviceLedRowCommand(&device, x_offset, y, bitfield);
+    GridConnectionManager::get()->serialOscInterface->driver->sendDeviceLedRowCommand(&device, x_offset, y, bitfield);
 }
 
 void SerialOscGrid::updateQuadrant(int x, int y, uint8_t* leds)
@@ -66,7 +31,7 @@ void SerialOscGrid::updateQuadrant(int x, int y, uint8_t* leds)
                     bits |= 1 << j;
                 }
             }
-            gSerialOscInterface.driver->sendDeviceLedRowCommand(&device, 0, i, bits);
+            GridConnectionManager::get()->serialOscInterface->driver->sendDeviceLedRowCommand(&device, 0, i, bits);
         }
     }
     else if (device.protocol == PROTOCOL_SERIES)
@@ -83,15 +48,15 @@ void SerialOscGrid::updateQuadrant(int x, int y, uint8_t* leds)
                 }
             }
         }
-        gSerialOscInterface.driver->sendDeviceLedMapCommand(&device, x, y, map);
+        GridConnectionManager::get()->serialOscInterface->driver->sendDeviceLedMapCommand(&device, x, y, map);
     }
     else
     {
-        gSerialOscInterface.driver->sendDeviceLedLevelMapCommand(&device, x, y, leds);
+        GridConnectionManager::get()->serialOscInterface->driver->sendDeviceLedLevelMapCommand(&device, x, y, leds);
     }
 }
 
 void SerialOscGrid::clearAll()
 {
-    gSerialOscInterface.driver->sendDeviceLedAllCommand(&device, false);
+    GridConnectionManager::get()->serialOscInterface->driver->sendDeviceLedAllCommand(&device, false);
 }

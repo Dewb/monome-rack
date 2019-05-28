@@ -23,13 +23,13 @@ SOURCES = \
 	earthsea/libavr32/src/euclidean/data.c \
 	earthsea/libavr32/src/euclidean/euclidean.c \
 	earthsea/libavr32/src/events.c \
-	earthsea/libavr32/src/monome.c \
 	earthsea/libavr32/src/notes.c \
 	earthsea/libavr32/src/random.c \
 	earthsea/libavr32/src/timers.c \
 	earthsea/libavr32/src/util.c \
 	mock_hardware/adapter.c \
-	mock_hardware/mock_hardware.c
+	mock_hardware/mock_hardware.c \
+	mock_hardware/monome.c 
 
 TARGETNAME = ../res/firmware/earthsea
 
