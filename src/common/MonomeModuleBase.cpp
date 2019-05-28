@@ -1,43 +1,32 @@
 #include "MonomeModuleBase.hpp"
-#include "SerialOscGridConnection.hpp"
-#include "VirtualGridConnection.hpp"
-#include "VirtualGridModule.hpp"
-#include "VirtualGridWidget.hpp"
 #include "base64.h"
 
 using namespace std;
 
 MonomeModuleBase::MonomeModuleBase()
 {
-    gridConnection = NULL;
-    serialOscDriver = new SerialOsc("rack", 13000);
-    serialOscDriver->start(this);
+    gridConnection = nullptr;
     firstStep = true;
 }
 
 MonomeModuleBase::~MonomeModuleBase()
 {
-    delete gridConnection;
+    GridConnectionManager::get()->deregisterGridConsumer(this);
 }
 
-void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
+void MonomeModuleBase::gridConnected(Grid* newConnection)
 {
-    if (gridConnection)
+    if (gridConnection != nullptr)
     {
-        gridConnection->clearAll();
-        gridConnection->disconnect();
-        delete gridConnection;
+        //firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
     }
 
     gridConnection = newConnection;
-
     if (gridConnection)
     {
-        gridConnection->disconnect();
-        gridConnection->connect();
-        unresolvedConnectionId = "";
+        string id = gridConnection->getDevice().id;
+        lastConnectedDeviceId = id;
 
-        string id = gridConnection->device->id;
         string wide_id;
         for (size_t i = 0; i < id.length(); i++)
         {
@@ -51,41 +40,31 @@ void MonomeModuleBase::setGridConnection(GridConnection* newConnection)
         firmware.serialConnectionChange(FTDI_BUS, 1, "m o n o m e", "p r o d u c t", wide_id.c_str());
 
         uint8_t buf[6] = { 0, 1, 0, 0, 0, 0 };
-        buf[2] = (gridConnection->device->width * gridConnection->device->height) / 64;
+        buf[2] = (gridConnection->getDevice().width * gridConnection->getDevice().height) / 64;
         firmware.writeSerial(FTDI_BUS, buf, 6);
         uint8_t buf2[2] = { 0, 0 };
         firmware.writeSerial(FTDI_BUS, buf2, 2);
     }
-    else
-    {
-        firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
-    }
 }
 
-void MonomeModuleBase::deviceFound(const MonomeDevice* const device)
+void MonomeModuleBase::gridDisconnected()
 {
-    if (!gridConnection && device->id == unresolvedConnectionId)
-    {
-        setGridConnection(new SerialOscGridConnection(this, device));
-    }
+    gridConnection = nullptr;
+    firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
 }
 
-void MonomeModuleBase::deviceRemoved(const std::string& id)
-{
-    if (gridConnection && gridConnection->device->id == id)
-    {
-        unresolvedConnectionId = id;
-        delete gridConnection;
-    }
-}
-
-void MonomeModuleBase::buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state)
+void MonomeModuleBase::gridButtonEvent(int x, int y, bool state)
 {
     uint8_t msg[4] = { 0xF0, 0, 0, 0 };
     msg[1] = (uint8_t)x;
     msg[2] = (uint8_t)y;
     msg[3] = state ? 1 : 0;
     firmware.writeSerial(FTDI_BUS, msg, 4);
+}
+
+std::string MonomeModuleBase::gridGetLastDeviceId()
+{
+    return lastConnectedDeviceId;
 }
 
 void MonomeModuleBase::readSerialMessages()
@@ -158,10 +137,9 @@ void MonomeModuleBase::readSerialMessages()
 
 void MonomeModuleBase::process(const ProcessArgs& args)
 {
-    // Execute setup tasks that must be run after full Rack is deserialized from JSON
     if (firstStep)
     {
-        resolveSavedGridConnection();
+        GridConnectionManager::get()->registerGridConsumer(this);
         firstStep = false;
     }
 
@@ -181,46 +159,12 @@ void MonomeModuleBase::process(const ProcessArgs& args)
     readSerialMessages();
 }
 
-void MonomeModuleBase::resolveSavedGridConnection()
-{
-    // Resolve connections from JSON after the entire rack has been deserialized
-    if (unresolvedConnectionId != "")
-    {
-        // enumerate detected serialosc devices
-        for (MonomeDevice* device : serialOscDriver->getDevices())
-        {
-            if (device->id == unresolvedConnectionId)
-            {
-                auto connection = new SerialOscGridConnection(this, device);
-                setGridConnection(connection);
-                return;
-            }
-        }
-
-        // enumerate modules
-        for (rack::Widget* w : rack::APP->scene->rack->moduleContainer->children)
-        {
-            VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
-            if (gridWidget)
-            {
-                auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
-                if (gridModule->device.id == unresolvedConnectionId)
-                {
-                    auto connection = new VirtualGridConnection(this, gridModule);
-                    setGridConnection(connection);
-                    return;
-                }
-            }
-        }
-    }
-}
-
 json_t* MonomeModuleBase::dataToJson()
 {
-    std::string deviceId = unresolvedConnectionId;
+    std::string deviceId = lastConnectedDeviceId;
     if (gridConnection)
     {
-        deviceId = gridConnection->device->id;
+        deviceId = gridConnection->getDevice().id;
     }
 
     json_t* rootJ = json_object();
@@ -251,7 +195,7 @@ void MonomeModuleBase::dataFromJson(json_t* rootJ)
     json_t* id = json_object_get(rootJ, "connectedDeviceId");
     if (id)
     {
-        unresolvedConnectionId = json_string_value(id);
+        lastConnectedDeviceId = json_string_value(id);
     }
 
     void* data;

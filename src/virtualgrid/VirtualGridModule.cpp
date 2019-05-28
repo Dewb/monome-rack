@@ -23,29 +23,34 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
     device.type = "virtual " + std::to_string(w * h);
 
     clearAll();
+    firstStep = true;
+}
+
+VirtualGridModule::~VirtualGridModule()
+{
+    GridConnectionManager::get()->deregisterGrid(this->device.id, false);
 }
 
 void VirtualGridModule::process(const ProcessArgs& args)
 {
-    if (connectedModule)
+    if (firstStep)
     {
-        for (int i = 0; i < device.width; i++)
-        {
-            for (int j = 0; j < device.height; j++)
-            {
-                int n = i + (j * device.width);
-                if ((params[n].value > 0) != pressedState[n])
-                {
-                    connectedModule->buttonPressMessageReceived(NULL, i, j, params[n].value > 0);
-                    pressedState[n] = params[n].value > 0;
-                }
-                lights[n].setBrightness(ledBuffer[n] / 255.0);
-            }
-        }
+        GridConnectionManager::get()->registerGrid(this);
+        firstStep = false;
     }
-    else
+
+    for (int i = 0; i < device.width; i++)
     {
-        clearAll();
+        for (int j = 0; j < device.height; j++)
+        {
+            int n = i + (j * device.width);
+            if ((params[n].value > 0) != pressedState[n])
+            {
+                GridConnectionManager::get()->dispatchButtonMessage(&this->device, i, j, params[n].value > 0);
+                pressedState[n] = params[n].value > 0;
+            }
+            lights[n].setBrightness(ledBuffer[n] / 255.0);
+        }
     }
 }
 
@@ -59,6 +64,11 @@ json_t* VirtualGridModule::dataToJson()
 void VirtualGridModule::dataFromJson(json_t* rootJ)
 {
     device.id = json_string_value(json_object_get(rootJ, "deviceId"));
+}
+
+const MonomeDevice& VirtualGridModule::getDevice()
+{
+    return device;
 }
 
 void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)

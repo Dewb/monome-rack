@@ -1,29 +1,25 @@
 #include "MonomeModuleBaseWidget.hpp"
 #include "MonomeModuleBase.hpp"
-#include "SerialOscGridConnection.hpp"
-#include "VirtualGridConnection.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 
 using namespace rack;
 
-struct MonomeConnectionItem : rack::ui::MenuItem
+struct ConnectGridItem : rack::ui::MenuItem
 {
     MonomeModuleBase* module;
-    GridConnection* connection;
-
-    ~MonomeConnectionItem()
-    {
-        if (connection)
-        {
-            delete connection;
-        }
-    }
+    Grid* grid;
 
     void onAction(const rack::event::Action& e) override
     {
-        module->setGridConnection(connection);
-        connection = NULL;
+        if (module->gridConnection == grid)
+        {
+            GridConnectionManager::get()->disconnect(module);
+        }
+        else
+        {
+            GridConnectionManager::get()->connect(grid, module);
+        }
     }
 };
 
@@ -40,36 +36,17 @@ void MonomeModuleBaseWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(construct<MenuEntry>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
 
-    // enumerate detected serialosc devices
+    // enumerate registered grid devices
     int deviceCount = 0;
-    for (MonomeDevice* device : m->serialOscDriver->getDevices())
+    for (Grid* grid : GridConnectionManager::get()->getGrids())
     {
-        auto connection = new SerialOscGridConnection(m, device);
-        auto* connectionItem = new MonomeConnectionItem();
-        connectionItem->text = device->type + " (" + device->id + ")";
-        connectionItem->rightText = (m->gridConnection && m->gridConnection->device->id == connection->device->id) ? "✔" : "";
-        connectionItem->module = m;
-        connectionItem->connection = connection;
-        menu->addChild(connectionItem);
+        auto connectItem = new ConnectGridItem();
+        connectItem->text = grid->getDevice().type + " (" + grid->getDevice().id + ")";
+        connectItem->rightText = (m->gridConnection && m->gridConnection->getDevice().id == grid->getDevice().id) ? "✔" : "";
+        connectItem->module = m;
+        connectItem->grid = grid;
+        menu->addChild(connectItem);
         deviceCount++;
-    }
-
-    // enumerate modules
-    for (rack::Widget* w : rack::APP->scene->rack->moduleContainer->children)
-    {
-        VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
-        if (gridWidget)
-        {
-            auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
-            auto connection = new VirtualGridConnection(m, gridModule);
-            auto* connectionItem = new MonomeConnectionItem();
-            connectionItem->text = gridModule->device.type + " (" + gridModule->device.id + ")";
-            connectionItem->rightText = (m->gridConnection && m->gridConnection->device->id == connection->device->id) ? "✔" : "";
-            connectionItem->module = m;
-            connectionItem->connection = connection;
-            menu->addChild(connectionItem);
-            deviceCount++;
-        }
     }
 
     if (deviceCount == 0)

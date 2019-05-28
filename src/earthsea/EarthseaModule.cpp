@@ -37,7 +37,7 @@ void EarthseaModule::processOutputs()
     lights[CV2_LIGHT].value = firmware.getDAC(3) / 65536.0;
     lights[CV3_LIGHT].value = firmware.getDAC(0) / 65536.0;
     lights[POS_LIGHT].value = firmware.getDAC(1) / 65536.0;
-    lights[EDGE_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
+    lights[EDGE_LIGHT].setBrightness(firmware.getGPIO(B00));
 
     // Update output jacks from GPIO & DAC
     outputs[CV1_OUTPUT].setVoltage(10.0 * firmware.getDAC(2) / 65536.0);

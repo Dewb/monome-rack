@@ -1,5 +1,5 @@
 #include "FirmwareManager.hpp"
-#include "SerialOsc.h"
+#include "GridConnection.hpp"
 #include "rack.hpp"
 
 #pragma once
@@ -19,19 +19,15 @@
 
 struct GridConnection;
 
-struct MonomeModuleBase : rack::engine::Module, SerialOsc::Listener
+struct MonomeModuleBase : rack::engine::Module, GridConsumer
 {
     FirmwareManager firmware;
 
     MonomeModuleBase();
-
-    // SerialOsc::Listener methods
-    void deviceFound(const MonomeDevice* const device) override;
-    void deviceRemoved(const std::string& id) override;
-    void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) override;
+    ~MonomeModuleBase();
 
     // Rack module methods
-    void process(const ProcessArgs &args) override;
+    void process(const ProcessArgs& args) override;
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
 
@@ -39,13 +35,15 @@ struct MonomeModuleBase : rack::engine::Module, SerialOsc::Listener
     virtual void processInputs() = 0;
     virtual void processOutputs() = 0;
 
-    ~MonomeModuleBase();
-    void setGridConnection(GridConnection* newConnection);
-    void resolveSavedGridConnection();
+    // GridConsumer methods
+    void gridConnected(Grid* grid) override;
+    void gridDisconnected() override;
+    void gridButtonEvent(int x, int y, bool state) override;
+    std::string gridGetLastDeviceId() override;
+
     virtual void readSerialMessages();
 
-    SerialOsc* serialOscDriver;
-    GridConnection* gridConnection;
+    Grid* gridConnection;
+    std::string lastConnectedDeviceId;
     bool firstStep;
-    std::string unresolvedConnectionId;
 };

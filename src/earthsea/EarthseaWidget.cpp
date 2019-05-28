@@ -11,7 +11,7 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
     box.size = Vec(15 * 6, 380);
 
     {
-        auto panel = new SVGPanel();
+        auto panel = new SvgPanel();
         panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/earthsea.svg")));
         panel->box.size = box.size;
         addChild(panel);

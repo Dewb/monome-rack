@@ -40,6 +40,7 @@
         "vector": "cpp",
         "sstream": "cpp",
         "strstream": "cpp",
-        "locale": "cpp"
+        "locale": "cpp",
+        "__locale": "cpp"
     }
 }
