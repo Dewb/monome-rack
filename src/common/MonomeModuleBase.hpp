@@ -45,5 +45,7 @@ struct MonomeModuleBase : rack::engine::Module, GridConsumer
 
     Grid* gridConnection;
     std::string lastConnectedDeviceId;
+
+private:
     bool firstStep;
 };

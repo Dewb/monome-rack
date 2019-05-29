@@ -1,5 +1,4 @@
 #include "GridConnection.hpp"
-#include "SerialOscInterface.hpp"
 
 Grid::~Grid()
 {
@@ -10,13 +9,19 @@ void GridConnectionManager::registerGrid(Grid* grid)
     grids.insert(grid);
 
     // Check if there's a consumer with a saved connection looking for this grid
+    GridConsumer* consumerToConnect = nullptr;
     for (auto consumer : consumers)
     {
         if (!isConnected(consumer) && grid->getDevice().id == consumer->gridGetLastDeviceId())
         {
-            connect(grid, consumer);
-            return;
+            consumerToConnect = consumer;
+            break;
         }
+    }
+
+    if (consumerToConnect != nullptr)
+    {
+        connect(grid, consumerToConnect);
     }
 }
 
@@ -25,13 +30,19 @@ void GridConnectionManager::registerGridConsumer(GridConsumer* consumer)
     consumers.insert(consumer);
 
     // Check if this consumer had a saved connection to an already-registered grid
+    Grid* gridToConnect = nullptr;
     for (auto grid : grids)
     {
         if (!isConnected(grid->getDevice().id) && consumer->gridGetLastDeviceId() == grid->getDevice().id)
         {
-            connect(grid, consumer);
-            return;
+            gridToConnect = grid;
+            break;
         }
+    }
+
+    if (gridToConnect != nullptr)
+    {
+        connect(gridToConnect, consumer);
     }
 }
 
@@ -68,6 +79,7 @@ void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
     // }
     disconnect(consumer);
     disconnect(grid);
+
     consumerToGridMap[consumer] = grid;
     idToConsumerMap[grid->getDevice().id] = consumer;
     consumer->gridConnected(grid);
@@ -124,15 +136,10 @@ const std::set<Grid*>& GridConnectionManager::getGrids()
 
 GridConnectionManager::GridConnectionManager()
 {
-    serialOscInterface = new SerialOscInterface();
 }
 
-GridConnectionManager* GridConnectionManager::instance = nullptr;
 GridConnectionManager* GridConnectionManager::get()
 {
-    if (!instance)
-    {
-        instance = new GridConnectionManager();
-    }
+    static GridConnectionManager* instance = new GridConnectionManager();
     return instance;
 }

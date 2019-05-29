@@ -27,3 +27,9 @@ void SerialOscInterface::buttonPressMessageReceived(MonomeDevice* device, int x,
 {
     GridConnectionManager::get()->dispatchButtonMessage(device, x, y, state);
 }
+
+SerialOscInterface* SerialOscInterface::get()
+{
+    static SerialOscInterface* instance = new SerialOscInterface();
+    return instance;
+}

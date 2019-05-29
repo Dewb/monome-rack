@@ -1,8 +1,7 @@
 #include "SerialOsc.h"
 
-struct SerialOscInterface : public SerialOsc::Listener
+struct SerialOscInterface final : public SerialOsc::Listener
 {
-    SerialOscInterface();
     ~SerialOscInterface();
 
     // SerialOsc::Listener methods
@@ -11,4 +10,13 @@ struct SerialOscInterface : public SerialOsc::Listener
     void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) override;
 
     SerialOsc* driver;
+
+    static SerialOscInterface* get();
+
+private:
+    SerialOscInterface();
+    SerialOscInterface(const SerialOscInterface&) = delete;
+    SerialOscInterface& operator=(const SerialOscInterface&) = delete;
+    SerialOscInterface(SerialOscInterface&&) = delete;
+    SerialOscInterface&& operator=(const SerialOscInterface&&) = delete;
 };

@@ -24,7 +24,7 @@ struct GridConsumer
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
 };
 
-struct GridConnectionManager
+struct GridConnectionManager final
 {
     void registerGrid(Grid* grid);
     void registerGridConsumer(GridConsumer* consumer);
@@ -43,11 +43,12 @@ struct GridConnectionManager
 
     static GridConnectionManager* get();
 
-    SerialOscInterface* serialOscInterface;
-
 private:
     GridConnectionManager();
-    static GridConnectionManager* instance;
+    GridConnectionManager(const GridConnectionManager&) = delete;
+    GridConnectionManager& operator=(const GridConnectionManager&) = delete;
+    GridConnectionManager(GridConnectionManager&&) = delete;
+    GridConnectionManager&& operator=(const GridConnectionManager&&) = delete;
 
     std::set<GridConsumer*> consumers;
     std::set<Grid*> grids;

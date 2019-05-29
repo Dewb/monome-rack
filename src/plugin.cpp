@@ -2,6 +2,7 @@
 #include "EarthseaWidget.hpp"
 #include "MeadowphysicsModule.hpp"
 #include "MeadowphysicsWidget.hpp"
+#include "SerialOscInterface.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
@@ -34,4 +35,7 @@ void init(Plugin* p)
     p->addModel(modelGrid64Series);
 
     //p->addModel(createModel<TeletypeWidget>("monome", "teletype", "teletype", SEQUENCER_TAG, FUNCTION_GENERATOR_TAG, UTILITY_TAG, RANDOM_TAG, EXTERNAL_TAG));
+
+    // initialize SerialOsc
+    SerialOscInterface::get()->driver->getDeviceCount();
 }
