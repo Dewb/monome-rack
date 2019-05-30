@@ -6,3 +6,4 @@ plugin.so
 /res/firmware
 /dist
 .vscode/ipch
+/Rack-SDK

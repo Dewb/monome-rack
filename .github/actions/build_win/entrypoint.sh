@@ -10,4 +10,4 @@ export CXX=x86_64-w64-mingw32-g++-posix
 export STRIP=x86_64-w64-mingw32-strip
 
 make clean
-make dist
+make install
