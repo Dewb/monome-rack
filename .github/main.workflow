@@ -1,6 +1,6 @@
 workflow "Build Latest" {
-  on = "push"
   resolves = ["Upload Windows Release", "Upload Linux Release"]
+  on = "push"
 }
 
 action "Fetch Submodules" {
