@@ -136,7 +136,7 @@ struct FirmwareManagerImpl
                     {
                         tempLibraryFolder += PATH_SEPARATOR;
                     }
-                    tempLibraryFolder += string(name);
+                    tempLibraryFolder += std::string(name);
 
                     if (mkdir(tempLibraryFolder.c_str()) == 0)
                     {
