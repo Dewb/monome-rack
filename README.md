@@ -30,6 +30,8 @@ Through the virtual grid, all features of each module are accessible, but some f
 
 ### How do I use this?
 
+The master branch is now on Rack 1.0. Currently you must set Rack to *single-threaded mode* to use the virtual grid modules.
+
 For now, this is a *source-only plugin*, no official binary package is provided. You must either build VCVRack from source or download the Rack SDK.
 
 If you're adventurous we now have experimental CI builds on the [Releases page](../../releases).
