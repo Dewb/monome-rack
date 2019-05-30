@@ -26,7 +26,7 @@ action "Build OS X" {
 
 action "Build Windows" {
   uses = "./.github/actions/build_win"
-  needs = ["Fetch Rack SDK", "Fetch Submodules"]
+  needs = ["Build Linux"]
 }
 
 action "Tag Head as Latest" {
