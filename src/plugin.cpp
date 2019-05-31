@@ -22,8 +22,6 @@ void init(Plugin* p)
 
     Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8, 5>, VirtualGridWidgetTemplate<16, 8, 5>>("grid128");
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8, 5>, VirtualGridWidgetTemplate<8, 8, 5>>("grid64");
-    Model* modelGrid128Series = createModel<VirtualGridModuleTemplate<16, 8, 2>, VirtualGridWidgetTemplate<16, 8, 2>>("grid128series");
-    Model* modelGrid64Series = createModel<VirtualGridModuleTemplate<8, 8, 0>, VirtualGridWidgetTemplate<8, 8, 0>>("grid64series");
 
     p->addModel(modelWhiteWhale);
     p->addModel(modelMeadowphysics);
@@ -31,10 +29,6 @@ void init(Plugin* p)
 
     p->addModel(modelGrid128);
     p->addModel(modelGrid64);
-    p->addModel(modelGrid128Series);
-    p->addModel(modelGrid64Series);
-
-    //p->addModel(createModel<TeletypeWidget>("monome", "teletype", "teletype", SEQUENCER_TAG, FUNCTION_GENERATOR_TAG, UTILITY_TAG, RANDOM_TAG, EXTERNAL_TAG));
 
     // initialize SerialOsc
     SerialOscInterface::get()->driver->getDeviceCount();

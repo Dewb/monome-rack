@@ -6,7 +6,7 @@
         {
             "label": "Build Rack plugin",
             "type": "shell",
-            "command": "RACK_DIR=$(PWD)/../.. make -j4",
+            "command": "RACK_DIR=$(PWD)/../.. make -j4 dist",
             "problemMatcher": [
                 "$gcc"
             ],

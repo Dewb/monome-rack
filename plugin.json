@@ -13,7 +13,7 @@
   "modules": [
     {
       "slug": "whitewhale",
-      "name": "whitewhale",
+      "name": "white whale",
       "description": "grid-enabled probabilistic step sequencer",
       "tags": [
         "sequencer",
@@ -42,7 +42,7 @@
     },
     {
       "slug": "grid128",
-      "name": "grid128",
+      "name": "grid 128",
       "description": "",
       "tags": [
         "controller"
@@ -50,23 +50,7 @@
     },
     {
       "slug": "grid64",
-      "name": "grid64",
-      "description": "",
-      "tags": [
-        "controller"
-      ]
-    },
-    {
-      "slug": "grid128series",
-      "name": "grid128series",
-      "description": "",
-      "tags": [
-        "controller"
-      ]
-    },
-    {
-      "slug": "grid64series",
-      "name": "grid64series",
+      "name": "grid 64",
       "description": "",
       "tags": [
         "controller"
