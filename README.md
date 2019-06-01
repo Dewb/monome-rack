@@ -85,7 +85,7 @@ This plugin has been built and tested on the following platforms, though [bugs a
    ```
 * Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
    ```bash
-   $ make
+   $ RACK_DIR=$(PWD)/../.. make
    ```
 Now that you've built the plugin, let's get to patching:
 
