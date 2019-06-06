@@ -30,16 +30,14 @@ Through the virtual grid, all features of each module are accessible, but some f
 
 ### How do I use this?
 
-The master branch is now on Rack 1.0. Currently you must set Rack to *single-threaded mode* to use the virtual grid modules.
+The `master` branch is now compatible with Rack 1.0. For Rack 0.6.2, check the `v0.6` branch.
 
-For now, this is a *source-only plugin*, no official binary package is provided. You must either build VCVRack from source or download the Rack SDK.
-
-If you're adventurous we now have experimental CI builds on the [Releases page](../../releases).
+We now have experimental CI builds on the [Releases page](../../releases). These builds are built against the prerelease Rack SDK version `1.dev.439b3f6`.
 
 This plugin has been built and tested on the following platforms, though [bugs and issues](/../../issues) still exist.
-* Mac OS X 10.13 (with Rack 1.0)
-* Windows 10 (with Msys2) (with Rack 0.6, 1.0 TBD)
-* Ubuntu 16.04 (with Rack 0.6, 1.0 TBD)
+* Mac OS X 10.13
+* Windows 10
+* Ubuntu 16.04 
 
 #### To build with the Rack SDK:
 
@@ -54,8 +52,8 @@ This plugin has been built and tested on the following platforms, though [bugs a
    ```
 * Download the Rack SDK.
    ```bash
-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.dev.ddf06a9.zip
-   $ unzip Rack-SDK-1.dev.ddf06a9.zip
+   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.dev.439b3f6.zip
+   $ unzip Rack-SDK-1.dev.439b3f6.zip
    ```
 * Build with `make`.
    ```bash
