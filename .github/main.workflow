@@ -10,7 +10,7 @@ action "Fetch Submodules" {
 action "Fetch Rack SDK" {
   uses = "./.github/actions/rack_sdk"
   env = {
-    RACK_SDK_VERSION = "1.dev.ddf06a9"
+    RACK_SDK_VERSION = "1.dev.439b3f6"
   }
 }
 
