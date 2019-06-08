@@ -249,6 +249,10 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
         }
     }
 
+    PanelBorder* pb = new PanelBorder;
+    pb->box.size = box.size;
+    addChild(pb);
+
     isDraggingKeys = false;
 }
 
