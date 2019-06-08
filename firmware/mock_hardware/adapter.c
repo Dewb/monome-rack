@@ -25,8 +25,6 @@ spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
 
-typedef void uhc_device_t;
-
 volatile uint64_t tcTicks = 0;
 volatile uint8_t tcOverflow = 0;
 
@@ -310,9 +308,9 @@ void print_dbg_char_hex(unsigned char n) { fprintf(stderr, "%x", n); }
 void print_dbg_short_hex(unsigned short n) { fprintf(stderr, "%d", n); }
 void print_dbg_hex(unsigned long n) { fprintf(stderr, "%lx", n); }
 
-u8 irqs_pause(void) {}
+u8 irqs_pause(void) { return 0; }
 void irqs_resume(u8 irq_flags) {}
 
 void midi_read(void) {}
-bool midi_write(const u8* data, u32 bytes) {}
+bool midi_write(const u8* data, u32 bytes) { return true; }
 void midi_change(uhc_device_t* dev, u8 plug) {}

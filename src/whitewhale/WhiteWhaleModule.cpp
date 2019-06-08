@@ -41,11 +41,11 @@ void WhiteWhaleModule::processInputs()
 void WhiteWhaleModule::processOutputs()
 {
     // Update lights from GPIO
-    lights[CLOCK_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
-    lights[TRIG1_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
-    lights[TRIG2_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
-    lights[TRIG3_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
-    lights[TRIG4_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
+    lights[CLOCK_LIGHT].setSmoothBrightness(firmware.getGPIO(B10), 1.f);
+    lights[TRIG1_LIGHT].setSmoothBrightness(firmware.getGPIO(B00), 1.f);
+    lights[TRIG2_LIGHT].setSmoothBrightness(firmware.getGPIO(B01), 1.f);
+    lights[TRIG3_LIGHT].setSmoothBrightness(firmware.getGPIO(B02), 1.f);
+    lights[TRIG4_LIGHT].setSmoothBrightness(firmware.getGPIO(B03), 1.f);
     lights[CVA_LIGHT].value = firmware.getDAC(0) / 65536.0;
     lights[CVB_LIGHT].value = firmware.getDAC(1) / 65536.0;
 

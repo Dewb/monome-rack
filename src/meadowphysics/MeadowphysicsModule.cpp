@@ -39,15 +39,15 @@ void MeadowphysicsModule::processInputs()
 void MeadowphysicsModule::processOutputs()
 {
     // Update lights from GPIO
-    lights[CLOCK_LIGHT].setBrightnessSmooth(firmware.getGPIO(B10));
-    lights[TRIG1_LIGHT].setBrightnessSmooth(firmware.getGPIO(B00));
-    lights[TRIG2_LIGHT].setBrightnessSmooth(firmware.getGPIO(B01));
-    lights[TRIG3_LIGHT].setBrightnessSmooth(firmware.getGPIO(B02));
-    lights[TRIG4_LIGHT].setBrightnessSmooth(firmware.getGPIO(B03));
-    lights[TRIG5_LIGHT].setBrightnessSmooth(firmware.getGPIO(B04));
-    lights[TRIG6_LIGHT].setBrightnessSmooth(firmware.getGPIO(B05));
-    lights[TRIG7_LIGHT].setBrightnessSmooth(firmware.getGPIO(B06));
-    lights[TRIG8_LIGHT].setBrightnessSmooth(firmware.getGPIO(B07));
+    lights[CLOCK_LIGHT].setSmoothBrightness(firmware.getGPIO(B10), 1.f);
+    lights[TRIG1_LIGHT].setSmoothBrightness(firmware.getGPIO(B00), 1.f);
+    lights[TRIG2_LIGHT].setSmoothBrightness(firmware.getGPIO(B01), 1.f);
+    lights[TRIG3_LIGHT].setSmoothBrightness(firmware.getGPIO(B02), 1.f);
+    lights[TRIG4_LIGHT].setSmoothBrightness(firmware.getGPIO(B03), 1.f);
+    lights[TRIG5_LIGHT].setSmoothBrightness(firmware.getGPIO(B04), 1.f);
+    lights[TRIG6_LIGHT].setSmoothBrightness(firmware.getGPIO(B05), 1.f);
+    lights[TRIG7_LIGHT].setSmoothBrightness(firmware.getGPIO(B06), 1.f);
+    lights[TRIG8_LIGHT].setSmoothBrightness(firmware.getGPIO(B07), 1.f);
 
     // Update output jacks from GPIO & DAC
     outputs[CLOCK_OUTPUT].setVoltage(firmware.getGPIO(B10) * 8.0);

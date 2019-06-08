@@ -23,6 +23,6 @@ void USBAJack::draw(const DrawArgs& args)
 
 MonomeKnob::MonomeKnob()
 {
-    setSVG(rack::APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
+    setSvg(rack::APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
     box.size = rack::Vec(42, 42);
 }

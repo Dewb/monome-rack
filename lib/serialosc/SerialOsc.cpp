@@ -7,10 +7,10 @@
 #define OSC_BUFFER_SIZE 1024
 
 SerialOsc::SerialOsc(std::string devicePrefix, int defaultPort, int maxPortsToScan)
-    : devicePrefix(devicePrefix)
+    : listenSocket(nullptr)
     , listener(nullptr)
+    , devicePrefix(devicePrefix)
     , listenPort(defaultPort)
-    , listenSocket(nullptr)
     , portsToScan(maxPortsToScan < 1 ? 1 : maxPortsToScan)
 {
 }
@@ -323,7 +323,7 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
             device->port = port;
             device->prefix = devicePrefix;
 
-            if (!device->prefix.find("/") == 0)
+            if (device->prefix.find("/") != 0)
             {
                 device->prefix = "/" + device->prefix;
             }
