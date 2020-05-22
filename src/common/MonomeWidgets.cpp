@@ -2,11 +2,6 @@
 
 extern rack::Plugin* pluginInstance;
 
-WhiteLight::WhiteLight()
-{
-    addBaseColor(rack::componentlibrary::SCHEME_WHITE);
-}
-
 void USBAJack::draw(const DrawArgs& args)
 {
     auto vg = args.vg;
@@ -23,6 +18,6 @@ void USBAJack::draw(const DrawArgs& args)
 
 MonomeKnob::MonomeKnob()
 {
-    setSvg(rack::APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
+    setSvg(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
     box.size = rack::Vec(42, 42);
 }
