@@ -34,7 +34,7 @@ extern rack::Plugin* pluginInstance;
     fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
     if (!fw_fn_##name)                                              \
     {                                                               \
-        rack::WARN("Failed to find symbol '" #name "'");            \
+        WARN("Failed to find symbol '" #name "'");            \
         return false;                                               \
     }
 
@@ -48,7 +48,7 @@ extern rack::Plugin* pluginInstance;
     fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
     if (!fw_fn_##name)                                     \
     {                                                      \
-        rack::WARN("Failed to find symbol '" #name "'");   \
+        WARN("Failed to find symbol '" #name "'");   \
         return false;                                      \
     }
 
@@ -162,13 +162,13 @@ struct FirmwareManagerImpl
 
             if (!success)
             {
-                rack::WARN("Could not create temporary folder for firmware");
+                WARN("Could not create temporary folder for firmware");
                 return false;
             }
 
             tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
 
-            rack::INFO("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
+            INFO("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
 
             {
                 std::ifstream src(librarySource, std::ios::binary);
@@ -184,7 +184,7 @@ struct FirmwareManagerImpl
             alreadyLoadedPaths.insert(libraryToLoad);
         }
 
-        rack::INFO("Loading module firmware from %s", libraryToLoad.c_str());
+        INFO("Loading module firmware from %s", libraryToLoad.c_str());
 
 #if ARCH_WIN
 
@@ -194,7 +194,7 @@ struct FirmwareManagerImpl
         if (!handle)
         {
             int error = GetLastError();
-            rack::WARN("Failed to load library %s: %d", libraryToLoad.c_str(), error);
+            WARN("Failed to load library %s: %d", libraryToLoad.c_str(), error);
             return false;
         }
 
@@ -203,7 +203,7 @@ struct FirmwareManagerImpl
         handle = dlopen(libraryToLoad.c_str(), RTLD_NOW | RTLD_LOCAL);
         if (!handle)
         {
-            rack::WARN("Failed to load library %s: %s", libraryToLoad.c_str(), dlerror());
+            WARN("Failed to load library %s: %s", libraryToLoad.c_str(), dlerror());
             return false;
         }
 

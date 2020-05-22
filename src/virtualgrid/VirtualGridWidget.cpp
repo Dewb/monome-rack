@@ -180,7 +180,7 @@ std::string getUniqueVirtualDeviceId(std::string prefix)
         uniqueIdFound = true;
 
         // enumerate modules
-        for (rack::Widget* w : rack::APP->scene->rack->moduleContainer->children)
+        for (rack::Widget* w : APP->scene->rack->moduleContainer->children)
         {
             VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
             if (gridWidget)
@@ -300,7 +300,7 @@ void VirtualGridWidget::onDragStart(const event::DragStart& e)
         else
         {
             // Allow drag only at edges of module
-            /* TODO: fix 
+            /* TODO: fix
             if (e.pos.x < margins.x || e.pos.x > box.size.x - margins.x || e.pos.y < margins.y || e.pos.y > box.size.y - margins.y)
             {
                 return;
