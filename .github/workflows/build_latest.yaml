@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build Windows
-        uses: ./.github/actions/build_windows
+        uses: ./.github/actions/build_win
         env: 
           RACK_SDK_VERSION: 1.1.6
       - name: Tag HEAD as latest
