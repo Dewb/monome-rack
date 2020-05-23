@@ -44,7 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REF: refs/heads/master
           TAG: latest
-      - name: Upload Linux Release
+      - name: Upload Windows Release
         uses: ./.github/actions/update_asset
         env: 
           ASSET_PATH: plugins-v1/monome-1.0.0-pre-win.zip
