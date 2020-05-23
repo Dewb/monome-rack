@@ -7,3 +7,4 @@ plugin.so
 /dist
 .vscode/ipch
 /Rack-SDK
+Rack-SDK*.zip

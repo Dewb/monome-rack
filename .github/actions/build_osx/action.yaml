@@ -1,0 +1,5 @@
+name: 'Build macOS'
+description: 'Build a VCV Rack Plugin for macOS'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

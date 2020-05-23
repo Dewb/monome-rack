@@ -1,0 +1,5 @@
+name: 'Update tag'
+description: 'Sets a tag to the head of a ref'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
