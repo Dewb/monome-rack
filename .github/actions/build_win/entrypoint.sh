@@ -15,7 +15,7 @@ curl -L https://vcvrack.com/downloads/Rack-SDK-${RACK_SDK_VERSION}.zip -o rack-s
 unzip -o rack-sdk.zip
 rm rack-sdk.zip
 
-mkdir -p plugins
+mkdir -p plugins-v1
 
 make clean
 make install

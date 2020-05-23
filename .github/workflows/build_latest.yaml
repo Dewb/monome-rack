@@ -24,6 +24,6 @@ jobs:
       - name: Upload Linux Release
         uses: ./.github/actions/update_asset
         env: 
-          ASSET_PATH: plugins/monome-1.0.0-pre-lin.zip
+          ASSET_PATH: plugins-v1/monome-1.0.0-pre-lin.zip
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: latest
