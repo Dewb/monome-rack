@@ -8,12 +8,12 @@
             "name": "(lldb-Posix) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../../Rack",
+            "program": "${workspaceFolder}/../Rack",
             "args": [
                 "-d"
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/../..",
+            "cwd": "${workspaceFolder}/../Rack",
             "environment": [
                 {
                     "name": "DYLD_FALLBACK_LIBRARY_PATH",
@@ -31,15 +31,15 @@
             "name": "(gdb-Windows) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../../Rack.exe",
+            "program": "${workspaceFolder}/../Rack/Rack.exe",
             "environment": [
                 {
                     "Name": "PATH",
-                    "Value": "${workspaceFolder}/../../dep/bin:/mingw64/bin"
+                    "Value": "${workspaceFolder}/../Rack/dep/bin:/mingw64/bin"
                 }
             ],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/../..",
+            "cwd": "${workspaceFolder}/../Rack",
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "c:\\msys64\\usr\\bin\\gdb.exe"

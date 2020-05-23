@@ -52,8 +52,8 @@ This plugin has been built and tested on the following platforms, though [bugs a
    ```
 * Download the Rack SDK.
    ```bash
-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.dev.439b3f6.zip
-   $ unzip Rack-SDK-1.dev.439b3f6.zip
+   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip
+   $ unzip Rack-SDK-1.1.6.zip
    ```
 * Build with `make`.
    ```bash
