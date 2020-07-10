@@ -74,6 +74,7 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
     DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
+    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
 
     float clockPeriod;
     float clockPhase;
@@ -223,6 +224,7 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_writeNVRAM);
         GET_PROC_ADDRESS(handle, hardware_readVRAM);
         GET_PROC_ADDRESS(handle, hardware_writeVRAM);
+        GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
 
         return true;
     }
@@ -393,5 +395,13 @@ void FirmwareManager::writeVRAM(const void* ptr, uint32_t size)
     if (impl)
     {
         impl->fw_fn_hardware_writeVRAM(ptr, size);
+    }
+}
+
+void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_getScreenBuffer(ptr, width, height);
     }
 }

@@ -314,3 +314,47 @@ void irqs_resume(u8 irq_flags) {}
 void midi_read(void) {}
 bool midi_write(const u8* data, u32 bytes) { return true; }
 void midi_change(uhc_device_t* dev, u8 plug) {}
+int i2c_master_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+
+u64 get_ticks(void)
+{
+    return tcTicks;
+}
+
+
+void init_oled(void) {}
+void screen_startup(void) {}
+
+void screen_draw_region(u8 x, u8 y, u8 w, u8 h, u8* data)
+{
+    u8* screen;
+    uint16_t width, height;
+    hardware_getScreenBuffer(&screen, &width, &height);
+
+    screen += y * width + x;
+
+    for (int j = 0; j < h; j++)
+    {
+        memcpy(screen, data, w);
+        data += w;
+        screen += width;
+    }
+}
+
+void screen_draw_region_offset(u8 x, u8 y, u8 w, u8 h, u32 len, u8* data, u32 off)
+{
+}
+
+void screen_clear(void)
+{
+    u8* screen;
+    uint16_t width, height;
+    hardware_getScreenBuffer(&screen, width, height);
+    memset(screen, 0, sizeof(uint8_t) * width * height);
+}
+
+u8 irqs_pause(void) { return 0; }
+void irqs_resume(u8 irq_flags) {}
+
+void tele_usb_disk() {}

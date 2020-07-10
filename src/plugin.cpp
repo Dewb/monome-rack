@@ -7,6 +7,7 @@
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
 #include "WhiteWhaleWidget.hpp"
+#include "Teletype.hpp"
 
 using namespace rack;
 
@@ -19,6 +20,7 @@ void init(Plugin* p)
     Model* modelWhiteWhale = createModel<WhiteWhaleModule, WhiteWhaleWidget>("whitewhale");
     Model* modelMeadowphysics = createModel<MeadowphysicsModule, MeadowphysicsWidget>("meadowphysics");
     Model* modelEarthsea = createModel<EarthseaModule, EarthseaWidget>("earthsea");
+    Model* modelTeletype = createModel<TeletypeModule, TeletypeWidget>("teletype");
 
     Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8, 5>, VirtualGridWidgetTemplate<16, 8, 5>>("grid128");
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8, 5>, VirtualGridWidgetTemplate<8, 8, 5>>("grid64");

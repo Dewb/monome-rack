@@ -10,6 +10,7 @@ FLAGS += \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
 	-Isrc/earthsea \
+	-Isrc/teletype \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
@@ -40,6 +41,7 @@ firmwares:
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
+	cd firmware && $(MAKE) -f teletype.mk
 
 all: firmwares
 
