@@ -122,7 +122,6 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
 
 void simulate_hid_event(uint8_t* msg)
 {
-    
 }
 
 void hardware_init()
@@ -351,8 +350,14 @@ void hardware_declareVRAM(const void* ptr, uint32_t size)
 
 void hardware_readVRAM(void** ptr, uint32_t* size)
 {
-    *ptr = vram_ptr;
-    *size = vram_size;
+    if (ptr)
+    {
+        *ptr = vram_ptr;
+    }
+    if (size)
+    {
+        *size = vram_size;
+    }
 }
 
 void hardware_writeVRAM(const void* src, uint32_t size)

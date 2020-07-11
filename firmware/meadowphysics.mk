@@ -10,6 +10,8 @@ FLAGS = \
 	-Imock_hardware \
 	-Imock_hardware/stubs \
 	-Imeadowphysics/libavr32/src \
+	-Imeadowphysics/libavr32/asf/common/services/usb \
+	-Imeadowphysics/libavr32/asf/common/services/usb/uhc \
 	-Imeadowphysics/libavr32/conf \
 	-Imeadowphysics/libavr32/conf/trilogy \
 

@@ -1,6 +1,7 @@
 #include <conf_board.h>
 
-typedef enum {
+typedef enum
+{
     FTDI_BUS,
     HID_BUS,
     NUM_BUSES
@@ -33,11 +34,5 @@ void hardware_readSerial_internal(serial_bus_t bus, uint8_t** pbuf, uint32_t* pc
 void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byteCount);
 
 void hardware_triggerInterrupt();
-
-void hardware_readFlash(void** ptr, uint32_t* size);
-void hardware_writeFlash(const void* ptr, uint32_t size);
-
-void hardware_readVolatile(void** ptr, uint32_t* size);
-void hardware_writeVolatile(const void* ptr, uint32_t size);
 
 void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);

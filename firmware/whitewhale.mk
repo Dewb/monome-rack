@@ -10,6 +10,8 @@ FLAGS = \
 	-Imock_hardware \
 	-Imock_hardware/stubs \
 	-Iwhitewhale/libavr32/src \
+	-Iwhitewhale/libavr32/asf/common/services/usb \
+	-Iwhitewhale/libavr32/asf/common/services/usb/uhc \
 	-Iwhitewhale/libavr32/conf \
 	-Iwhitewhale/libavr32/conf/trilogy \
 	

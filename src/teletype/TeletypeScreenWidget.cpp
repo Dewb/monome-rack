@@ -57,15 +57,18 @@ void TeletypeScreenWidget::draw(NVGcontext* vg)
     nvgFillColor(vg, nvgRGB(0, 0, 0));
     nvgFill(vg);
 
-    uint8_t* ptr = buffer;
-    for (int j = 0; j < pixel_y; j++)
+    if (buffer)
     {
-        for (int i = 0; i < pixel_x; i++)
+        uint8_t* ptr = buffer;
+        for (int j = 0; j < pixel_y; j++)
         {
-            float x = margin + i * pixel_width;
-            float y = margin + j * pixel_height;
+            for (int i = 0; i < pixel_x; i++)
+            {
+                float x = margin + i * pixel_width;
+                float y = margin + j * pixel_height;
 
-            drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
+                drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
+            }
         }
     }
 }

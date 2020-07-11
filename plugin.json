@@ -18,6 +18,8 @@
       "tags": [
         "sequencer",
         "clock",
+        "digital",
+        "hardware clone",
         "external"
       ]
     },
@@ -27,6 +29,8 @@
       "description": "grid-enabled shape-memory pattern instrument",
       "tags": [
         "sequencer",
+        "digital",
+        "hardware clone",
         "external"
       ]
     },
@@ -37,6 +41,22 @@
       "tags": [
         "sequencer",
         "clock",
+        "digital",
+        "hardware clone",
+        "external"
+      ]
+    },
+    {
+      "slug": "teletype",
+      "name": "teletype",
+      "description": "algorithmic ecosystem",
+      "tags": [
+        "sequencer",
+        "clock",
+        "logic",
+        "function generator",
+        "digital",
+        "hardware clone",
         "external"
       ]
     },

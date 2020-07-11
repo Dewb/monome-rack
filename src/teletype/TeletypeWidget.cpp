@@ -11,7 +11,7 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 
     {
         auto panel = new SvgPanel();
-        //panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/teletype.svg")));
+        panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/teletype.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
@@ -29,9 +29,12 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     addChild(createScrew<ScrewSilver>(Vec(244, 312)));
 */
 
-    uint8_t* ptr;
-    uint16_t width, height;
-    module->firmware.getScreenBuffer(&ptr, &width, &height);
+    uint8_t* ptr = nullptr;
+    uint16_t width = 0, height = 0;
+    if (module)
+    {
+        module->firmware.getScreenBuffer(&ptr, &width, &height);
+    }
 
     auto screen = new TeletypeScreenWidget(ptr, width, height);
     screen->box.pos = Vec(31, 202);
