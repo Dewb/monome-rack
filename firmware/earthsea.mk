@@ -11,6 +11,8 @@ FLAGS = \
 	-Imock_hardware/stubs \
 	-Iearthsea/libavr32/src \
 	-Iearthsea/libavr32/src/usb/midi \
+	-Iearthsea/libavr32/asf/common/services/usb \
+	-Iearthsea/libavr32/asf/common/services/usb/uhc \
 	-Iearthsea/libavr32/conf \
 	-Iearthsea/libavr32/conf/trilogy \
 	

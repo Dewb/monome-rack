@@ -3,11 +3,12 @@
 #include "MeadowphysicsModule.hpp"
 #include "MeadowphysicsWidget.hpp"
 #include "SerialOscInterface.hpp"
+#include "TeletypeModule.hpp"
+#include "TeletypeWidget.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
 #include "WhiteWhaleWidget.hpp"
-#include "Teletype.hpp"
 
 using namespace rack;
 
@@ -28,6 +29,7 @@ void init(Plugin* p)
     p->addModel(modelWhiteWhale);
     p->addModel(modelMeadowphysics);
     p->addModel(modelEarthsea);
+    p->addModel(modelTeletype);
 
     p->addModel(modelGrid128);
     p->addModel(modelGrid64);

@@ -184,8 +184,8 @@ void spi_write(u32 chip, u32 byte)
     }
 }
 
-void spi_selectChip(u32 arg1, u32 arg2){};
-void spi_unselectChip(u32 arg1, u32 arg2){};
+void spi_selectChip(u32 arg1, u32 arg2) {};
+void spi_unselectChip(u32 arg1, u32 arg2) {};
 
 void* flashc_memset64(void* dst, uint64_t src, size_t nbytes, bool erase)
 {
@@ -322,7 +322,6 @@ u64 get_ticks(void)
     return tcTicks;
 }
 
-
 void init_oled(void) {}
 void screen_startup(void) {}
 
@@ -353,8 +352,5 @@ void screen_clear(void)
     hardware_getScreenBuffer(&screen, width, height);
     memset(screen, 0, sizeof(uint8_t) * width * height);
 }
-
-u8 irqs_pause(void) { return 0; }
-void irqs_resume(u8 irq_flags) {}
 
 void tele_usb_disk() {}

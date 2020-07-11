@@ -4,6 +4,8 @@ FLAGS = \
 	-DNULL=0 \
 	-o0 \
 	-D__AVR32_UC3B0512__ \
+	-fPIC \
+	-g \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
 	-Imock_hardware/stubs \
@@ -17,16 +19,15 @@ FLAGS = \
 	-Iteletype/src \
 	-Iteletype/src/ops
 	
+CFLAGS += \
+	-std=c99
+
 SOURCES = \
 	$(wildcard teletype/src/*.c) \
 	$(wildcard teletype/src/ops/*.c) \
 	$(wildcard teletype/module/*.c) \
-	teletype/src/match_token.c \
-	teletype/src/scanner.c \
-	teletype/module/gitversion.c \
 	teletype/libavr32/src/events.c \
 	teletype/libavr32/src/timers.c \
-	teletype/libavr32/src/monome.c \
 	teletype/libavr32/src/util.c \
 	teletype/libavr32/src/font.c \
 	teletype/libavr32/src/kbd.c \
@@ -34,13 +35,14 @@ SOURCES = \
 	teletype/libavr32/src/usb/hid/hid.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
 	mock_hardware/adapter.c \
-	mock_hardware/mock_hardware.c
+	mock_hardware/mock_hardware.c \
+	mock_hardware/monome.c
 
 SOURCES := $(filter-out teletype/module/usb_disk_mode.c, $(SOURCES))
 
-TARGETNAME = ../build/firmware/teletype
+TARGETNAME = ../res/firmware/teletype
 
-include ../../../arch.mk
+include $(RACK_DIR)/arch.mk
 
 ifeq ($(ARCH), lin)
 	LDFLAGS += -shared
@@ -79,7 +81,7 @@ OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-all: $(TARGET) $(OBJECTS)
+all: $(TARGET) 
 
 clean:
 	rm -rfv ../build/firmware 

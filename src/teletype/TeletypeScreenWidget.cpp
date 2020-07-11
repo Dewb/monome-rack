@@ -1,37 +1,47 @@
-#include "screen.hpp"
+#include "TeletypeScreenWidget.hpp"
+#include "TeletypeModule.hpp"
 
-
-TeletypeScreen::TeletypeScreen(uint8_t* buffer, int x, int y)
+TeletypeScreenWidget::TeletypeScreenWidget(uint8_t* buffer, int x, int y)
     : buffer(buffer)
     , pixel_x(x)
     , pixel_y(y)
 {
 }
 
-void TeletypeScreen::onMouseDown(EventMouseDown& e) 
+void TeletypeScreenWidget::onSelect(const event::Select& e)
 {
-    e.target = this;
-    e.consumed = true;
+    //e.consumed = true;
 }
 
-void TeletypeScreen::onFocus(EventFocus& e) 
+void TeletypeScreenWidget::onDeselect(const event::Deselect& e)
 {
-    e.consumed = true;
+    //e.target = this;
+    //e.consumed = true;
 }
 
-void TeletypeScreen::onKey(EventKey& e) 
+void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
 {
-    e.consumed = true;
-    parent->onKey(e);
+    //e.consumed = true;
+    auto mw = static_cast<ModuleWidget*>(parent);
+    if (mw)
+    {
+        auto tt = static_cast<TeletypeModule*>(mw->module);
+        if (tt)
+        {
+            uint8_t msg[4] = { 0xF5, 0, 0, 0 };
+            //tt->firmware.writeSerial(0, msg, sizeof(uint8_t) * 4);
+        }
+    }
 }
 
-void TeletypeScreen::draw(NVGcontext* vg) 
+void TeletypeScreenWidget::draw(NVGcontext* vg)
 {
     int margin = 4;
 
     float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
     float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
 
+    /*
     if (gFocusedWidget == this)
     {
         nvgBeginPath(vg);
@@ -40,6 +50,7 @@ void TeletypeScreen::draw(NVGcontext* vg)
         nvgStrokeWidth(vg, 3);
         nvgStroke(vg);
     }
+    */
 
     nvgBeginPath(vg);
     nvgRect(vg, 0, 0, box.size.x, box.size.y);
@@ -59,7 +70,7 @@ void TeletypeScreen::draw(NVGcontext* vg)
     }
 }
 
-void TeletypeScreen::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
+void TeletypeScreenWidget::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
 {
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width * 0.96, height * 0.96);

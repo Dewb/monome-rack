@@ -1,4 +1,5 @@
 #include "types.h"
+#include "uhc.h"
 
 #pragma once
 
@@ -8,7 +9,6 @@
 void ftdi_read(void);
 void ftdi_write(u8* data, u32 bytes);
 
-typedef void uhc_device_t;
 void ftdi_change(uhc_device_t* dev, u8 plug);
 void ftdi_setup(void);
 
