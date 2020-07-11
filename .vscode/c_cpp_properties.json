@@ -58,26 +58,18 @@
         {
             "name": "Win32",
             "includePath": [
-                "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
-                "${workspaceFolder}",
-                "${workspaceFolder}/../../include",
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Rack-SDK/dep/**",
+                "${workspaceFolder}/Rack-SDK/include/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
+            "windowsSdkVersion": "10.0.18362.0",
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "intelliSenseMode": "msvc-x64",
-            "browse": {
-                "path": [
-                    "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
-                    "${workspaceFolder}",
-                    "${workspaceFolder}/../../include"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
             "cStandard": "c11",
             "cppStandard": "c++17"
         }

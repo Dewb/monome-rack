@@ -4,27 +4,86 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Rack plugin",
+            "label": "Build Rack plugin (Windows)",
             "type": "shell",
-            "command": "RACK_DIR=${workspaceFolder}/Rack-SDK make -j4 dist",
-            "problemMatcher": [
-                "$gcc"
-            ],
+            "command": "make -j4 dist",
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "env": {
+                    "PATH": "C:/msys64/usr/bin;c:/msys64/mingw64/bin",
+                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                    "MSYSTEM": "MINGW64"
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "absolute"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
             }
         },
         {
-            "label": "Clean Rack plugin",
+            "label": "Clean Rack plugin (Windows)",
             "type": "shell",
             "command": "make clean",
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "env": {
+                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                    "MSYSTEM": "MINGW64",
+                    "MSYS2_PATH_TYPE": "inherit"
+                }
+            },
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": {
-                "kind": "build"
-            }
+            "group": "build"
+        },
+        {
+            "label": "Build Rack plugin (POSIX)",
+            "type": "shell",
+            "command": "make -j4 dist",
+            "options": {
+                "env": {
+                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Clean Rack plugin (POSIX)",
+            "type": "shell",
+            "command": "make clean",
+            "options": {
+                "env": {
+                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         }
     ]
 }

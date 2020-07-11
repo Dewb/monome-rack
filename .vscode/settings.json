@@ -1,13 +1,4 @@
 {
-    "terminal.integrated.shell.windows": "c:\\msys64\\usr\\bin\\bash.exe",
-    "terminal.integrated.shellArgs.windows": [
-        "--login",
-        "-i"
-    ],
-    "terminal.integrated.env.windows": {
-        "MSYSTEM": "MINGW64",
-        "MSYS2_PATH_TYPE": "inherit"
-    },
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
     "editor.formatOnType": true,
@@ -42,5 +33,6 @@
         "strstream": "cpp",
         "locale": "cpp",
         "__locale": "cpp"
-    }
+    },
+    "terminal.integrated.shell.windows": "c:\\msys64\\usr\\bin\\bash.exe"
 }

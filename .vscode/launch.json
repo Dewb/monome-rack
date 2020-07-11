@@ -29,18 +29,21 @@
             "name": "(gdb-Windows) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/../Rack/Rack.exe",
-            "environment": [
-                {
-                    "Name": "PATH",
-                    "Value": "${workspaceFolder}/../Rack/dep/bin:/mingw64/bin"
-                }
-            ],
+            "program": "c:\\Program Files\\VCV\\Rack\\Rack.exe",
+            "environment": [],
+            "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/../Rack",
+            "cwd": "${workspaceFolder}",
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "c:\\msys64\\usr\\bin\\gdb.exe"
+            "miDebuggerPath": "c:\\msys64\\mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

@@ -25,8 +25,8 @@ spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
 
-volatile uint64_t tcTicks = 0;
-volatile uint8_t tcOverflow = 0;
+extern volatile u64 tcTicks;
+extern volatile u8 tcOverflow;
 
 typedef void (*clock_pulse_t)(uint8_t phase);
 volatile uint8_t clock_external;

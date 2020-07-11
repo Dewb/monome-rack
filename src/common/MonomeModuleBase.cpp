@@ -172,7 +172,7 @@ json_t* MonomeModuleBase::dataToJson()
 
     void* data;
     uint32_t size;
-    /*
+
     firmware.readNVRAM(&data, &size);
     if (data && size > 0)
     {
@@ -184,7 +184,7 @@ json_t* MonomeModuleBase::dataToJson()
     {
         json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
     }
-*/
+
     return rootJ;
 }
 
