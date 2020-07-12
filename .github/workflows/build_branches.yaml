@@ -1,0 +1,74 @@
+name: Build Latest
+on: 
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - README.md
+jobs:
+  buildLinux:
+    name: Build Latest for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Linux
+        uses: ./.github/actions/build_linux
+        env: 
+          RACK_SDK_VERSION: 1.1.6
+      - name: Tag HEAD as latest
+        uses: ./.github/actions/update_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: refs/heads/master
+          TAG: latest
+      - name: Upload Linux Release
+        uses: ./.github/actions/update_asset
+        env: 
+          ASSET_PATH: plugins-v1/monome-1.0.0-pre-lin.zip
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: latest
+  buildWindows:
+    name: Build Latest for Windows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Windows
+        uses: ./.github/actions/build_win
+        env: 
+          RACK_SDK_VERSION: 1.1.6
+      - name: Tag HEAD as latest
+        uses: ./.github/actions/update_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: refs/heads/master
+          TAG: latest
+      - name: Upload Windows Release
+        uses: ./.github/actions/update_asset
+        env: 
+          ASSET_PATH: plugins-v1/monome-1.0.0-pre-win.zip
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: latest
+  buildMac:
+    name: Build Latest for Mac
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build Mac
+        uses: ./.github/actions/build_mac
+        env: 
+          RACK_SDK_VERSION: 1.1.6
+      - name: Tag HEAD as latest
+        uses: ./.github/actions/update_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REF: refs/heads/master
+          TAG: latest
+      - name: Upload Mac Release
+        uses: ./.github/actions/update_asset
+        env: 
+          ASSET_PATH: plugins-v1/monome-1.0.0-pre-mac.zip
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: latest
