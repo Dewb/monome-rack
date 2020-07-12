@@ -41,7 +41,7 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     screen->box.size = Vec(208, 108);
     addChild(screen);
 
-    addParam(createParam<MonomeKnob>(Vec(220, 56), module, TeletypeModule::PARAM_PARAM));
+    addParam(createParam<MonomeKnob>(Vec(213, 46), module, TeletypeModule::PARAM_PARAM));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(118, 112), module, TeletypeModule::TRIGA_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(158, 112), module, TeletypeModule::TRIGB_LIGHT));
@@ -52,7 +52,6 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     addChild(createLight<MediumLight<WhiteLight>>(Vec(218, 152), module, TeletypeModule::CV3_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(258, 152), module, TeletypeModule::CV4_LIGHT));
 
-    addInput(createInput<PJ301MPort>(Vec(170, 36), module, TeletypeModule::CV_INPUT));
     addInput(createInput<PJ301MPort>(Vec(10, 36), module, TeletypeModule::TRIG1_INPUT));
     addInput(createInput<PJ301MPort>(Vec(50, 36), module, TeletypeModule::TRIG2_INPUT));
     addInput(createInput<PJ301MPort>(Vec(90, 36), module, TeletypeModule::TRIG3_INPUT));
@@ -61,6 +60,9 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     addInput(createInput<PJ301MPort>(Vec(70, 76), module, TeletypeModule::TRIG6_INPUT));
     addInput(createInput<PJ301MPort>(Vec(110, 76), module, TeletypeModule::TRIG7_INPUT));
     addInput(createInput<PJ301MPort>(Vec(150, 76), module, TeletypeModule::TRIG8_INPUT));
+
+    addInput(createInput<PJ301MPort>(Vec(170, 36), module, TeletypeModule::CV_INPUT));
+
     addOutput(createOutput<PJ301MPort>(Vec(90, 116), module, TeletypeModule::TRIGA_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(130, 116), module, TeletypeModule::TRIGB_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(170, 116), module, TeletypeModule::TRIGC_OUTPUT));

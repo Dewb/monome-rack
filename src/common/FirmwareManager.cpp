@@ -249,7 +249,7 @@ bool FirmwareManager::load(string modulePath)
     if (!impl->load(modulePath))
     {
         impl = nullptr;
-        fprintf(stderr, "Could not load firmware %s", modulePath);
+        WARN("Could not load firmware %s", modulePath.c_str());
         return false;
     }
     return true;

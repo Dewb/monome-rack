@@ -5,8 +5,6 @@ using namespace rack;
 
 struct TeletypeModule : MonomeModuleBase
 {
-    FirmwareManager firmware;
-
     enum ParamIds
     {
         PARAM_PARAM,
