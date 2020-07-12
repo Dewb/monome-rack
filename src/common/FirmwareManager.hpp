@@ -3,7 +3,8 @@
 
 #pragma once
 
-typedef enum {
+typedef enum
+{
     FTDI_BUS,
     HID_BUS,
     NUM_BUSES
@@ -40,6 +41,10 @@ struct FirmwareManager
     void writeVRAM(const void* ptr, uint32_t size);
 
     void getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);
+
+    void hidConnect();
+    void hidDisconnect();
+    void hidMessage(uint8_t* msg, uint8_t size);
 
     struct FirmwareManagerImpl* impl;
 };

@@ -75,6 +75,9 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
     DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_hidConnect, ());
+    DECLARE_PROC(void, hardware_hidDisconnect, ());
+    DECLARE_PROC(void, hardware_hidMessage, (uint8_t*, uint8_t));
 
     float clockPeriod;
     float clockPhase;
@@ -225,6 +228,9 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_readVRAM);
         GET_PROC_ADDRESS(handle, hardware_writeVRAM);
         GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
+        GET_PROC_ADDRESS(handle, hardware_hidConnect);
+        GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
+        GET_PROC_ADDRESS(handle, hardware_hidMessage);
 
         return true;
     }
@@ -406,5 +412,29 @@ void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* 
     if (impl)
     {
         impl->fw_fn_hardware_getScreenBuffer(ptr, width, height);
+    }
+}
+
+void FirmwareManager::hidConnect()
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidConnect();
+    }
+}
+
+void FirmwareManager::hidDisconnect()
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidDisconnect();
+    }
+}
+
+void FirmwareManager::hidMessage(uint8_t* msg, uint8_t size)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidMessage(msg, size);
     }
 }

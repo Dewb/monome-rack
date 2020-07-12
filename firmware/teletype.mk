@@ -12,6 +12,7 @@ FLAGS = \
 	-Imock_hardware \
 	-Imock_hardware/stubs \
 	-Iteletype/libavr32/src \
+	-Iteletype/libavr32/src/usb/midi \
 	-Iteletype/libavr32/src/usb/hid \
 	-Iteletype/libavr32/conf \
 	-Iteletype/libavr32/conf/teletype \

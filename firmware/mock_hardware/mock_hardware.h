@@ -36,3 +36,7 @@ void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byte
 void hardware_triggerInterrupt();
 
 void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);
+
+void hardware_hidConnect();
+void hardware_hidDisconnect();
+void hardware_hidMessage(uint8_t* msg, uint8_t size);

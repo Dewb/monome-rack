@@ -347,7 +347,7 @@ void screen_clear(void)
 {
     u8* screen;
     uint16_t width, height;
-    hardware_getScreenBuffer(&screen, width, height);
+    hardware_getScreenBuffer(&screen, &width, &height);
     memset(screen, 0, sizeof(uint8_t) * width * height);
 }
 

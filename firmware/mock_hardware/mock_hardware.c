@@ -1,5 +1,6 @@
 #include "mock_hardware.h"
 #include "events.h"
+#include "hid.h"
 #include "monome.h"
 #include "timers.h"
 #include <stdio.h>
@@ -120,8 +121,23 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
     event_post(&ev);
 }
 
-void simulate_hid_event(uint8_t* msg)
+void hardware_hidMessage(uint8_t* msg, uint8_t size)
 {
+    hid_parse_frame(msg, size);
+}
+
+void hardware_hidConnect()
+{
+    event_t ev;
+    ev.type = kEventHidConnect;
+    event_post(&ev);
+}
+
+void hardware_hidDisconnect()
+{
+    event_t ev;
+    ev.type = kEventHidDisconnect;
+    event_post(&ev);
 }
 
 void hardware_init()
@@ -145,10 +161,6 @@ void hardware_step()
         if (msg[0] == 0xF0 && count >= 4)
         {
             simulate_monome_key(msg[1], msg[2], msg[3]);
-        }
-        if (msg[0] == 0xF5)
-        {
-            simulate_hid_event(msg);
         }
         hardware_readSerial_internal(FTDI_BUS, &msg, &count);
     }
