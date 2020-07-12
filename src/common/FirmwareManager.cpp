@@ -34,7 +34,7 @@ extern rack::Plugin* pluginInstance;
     fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
     if (!fw_fn_##name)                                              \
     {                                                               \
-        WARN("Failed to find symbol '" #name "'");            \
+        WARN("Failed to find symbol '" #name "'");                  \
         return false;                                               \
     }
 
@@ -48,7 +48,7 @@ extern rack::Plugin* pluginInstance;
     fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
     if (!fw_fn_##name)                                     \
     {                                                      \
-        WARN("Failed to find symbol '" #name "'");   \
+        WARN("Failed to find symbol '" #name "'");         \
         return false;                                      \
     }
 
@@ -233,6 +233,7 @@ struct FirmwareManagerImpl
 unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
 
 FirmwareManager::FirmwareManager()
+    : impl(nullptr)
 {
 }
 
@@ -243,10 +244,12 @@ FirmwareManager::~FirmwareManager()
 
 bool FirmwareManager::load(string modulePath)
 {
+    delete impl;
     impl = new FirmwareManagerImpl();
     if (!impl->load(modulePath))
     {
-        impl = NULL;
+        impl = nullptr;
+        fprintf(stderr, "Could not load firmware %s", modulePath);
         return false;
     }
     return true;
