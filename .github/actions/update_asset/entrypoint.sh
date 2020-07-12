@@ -9,10 +9,6 @@ GITHUB_UPLOAD_URL=https://uploads.github.com
 
 REPO=${GITHUB_REPOSITORY#"https://github.com/"} # work around url parsing bug in act for local testing
 
-# If the action was triggered on a branch other than master, terminate with neutral status
-if [ ${GITHUB_REF} != "refs/heads/master" ] ; then
-    exit 78
-fi
 
 FILENAME=$(basename ${ASSET_PATH})
 
