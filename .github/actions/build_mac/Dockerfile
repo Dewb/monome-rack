@@ -29,7 +29,8 @@ RUN apt-get update && \
     libgl1-mesa-dev     \
     libglu1-mesa-dev    \
     jq                  \
-    rsync
+    rsync               \
+    ragel
 
 # Install osxcross
 # NOTE: The Docker Hub's build machines run varying types of CPUs, so an image
