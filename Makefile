@@ -37,7 +37,7 @@ else
 	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
 
-firmwares:
+firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk

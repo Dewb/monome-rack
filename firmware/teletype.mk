@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 SHELL:=/bin/bash -O extglob
 
 FLAGS = \
@@ -65,24 +67,6 @@ endif
 OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
 
 # Add a rule to build match_token.c from match_token.rl
-#teletype/src/match_token.c: teletype/src/match_token.rl
-#	ragel -C -G2 teletype/src/match_token.rl -o teletype/src/match_token.c
-
-# Add a rule to build scanner.c from scanner.rl
-#teletype/src/scanner.c: teletype/src/scanner.rl
-#	ragel -C -G2 teletype/src/scanner.rl -o teletype/src/scanner.c
-
-# Add the git commit id to a file for use when printing out the version
-#teletype/module/gitversion.c: teletype
-#	echo "const char *git_version = \"$(shell cd teletype; git describe --always --dirty | tr '[a-z]' '[A-Z]')\";" > $@
-
-
-../build/firmware/%.c.o: %.c
-	@mkdir -p $(@D)
-	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
-
-
-# Add a rule to build match_token.c from match_token.rl
 teletype/src/match_token.c: teletype/src/match_token.rl
 	ragel -C -G2 teletype/src/match_token.rl -o teletype/src/match_token.c
 
@@ -91,8 +75,13 @@ teletype/src/scanner.c: teletype/src/scanner.rl
 	ragel -C -G2 teletype/src/scanner.rl -o teletype/src/scanner.c
 
 # Add the git commit id to a file for use when printing out the version
-teletype/module/gitversion.c: teletype/.git/HEAD teletype/.git/index
-	echo "const char *git_version = \"$(shell git describe --always --dirty | tr '[a-z]' '[A-Z]')\";" > $@
+teletype/module/gitversion.c: teletype
+	echo "const char *git_version = \"$(shell cd teletype; git describe --always --dirty | tr '[a-z]' '[A-Z]')\";" > $@
+
+
+../build/firmware/%.c.o: %.c
+	@mkdir -p $(@D)
+	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $@ $^ $(LDFLAGS)

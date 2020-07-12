@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 SHELL:=/bin/bash -O extglob
 
 FLAGS = \

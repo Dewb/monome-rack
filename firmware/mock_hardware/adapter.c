@@ -25,9 +25,6 @@ spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
 
-extern volatile u64 tcTicks;
-extern volatile u8 tcOverflow;
-
 typedef void (*clock_pulse_t)(uint8_t phase);
 volatile uint8_t clock_external;
 
@@ -319,6 +316,7 @@ int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
 
 u64 get_ticks(void)
 {
+    static u64 tcTicks = 0;
     return tcTicks;
 }
 
