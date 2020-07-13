@@ -10,28 +10,10 @@ TeletypeScreenWidget::TeletypeScreenWidget(uint8_t* buffer, int x, int y)
 
 void TeletypeScreenWidget::onSelect(const event::Select& e)
 {
-    auto mw = static_cast<ModuleWidget*>(parent);
-    if (mw)
-    {
-        auto tt = static_cast<TeletypeModule*>(mw->module);
-        if (tt)
-        {
-            tt->firmware.hidConnect();
-        }
-    }
 }
 
 void TeletypeScreenWidget::onDeselect(const event::Deselect& e)
 {
-    auto mw = static_cast<ModuleWidget*>(parent);
-    if (mw)
-    {
-        auto tt = static_cast<TeletypeModule*>(mw->module);
-        if (tt)
-        {
-            tt->firmware.hidDisconnect();
-        }
-    }
 }
 
 void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
