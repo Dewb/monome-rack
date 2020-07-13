@@ -337,7 +337,7 @@ void hardware_writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
     }
 }
 
-void hardware_declareNVRAM(const void* ptr, uint32_t size)
+void hardware_declareNVRAM(void* ptr, uint32_t size)
 {
     nvram_ptr = ptr;
     nvram_size = size;
@@ -354,7 +354,7 @@ void hardware_writeNVRAM(const void* src, uint32_t size)
     memcpy(nvram_ptr, src, nvram_size >= size ? size : nvram_size);
 }
 
-void hardware_declareVRAM(const void* ptr, uint32_t size)
+void hardware_declareVRAM(void* ptr, uint32_t size)
 {
     vram_ptr = ptr;
     vram_size = size;

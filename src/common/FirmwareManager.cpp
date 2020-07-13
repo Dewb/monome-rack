@@ -30,12 +30,14 @@ extern rack::Plugin* pluginInstance;
 #include <direct.h>
 #include <windows.h>
 
-#define GET_PROC_ADDRESS(handle, name)                              \
-    fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
-    if (!fw_fn_##name)                                              \
-    {                                                               \
-        WARN("Failed to find symbol '" #name "'");                  \
-        return false;                                               \
+#define GET_PROC_ADDRESS(handle, name)                 \
+    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+        reinterpret_cast<void*>(                       \
+            GetProcAddress(handle, #name)));           \
+    if (!fw_fn_##name)                                 \
+    {                                                  \
+        WARN("Failed to find symbol '" #name "'");     \
+        return false;                                  \
     }
 
 #elif ARCH_LIN || ARCH_MAC
@@ -44,12 +46,14 @@ extern rack::Plugin* pluginInstance;
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define GET_PROC_ADDRESS(handle, name)                     \
-    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
-    if (!fw_fn_##name)                                     \
-    {                                                      \
-        WARN("Failed to find symbol '" #name "'");         \
-        return false;                                      \
+#define GET_PROC_ADDRESS(handle, name)                 \
+    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+        reinterpret_cast<void*>(                       \
+            dlsym(handle, #name)));                    \
+    if (!fw_fn_##name)                                 \
+    {                                                  \
+        WARN("Failed to find symbol '" #name "'");     \
+        return false;                                  \
     }
 
 #endif

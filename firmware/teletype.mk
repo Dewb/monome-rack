@@ -85,7 +85,7 @@ teletype/module/gitversion.c: teletype
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 all: $(TARGET) 
 

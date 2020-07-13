@@ -2,7 +2,6 @@ SHELL:=/bin/bash -O extglob
 RACK_DIR ?= ../..
 
 FLAGS += \
-	-Werror=implicit-function-declaration \
 	-Isrc \
 	-Isrc/common \
 	-Isrc/common/GridConnection \

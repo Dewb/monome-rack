@@ -28,6 +28,7 @@ SOURCES = \
 	meadowphysics/libavr32/src/timers.c \
 	meadowphysics/libavr32/src/util.c \
 	mock_hardware/adapter.c \
+	mock_hardware/adapter_trilogy.c \
 	mock_hardware/mock_hardware.c \
 	mock_hardware/monome.c 
 
@@ -57,7 +58,7 @@ OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 all: $(TARGET)
 
