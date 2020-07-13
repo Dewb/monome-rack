@@ -46,14 +46,14 @@ void TeletypeModule::processInputs()
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(0, params[PARAM_PARAM].getValue() * 0xFFF);
 
-    firmware.setGPIO(A00, inputs[TRIG1_INPUT].getVoltage());
-    firmware.setGPIO(A01, inputs[TRIG2_INPUT].getVoltage());
-    firmware.setGPIO(A02, inputs[TRIG3_INPUT].getVoltage());
-    firmware.setGPIO(A03, inputs[TRIG4_INPUT].getVoltage());
-    firmware.setGPIO(A04, inputs[TRIG5_INPUT].getVoltage());
-    firmware.setGPIO(A05, inputs[TRIG6_INPUT].getVoltage());
-    firmware.setGPIO(A06, inputs[TRIG7_INPUT].getVoltage());
-    firmware.setGPIO(A07, inputs[TRIG8_INPUT].getVoltage());
+    firmware.setGPIO(A00, inputs[TRIG1_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A01, inputs[TRIG2_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A02, inputs[TRIG3_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A03, inputs[TRIG4_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A04, inputs[TRIG5_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A05, inputs[TRIG6_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A06, inputs[TRIG7_INPUT].getVoltage() > 0);
+    firmware.setGPIO(A07, inputs[TRIG8_INPUT].getVoltage() > 0);
 }
 
 void TeletypeModule::processOutputs()
@@ -63,8 +63,8 @@ void TeletypeModule::processOutputs()
     lights[TRIGB_LIGHT].setBrightness(firmware.getGPIO(B09));
     lights[TRIGC_LIGHT].setBrightness(firmware.getGPIO(B10));
     lights[TRIGD_LIGHT].setBrightness(firmware.getGPIO(B11));
-    lights[CV1_LIGHT].value = firmware.getDAC(0) / 65536.0;
-    lights[CV2_LIGHT].value = firmware.getDAC(1) / 65536.0;
+    lights[CV1_LIGHT].value = firmware.getDAC(2) / 65536.0;
+    lights[CV2_LIGHT].value = firmware.getDAC(3) / 65536.0;
     lights[CV3_LIGHT].value = firmware.getDAC(0) / 65536.0;
     lights[CV4_LIGHT].value = firmware.getDAC(1) / 65536.0;
 
@@ -73,8 +73,8 @@ void TeletypeModule::processOutputs()
     outputs[TRIGB_OUTPUT].value = firmware.getGPIO(B09) * 8.0;
     outputs[TRIGC_OUTPUT].value = firmware.getGPIO(B10) * 8.0;
     outputs[TRIGD_OUTPUT].value = firmware.getGPIO(B11) * 8.0;
-    outputs[CV1_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
-    outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
+    outputs[CV1_OUTPUT].value = 10.0 * firmware.getDAC(2) / 65536.0;
+    outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(3) / 65536.0;
     outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CV4_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
 }

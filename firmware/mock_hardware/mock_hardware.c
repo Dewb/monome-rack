@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define GPIO_NUM_PINS 43
+#define GPIO_NUM_PINS 50
 bool gpioBlock[GPIO_NUM_PINS];
 
 uint16_t adcBlock[4];

@@ -65,7 +65,7 @@ ifeq ($(ARCH), win)
 	TARGET = $(TARGETNAME).dll
 endif
 
-OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
+OBJECTS += $(patsubst %, ../build/firmware/teletype/%.o, $(SOURCES))
 
 # Add a rule to build match_token.c from match_token.rl
 teletype/src/match_token.c: teletype/src/match_token.rl
@@ -80,7 +80,7 @@ teletype/module/gitversion.c: teletype
 	echo "const char *git_version = \"$(shell cd teletype; git describe --always --dirty | tr '[a-z]' '[A-Z]')\";" > $@
 
 
-../build/firmware/%.c.o: %.c
+../build/firmware/teletype/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
@@ -90,4 +90,4 @@ $(TARGET): $(OBJECTS)
 all: $(TARGET) 
 
 clean:
-	rm -rfv ../build/firmware 
+	rm -rfv ../build/firmware/teletype

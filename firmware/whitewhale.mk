@@ -51,9 +51,9 @@ ifeq ($(ARCH), win)
 	TARGET = $(TARGETNAME).dll
 endif
 
-OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
+OBJECTS += $(patsubst %, ../build/firmware/whitewhale/%.o, $(SOURCES))
 
-../build/firmware/%.c.o: %.c
+../build/firmware/whitewhale/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
@@ -63,4 +63,4 @@ $(TARGET): $(OBJECTS)
 all: $(TARGET)
 
 clean:
-	rm -rfv ../build/firmware 
+	rm -rfv ../build/firmware/whitewhale
