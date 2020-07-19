@@ -44,7 +44,9 @@ void TeletypeModule::processInputs()
     }
 
     // Convert knob float parameters to 12-bit ADC values
-    firmware.setADC(0, params[PARAM_PARAM].getValue() * 0xFFF);
+    firmware.setADC(1, params[PARAM_PARAM].getValue() * 0xFFF);
+
+    firmware.setADC(0, (uint16_t)((math::rescale(math::clamp(inputs[CV_INPUT].getVoltage(), 0.0, 10.0), 0.0, 10.0, 0, 1.0) * 0xFFF)));
 
     firmware.setGPIO(A00, inputs[TRIG1_INPUT].getVoltage() > 0);
     firmware.setGPIO(A01, inputs[TRIG2_INPUT].getVoltage() > 0);
