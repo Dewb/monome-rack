@@ -94,6 +94,21 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
                 case GLFW_KEY_EQUAL:
                     key = 0x2e;
                     break;
+                case GLFW_KEY_SEMICOLON:
+                    key = 0x33;
+                    break;
+                case GLFW_KEY_APOSTROPHE:
+                    key = 0x34;
+                    break;
+                case GLFW_KEY_BACKSLASH:
+                    key = 0x31;
+                    break;
+                case GLFW_KEY_GRAVE_ACCENT:
+                    key = 0x35;
+                    break;
+                case GLFW_KEY_COMMA:
+                    key = 0x36;
+                    break;
             }
         }
     }
