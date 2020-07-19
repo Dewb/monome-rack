@@ -60,10 +60,11 @@
         {
             "label": "Build Rack plugin (POSIX)",
             "type": "shell",
-            "command": "make -j4 dist",
+            "command": "make -j4 install",
             "options": {
                 "env": {
                     "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                    "STRIP": "echo"
                 }
             },
             "problemMatcher": [
