@@ -40,7 +40,7 @@ void TeletypeModule::processInputs()
     if (frontButton != firmware.getGPIO(NMI))
     {
         firmware.setGPIO(NMI, frontButton);
-        firmware.triggerInterrupt(2);
+        firmware.triggerInterrupt(3);
     }
 
     // Convert knob float parameters to 12-bit ADC values
