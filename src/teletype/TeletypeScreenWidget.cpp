@@ -109,6 +109,9 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
                 case GLFW_KEY_COMMA:
                     key = 0x36;
                     break;
+                case GLFW_KEY_ESCAPE:
+                    key = 0x29;
+                    break;
             }
         }
     }
