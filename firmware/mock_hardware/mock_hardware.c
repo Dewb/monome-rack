@@ -211,7 +211,8 @@ void hardware_setGPIO(uint32_t pin, bool value)
 
         gpioBlock[pin] = value;
 
-        if (changed)
+        // Trigger interrupt only on rising edge
+        if (changed && value)
         {
             simulate_trigger_interrupt(pin);
         }
