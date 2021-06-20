@@ -21,7 +21,7 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
     uint8_t key = 0;
     uint8_t mod = 0;
 
-    // GLFW keycodes are "inspired by" but not equal to HID keycodes
+    // GLFW keycodes are "inspired by" but not equal to HID keycodes ><
     if (e.action == GLFW_PRESS || e.action == GLFW_REPEAT)
     {
         if (e.mods & GLFW_MOD_CONTROL)
@@ -45,7 +45,7 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
         {
             key = (e.key - GLFW_KEY_A) + 0x4;
         }
-        else if (e.key >= GLFW_KEY_1 && e.key <= GLFW_KEY_9)
+        else if (e.key >= GLFW_KEY_1 && e.key <= GLFW_KEY_9) // 0 is mapped separately
         {
             key = (e.key - GLFW_KEY_1) + 0x1e;
         }
@@ -56,6 +56,10 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
         else if (e.key >= GLFW_KEY_F1 && e.key <= GLFW_KEY_F12)
         {
             key = (e.key - GLFW_KEY_F1) + 0x3a;
+        }
+        else if (e.key >= GLFW_KEY_KP_1 && e.key <= GLFW_KEY_KP_9) // KP_0 is mapped separately
+        {
+            key = (e.key - GLFW_KEY_KP_1) + 0x59;
         }
         else
         {
@@ -78,6 +82,9 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
                     break;
                 case GLFW_KEY_0:
                     key = 0x27;
+                    break;
+                case GLFW_KEY_KP_0:
+                    key = 0x62;
                     break;
                 case GLFW_KEY_LEFT_BRACKET:
                     key = 0x2f;
@@ -111,6 +118,48 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
                     break;
                 case GLFW_KEY_ESCAPE:
                     key = 0x29;
+                    break;
+                case GLFW_KEY_NUM_LOCK:
+                    key = 0x53;
+                    break;
+                case GLFW_KEY_CAPS_LOCK:
+                    key = 0x39;
+                    break;
+                case GLFW_KEY_PRINT_SCREEN:
+                    key = 0x46;
+                    break;
+                case GLFW_KEY_SCROLL_LOCK:
+                    key = 0x47;
+                    break;
+                case GLFW_KEY_PAGE_UP:
+                    key = 0x4b;
+                    break;
+                case GLFW_KEY_PAGE_DOWN:
+                    key = 0x4e;
+                    break;
+                case GLFW_KEY_HOME:
+                    key = 0x4a;
+                    break;
+                case GLFW_KEY_END:
+                    key = 0x4d;
+                    break;
+                case GLFW_KEY_KP_DIVIDE:
+                    key = 0x54;
+                    break;
+                case GLFW_KEY_KP_MULTIPLY:
+                    key = 0x55;
+                    break;
+                case GLFW_KEY_KP_SUBTRACT:
+                    key = 0x56;
+                    break;
+                case GLFW_KEY_KP_ADD:
+                    key = 0x57;
+                    break;
+                case GLFW_KEY_KP_ENTER:
+                    key = 0x58;
+                    break;
+                case GLFW_KEY_KP_DECIMAL:
+                    key = 0x63;
                     break;
             }
         }
