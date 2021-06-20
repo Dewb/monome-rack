@@ -320,6 +320,11 @@ u64 get_ticks(void)
     return tcTicks;
 }
 
+extern u8 get_revision(void)
+{
+    return gpio_get_pin_value(33) == 0;
+}
+
 void init_oled(void) { }
 void screen_startup(void) { }
 
@@ -340,6 +345,10 @@ void screen_draw_region(u8 x, u8 y, u8 w, u8 h, u8* data)
 }
 
 void screen_draw_region_offset(u8 x, u8 y, u8 w, u8 h, u32 len, u8* data, u32 off)
+{
+}
+
+void screen_set_direction(u8 flipped)
 {
 }
 

@@ -6,6 +6,7 @@ FLAGS = \
 	-DNULL=0 \
 	-o0 \
 	-D__AVR32_UC3B0512__ \
+	-DARCH_AVR32=1 \
 	-fPIC \
 	-g \
 	-Werror=implicit-function-declaration \
@@ -38,11 +39,12 @@ SOURCES = \
 	teletype/libavr32/src/font.c \
 	teletype/libavr32/src/kbd.c \
 	teletype/libavr32/src/region.c \
+	teletype/libavr32/src/random.c \
 	teletype/libavr32/src/usb/hid/hid.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
 	mock_hardware/adapter.c \
 	mock_hardware/mock_hardware.c \
-	mock_hardware/monome.c
+	mock_hardware/monome_tt.c
 
 SOURCES := $(filter-out teletype/module/usb_disk_mode.c, $(SOURCES))
 

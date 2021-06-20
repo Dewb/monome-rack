@@ -3,7 +3,6 @@
     "editor.insertSpaces": true,
     "editor.formatOnType": true,
     "editor.formatOnPaste": true,
-    "editor.formatOnSave": true,
     "C_Cpp.clang_format_style": "{ BasedOnStyle: WebKit, BreakBeforeBraces: Allman, IndentCaseLabels: true }",
     "files.associations": {
         "ios": "cpp",
