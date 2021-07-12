@@ -1,6 +1,7 @@
 #include "events.h"
 #include "mock_hardware.h"
 #include "monome.h"
+#include "i2c.h"
 #include "types.h"
 #include <stdio.h>
 #include <string.h>
@@ -395,3 +396,16 @@ void screen_clear(void)
 }
 
 void tele_usb_disk() { }
+
+// i2c.c
+
+int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+
+void twi_follower_rx(uint8_t u8_value) { }
+uint8_t twi_follower_tx(void) { return 0; }
+void twi_follower_stop(void) { }
+
+void ii_tx_queue(uint8_t u8_value) { }
+
+volatile process_ii_t process_ii;

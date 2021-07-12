@@ -86,6 +86,7 @@ typedef enum
     eProtocolNumProtocols // dummy and count
 } eMonomeProtocol;
 
+// device descriptor
 typedef struct e_monomeDesc
 {
     eMonomeProtocol protocol;
@@ -101,6 +102,7 @@ extern monomeDesc mdesc;
 
 static void simulate_monome_setup_mext(int rows, int cols)
 {
+    ftdi_setup();
     mdesc.protocol = eProtocolMext;
     mdesc.vari = 1;
     mdesc.device = eDeviceGrid;

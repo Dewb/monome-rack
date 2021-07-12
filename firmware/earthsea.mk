@@ -14,6 +14,7 @@ FLAGS = \
 	-Iearthsea/libavr32/src \
 	-Iearthsea/libavr32/src/usb/midi \
 	-Iearthsea/libavr32/src/usb/hid \
+	-Iearthsea/libavr32/src/usb/cdc \
 	-Iearthsea/libavr32/asf/common/services/usb \
 	-Iearthsea/libavr32/asf/common/services/usb/uhc \
 	-Iearthsea/libavr32/conf \
