@@ -15,6 +15,8 @@ FLAGS = \
 	-Iteletype/libavr32/src \
 	-Iteletype/libavr32/src/usb/midi \
 	-Iteletype/libavr32/src/usb/hid \
+	-Iteletype/libavr32/src/usb/cdc \
+	-Iteletype/libavr32/src/usb/ftdi \
 	-Iteletype/libavr32/conf \
 	-Iteletype/libavr32/conf/teletype \
 	-Iteletype/libavr32/asf/common/services/usb \
@@ -41,6 +43,8 @@ SOURCES = \
 	teletype/libavr32/src/region.c \
 	teletype/libavr32/src/random.c \
 	teletype/libavr32/src/usb/hid/hid.c \
+	teletype/libavr32/src/music.c \
+	teletype/libavr32/src/midi_common.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
 	mock_hardware/adapter.c \
 	mock_hardware/mock_hardware.c \

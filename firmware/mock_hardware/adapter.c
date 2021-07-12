@@ -221,8 +221,13 @@ void init_adc() { }
 
 void init_tc(void) { }
 void init_usb_host(void) { }
+
+// for modules using older libavr32
 void init_i2c_slave(uint8_t addr) { }
 void init_i2c_master(void) { }
+
+void init_i2c_follower(uint8_t addr) { }
+void init_i2c_leader(void) { }
 
 void register_interrupts() { }
 
@@ -289,6 +294,35 @@ u8 ftdi_tx_busy(void) { return 0; }
 u8 ftdi_connected(void)
 {
     return ftdiConnect;
+}
+
+void cdc_write(uint8_t* data, uint32_t bytes)
+{
+}
+
+void cdc_read(void)
+{
+}
+
+void cdc_setup(void)
+{
+}
+
+u8* cdc_rx_buf(void)
+{
+    return 0;
+}
+u8 cdc_rx_bytes(void)
+{
+    return 0;
+}
+
+u8 cdc_rx_busy(void) { return 0; }
+u8 cdc_tx_busy(void) { return 0; }
+
+uint8_t cdc_connected(void) 
+{ 
+    return false; 
 }
 
 void sysclk_init() { }
