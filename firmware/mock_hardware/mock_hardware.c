@@ -42,7 +42,7 @@ extern void initialize_module(void);
 extern void check_events(void);
 
 extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
-extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key);
+extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
 void simulate_clock_normal_interrupt()
 {
@@ -124,10 +124,9 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
     event_post(&ev);
 }
 
-void hardware_hidMessage(uint8_t* msg, uint8_t size)
+void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
 {
-    //hid_parse_frame(msg, size);
-    process_keypress(msg[2], msg[0], false);
+    process_keypress(key, mod, held, release);
 }
 
 void hardware_hidConnect()

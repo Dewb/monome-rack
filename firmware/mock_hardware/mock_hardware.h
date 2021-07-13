@@ -39,4 +39,4 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);
 
 void hardware_hidConnect();
 void hardware_hidDisconnect();
-void hardware_hidMessage(uint8_t* msg, uint8_t size);
+void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release);

@@ -81,7 +81,7 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
     DECLARE_PROC(void, hardware_hidConnect, ());
     DECLARE_PROC(void, hardware_hidDisconnect, ());
-    DECLARE_PROC(void, hardware_hidMessage, (uint8_t*, uint8_t));
+    DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
 
     float clockPeriod;
     float clockPhase;
@@ -435,10 +435,10 @@ void FirmwareManager::hidDisconnect()
     }
 }
 
-void FirmwareManager::hidMessage(uint8_t* msg, uint8_t size)
+void FirmwareManager::hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
 {
     if (impl)
     {
-        impl->fw_fn_hardware_hidMessage(msg, size);
+        impl->fw_fn_hardware_hidMessage(key, mod, held, release);
     }
 }
