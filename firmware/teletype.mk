@@ -83,7 +83,7 @@ teletype/src/scanner.c: teletype/src/scanner.rl
 
 # Add the git commit id to a file for use when printing out the version
 teletype/module/gitversion.c: teletype
-	echo "const char *git_version = \"$(shell cd teletype; git describe --always --dirty | tr '[a-z]' '[A-Z]')\";" > $@
+	echo "const char *git_version = \"$(shell cut -d '-' -f 1 <<< $(shell cd teletype; git describe --tags | cut -c 1-)) $(shell cd teletype; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\";" > $@
 
 
 ../build/firmware/teletype/%.c.o: %.c
