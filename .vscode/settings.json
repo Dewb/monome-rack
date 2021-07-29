@@ -32,6 +32,5 @@
         "strstream": "cpp",
         "locale": "cpp",
         "__locale": "cpp"
-    },
-    "terminal.integrated.shell.windows": "c:\\msys64\\usr\\bin\\bash.exe"
+    }
 }
