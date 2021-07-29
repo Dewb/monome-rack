@@ -26,9 +26,6 @@ spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
 
-typedef void (*clock_pulse_t)(uint8_t phase);
-volatile uint8_t clock_external;
-
 #define FTDI_STRING_MAX_LEN 64
 char manufacturer_string[FTDI_STRING_MAX_LEN];
 char product_string[FTDI_STRING_MAX_LEN];
@@ -328,8 +325,6 @@ uint8_t cdc_connected(void)
 
 void sysclk_init() { }
 
-void clock_null(uint8_t phase) { }
-volatile clock_pulse_t clock_pulse = &clock_null;
 
 void init_dbg_rs232(long pba_hz) { }
 

@@ -10,6 +10,7 @@ FLAGS += \
 	-Isrc/meadowphysics \
 	-Isrc/earthsea \
 	-Isrc/teletype \
+	-Isrc/ansible \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
@@ -41,6 +42,7 @@ firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
 	cd firmware && $(MAKE) -f teletype.mk
+	cd firmware && $(MAKE) -f ansible.mk
 
 all: firmwares
 

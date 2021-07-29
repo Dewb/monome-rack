@@ -14,3 +14,6 @@
 	path = firmware/earthsea
 	url = https://github.com/Dewb/earthsea
 	branch = vcvrack
+[submodule "firmware/ansible"]
+	path = firmware/ansible
+	url = https://github.com/Dewb/ansible

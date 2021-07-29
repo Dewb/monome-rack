@@ -1,3 +1,5 @@
+#include "AnsibleModule.hpp"
+#include "AnsibleWidget.hpp"
 #include "EarthseaModule.hpp"
 #include "EarthseaWidget.hpp"
 #include "MeadowphysicsModule.hpp"
@@ -22,6 +24,7 @@ void init(Plugin* p)
     Model* modelMeadowphysics = createModel<MeadowphysicsModule, MeadowphysicsWidget>("meadowphysics");
     Model* modelEarthsea = createModel<EarthseaModule, EarthseaWidget>("earthsea");
     Model* modelTeletype = createModel<TeletypeModule, TeletypeWidget>("teletype");
+    Model* modelAnsible = createModel<AnsibleModule, AnsibleWidget>("ansible");
 
     Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8, 5>, VirtualGridWidgetTemplate<16, 8, 5>>("grid128");
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8, 5>, VirtualGridWidgetTemplate<8, 8, 5>>("grid64");
@@ -30,6 +33,7 @@ void init(Plugin* p)
     p->addModel(modelMeadowphysics);
     p->addModel(modelEarthsea);
     p->addModel(modelTeletype);
+    p->addModel(modelAnsible);
 
     p->addModel(modelGrid128);
     p->addModel(modelGrid64);

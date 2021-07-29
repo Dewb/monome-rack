@@ -61,6 +61,20 @@
       ]
     },
     {
+      "slug": "ansible",
+      "name": "ansible",
+      "description": "far communicator",
+      "tags": [
+        "sequencer",
+        "clock",
+        "logic",
+        "function generator",
+        "digital",
+        "hardware clone",
+        "external"
+      ]
+    },
+    {
       "slug": "grid128",
       "name": "grid 128",
       "description": "",

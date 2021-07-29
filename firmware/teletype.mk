@@ -48,7 +48,8 @@ SOURCES = \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
 	mock_hardware/adapter.c \
 	mock_hardware/mock_hardware.c \
-	mock_hardware/monome.c
+	mock_hardware/adapter_not_ansible.c \
+	mock_hardware/monome.c \
 
 SOURCES := $(filter-out teletype/module/usb_disk_mode.c, $(SOURCES))
 
