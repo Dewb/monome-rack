@@ -344,12 +344,6 @@ void midi_change(uhc_device_t* dev, u8 plug) { }
 int i2c_master_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
 int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
 
-u64 get_ticks(void)
-{
-    static u64 tcTicks = 0;
-    return tcTicks;
-}
-
 extern u8 get_revision(void)
 {
     return gpio_get_pin_value(33) == 0;

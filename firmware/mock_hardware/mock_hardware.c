@@ -44,6 +44,32 @@ extern void check_events(void);
 extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
 extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
+volatile u64 tcTicks = 0;
+volatile u8 tcOverflow = 0;
+static const u64 tcMax = (U64)0x7fffffff;
+static const u64 tcMaxInv = (u64)0x10000000;
+
+u64 get_ticks(void)
+{
+    return tcTicks;
+}
+
+void simulate_tc_interrupt()
+{
+    tcTicks++;
+    // overflow control
+    if (tcTicks > tcMax)
+    {
+        tcTicks = 0;
+        tcOverflow = 1;
+    }
+    else
+    {
+        tcOverflow = 0;
+    }
+    process_timers();
+}
+
 void simulate_clock_normal_interrupt()
 {
     event_t e;
@@ -189,7 +215,7 @@ void hardware_triggerInterrupt(int interrupt)
     {
         // todo: make an enum for this
         case 0: // system clock
-            process_timers();
+            simulate_tc_interrupt();
             break;
         case 1: // clock jack normal
             simulate_clock_normal_interrupt();
