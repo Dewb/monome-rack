@@ -20,8 +20,8 @@ AnsibleWidget::AnsibleWidget(AnsibleModule* module)
     addChild(createWidget<USBAJack>(Vec(10, 338)));
 
     addParam(createParam<TL1105>(Vec(62, 336), module, AnsibleModule::MODE_PARAM));
-    addParam(createParam<TL1105>(Vec(20, 256), module, AnsibleModule::KEY1_PARAM));
-    addParam(createParam<TL1105>(Vec(57, 256), module, AnsibleModule::KEY2_PARAM));
+    addParam(createParam<TL1105>(Vec(17, 256), module, AnsibleModule::KEY1_PARAM));
+    addParam(createParam<TL1105>(Vec(54, 256), module, AnsibleModule::KEY2_PARAM));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(2, 72), module, AnsibleModule::TR1_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 72), module, AnsibleModule::CV1_LIGHT));
@@ -31,7 +31,7 @@ AnsibleWidget::AnsibleWidget(AnsibleModule* module)
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 148), module, AnsibleModule::CV3_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(2, 186), module, AnsibleModule::TR4_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 186), module, AnsibleModule::CV4_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(77, 330), module, AnsibleModule::MODE_LIGHT));
+    addChild(createLight<MediumLight<YellowWhiteLight>>(Vec(77, 326), module, AnsibleModule::MODE_YELLOW_LIGHT));
 
     addOutput(createOutput<PJ301MPort>(Vec(13, 54), module, AnsibleModule::TR1_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 75), module, AnsibleModule::CV1_OUTPUT));

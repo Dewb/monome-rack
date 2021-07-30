@@ -68,9 +68,21 @@ void simulate_front_button_interrupt()
     event_post(&e);
 }
 
+void simulate_ansible_key_interrupt(int pin, int offset)
+{
+    event_t e = { .type = kEventKey, .data = hardware_getGPIO(pin) + offset };
+    event_post(&e);
+}
+
 void simulate_trigger_interrupt(int pin)
 {
     event_t e = { .type = kEventTrigger, .data = pin };
+    event_post(&e);
+}
+
+void simulate_ansible_tr_interrupt(int pin, int offset)
+{
+    event_t e = { .type = kEventTr, .data = hardware_getGPIO(pin) + offset };
     event_post(&e);
 }
 
@@ -175,6 +187,7 @@ void hardware_triggerInterrupt(int interrupt)
 {
     switch (interrupt)
     {
+        // todo: make an enum for this
         case 0: // system clock
             process_timers();
             break;
@@ -186,6 +199,18 @@ void hardware_triggerInterrupt(int interrupt)
             break;
         case 3: // front button pressed
             simulate_front_button_interrupt();
+            break;
+        case 4: // panel key1 pressed
+            simulate_ansible_key_interrupt(38, 0);
+            break;
+        case 5: // panel key2 pressed
+            simulate_ansible_key_interrupt(39, 2);
+            break;
+        case 6: // input 1 change
+            simulate_ansible_tr_interrupt(40, 0);
+            break;
+        case 7: // input 2 change
+            simulate_ansible_tr_interrupt(41, 2);
             break;
     }
 }

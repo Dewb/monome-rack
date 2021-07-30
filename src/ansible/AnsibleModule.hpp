@@ -34,7 +34,8 @@ struct AnsibleModule : MonomeModuleBase
 
     enum LightIds
     {
-        MODE_LIGHT,
+        MODE_YELLOW_LIGHT,
+        MODE_WHITE_LIGHT,
         TR1_LIGHT,
         TR2_LIGHT,
         TR3_LIGHT,
