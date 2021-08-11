@@ -1,6 +1,7 @@
 #include "events.h"
 #include "mock_hardware.h"
 #include "monome.h"
+#include "i2c.h"
 #include "types.h"
 #include <stdio.h>
 #include <string.h>
@@ -24,9 +25,6 @@ typedef enum
 spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
-
-volatile uint64_t tcTicks = 0;
-volatile uint8_t tcOverflow = 0;
 
 typedef void (*clock_pulse_t)(uint8_t phase);
 volatile uint8_t clock_external;
@@ -61,7 +59,7 @@ int gpio_get_pin_value(u32 pin)
     return hardware_getGPIO(pin);
 }
 
-void adc_convert(u16* adc)
+void adc_convert(u16 adc[4])
 {
     adc[0] = hardware_getADC(0);
     adc[1] = hardware_getADC(1);
@@ -109,7 +107,7 @@ void spi_write(u32 chip, u32 byte)
         }
         case WRITING_CHANNEL1_HIGH:
         {
-            spi_word = byte << 4;
+            spi_word = byte << 8;
             spi_dac_state = WRITING_CHANNEL1_LOW;
             break;
         }
@@ -129,7 +127,7 @@ void spi_write(u32 chip, u32 byte)
         }
         case WRITING_CHANNEL2_HIGH:
         {
-            spi_word = byte << 4;
+            spi_word = byte << 8;
             spi_dac_state = WRITING_CHANNEL2_LOW;
             break;
         }
@@ -149,7 +147,7 @@ void spi_write(u32 chip, u32 byte)
         }
         case WRITING_CHANNEL3_HIGH:
         {
-            spi_word = byte << 4;
+            spi_word = byte << 8;
             spi_dac_state = WRITING_CHANNEL3_LOW;
             break;
         }
@@ -162,7 +160,7 @@ void spi_write(u32 chip, u32 byte)
         }
         case WRITING_CHANNEL4_HIGH:
         {
-            spi_word = byte << 4;
+            spi_word = byte << 8;
             spi_dac_state = WRITING_CHANNEL4_LOW;
             break;
         }
@@ -184,8 +182,8 @@ void spi_write(u32 chip, u32 byte)
     }
 }
 
-void spi_selectChip(u32 arg1, u32 arg2){};
-void spi_unselectChip(u32 arg1, u32 arg2){};
+void spi_selectChip(u32 arg1, u32 arg2) {};
+void spi_unselectChip(u32 arg1, u32 arg2) {};
 
 void* flashc_memset64(void* dst, uint64_t src, size_t nbytes, bool erase)
 {
@@ -217,20 +215,25 @@ void* flashc_memcpy(void* dst, const void* src, size_t nbytes, bool erase)
     return dst;
 }
 
-void init_gpio() {}
+void init_gpio() { }
 
-void init_spi() {}
-void init_adc() {}
+void init_spi() { }
+void init_adc() { }
 
-void init_tc(void) {}
-void init_usb_host(void) {}
-void init_i2c_slave(uint8_t addr) {}
-void init_i2c_master(void) {}
+void init_tc(void) { }
+void init_usb_host(void) { }
 
-void register_interrupts() {}
+// for modules using older libavr32
+void init_i2c_slave(uint8_t addr) { }
+void init_i2c_master(void) { }
+
+void init_i2c_follower(uint8_t addr) { }
+void init_i2c_leader(void) { }
+
+void register_interrupts() { }
 
 u8* current_ftdi_message;
-u8 current_ftdi_message_length;
+u32 current_ftdi_message_length;
 u8 ftdiConnect;
 
 void ftdi_read(void)
@@ -294,12 +297,41 @@ u8 ftdi_connected(void)
     return ftdiConnect;
 }
 
-void sysclk_init() {}
+void cdc_write(uint8_t* data, uint32_t bytes)
+{
+}
 
-void clock_null(uint8_t phase) {}
+void cdc_read(void)
+{
+}
+
+void cdc_setup(void)
+{
+}
+
+u8* cdc_rx_buf(void)
+{
+    return 0;
+}
+u8 cdc_rx_bytes(void)
+{
+    return 0;
+}
+
+u8 cdc_rx_busy(void) { return 0; }
+u8 cdc_tx_busy(void) { return 0; }
+
+uint8_t cdc_connected(void) 
+{ 
+    return false; 
+}
+
+void sysclk_init() { }
+
+void clock_null(uint8_t phase) { }
 volatile clock_pulse_t clock_pulse = &clock_null;
 
-void init_dbg_rs232(long pba_hz) {}
+void init_dbg_rs232(long pba_hz) { }
 
 void print_dbg(const char* str) { fprintf(stderr, "%s", str); }
 void print_dbg_char(int c) { fprintf(stderr, "%d", c); }
@@ -309,8 +341,71 @@ void print_dbg_short_hex(unsigned short n) { fprintf(stderr, "%d", n); }
 void print_dbg_hex(unsigned long n) { fprintf(stderr, "%lx", n); }
 
 u8 irqs_pause(void) { return 0; }
-void irqs_resume(u8 irq_flags) {}
+void irqs_resume(u8 irq_flags) { }
 
-void midi_read(void) {}
+void midi_read(void) { }
 bool midi_write(const u8* data, u32 bytes) { return true; }
-void midi_change(uhc_device_t* dev, u8 plug) {}
+void midi_change(uhc_device_t* dev, u8 plug) { }
+int i2c_master_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+
+u64 get_ticks(void)
+{
+    static u64 tcTicks = 0;
+    return tcTicks;
+}
+
+extern u8 get_revision(void)
+{
+    return gpio_get_pin_value(33) == 0;
+}
+
+void init_oled(void) { }
+void screen_startup(void) { }
+
+void screen_draw_region(u8 x, u8 y, u8 w, u8 h, u8* data)
+{
+    u8* screen;
+    uint16_t width, height;
+    hardware_getScreenBuffer(&screen, &width, &height);
+
+    screen += y * width + x;
+
+    for (int j = 0; j < h; j++)
+    {
+        memcpy(screen, data, w);
+        data += w;
+        screen += width;
+    }
+}
+
+void screen_draw_region_offset(u8 x, u8 y, u8 w, u8 h, u32 len, u8* data, u32 off)
+{
+}
+
+void screen_set_direction(u8 flipped)
+{
+}
+
+void screen_clear(void)
+{
+    u8* screen;
+    uint16_t width, height;
+    hardware_getScreenBuffer(&screen, &width, &height);
+    memset(screen, 0, sizeof(uint8_t) * width * height);
+}
+
+void tele_usb_disk() { }
+
+// i2c.c
+
+int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+
+void twi_follower_rx(uint8_t u8_value) { }
+uint8_t twi_follower_tx(void) { return 0; }
+void twi_follower_stop(void) { }
+
+void ii_tx_queue(uint8_t u8_value) { }
+
+volatile process_ii_t process_ii;

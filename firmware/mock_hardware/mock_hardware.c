@@ -1,11 +1,12 @@
 #include "mock_hardware.h"
 #include "events.h"
+#include "hid.h"
 #include "monome.h"
 #include "timers.h"
 #include <stdio.h>
 #include <string.h>
 
-#define GPIO_NUM_PINS 43
+#define GPIO_NUM_PINS 50
 bool gpioBlock[GPIO_NUM_PINS];
 
 uint16_t adcBlock[4];
@@ -27,16 +28,21 @@ uint32_t vserial_in_message_size[VSERIAL_MAX_MESSAGES];
 float phase = 0.0;
 float clockRate = 0.001; // 1 ms
 
-void* nvram_ptr;
-void* vram_ptr;
-uint32_t nvram_size;
-uint32_t vram_size;
+void* nvram_ptr = NULL;
+void* vram_ptr = NULL;
+uint32_t nvram_size = 0;
+uint32_t vram_size = 0;
+
+uint8_t* screenBuffer = NULL;
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
 
 // hardware interface points
 extern void initialize_module(void);
 extern void check_events(void);
 
 extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
+extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
 void simulate_clock_normal_interrupt()
 {
@@ -80,6 +86,7 @@ typedef enum
     eProtocolNumProtocols // dummy and count
 } eMonomeProtocol;
 
+// device descriptor
 typedef struct e_monomeDesc
 {
     eMonomeProtocol protocol;
@@ -95,6 +102,7 @@ extern monomeDesc mdesc;
 
 static void simulate_monome_setup_mext(int rows, int cols)
 {
+    ftdi_setup();
     mdesc.protocol = eProtocolMext;
     mdesc.vari = 1;
     mdesc.device = eDeviceGrid;
@@ -113,6 +121,25 @@ void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
     data[1] = y;
     data[2] = val;
     ev.type = kEventMonomeGridKey;
+    event_post(&ev);
+}
+
+void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
+{
+    process_keypress(key, mod, held, release);
+}
+
+void hardware_hidConnect()
+{
+    event_t ev;
+    ev.type = kEventHidConnect;
+    event_post(&ev);
+}
+
+void hardware_hidDisconnect()
+{
+    event_t ev;
+    ev.type = kEventHidDisconnect;
     event_post(&ev);
 }
 
@@ -185,7 +212,8 @@ void hardware_setGPIO(uint32_t pin, bool value)
 
         gpioBlock[pin] = value;
 
-        if (changed)
+        // Trigger interrupt only on rising edge
+        if (changed && value)
         {
             simulate_trigger_interrupt(pin);
         }
@@ -313,7 +341,7 @@ void hardware_writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
     }
 }
 
-void hardware_declareNVRAM(const void* ptr, uint32_t size)
+void hardware_declareNVRAM(void* ptr, uint32_t size)
 {
     nvram_ptr = ptr;
     nvram_size = size;
@@ -330,7 +358,7 @@ void hardware_writeNVRAM(const void* src, uint32_t size)
     memcpy(nvram_ptr, src, nvram_size >= size ? size : nvram_size);
 }
 
-void hardware_declareVRAM(const void* ptr, uint32_t size)
+void hardware_declareVRAM(void* ptr, uint32_t size)
 {
     vram_ptr = ptr;
     vram_size = size;
@@ -338,11 +366,54 @@ void hardware_declareVRAM(const void* ptr, uint32_t size)
 
 void hardware_readVRAM(void** ptr, uint32_t* size)
 {
-    *ptr = vram_ptr;
-    *size = vram_size;
+    if (ptr)
+    {
+        *ptr = vram_ptr;
+    }
+    if (size)
+    {
+        *size = vram_size;
+    }
 }
 
 void hardware_writeVRAM(const void* src, uint32_t size)
 {
     memcpy(vram_ptr, src, vram_size >= size ? size : vram_size);
+}
+
+void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
+{
+    if (!screenBuffer)
+    {
+        screenBuffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+        memset(screenBuffer, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+
+        // initialize a distinctive pattern for debugging purposes
+        for (int j = 0; j < SCREEN_HEIGHT; j++)
+        {
+            for (int i = 0; i < SCREEN_WIDTH; i++)
+            {
+                if ((j / 16) % 2)
+                {
+                    screenBuffer[i + SCREEN_WIDTH * j] = i % 16;
+                }
+                else
+                {
+                    screenBuffer[i + SCREEN_WIDTH * j] = 15 - (i % 16);
+                }
+            }
+        }
+    }
+    if (ptr)
+    {
+        *ptr = screenBuffer;
+    }
+    if (width)
+    {
+        *width = 128;
+    }
+    if (height)
+    {
+        *height = 64;
+    }
 }

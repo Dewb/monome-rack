@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 SHELL:=/bin/bash -O extglob
 
 FLAGS = \
@@ -10,6 +12,11 @@ FLAGS = \
 	-Imock_hardware \
 	-Imock_hardware/stubs \
 	-Iwhitewhale/libavr32/src \
+	-Iwhitewhale/libavr32/src/usb/midi \
+	-Iwhitewhale/libavr32/src/usb/hid \
+	-Iwhitewhale/libavr32/src/usb/cdc \
+	-Iwhitewhale/libavr32/asf/common/services/usb \
+	-Iwhitewhale/libavr32/asf/common/services/usb/uhc \
 	-Iwhitewhale/libavr32/conf \
 	-Iwhitewhale/libavr32/conf/trilogy \
 	
@@ -22,6 +29,7 @@ SOURCES = \
 	whitewhale/libavr32/src/timers.c \
 	whitewhale/libavr32/src/util.c \
 	mock_hardware/adapter.c \
+	mock_hardware/adapter_trilogy.c \
 	mock_hardware/mock_hardware.c \
 	mock_hardware/monome.c 
 
@@ -44,16 +52,16 @@ ifeq ($(ARCH), win)
 	TARGET = $(TARGETNAME).dll
 endif
 
-OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
+OBJECTS += $(patsubst %, ../build/firmware/whitewhale/%.o, $(SOURCES))
 
-../build/firmware/%.c.o: %.c
+../build/firmware/whitewhale/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 all: $(TARGET)
 
 clean:
-	rm -rfv ../build/firmware 
+	rm -rfv ../build/firmware/whitewhale

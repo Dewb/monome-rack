@@ -170,8 +170,8 @@ json_t* MonomeModuleBase::dataToJson()
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
 
-    void* data;
-    uint32_t size;
+    void* data = 0;
+    uint32_t size = 0;
 
     firmware.readNVRAM(&data, &size);
     if (data && size > 0)
@@ -196,8 +196,8 @@ void MonomeModuleBase::dataFromJson(json_t* rootJ)
         lastConnectedDeviceId = json_string_value(id);
     }
 
-    void* data;
-    uint32_t size;
+    void* data = 0;
+    uint32_t size = 0;
     json_t* jd;
 
     jd = json_object_get(rootJ, "nvram");

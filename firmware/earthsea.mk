@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := all
+
 SHELL:=/bin/bash -O extglob
 
 FLAGS = \
@@ -11,6 +13,10 @@ FLAGS = \
 	-Imock_hardware/stubs \
 	-Iearthsea/libavr32/src \
 	-Iearthsea/libavr32/src/usb/midi \
+	-Iearthsea/libavr32/src/usb/hid \
+	-Iearthsea/libavr32/src/usb/cdc \
+	-Iearthsea/libavr32/asf/common/services/usb \
+	-Iearthsea/libavr32/asf/common/services/usb/uhc \
 	-Iearthsea/libavr32/conf \
 	-Iearthsea/libavr32/conf/trilogy \
 	
@@ -28,6 +34,7 @@ SOURCES = \
 	earthsea/libavr32/src/timers.c \
 	earthsea/libavr32/src/util.c \
 	mock_hardware/adapter.c \
+	mock_hardware/adapter_trilogy.c \
 	mock_hardware/mock_hardware.c \
 	mock_hardware/monome.c 
 
@@ -50,16 +57,16 @@ ifeq ($(ARCH), win)
 	TARGET = $(TARGETNAME).dll
 endif
 
-OBJECTS += $(patsubst %, ../build/firmware/%.o, $(SOURCES))
+OBJECTS += $(patsubst %, ../build/firmware/earthsea/%.o, $(SOURCES))
 
-../build/firmware/%.c.o: %.c
+../build/firmware/earthsea/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 all: $(TARGET)
 
 clean:
-	rm -rfv ../build/firmware 
+	rm -rfv ../build/firmware/earthsea

@@ -30,12 +30,14 @@ extern rack::Plugin* pluginInstance;
 #include <direct.h>
 #include <windows.h>
 
-#define GET_PROC_ADDRESS(handle, name)                              \
-    fw_fn_##name = (fw_fn_##name##_t)GetProcAddress(handle, #name); \
-    if (!fw_fn_##name)                                              \
-    {                                                               \
-        WARN("Failed to find symbol '" #name "'");            \
-        return false;                                               \
+#define GET_PROC_ADDRESS(handle, name)                 \
+    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+        reinterpret_cast<void*>(                       \
+            GetProcAddress(handle, #name)));           \
+    if (!fw_fn_##name)                                 \
+    {                                                  \
+        WARN("Failed to find symbol '" #name "'");     \
+        return false;                                  \
     }
 
 #elif ARCH_LIN || ARCH_MAC
@@ -44,12 +46,14 @@ extern rack::Plugin* pluginInstance;
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define GET_PROC_ADDRESS(handle, name)                     \
-    fw_fn_##name = (fw_fn_##name##_t)dlsym(handle, #name); \
-    if (!fw_fn_##name)                                     \
-    {                                                      \
-        WARN("Failed to find symbol '" #name "'");   \
-        return false;                                      \
+#define GET_PROC_ADDRESS(handle, name)                 \
+    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+        reinterpret_cast<void*>(                       \
+            dlsym(handle, #name)));                    \
+    if (!fw_fn_##name)                                 \
+    {                                                  \
+        WARN("Failed to find symbol '" #name "'");     \
+        return false;                                  \
     }
 
 #endif
@@ -74,6 +78,10 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
     DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
+    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_hidConnect, ());
+    DECLARE_PROC(void, hardware_hidDisconnect, ());
+    DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
 
     float clockPeriod;
     float clockPhase;
@@ -223,6 +231,10 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_writeNVRAM);
         GET_PROC_ADDRESS(handle, hardware_readVRAM);
         GET_PROC_ADDRESS(handle, hardware_writeVRAM);
+        GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
+        GET_PROC_ADDRESS(handle, hardware_hidConnect);
+        GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
+        GET_PROC_ADDRESS(handle, hardware_hidMessage);
 
         return true;
     }
@@ -231,6 +243,7 @@ struct FirmwareManagerImpl
 unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
 
 FirmwareManager::FirmwareManager()
+    : impl(nullptr)
 {
 }
 
@@ -241,10 +254,12 @@ FirmwareManager::~FirmwareManager()
 
 bool FirmwareManager::load(string modulePath)
 {
+    delete impl;
     impl = new FirmwareManagerImpl();
     if (!impl->load(modulePath))
     {
-        impl = NULL;
+        impl = nullptr;
+        WARN("Could not load firmware %s", modulePath.c_str());
         return false;
     }
     return true;
@@ -393,5 +408,37 @@ void FirmwareManager::writeVRAM(const void* ptr, uint32_t size)
     if (impl)
     {
         impl->fw_fn_hardware_writeVRAM(ptr, size);
+    }
+}
+
+void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_getScreenBuffer(ptr, width, height);
+    }
+}
+
+void FirmwareManager::hidConnect()
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidConnect();
+    }
+}
+
+void FirmwareManager::hidDisconnect()
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidDisconnect();
+    }
+}
+
+void FirmwareManager::hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_hidMessage(key, mod, held, release);
     }
 }

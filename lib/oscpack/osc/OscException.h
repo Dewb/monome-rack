@@ -39,22 +39,31 @@
 
 #include <exception>
 
-namespace osc{
+namespace osc
+{
 
-class Exception : public std::exception {
-    const char *what_;
-    
+class Exception : public std::exception
+{
+    const char* what_;
+
 public:
     Exception() throw() {}
-    Exception( const Exception& src ) throw()
-        : std::exception( src )
-        , what_( src.what_ ) {}
-    Exception( const char *w ) throw()
-        : what_( w ) {}
-    Exception& operator=( const Exception& src ) throw()
-        { what_ = src.what_; return *this; }
+    Exception(const Exception& src) throw()
+        : std::exception(src)
+        , what_(src.what_)
+    {
+    }
+    Exception(const char* w) throw()
+        : what_(w)
+    {
+    }
+    Exception& operator=(const Exception& src) throw()
+    {
+        what_ = src.what_;
+        return *this;
+    }
     virtual ~Exception() throw() {}
-    virtual const char* what() const throw() { return what_; }
+    const char* what() const throw() override { return what_; }
 };
 
 } // namespace osc

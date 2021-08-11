@@ -2,7 +2,6 @@ SHELL:=/bin/bash -O extglob
 RACK_DIR ?= ../..
 
 FLAGS += \
-	-Werror=implicit-function-declaration \
 	-Isrc \
 	-Isrc/common \
 	-Isrc/common/GridConnection \
@@ -10,6 +9,7 @@ FLAGS += \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
 	-Isrc/earthsea \
+	-Isrc/teletype \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
@@ -36,10 +36,11 @@ else
 	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
 
-firmwares:
+firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
+	cd firmware && $(MAKE) -f teletype.mk
 
 all: firmwares
 

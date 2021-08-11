@@ -37,40 +37,43 @@
 #ifndef INCLUDED_OSCPACK_OSCPACKETLISTENER_H
 #define INCLUDED_OSCPACK_OSCPACKETLISTENER_H
 
-#include "OscReceivedElements.h"
 #include "../ip/PacketListener.h"
+#include "OscReceivedElements.h"
 
+namespace osc
+{
 
-namespace osc{
-
-class OscPacketListener : public PacketListener{ 
+class OscPacketListener : public PacketListener
+{
 protected:
-    virtual void ProcessBundle( const osc::ReceivedBundle& b, 
-				const IpEndpointName& remoteEndpoint )
+    virtual void ProcessBundle(const osc::ReceivedBundle& b,
+        const IpEndpointName& remoteEndpoint)
     {
         // ignore bundle time tag for now
 
-        for( ReceivedBundle::const_iterator i = b.ElementsBegin(); 
-				i != b.ElementsEnd(); ++i ){
-            if( i->IsBundle() )
-                ProcessBundle( ReceivedBundle(*i), remoteEndpoint );
+        for (ReceivedBundle::const_iterator i = b.ElementsBegin();
+             i != b.ElementsEnd(); ++i)
+        {
+            if (i->IsBundle())
+                ProcessBundle(ReceivedBundle(*i), remoteEndpoint);
             else
-                ProcessMessage( ReceivedMessage(*i), remoteEndpoint );
+                ProcessMessage(ReceivedMessage(*i), remoteEndpoint);
         }
     }
 
-    virtual void ProcessMessage( const osc::ReceivedMessage& m, 
-				const IpEndpointName& remoteEndpoint ) = 0;
-    
+    virtual void ProcessMessage(const osc::ReceivedMessage& m,
+        const IpEndpointName& remoteEndpoint)
+        = 0;
+
 public:
-	virtual void ProcessPacket( const char *data, int size, 
-			const IpEndpointName& remoteEndpoint )
+    void ProcessPacket(const char* data, int size,
+        const IpEndpointName& remoteEndpoint) override
     {
-        osc::ReceivedPacket p( data, size );
-        if( p.IsBundle() )
-            ProcessBundle( ReceivedBundle(p), remoteEndpoint );
+        osc::ReceivedPacket p(data, size);
+        if (p.IsBundle())
+            ProcessBundle(ReceivedBundle(p), remoteEndpoint);
         else
-            ProcessMessage( ReceivedMessage(p), remoteEndpoint );
+            ProcessMessage(ReceivedMessage(p), remoteEndpoint);
     }
 };
 
