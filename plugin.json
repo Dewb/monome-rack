@@ -89,6 +89,14 @@
       "tags": [
         "controller"
       ]
+    },
+    {
+      "slug": "faderbank",
+      "name": "faderbank",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
     }
   ]
 }

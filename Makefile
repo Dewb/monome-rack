@@ -11,6 +11,7 @@ FLAGS += \
 	-Isrc/earthsea \
 	-Isrc/teletype \
 	-Isrc/ansible \
+	-Isrc/faderbank \
 	-Ilib/base64 \
 	-Ilib/oscpack \
 	-Ilib/serialosc 
