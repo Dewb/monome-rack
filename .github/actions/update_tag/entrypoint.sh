@@ -9,6 +9,7 @@ REPO=${GITHUB_REPOSITORY#"https://github.com/"} # work around url parsing bug in
 
 # If the action was triggered on a different ref than specified, terminate with neutral status
 if [ ${GITHUB_REF} != ${REF} ] ; then
+    echo ref "${GITHUB_REF}" does not match expected "${REF}"
     exit 78
 fi
 
