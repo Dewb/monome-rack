@@ -20,7 +20,7 @@ jobs:
         uses: ./.github/actions/update_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REF: refs/heads/master
+          REF: refs/heads/main
           TAG: latest
       - name: Upload Linux Release
         uses: ./.github/actions/update_asset
@@ -42,7 +42,7 @@ jobs:
         uses: ./.github/actions/update_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REF: refs/heads/master
+          REF: refs/heads/main
           TAG: latest
       - name: Upload Windows Release
         uses: ./.github/actions/update_asset
@@ -64,7 +64,7 @@ jobs:
         uses: ./.github/actions/update_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REF: refs/heads/master
+          REF: refs/heads/main
           TAG: latest
       - name: Upload Mac Release
         uses: ./.github/actions/update_asset
