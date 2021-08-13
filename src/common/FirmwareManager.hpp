@@ -46,5 +46,7 @@ struct FirmwareManager
     void hidDisconnect();
     void hidMessage(uint8_t key, uint8_t mod, bool held, bool release);
 
+    void iiUpdateFollowerData(uint16_t key, uint16_t value);
+
     struct FirmwareManagerImpl* impl;
 };

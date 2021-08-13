@@ -468,3 +468,23 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
         *height = 64;
     }
 }
+
+// TODO: make this generic for all followers somehow
+uint16_t faderbank[16];
+
+void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data)
+{
+    if (key >> 8 == 0x34)
+    {
+        faderbank[key & 0xFF] = data;
+    }
+}
+
+uint16_t hardware_iiGetFollowerData(uint16_t key)
+{
+    if (key >> 8 == 0x34)
+    {
+        return faderbank[key & 0xFF];
+    }
+    return 0;
+}

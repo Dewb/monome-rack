@@ -46,4 +46,7 @@ void init(Plugin* p)
 
     // initialize SerialOsc
     SerialOscInterface::get()->driver->getDeviceCount();
+
+    // initialize ii bus
+    iiBus::Initialize();
 }

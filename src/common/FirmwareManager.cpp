@@ -82,6 +82,7 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_hidConnect, ());
     DECLARE_PROC(void, hardware_hidDisconnect, ());
     DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
+    DECLARE_PROC(void, hardware_iiUpdateFollowerData, (const uint16_t, const uint16_t));
 
     float clockPeriod;
     float clockPhase;
@@ -235,6 +236,7 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_hidConnect);
         GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
         GET_PROC_ADDRESS(handle, hardware_hidMessage);
+        GET_PROC_ADDRESS(handle, hardware_iiUpdateFollowerData);
 
         return true;
     }
@@ -440,5 +442,13 @@ void FirmwareManager::hidMessage(uint8_t key, uint8_t mod, bool held, bool relea
     if (impl)
     {
         impl->fw_fn_hardware_hidMessage(key, mod, held, release);
+    }
+}
+
+void FirmwareManager::iiUpdateFollowerData(uint16_t key, uint16_t value)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_iiUpdateFollowerData(key, value);
     }
 }

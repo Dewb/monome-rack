@@ -1,4 +1,5 @@
 #include "TeletypeModule.hpp"
+#include "iiBus.h"
 
 #include <string.h>
 
@@ -56,6 +57,11 @@ void TeletypeModule::processInputs()
     firmware.setGPIO(A05, inputs[TRIG6_INPUT].getVoltage() > 0);
     firmware.setGPIO(A06, inputs[TRIG7_INPUT].getVoltage() > 0);
     firmware.setGPIO(A07, inputs[TRIG8_INPUT].getVoltage() > 0);
+
+    for (const auto & [ key, value ] : iiBus::FollowerData)
+    {
+        firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
+    }
 }
 
 void TeletypeModule::processOutputs()

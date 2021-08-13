@@ -1,5 +1,6 @@
 #pragma once
 #include "rack.hpp"
+#include "iiBus.h"
 
 #define NUM_FADERS 16
 
@@ -14,4 +15,5 @@ struct FaderbankModule : rack::Module
     void dataFromJson(json_t* rootJ) override;
 
 protected:
+    iiDevice _iiDevice;
 };

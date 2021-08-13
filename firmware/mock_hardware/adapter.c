@@ -388,8 +388,27 @@ void tele_usb_disk() { }
 
 // i2c.c
 
-int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
-int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+uint8_t last_port = 0;
+int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) 
+{ 
+    if (l >= 1)
+    {
+        last_port = data[0];
+    }
+
+    return 0;
+}
+
+int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) 
+{
+    if (l == 2) {
+        uint16_t value = hardware_iiGetFollowerData(addr << 8 | last_port);
+        data[0] = value >> 8;
+        data[1] = value & 0xFF;
+    }
+
+    return 0;
+}
 
 void twi_follower_rx(uint8_t u8_value) { }
 uint8_t twi_follower_tx(void) { return 0; }
