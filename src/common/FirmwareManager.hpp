@@ -47,6 +47,7 @@ struct FirmwareManager
     void hidMessage(uint8_t key, uint8_t mod, bool held, bool release);
 
     void iiUpdateFollowerData(uint16_t key, uint16_t value);
+    bool iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);
 
     struct FirmwareManagerImpl* impl;
 };

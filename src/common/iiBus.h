@@ -1,3 +1,6 @@
+#pragma once
+
+#include "rack.hpp"
 
 #include <cstdint>
 #include <unordered_map>
@@ -24,17 +27,19 @@ struct iiCommand
 {
     // 7-bit I2C address
     uint8_t address;
-    // 8-bit command ID (0xC0-0xFF reserved)
-    uint8_t command;
-    // plus optional data
-    uint8_t data[MAX_II_DATA_BYTES]; 
+    uint8_t data[MAX_II_DATA_BYTES];
+    uint8_t length;
 };
 
 struct iiDevice
 {
+    iiDevice(rack::Module* module);
+
     void setAddress(uint8_t address);
     void updateFollowerData(uint8_t id, uint16_t data);
+    void transmit(const iiCommand& msg);
 
 protected:
+    rack::Module* _module;
     uint8_t _address; 
 };

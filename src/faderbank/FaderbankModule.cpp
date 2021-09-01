@@ -3,6 +3,7 @@
 #define FADERBANK_II_MAX_VALUE 16383
 
 FaderbankModule::FaderbankModule()
+:_iiDevice(this)
 {
     config(NUM_FADERS, 0, NUM_FADERS, 0);
 

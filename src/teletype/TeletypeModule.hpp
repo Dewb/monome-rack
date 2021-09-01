@@ -1,4 +1,6 @@
 #include "MonomeModuleBase.hpp"
+#include "iiBus.h"
+
 #include "rack.hpp"
 
 using namespace rack;
@@ -52,4 +54,7 @@ struct TeletypeModule : MonomeModuleBase
     TeletypeModule();
     void processInputs() override;
     void processOutputs() override;
+
+protected:
+    iiDevice _iiDevice;
 };

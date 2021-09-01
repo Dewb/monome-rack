@@ -1,5 +1,5 @@
 #include "TeletypeModule.hpp"
-#include "iiBus.h"
+
 
 #include <string.h>
 
@@ -26,6 +26,7 @@
 #define NMI 13
 
 TeletypeModule::TeletypeModule()
+:_iiDevice(this)
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
@@ -61,6 +62,11 @@ void TeletypeModule::processInputs()
     for (const auto & [ key, value ] : iiBus::FollowerData)
     {
         firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
+    }
+
+    iiCommand msg;
+    while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {
+        _iiDevice.transmit(msg);
     }
 }
 

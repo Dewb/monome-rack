@@ -43,3 +43,5 @@ void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release);
 
 void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data);
 uint16_t hardware_iiGetFollowerData(uint16_t key);
+bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length);
+bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);

@@ -488,3 +488,47 @@ uint16_t hardware_iiGetFollowerData(uint16_t key)
     }
     return 0;
 }
+
+#define II_MAX_DATA 8
+#define II_MAX_MESSAGES 32
+
+typedef struct 
+{
+    uint8_t addr;
+    uint8_t data[II_MAX_DATA];
+    uint8_t length;
+} iiMessage;
+
+iiMessage iiMessageBuffer[II_MAX_MESSAGES];
+size_t iiMessageBufferIndex = 0;
+
+bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length)
+{
+    if (iiMessageBufferIndex < II_MAX_MESSAGES) {
+        iiMessageBuffer[iiMessageBufferIndex].addr = addr;
+        iiMessageBuffer[iiMessageBufferIndex].length = length;
+        memcpy_s(iiMessageBuffer[iiMessageBufferIndex].data, II_MAX_DATA, data, length);
+        iiMessageBufferIndex++;
+        return true;
+    }
+    return false;
+}
+
+bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length)
+{
+    if (iiMessageBufferIndex > 0)
+    {
+        if (addr) {
+            *addr = iiMessageBuffer[iiMessageBufferIndex].addr;
+        }
+        if (length) {
+            *length = iiMessageBuffer[iiMessageBufferIndex].length;
+        }
+        if (data) {
+            memcpy_s(data, II_MAX_DATA, iiMessageBuffer[iiMessageBufferIndex].data, length);
+        }
+        iiMessageBufferIndex--;
+        return true;
+    }
+    return false;
+}

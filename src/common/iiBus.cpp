@@ -13,6 +13,16 @@ void iiBus::Initialize()
     }
 }
 
+iiDevice::iiDevice(rack::Module* module)
+: _module(module)
+{
+    if (_module) 
+    {
+        _module->rightExpander.producerMessage = new iiCommand();
+        _module->leftExpander.producerMessage = new iiCommand();
+    }
+}
+
 void iiDevice::setAddress(uint8_t address)
 {
     _address = address;
@@ -24,5 +34,22 @@ void iiDevice::updateFollowerData(uint8_t id, uint16_t data)
     if (record != iiBus::FollowerData.end()) 
     {
         record->second.store(data, std::memory_order_relaxed);
+    }
+}
+
+void iiDevice::transmit(const iiCommand& msg)
+{
+    if (_module) 
+    {
+        if (_module->rightExpander.producerMessage)
+        {
+            *(reinterpret_cast<iiCommand*>(_module->rightExpander.producerMessage)) = msg;
+            _module->rightExpander.messageFlipRequested = true;
+        }
+        if (_module->leftExpander.producerMessage)
+        {
+            *(reinterpret_cast<iiCommand*>(_module->leftExpander.producerMessage)) = msg;
+            _module->leftExpander.messageFlipRequested = true;
+        }
     }
 }

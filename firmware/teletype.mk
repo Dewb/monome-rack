@@ -3,6 +3,7 @@
 SHELL:=/bin/bash -O extglob
 
 FLAGS = \
+	-DDEBUG \
 	-DNULL=0 \
 	-o0 \
 	-D__AVR32_UC3B0512__ \
