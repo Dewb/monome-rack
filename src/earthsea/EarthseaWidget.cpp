@@ -1,6 +1,6 @@
 #include "EarthseaWidget.hpp"
 #include "EarthseaModule.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 using namespace rack;
 

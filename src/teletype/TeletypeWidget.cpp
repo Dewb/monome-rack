@@ -1,5 +1,5 @@
 #include "TeletypeWidget.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 #include "TeletypeModule.hpp"
 #include "TeletypeScreenWidget.hpp"
 
@@ -15,28 +15,19 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
         panel->box.size = box.size;
         addChild(panel);
     }
-    /*
-    addChild(createScrew<ScrewSilver>(Vec(15, 0)));
-    addChild(createScrew<ScrewSilver>(Vec(15, 365)));
-    addChild(createScrew<ScrewSilver>(Vec(239, 0)));
-    addChild(createScrew<ScrewSilver>(Vec(239, 365)));
-*/
+    
+    // addChild(createScrew<ScrewSilver>(Vec(15, 0)));
+    // addChild(createScrew<ScrewSilver>(Vec(15, 365)));
+    // addChild(createScrew<ScrewSilver>(Vec(239, 0)));
+    // addChild(createScrew<ScrewSilver>(Vec(239, 365)));
+
     addChild(createWidget<USBAJack>(Vec(10, 337)));
     addParam(createParam<TL1105>(Vec(62, 337), module, TeletypeModule::BUTTON_PARAM));
 
-    /*
-    addChild(createScrew<ScrewSilver>(Vec(11, 312)));
-    addChild(createScrew<ScrewSilver>(Vec(244, 312)));
-*/
+    // addChild(createScrew<ScrewSilver>(Vec(11, 312)));
+    // addChild(createScrew<ScrewSilver>(Vec(244, 312)));
 
-    uint8_t* ptr = nullptr;
-    uint16_t width = 0, height = 0;
-    if (module)
-    {
-        module->firmware.getScreenBuffer(&ptr, &width, &height);
-    }
-
-    auto screen = new TeletypeScreenWidget(ptr, width, height);
+    auto screen = new TeletypeScreenWidget(module ? module->screenBuffer : nullptr, 128, 64);
     screen->box.pos = Vec(31, 202);
     screen->box.size = Vec(208, 108);
     addChild(screen);
@@ -95,7 +86,7 @@ struct TeletypeKeystrokeItem : rack::ui::MenuItem
 
 void TeletypeWidget::appendContextMenu(rack::Menu* menu)
 {
-    MonomeModuleBaseWidget::appendContextMenu(menu);
+    LibAVR32ModuleWidget::appendContextMenu(menu);
 
     TeletypeModule* m = dynamic_cast<TeletypeModule*>(module);
     assert(m);

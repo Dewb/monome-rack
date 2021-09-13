@@ -1,20 +1,25 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 #include "base64.h"
 
 using namespace std;
 
-MonomeModuleBase::MonomeModuleBase()
+LibAVR32Module::LibAVR32Module(std::string firmwareName)
+: firmwareName(firmwareName)
 {
     gridConnection = nullptr;
     firstStep = true;
+    reloadRequested = ReloadRequest::None;
+
+    firmware.load(firmwareName);
+    firmware.init();
 }
 
-MonomeModuleBase::~MonomeModuleBase()
+LibAVR32Module::~LibAVR32Module()
 {
     GridConnectionManager::get()->deregisterGridConsumer(this);
 }
 
-void MonomeModuleBase::gridConnected(Grid* newConnection)
+void LibAVR32Module::gridConnected(Grid* newConnection)
 {
     if (gridConnection != nullptr)
     {
@@ -47,13 +52,13 @@ void MonomeModuleBase::gridConnected(Grid* newConnection)
     }
 }
 
-void MonomeModuleBase::gridDisconnected()
+void LibAVR32Module::gridDisconnected()
 {
     gridConnection = nullptr;
     //firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
 }
 
-void MonomeModuleBase::gridButtonEvent(int x, int y, bool state)
+void LibAVR32Module::gridButtonEvent(int x, int y, bool state)
 {
     uint8_t msg[6] = { 0xF0, 0, 0, 0 };
     msg[1] = (uint8_t)x;
@@ -62,12 +67,12 @@ void MonomeModuleBase::gridButtonEvent(int x, int y, bool state)
     firmware.writeSerial(FTDI_BUS, msg, 4);
 }
 
-std::string MonomeModuleBase::gridGetLastDeviceId()
+std::string LibAVR32Module::gridGetLastDeviceId()
 {
     return lastConnectedDeviceId;
 }
 
-void MonomeModuleBase::readSerialMessages()
+void LibAVR32Module::readSerialMessages()
 {
     uint8_t* msg;
     uint32_t count;
@@ -135,12 +140,54 @@ void MonomeModuleBase::readSerialMessages()
     }
 }
 
-void MonomeModuleBase::process(const ProcessArgs& args)
+void LibAVR32Module::reloadFirmware(bool preserveMemory)
+{
+    void *data, *nvram_copy, *vram_copy = 0;
+    uint32_t nvram_size, vram_size = 0;
+
+    if (preserveMemory) {
+        firmware.readNVRAM(&data, &nvram_size);
+        nvram_copy = malloc(nvram_size);
+        memcpy_s(nvram_copy, nvram_size, data, nvram_size);
+
+        firmware.readVRAM(&data, &vram_size);
+        vram_copy = malloc(vram_size);
+        memcpy_s(vram_copy, vram_size, data, vram_size);
+    }
+
+    firmware.load(firmwareName);
+    firmware.init();
+
+    if (preserveMemory) {
+        firmware.writeNVRAM(nvram_copy, nvram_size);
+        firmware.writeVRAM(vram_copy, vram_size);
+        free(nvram_copy);
+        free(vram_copy);
+    }
+    
+    gridConnected(gridConnection);
+}
+
+void LibAVR32Module::process(const ProcessArgs& args)
 {
     if (firstStep)
     {
         GridConnectionManager::get()->registerGridConsumer(this);
         firstStep = false;
+    }
+
+    if (reloadRequested != ReloadRequest::None) {
+        switch (reloadRequested) {
+            case ReloadRequest::ReloadAndRestart:
+                reloadFirmware(false);
+                break;
+            case ReloadRequest::HotReload:
+                reloadFirmware(true);
+                break;
+            default:
+                break;
+        }
+        reloadRequested = ReloadRequest::None;
     }
 
     // Module-specific code to bind Rack inputs to GPIO/ADC
@@ -159,7 +206,7 @@ void MonomeModuleBase::process(const ProcessArgs& args)
     readSerialMessages();
 }
 
-json_t* MonomeModuleBase::dataToJson()
+json_t* LibAVR32Module::dataToJson()
 {
     std::string deviceId = lastConnectedDeviceId;
     if (gridConnection)
@@ -188,7 +235,7 @@ json_t* MonomeModuleBase::dataToJson()
     return rootJ;
 }
 
-void MonomeModuleBase::dataFromJson(json_t* rootJ)
+void LibAVR32Module::dataFromJson(json_t* rootJ)
 {
     json_t* id = json_object_get(rootJ, "connectedDeviceId");
     if (id)

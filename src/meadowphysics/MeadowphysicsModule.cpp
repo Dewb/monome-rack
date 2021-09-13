@@ -1,13 +1,11 @@
 #include "MeadowphysicsModule.hpp"
 
 MeadowphysicsModule::MeadowphysicsModule()
+: LibAVR32Module("meadowphysics")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
     configParam(CLOCK_PARAM, 0.0, 1.0, 0.5, "Clock");
-
-    firmware.load("meadowphysics");
-    firmware.init();
 }
 
 void MeadowphysicsModule::processInputs()

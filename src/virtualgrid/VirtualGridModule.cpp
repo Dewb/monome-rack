@@ -1,5 +1,5 @@
 #include "VirtualGridModule.hpp"
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 {

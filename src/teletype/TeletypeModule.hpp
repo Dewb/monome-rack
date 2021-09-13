@@ -1,11 +1,11 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 #include "iiBus.h"
 
 #include "rack.hpp"
 
 using namespace rack;
 
-struct TeletypeModule : MonomeModuleBase
+struct TeletypeModule : LibAVR32Module
 {
     enum ParamIds
     {
@@ -54,6 +54,8 @@ struct TeletypeModule : MonomeModuleBase
     TeletypeModule();
     void processInputs() override;
     void processOutputs() override;
+
+    uint8_t screenBuffer[128 * 64];
 
 protected:
     iiDevice _iiDevice;

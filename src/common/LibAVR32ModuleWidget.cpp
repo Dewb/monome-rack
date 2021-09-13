@@ -1,5 +1,5 @@
-#include "MonomeModuleBaseWidget.hpp"
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32ModuleWidget.hpp"
+#include "LibAVR32Module.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 
@@ -7,12 +7,12 @@ using namespace rack;
 
 struct ConnectGridItem : rack::ui::MenuItem
 {
-    MonomeModuleBase* module;
+    LibAVR32Module* module;
     Grid* grid;
 
     void onAction(const rack::event::Action& e) override
     {
-        if (module->gridConnection == grid)
+        if (module && module->gridConnection == grid)
         {
             GridConnectionManager::get()->disconnect(module);
         }
@@ -23,15 +23,39 @@ struct ConnectGridItem : rack::ui::MenuItem
     }
 };
 
-MonomeModuleBaseWidget::MonomeModuleBaseWidget()
+struct ReloadFirmwareItem : rack::ui::MenuItem
+{
+    LibAVR32Module* module;
+    ReloadRequest requestType;
+
+    void onAction(const rack::event::Action& e) override
+    {
+        if (module) {
+            module->requestReloadFirmware(requestType);
+        }
+    }
+};
+
+LibAVR32ModuleWidget::LibAVR32ModuleWidget()
 {
 }
 
-void MonomeModuleBaseWidget::appendContextMenu(rack::Menu* menu)
+void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
 {
-
-    MonomeModuleBase* m = dynamic_cast<MonomeModuleBase*>(module);
+    LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
     assert(m);
+
+    auto reloadItem = new ReloadFirmwareItem();
+    reloadItem->text = "Reload & Restart";
+    reloadItem->module = m;
+    reloadItem->requestType = ReloadRequest::ReloadAndRestart;
+    menu->addChild(reloadItem);
+
+    auto hotReloadItem = new ReloadFirmwareItem();
+    hotReloadItem->text = "Hot Reload";
+    hotReloadItem->module = m;
+    hotReloadItem->requestType = ReloadRequest::HotReload;
+    menu->addChild(hotReloadItem);
 
     menu->addChild(construct<MenuEntry>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));

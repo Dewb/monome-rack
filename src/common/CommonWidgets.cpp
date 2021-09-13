@@ -1,4 +1,4 @@
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 extern rack::Plugin* pluginInstance;
 

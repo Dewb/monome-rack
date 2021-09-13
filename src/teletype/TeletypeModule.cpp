@@ -26,14 +26,12 @@
 #define NMI 13
 
 TeletypeModule::TeletypeModule()
-:_iiDevice(this)
+: _iiDevice(this)
+, LibAVR32Module("teletype")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
     configParam(PARAM_PARAM, 0.0, 1.0, 0.5, "Param");
-
-    firmware.load("teletype");
-    firmware.init();
 }
 
 void TeletypeModule::processInputs()
@@ -91,4 +89,6 @@ void TeletypeModule::processOutputs()
     outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(3) / 65536.0;
     outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CV4_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
+
+    firmware.copyScreenBuffer(screenBuffer);
 }

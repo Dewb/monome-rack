@@ -19,12 +19,19 @@
 
 struct GridConnection;
 
-struct MonomeModuleBase : rack::engine::Module, GridConsumer
+enum ReloadRequest
+{
+    None = 0,
+    ReloadAndRestart,
+    HotReload,
+};
+
+struct LibAVR32Module : rack::engine::Module, GridConsumer
 {
     FirmwareManager firmware;
 
-    MonomeModuleBase();
-    ~MonomeModuleBase();
+    LibAVR32Module(std::string firmwareName);
+    ~LibAVR32Module();
 
     // Rack module methods
     void process(const ProcessArgs& args) override;
@@ -42,10 +49,15 @@ struct MonomeModuleBase : rack::engine::Module, GridConsumer
     std::string gridGetLastDeviceId() override;
 
     virtual void readSerialMessages();
+    void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
 
     Grid* gridConnection;
     std::string lastConnectedDeviceId;
+    std::string firmwareName;
 
 private:
+    void reloadFirmware(bool preserveMemory);
+
     bool firstStep;
+    ReloadRequest reloadRequested;
 };

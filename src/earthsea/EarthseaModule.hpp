@@ -1,8 +1,8 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 
 #pragma once
 
-struct EarthseaModule : MonomeModuleBase
+struct EarthseaModule : LibAVR32Module
 {
     enum ParamIds
     {

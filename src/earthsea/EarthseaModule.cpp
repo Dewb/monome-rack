@@ -1,7 +1,8 @@
 #include "EarthseaModule.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 EarthseaModule::EarthseaModule()
+: LibAVR32Module("earthsea")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
@@ -9,9 +10,6 @@ EarthseaModule::EarthseaModule()
     configParam(CV1_PARAM, 0.0, 1.0, 0.5, "CV 1");
     configParam(CV2_PARAM, 0.0, 1.0, 0.5, "CV 2");
     configParam(CV3_PARAM, 0.0, 1.0, 0.5, "CV 3");
-
-    firmware.load("earthsea");
-    firmware.init();
 }
 
 void EarthseaModule::processInputs()

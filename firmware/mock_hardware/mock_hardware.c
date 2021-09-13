@@ -469,6 +469,14 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
     }
 }
 
+void hardware_copyScreenBuffer(uint8_t* dest)
+{
+    if (screenBuffer && dest)
+    {
+        memcpy_s(dest, 128 * 64, screenBuffer, 128 * 64);
+    }
+}
+
 // TODO: make this generic for all followers somehow
 uint16_t faderbank[16];
 

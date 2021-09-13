@@ -1,14 +1,12 @@
 #include "AnsibleModule.hpp"
 
 AnsibleModule::AnsibleModule()
+: LibAVR32Module("ansible")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(KEY1_PARAM, 0.0, 1.0, 0.0, "Key 1");
     configParam(KEY2_PARAM, 0.0, 1.0, 0.0, "Key 2");
     configParam(MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
-
-    firmware.load("ansible");
-    firmware.init();
 }
 
 void AnsibleModule::processInputs()

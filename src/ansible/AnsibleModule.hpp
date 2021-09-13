@@ -1,8 +1,8 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 
 #pragma once
 
-struct AnsibleModule : MonomeModuleBase
+struct AnsibleModule : LibAVR32Module
 {
     enum ParamIds
     {

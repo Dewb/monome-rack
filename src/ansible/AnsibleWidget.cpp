@@ -1,6 +1,6 @@
 #include "AnsibleWidget.hpp"
 #include "AnsibleModule.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 using namespace rack;
 

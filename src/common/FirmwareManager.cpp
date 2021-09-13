@@ -78,7 +78,8 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
     DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
-    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t **ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_copyScreenBuffer, (uint8_t *ptr))
     DECLARE_PROC(void, hardware_hidConnect, ());
     DECLARE_PROC(void, hardware_hidDisconnect, ());
     DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
@@ -234,6 +235,7 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_readVRAM);
         GET_PROC_ADDRESS(handle, hardware_writeVRAM);
         GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
+        GET_PROC_ADDRESS(handle, hardware_copyScreenBuffer);
         GET_PROC_ADDRESS(handle, hardware_hidConnect);
         GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
         GET_PROC_ADDRESS(handle, hardware_hidMessage);
@@ -420,6 +422,14 @@ void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* 
     if (impl)
     {
         impl->fw_fn_hardware_getScreenBuffer(ptr, width, height);
+    }
+}
+
+void FirmwareManager::copyScreenBuffer(uint8_t* dest)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_copyScreenBuffer(dest);
     }
 }
 
