@@ -50,3 +50,4 @@ jobs:
           ASSET_PATH: plugins-v1/monome-1.0.0-pre-mac.zip
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: experimental
+
