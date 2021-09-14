@@ -15,11 +15,11 @@
 // structure accessible to the leader with all data the leader could possible request. 
 
 // cheapo concurrent data structure for time-travelling follower data
-typedef std::unordered_map<uint16_t, std::atomic<uint16_t>> iiFollowerData_t;
+// typedef std::unordered_map<uint16_t, std::atomic<uint16_t>> iiFollowerData_t;
 
 struct iiBus {
     static void Initialize();
-    static iiFollowerData_t FollowerData;
+//     static iiFollowerData_t FollowerData;
 };
 
 // TODO: send commands from follower over Rack expander bus

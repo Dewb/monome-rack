@@ -34,8 +34,8 @@ struct TTExpanderModule : rack::Module
 
     enum LightIds
     {
-        MODE_YELLOW_LIGHT,
-        MODE_WHITE_LIGHT,
+        // MODE_YELLOW_LIGHT,
+        // MODE_WHITE_LIGHT,
         TR1_LIGHT,
         TR2_LIGHT,
         TR3_LIGHT,

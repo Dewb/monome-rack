@@ -473,7 +473,7 @@ void hardware_copyScreenBuffer(uint8_t* dest)
 {
     if (screenBuffer && dest)
     {
-        memcpy_s(dest, 128 * 64, screenBuffer, 128 * 64);
+        memcpy(dest, screenBuffer, 128 * 64);
     }
 }
 
@@ -512,10 +512,10 @@ size_t iiMessageBufferIndex = 0;
 
 bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length)
 {
-    if (iiMessageBufferIndex < II_MAX_MESSAGES) {
+    if (iiMessageBufferIndex < II_MAX_MESSAGES && length <= II_MAX_DATA) {
         iiMessageBuffer[iiMessageBufferIndex].addr = addr;
         iiMessageBuffer[iiMessageBufferIndex].length = length;
-        memcpy_s(iiMessageBuffer[iiMessageBufferIndex].data, II_MAX_DATA, data, length);
+        memcpy(iiMessageBuffer[iiMessageBufferIndex].data, data, length);
         iiMessageBufferIndex++;
         return true;
     }
@@ -532,8 +532,8 @@ bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length)
         if (length) {
             *length = iiMessageBuffer[iiMessageBufferIndex].length;
         }
-        if (data) {
-            memcpy_s(data, II_MAX_DATA, iiMessageBuffer[iiMessageBufferIndex].data, length);
+        if (data && length <= II_MAX_DATA) {
+            memcpy(data, iiMessageBuffer[iiMessageBufferIndex].data, length);
         }
         iiMessageBufferIndex--;
         return true;

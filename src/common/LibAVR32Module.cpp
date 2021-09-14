@@ -1,5 +1,6 @@
 #include "LibAVR32Module.hpp"
 #include "base64.h"
+#include <string.h>
 
 using namespace std;
 
@@ -148,11 +149,11 @@ void LibAVR32Module::reloadFirmware(bool preserveMemory)
     if (preserveMemory) {
         firmware.readNVRAM(&data, &nvram_size);
         nvram_copy = malloc(nvram_size);
-        memcpy_s(nvram_copy, nvram_size, data, nvram_size);
+        memcpy(nvram_copy, data, nvram_size);
 
         firmware.readVRAM(&data, &vram_size);
         vram_copy = malloc(vram_size);
-        memcpy_s(vram_copy, vram_size, data, vram_size);
+        memcpy(vram_copy, data, vram_size);
     }
 
     firmware.load(firmwareName);
