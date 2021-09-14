@@ -188,7 +188,7 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
 
 void TeletypeScreenWidget::draw(NVGcontext* vg)
 {
-    int margin = 4;
+    int margin = 5;
 
     float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
     float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
@@ -196,14 +196,31 @@ void TeletypeScreenWidget::draw(NVGcontext* vg)
     if (this == APP->event->selectedWidget)
     {
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 2);
+        nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 2.25);
         nvgStrokeColor(vg, nvgRGB(190, 180, 0));
         nvgStrokeWidth(vg, 3);
         nvgStroke(vg);
     }
 
+    // shadow around screen
     nvgBeginPath(vg);
-    nvgRect(vg, 0, 0, box.size.x, box.size.y);
+    nvgRoundedRect(vg, box.size.x - 1, -1, 2, box.size.y + 2, 2);
+    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFill(vg);
+
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, -1, -1, box.size.x + 2, 2, 2);
+    nvgRoundedRect(vg, -1, -1, 2, box.size.y + 1, 2);
+    nvgFillColor(vg, nvgRGB(90, 90, 80));
+    nvgFill(vg);
+
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, -1, box.size.y - 1, box.size.x + 2, 2, 2);
+    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFill(vg);
+
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
     nvgFillColor(vg, nvgRGB(0, 0, 0));
     nvgFill(vg);
 

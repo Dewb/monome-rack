@@ -61,6 +61,20 @@
       ]
     },
     {
+      "slug": "teletype-expander",
+      "name": "teletype expander",
+      "description": "algorithmic ecosystem",
+      "tags": [
+        "sequencer",
+        "clock",
+        "logic",
+        "function generator",
+        "digital",
+        "hardware clone",
+        "external"
+      ]
+    },    
+    {
       "slug": "ansible",
       "name": "ansible",
       "description": "far communicator",
