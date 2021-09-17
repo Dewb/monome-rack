@@ -1,0 +1,111 @@
+name: Build VCV Rack Plugin
+on: [push, pull_request]
+
+env:
+  rack-sdk-version: 1.1.6
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.config.shell }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: Linux,
+            os: ubuntu-latest,
+            shell: bash,
+            prepare-os: "sudo apt install -y libglu-dev ragel"
+          }
+        - {
+            name: MacOS,
+            os: macos-latest,
+            shell: bash,
+            prepare-os: "brew install ragel"
+          }
+        - {
+            name: Windows,
+            os: windows-latest,
+            shell: bash,
+            prepare-os: "export CC=gcc; vcpkg install ragel:x64-windows; export RAGEL=/c/vcpkg/packages/ragel_x64-windows/tools/ragel.exe; $RAGEL -v"
+          }
+    steps:
+      - name: Check out repository and submodules
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Get Rack-SDK
+        run: |
+          pushd $HOME
+          curl -o Rack-SDK.zip https://vcvrack.com/downloads/Rack-SDK-${{ env.rack-sdk-version }}.zip
+          unzip Rack-SDK.zip
+      - name: Windows - patch plugin.mk to use 7zip
+        if: runner.os == 'Windows'
+        run: |
+          sed -i 's/zip -q -9 -r/7z a -tzip -mx=9/' $HOME/Rack-SDK/plugin.mk
+      #- name: Patch Makefile to use old glibc versions on Linux
+      #  if: runner.os == 'Linux'
+      #  run: |
+      #    echo "FLAGS += -include force_link_glibc_2.23.h" >> Makefile
+      - name: Modify plugin version
+        # only modify plugin version if no tag was created
+        if: "! startsWith(github.ref, 'refs/tags/v')"
+        run: |
+          gitrev=`git rev-parse --short HEAD`
+          pluginversion=`jq -r '.version' plugin.json`
+          echo "Set plugin version from $pluginversion to $pluginversion-$gitrev"
+          cat <<< `jq --arg VERSION "$pluginversion-$gitrev" '.version=$VERSION' plugin.json` > plugin.json
+      - name: Build plugin
+        run: |
+          ${{ matrix.config.prepare-os }}
+          export RACK_DIR=$HOME/Rack-SDK
+          make -j dep
+          make -j dist
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: dist
+          name: ${{ matrix.config.name }}
+
+  publish:
+    name: Publish plugin
+    # only create a release if a tag was created that is called e.g. v1.2.3
+    # see also https://vcvrack.com/manual/Manifest#version
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: FranzDiebold/github-env-vars-action@v1.2.1
+      - name: Check if plugin version matches tag
+        run: |
+          pluginversion=`jq -r '.version' plugin.json`
+          if [ "v$pluginversion" != "${{ env.GITHUB_REF_NAME }}" ]; then
+            echo "Plugin version from plugin.json 'v$pluginversion' doesn't match with tag version '${{ env.GITHUB_REF_NAME }}'"
+            exit 1
+          fi
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ env.GITHUB_REPOSITORY_NAME }} VCV Rack Plugin ${{ env.GITHUB_REF_NAME }}
+          draft: false
+          prerelease: false
+      - uses: actions/download-artifact@v2
+        with:
+          path: _artifacts
+      - name: Upload release assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: _artifacts/**/*.zip
+          tag: ${{ github.ref }}
+          file_glob: true

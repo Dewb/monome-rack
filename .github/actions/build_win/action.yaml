@@ -1,5 +1,0 @@
-name: 'Build Windows'
-description: 'Build a VCV Rack Plugin for Windows'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'

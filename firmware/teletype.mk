@@ -75,13 +75,15 @@ endif
 
 OBJECTS += $(patsubst %, ../build/firmware/teletype/%.o, $(SOURCES))
 
+RAGEL ?= ragel
+
 # Add a rule to build match_token.c from match_token.rl
 teletype/src/match_token.c: teletype/src/match_token.rl
-	ragel -C -G2 teletype/src/match_token.rl -o teletype/src/match_token.c
+	$(RAGEL) -C -G2 teletype/src/match_token.rl -o teletype/src/match_token.c
 
 # Add a rule to build scanner.c from scanner.rl
 teletype/src/scanner.c: teletype/src/scanner.rl
-	ragel -C -G2 teletype/src/scanner.rl -o teletype/src/scanner.c
+	$(RAGEL) -C -G2 teletype/src/scanner.rl -o teletype/src/scanner.c
 
 # Add the git commit id to a file for use when printing out the version
 teletype/module/gitversion.c: teletype
