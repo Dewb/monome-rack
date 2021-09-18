@@ -57,10 +57,10 @@ void TeletypeModule::processInputs()
     firmware.setGPIO(A06, inputs[TRIG7_INPUT].getVoltage() > 0);
     firmware.setGPIO(A07, inputs[TRIG8_INPUT].getVoltage() > 0);
 
-    // for (const auto & [ key, value ] : iiBus::FollowerData)
-    // {
-    //     firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
-    // }
+    for (const auto & [ key, value ] : iiBus::FollowerData)
+    {
+        firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
+    }
 
     iiCommand msg;
     while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {

@@ -532,8 +532,8 @@ bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length)
         if (length) {
             *length = iiMessageBuffer[iiMessageBufferIndex].length;
         }
-        if (data && length <= II_MAX_DATA) {
-            memcpy(data, iiMessageBuffer[iiMessageBufferIndex].data, length);
+        if (data && *length <= II_MAX_DATA) {
+            memcpy(data, iiMessageBuffer[iiMessageBufferIndex].data, *length);
         }
         iiMessageBufferIndex--;
         return true;
