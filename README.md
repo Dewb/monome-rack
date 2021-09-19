@@ -71,6 +71,10 @@ In order of importance, the initial goals of this project were/are:
 
 The firmwares for the monome modules are written in C for the AVR32 platform. ([More details here](https://github.com/monome/libavr32).) In this project, these firmware repos are built into separate C shared libraries, together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module instance you place, so statics and globals work as expected within each copy of the module.
 
+### How can I build the source myself?
+
+See [DEVELOPING.md](DEVELOPING.md).
+
 ### Who did this?
 
 Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
