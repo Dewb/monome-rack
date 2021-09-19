@@ -195,35 +195,40 @@ void TeletypeScreenWidget::draw(NVGcontext* vg)
 
     if (this == APP->event->selectedWidget)
     {
+        // draw keyboard focus highlight rectangle
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 2.25);
+        nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
         nvgStrokeColor(vg, nvgRGB(190, 180, 0));
-        nvgStrokeWidth(vg, 3);
+        nvgStrokeWidth(vg, 3.5);
         nvgStroke(vg);
+        nvgFillColor(vg, nvgRGB(190, 180, 0));
+        nvgFill(vg);
+    } else {
+        // draw skeumorphic shadow around screen
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, box.size.x - 1, -1, 2, box.size.y + 2, 2.5);
+        nvgFillColor(vg, nvgRGB(250, 250, 240));
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, -1, -1, box.size.x + 2, 2, 2.5);
+        nvgRoundedRect(vg, -1, -1, 2, box.size.y + 1, 2.5);
+        nvgFillColor(vg, nvgRGB(140, 140, 130));
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, -1, box.size.y - 1, box.size.x + 2, 2, 2.5);
+        nvgFillColor(vg, nvgRGB(250, 250, 240));
+        nvgFill(vg);
     }
 
-    // shadow around screen
-    nvgBeginPath(vg);
-    nvgRoundedRect(vg, box.size.x - 1, -1, 2, box.size.y + 2, 2);
-    nvgFillColor(vg, nvgRGB(250, 250, 240));
-    nvgFill(vg);
-
-    nvgBeginPath(vg);
-    nvgRoundedRect(vg, -1, -1, box.size.x + 2, 2, 2);
-    nvgRoundedRect(vg, -1, -1, 2, box.size.y + 1, 2);
-    nvgFillColor(vg, nvgRGB(90, 90, 80));
-    nvgFill(vg);
-
-    nvgBeginPath(vg);
-    nvgRoundedRect(vg, -1, box.size.y - 1, box.size.x + 2, 2, 2);
-    nvgFillColor(vg, nvgRGB(250, 250, 240));
-    nvgFill(vg);
-
+    // the screen itself
     nvgBeginPath(vg);
     nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
     nvgFillColor(vg, nvgRGB(0, 0, 0));
     nvgFill(vg);
 
+    // now draw the pixels
     if (buffer)
     {
         uint8_t* ptr = buffer;
