@@ -61,34 +61,6 @@
       ]
     },
     {
-      "slug": "teletype-expander",
-      "name": "teletype expander",
-      "description": "algorithmic ecosystem",
-      "tags": [
-        "sequencer",
-        "clock",
-        "logic",
-        "function generator",
-        "digital",
-        "hardware clone",
-        "external"
-      ]
-    },    
-    {
-      "slug": "ansible",
-      "name": "ansible",
-      "description": "far communicator",
-      "tags": [
-        "sequencer",
-        "clock",
-        "logic",
-        "function generator",
-        "digital",
-        "hardware clone",
-        "external"
-      ]
-    },
-    {
       "slug": "grid128",
       "name": "grid 128",
       "description": "",
@@ -99,14 +71,6 @@
     {
       "slug": "grid64",
       "name": "grid 64",
-      "description": "",
-      "tags": [
-        "controller"
-      ]
-    },
-    {
-      "slug": "faderbank",
-      "name": "faderbank",
       "description": "",
       "tags": [
         "controller"
