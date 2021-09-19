@@ -78,10 +78,13 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
     DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
     DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
-    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t **ptr, uint16_t* width, uint16_t* height))
+    DECLARE_PROC(void, hardware_copyScreenBuffer, (uint8_t *ptr))
     DECLARE_PROC(void, hardware_hidConnect, ());
     DECLARE_PROC(void, hardware_hidDisconnect, ());
     DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
+    DECLARE_PROC(void, hardware_iiUpdateFollowerData, (const uint16_t, const uint16_t));
+    DECLARE_PROC(bool, hardware_iiPopMessage, (uint8_t * addr, uint8_t* data, uint8_t* length));
 
     float clockPeriod;
     float clockPhase;
@@ -232,9 +235,12 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_readVRAM);
         GET_PROC_ADDRESS(handle, hardware_writeVRAM);
         GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
+        GET_PROC_ADDRESS(handle, hardware_copyScreenBuffer);
         GET_PROC_ADDRESS(handle, hardware_hidConnect);
         GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
         GET_PROC_ADDRESS(handle, hardware_hidMessage);
+        GET_PROC_ADDRESS(handle, hardware_iiUpdateFollowerData);
+        GET_PROC_ADDRESS(handle, hardware_iiPopMessage);
 
         return true;
     }
@@ -419,6 +425,14 @@ void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* 
     }
 }
 
+void FirmwareManager::copyScreenBuffer(uint8_t* dest)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_copyScreenBuffer(dest);
+    }
+}
+
 void FirmwareManager::hidConnect()
 {
     if (impl)
@@ -441,4 +455,21 @@ void FirmwareManager::hidMessage(uint8_t key, uint8_t mod, bool held, bool relea
     {
         impl->fw_fn_hardware_hidMessage(key, mod, held, release);
     }
+}
+
+void FirmwareManager::iiUpdateFollowerData(uint16_t key, uint16_t value)
+{
+    if (impl)
+    {
+        impl->fw_fn_hardware_iiUpdateFollowerData(key, value);
+    }
+}
+
+bool FirmwareManager::iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_iiPopMessage(addr, data, length);
+    }
+    return false;
 }

@@ -44,6 +44,32 @@ extern void check_events(void);
 extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
 extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
+volatile u64 tcTicks = 0;
+volatile u8 tcOverflow = 0;
+static const u64 tcMax = (U64)0x7fffffff;
+static const u64 tcMaxInv = (u64)0x10000000;
+
+u64 get_ticks(void)
+{
+    return tcTicks;
+}
+
+void simulate_tc_interrupt()
+{
+    tcTicks++;
+    // overflow control
+    if (tcTicks > tcMax)
+    {
+        tcTicks = 0;
+        tcOverflow = 1;
+    }
+    else
+    {
+        tcOverflow = 0;
+    }
+    process_timers();
+}
+
 void simulate_clock_normal_interrupt()
 {
     event_t e;
@@ -68,9 +94,21 @@ void simulate_front_button_interrupt()
     event_post(&e);
 }
 
+void simulate_ansible_key_interrupt(int pin, int offset)
+{
+    event_t e = { .type = kEventKey, .data = hardware_getGPIO(pin) + offset };
+    event_post(&e);
+}
+
 void simulate_trigger_interrupt(int pin)
 {
     event_t e = { .type = kEventTrigger, .data = pin };
+    event_post(&e);
+}
+
+void simulate_ansible_tr_interrupt(int pin, int offset)
+{
+    event_t e = { .type = kEventTr, .data = hardware_getGPIO(pin) + offset };
     event_post(&e);
 }
 
@@ -175,8 +213,9 @@ void hardware_triggerInterrupt(int interrupt)
 {
     switch (interrupt)
     {
+        // todo: make an enum for this
         case 0: // system clock
-            process_timers();
+            simulate_tc_interrupt();
             break;
         case 1: // clock jack normal
             simulate_clock_normal_interrupt();
@@ -186,6 +225,18 @@ void hardware_triggerInterrupt(int interrupt)
             break;
         case 3: // front button pressed
             simulate_front_button_interrupt();
+            break;
+        case 4: // panel key1 pressed
+            simulate_ansible_key_interrupt(38, 0);
+            break;
+        case 5: // panel key2 pressed
+            simulate_ansible_key_interrupt(39, 2);
+            break;
+        case 6: // input 1 change
+            simulate_ansible_tr_interrupt(40, 0);
+            break;
+        case 7: // input 2 change
+            simulate_ansible_tr_interrupt(41, 2);
             break;
     }
 }
@@ -416,4 +467,76 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
     {
         *height = 64;
     }
+}
+
+void hardware_copyScreenBuffer(uint8_t* dest)
+{
+    if (screenBuffer && dest)
+    {
+        memcpy(dest, screenBuffer, 128 * 64);
+    }
+}
+
+// TODO: make this generic for all followers somehow
+uint16_t faderbank[16];
+
+void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data)
+{
+    if (key >> 8 == 0x34)
+    {
+        faderbank[key & 0xFF] = data;
+    }
+}
+
+uint16_t hardware_iiGetFollowerData(uint16_t key)
+{
+    if (key >> 8 == 0x34)
+    {
+        return faderbank[key & 0xFF];
+    }
+    return 0;
+}
+
+#define II_MAX_DATA 8
+#define II_MAX_MESSAGES 32
+
+typedef struct 
+{
+    uint8_t addr;
+    uint8_t data[II_MAX_DATA];
+    uint8_t length;
+} iiMessage;
+
+iiMessage iiMessageBuffer[II_MAX_MESSAGES];
+size_t iiMessageBufferIndex = 0;
+
+bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length)
+{
+    if (iiMessageBufferIndex < II_MAX_MESSAGES && length <= II_MAX_DATA) {
+        iiMessageBuffer[iiMessageBufferIndex].addr = addr;
+        iiMessageBuffer[iiMessageBufferIndex].length = length;
+        memcpy(iiMessageBuffer[iiMessageBufferIndex].data, data, length);
+        iiMessageBufferIndex++;
+        return true;
+    }
+    return false;
+}
+
+bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length)
+{
+    if (iiMessageBufferIndex > 0)
+    {
+        if (addr) {
+            *addr = iiMessageBuffer[iiMessageBufferIndex].addr;
+        }
+        if (length) {
+            *length = iiMessageBuffer[iiMessageBufferIndex].length;
+        }
+        if (data && *length <= II_MAX_DATA) {
+            memcpy(data, iiMessageBuffer[iiMessageBufferIndex].data, *length);
+        }
+        iiMessageBufferIndex--;
+        return true;
+    }
+    return false;
 }

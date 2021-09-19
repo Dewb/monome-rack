@@ -1,6 +1,6 @@
 #include "MeadowphysicsWidget.hpp"
 #include "MeadowphysicsModule.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 using namespace rack;
 

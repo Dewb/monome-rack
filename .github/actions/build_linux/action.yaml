@@ -1,5 +1,0 @@
-name: 'Build Linux'
-description: 'Build a VCV Rack Plugin for Linux'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'

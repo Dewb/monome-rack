@@ -1,10 +1,10 @@
-#include "MonomeModuleBaseWidget.hpp"
+#include "LibAVR32ModuleWidget.hpp"
 
 #pragma once
 
 struct MeadowphysicsModule;
 
-struct MeadowphysicsWidget : MonomeModuleBaseWidget
+struct MeadowphysicsWidget : LibAVR32ModuleWidget
 {
     MeadowphysicsWidget(MeadowphysicsModule* module);
 };

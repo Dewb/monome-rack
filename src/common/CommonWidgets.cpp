@@ -1,4 +1,4 @@
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 
 extern rack::Plugin* pluginInstance;
 
@@ -6,7 +6,7 @@ void USBAJack::draw(const DrawArgs& args)
 {
     auto vg = args.vg;
     nvgBeginPath(vg);
-    nvgRect(vg, 0, 0, 38, 14);
+    nvgRoundedRect(vg, 0, 0, 38, 14, 1.5);
     nvgFillColor(vg, nvgRGB(0, 0, 0));
     nvgFill(vg);
 

@@ -10,10 +10,10 @@ struct TeletypeScreenWidget : OpaqueWidget
 
     TeletypeScreenWidget(uint8_t* buffer, int x, int y);
 
-    void onSelect(const event::Select& e) override;
-    void onDeselect(const event::Deselect& e) override;
-    void onSelectKey(const event::SelectKey& e) override;
-    void draw(NVGcontext* vg) override;
+    virtual void onSelect(const event::Select& e) override;
+    virtual void onDeselect(const event::Deselect& e) override;
+    virtual void onSelectKey(const event::SelectKey& e) override;
+    virtual void draw(NVGcontext* vg) override;
 
     void drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data);
 };

@@ -1,5 +1,0 @@
-name: 'Update Release Asset'
-description: 'Post a file as an asset in an existing release'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'

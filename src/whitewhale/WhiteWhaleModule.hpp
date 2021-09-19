@@ -1,8 +1,8 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 
 #pragma once
 
-struct WhiteWhaleModule : MonomeModuleBase
+struct WhiteWhaleModule : LibAVR32Module
 {
     enum ParamIds
     {

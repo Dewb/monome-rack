@@ -34,7 +34,8 @@ SOURCES = \
 	earthsea/libavr32/src/timers.c \
 	earthsea/libavr32/src/util.c \
 	mock_hardware/adapter.c \
-	mock_hardware/adapter_trilogy.c \
+	mock_hardware/adapter_not_teletype.c \
+	mock_hardware/adapter_not_ansible.c \
 	mock_hardware/mock_hardware.c \
 	mock_hardware/monome.c 
 

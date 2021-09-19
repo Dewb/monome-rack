@@ -36,7 +36,13 @@ void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byte
 void hardware_triggerInterrupt();
 
 void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);
+void hardware_copyScreenBuffer(uint8_t* dest);
 
 void hardware_hidConnect();
 void hardware_hidDisconnect();
 void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release);
+
+void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data);
+uint16_t hardware_iiGetFollowerData(uint16_t key);
+bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length);
+bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);

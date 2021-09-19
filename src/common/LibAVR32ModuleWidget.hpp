@@ -1,13 +1,13 @@
-#include "MonomeModuleBase.hpp"
+#include "LibAVR32Module.hpp"
 #include "rack.hpp"
 
 #pragma once
 
 extern rack::Plugin* pluginInstance;
 
-struct MonomeModuleBaseWidget : rack::app::ModuleWidget
+struct LibAVR32ModuleWidget : rack::app::ModuleWidget
 {
-    MonomeModuleBaseWidget();
+    LibAVR32ModuleWidget();
 
     virtual void appendContextMenu(rack::ui::Menu* menu) override;
 };

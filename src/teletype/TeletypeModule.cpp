@@ -1,5 +1,6 @@
 #include "TeletypeModule.hpp"
 
+
 #include <string.h>
 
 #define A00 0
@@ -25,13 +26,12 @@
 #define NMI 13
 
 TeletypeModule::TeletypeModule()
+: _iiDevice(this)
+, LibAVR32Module("teletype")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
     configParam(PARAM_PARAM, 0.0, 1.0, 0.5, "Param");
-
-    firmware.load("teletype");
-    firmware.init();
 }
 
 void TeletypeModule::processInputs()
@@ -44,9 +44,9 @@ void TeletypeModule::processInputs()
     }
 
     // Convert knob float parameters to 12-bit ADC values
-    firmware.setADC(1, params[PARAM_PARAM].getValue() * 0xFFF);
+    firmware.setADC(1, params[PARAM_PARAM].getValue() * 0x1000);
 
-    firmware.setADC(0, (uint16_t)((math::rescale(math::clamp(inputs[CV_INPUT].getVoltage(), 0.0, 10.0), 0.0, 10.0, 0, 1.0) * 0xFFF)));
+    firmware.setADC(0, (uint16_t)((math::rescale(math::clamp(inputs[CV_INPUT].getVoltage(), 0.0, 10.0), 0.0, 10.0, 0, 1.0) * 0x1000)));
 
     firmware.setGPIO(A00, inputs[TRIG1_INPUT].getVoltage() > 0);
     firmware.setGPIO(A01, inputs[TRIG2_INPUT].getVoltage() > 0);
@@ -56,6 +56,16 @@ void TeletypeModule::processInputs()
     firmware.setGPIO(A05, inputs[TRIG6_INPUT].getVoltage() > 0);
     firmware.setGPIO(A06, inputs[TRIG7_INPUT].getVoltage() > 0);
     firmware.setGPIO(A07, inputs[TRIG8_INPUT].getVoltage() > 0);
+
+    for (const auto & [ key, value ] : iiBus::FollowerData)
+    {
+        firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
+    }
+
+    iiCommand msg;
+    while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {
+        _iiDevice.transmit(msg);
+    }
 }
 
 void TeletypeModule::processOutputs()
@@ -79,4 +89,6 @@ void TeletypeModule::processOutputs()
     outputs[CV2_OUTPUT].value = 10.0 * firmware.getDAC(3) / 65536.0;
     outputs[CV3_OUTPUT].value = 10.0 * firmware.getDAC(0) / 65536.0;
     outputs[CV4_OUTPUT].value = 10.0 * firmware.getDAC(1) / 65536.0;
+
+    firmware.copyScreenBuffer(screenBuffer);
 }

@@ -16,6 +16,7 @@ struct FirmwareManager
     ~FirmwareManager();
 
     bool load(std::string firmwarePath);
+    void unload();
 
     void init();
     void step();
@@ -41,10 +42,14 @@ struct FirmwareManager
     void writeVRAM(const void* ptr, uint32_t size);
 
     void getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height);
+    void copyScreenBuffer(uint8_t* dest);
 
     void hidConnect();
     void hidDisconnect();
     void hidMessage(uint8_t key, uint8_t mod, bool held, bool release);
+
+    void iiUpdateFollowerData(uint16_t key, uint16_t value);
+    bool iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);
 
     struct FirmwareManagerImpl* impl;
 };

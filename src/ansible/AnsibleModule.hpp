@@ -2,43 +2,52 @@
 
 #pragma once
 
-struct EarthseaModule : LibAVR32Module
+struct AnsibleModule : LibAVR32Module
 {
     enum ParamIds
     {
-        CV1_PARAM,
-        CV2_PARAM,
-        CV3_PARAM,
-        BUTTON_PARAM,
+        KEY1_PARAM,
+        KEY2_PARAM,
+        MODE_PARAM,
         NUM_PARAMS
     };
 
     enum InputIds
     {
+        IN1_INPUT,
+        IN2_INPUT,
         NUM_INPUTS
     };
 
     enum OutputIds
     {
+        TR1_OUTPUT,
+        TR2_OUTPUT,
+        TR3_OUTPUT,
+        TR4_OUTPUT,
         CV1_OUTPUT,
         CV2_OUTPUT,
         CV3_OUTPUT,
-        POS_OUTPUT,
-        EDGE_OUTPUT,
+        CV4_OUTPUT,
         NUM_OUTPUTS
     };
 
     enum LightIds
     {
+        MODE_YELLOW_LIGHT,
+        MODE_WHITE_LIGHT,
+        TR1_LIGHT,
+        TR2_LIGHT,
+        TR3_LIGHT,
+        TR4_LIGHT,
         CV1_LIGHT,
         CV2_LIGHT,
         CV3_LIGHT,
-        POS_LIGHT,
-        EDGE_LIGHT,
+        CV4_LIGHT,
         NUM_LIGHTS
     };
 
-    EarthseaModule();
+    AnsibleModule();
     void processInputs() override;
     void processOutputs() override;
 };

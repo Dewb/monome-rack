@@ -26,9 +26,6 @@ spi_dac_state_t spi_dac_state = WAITING;
 u32 spi_word;
 int spi_num_devices = 1;
 
-typedef void (*clock_pulse_t)(uint8_t phase);
-volatile uint8_t clock_external;
-
 #define FTDI_STRING_MAX_LEN 64
 char manufacturer_string[FTDI_STRING_MAX_LEN];
 char product_string[FTDI_STRING_MAX_LEN];
@@ -328,8 +325,6 @@ uint8_t cdc_connected(void)
 
 void sysclk_init() { }
 
-void clock_null(uint8_t phase) { }
-volatile clock_pulse_t clock_pulse = &clock_null;
 
 void init_dbg_rs232(long pba_hz) { }
 
@@ -348,12 +343,6 @@ bool midi_write(const u8* data, u32 bytes) { return true; }
 void midi_change(uhc_device_t* dev, u8 plug) { }
 int i2c_master_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
 int i2c_master_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
-
-u64 get_ticks(void)
-{
-    static u64 tcTicks = 0;
-    return tcTicks;
-}
 
 extern u8 get_revision(void)
 {
@@ -399,8 +388,28 @@ void tele_usb_disk() { }
 
 // i2c.c
 
-int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
-int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) { return 0; }
+uint8_t last_port = 0;
+int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l) 
+{
+    hardware_iiPushMessage(addr, data, l);
+    if (l >= 1)
+    {
+        last_port = data[0];
+    }
+
+    return 0;
+}
+
+int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l) 
+{
+    if (l == 2) {
+        uint16_t value = hardware_iiGetFollowerData(addr << 8 | last_port);
+        data[0] = value >> 8;
+        data[1] = value & 0xFF;
+    }
+
+    return 0;
+}
 
 void twi_follower_rx(uint8_t u8_value) { }
 uint8_t twi_follower_tx(void) { return 0; }

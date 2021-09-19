@@ -1,5 +1,5 @@
 #include "WhiteWhaleWidget.hpp"
-#include "MonomeWidgets.hpp"
+#include "CommonWidgets.hpp"
 #include "WhiteWhaleModule.hpp"
 
 using namespace rack;
