@@ -36,6 +36,37 @@ struct ReloadFirmwareItem : rack::ui::MenuItem
     }
 };
 
+struct FirmwareSubmenuItem : MenuItem
+{
+    LibAVR32Module* module;
+
+    Menu* createChildMenu() override
+    {
+        LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
+        assert(m);
+
+        Menu* menu = new Menu;
+
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, module->firmwareName));
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "todo: branch"));
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "todo: commit hash"));
+
+        auto reloadItem = new ReloadFirmwareItem();
+        reloadItem->text = "Reload & Restart";
+        reloadItem->module = m;
+        reloadItem->requestType = ReloadRequest::ReloadAndRestart;
+        menu->addChild(reloadItem);
+
+        auto hotReloadItem = new ReloadFirmwareItem();
+        hotReloadItem->text = "Hot Reload";
+        hotReloadItem->module = m;
+        hotReloadItem->requestType = ReloadRequest::HotReload;
+        menu->addChild(hotReloadItem);
+
+        return menu;
+    }
+};
+
 LibAVR32ModuleWidget::LibAVR32ModuleWidget()
 {
 }
@@ -45,17 +76,11 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
     assert(m);
 
-    auto reloadItem = new ReloadFirmwareItem();
-    reloadItem->text = "Reload & Restart";
-    reloadItem->module = m;
-    reloadItem->requestType = ReloadRequest::ReloadAndRestart;
-    menu->addChild(reloadItem);
-
-    auto hotReloadItem = new ReloadFirmwareItem();
-    hotReloadItem->text = "Hot Reload";
-    hotReloadItem->module = m;
-    hotReloadItem->requestType = ReloadRequest::HotReload;
-    menu->addChild(hotReloadItem);
+    auto firmwareMenu = new FirmwareSubmenuItem();
+    firmwareMenu->text = "Firmware";
+    firmwareMenu->module = m;
+    firmwareMenu->rightText = "▸";
+    menu->addChild(firmwareMenu);
 
     menu->addChild(construct<MenuEntry>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));

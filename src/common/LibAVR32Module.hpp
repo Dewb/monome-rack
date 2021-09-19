@@ -37,6 +37,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void process(const ProcessArgs& args) override;
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
+    void onReset() override;
 
     // MonomeModuleBase virtual methods
     virtual void processInputs() = 0;

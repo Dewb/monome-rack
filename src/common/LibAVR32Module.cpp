@@ -272,3 +272,8 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
         }
     }
 }
+
+void LibAVR32Module::onReset() {
+    rack::engine::Module::onReset();
+    reloadFirmware(false);
+}
