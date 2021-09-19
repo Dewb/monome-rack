@@ -89,7 +89,7 @@ See the [release plan](../../projects/1).
 
 ## License
 
-The original monome firmware is licensed under the GPL version 2.
+The original monome firmware is licensed under the GPL version 2. Panel graphics [incorporate elements](https://github.com/monome/teletype-hardware/blob/master/teletype-panel-graphic.pdf) of hardware panel PDFs licensed CC-BY-SA 3.0. 
 
 The new code in this repository is also licensed under the GPL version 2.
 
