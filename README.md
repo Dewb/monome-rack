@@ -5,10 +5,9 @@ monome-rack — VCVRack plugin for monome hardware
 
 This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synthesizer](https://github.com/VCVRack/Rack) that implements (some of) the Eurorack modules and control hardware manufactured by [monome](https://monome.org). This is an unofficial community-driven port, and no support guarantees, warranty, or affiliation is implied from any organization mentioned in this document.
 
-This plugin is still in development. [The release roadmap is here](../../projects/1). If you're not comfortable with testing prerelease software, you might want to consider waiting for plugin to appear on the package manager.
+This plugin is still in development. [The extremely hypothetical release roadmap is here](../../projects/1). 
 
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
-
 
 This plugin currently includes:
 * Virtual versions of the venerable [monome grid 64 and 128](https://monome.org/docs/grid/), a series of open, interactive grid instruments, in 8x8 and 16x8 versions.
@@ -30,65 +29,18 @@ Through the virtual grid, all features of each module are accessible, but some f
 
 ### How do I use this?
 
-The `master` branch is now compatible with Rack 1.0. For Rack 0.6.2, check the `v0.6` branch.
+Download a release for your platform from the [Releases page](../../releases) and place it in your `Rack\plugins-v1` folder.
 
-We now have experimental CI builds on the [Releases page](../../releases). These builds are built against the prerelease Rack SDK version `1.dev.439b3f6`.
+More detailed instructions are available in the [Rack documentation on installing non-library plugins](https://vcvrack.com/manual/Installing#Installing-plugins-not-available-on-the-VCV-Library).
 
-This plugin has been built and tested on the following platforms, though [bugs and issues](/../../issues) still exist.
-* Mac OS X 10.13
-* Windows 10
-* Ubuntu 16.04 
-
-#### To build with the Rack SDK:
-
-* Clone this repo.
-   ```bash
-   $ git clone https://github.com/Dewb/monome-rack
-   ```
-* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
-   ```bash
-   $ cd monome-rack
-   $ git submodule update --init --recursive
-   ```
-* Download the Rack SDK.
-   ```bash
-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip
-   $ unzip Rack-SDK-1.1.6.zip
-   ```
-* Build with `make`.
-   ```bash
-   $ RACK_DIR=$(PWD)/Rack-SDK make
-   ```
-
-#### To build with the complete VCV Rack source:
-
-* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v1` branch. Run and test Rack to make sure it works as expected.
-   ```bash
-   $ git clone -b v1 https://github.com/VCVRack/Rack
-   $ cd Rack
-   $ git submodule update --init --recursive
-   $ make dep
-   $ make
-   $ make run
-   ``` 
-* Clone this repo into the `plugins` folder under VCVRack.
-   ```bash
-   $ cd plugins
-   $ git clone https://github.com/Dewb/monome-rack
-   ```
-* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
-   ```bash
-   $ cd monome-rack
-   $ git submodule update --init --recursive
-   ```
-* Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
-   ```bash
-   $ RACK_DIR=$(PWD)/../.. make
-   ```
-Now that you've built the plugin, let's get to patching:
+#### Connecting modules to grids
 
 * Start VCVRack. Add a `white whale` and `grid 128` module to your patch.
 * Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
+* If you have a hardware grid connected, right-click the module and select your hardware grid from the list. The virtual grid should go dark and your physical grid should light up.
+
+#### Going deeper
+
 * Read the manuals for the modules:
    * [white whale manual](https://monome.org/docs/modular/whitewhale/)
    * [meadowphysics manual](https://monome.org/docs/modular/meadowphysics/)
@@ -110,22 +62,22 @@ Now that you've built the plugin, let's get to patching:
 In order of importance, the initial goals of this project were/are:
 
 * Provide an easier environment for developing, debugging, and testing new and improved firmware features for the monome Eurorack modules
-* Allow existing hardware users to practice, experiment, and/or record while traveling light
+* Allow users of the hardware modules to practice, experiment, and/or record while away from their systems
 * Expose new users to the monome hardware/software ecosystem
 * Accelerate development of completely new grid applications
 * "Because it was there"
 
 ### How does this work?
 
-The firmware for the monome modules are written in C for the AVR32 platform. ([More details here](https://github.com/monome/libavr32).) In this project, these firmware repos are built into separate C shared libraries, together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module that you load, so statics and globals work as expected within each module instance.
+The firmwares for the monome modules are written in C for the AVR32 platform. ([More details here](https://github.com/monome/libavr32).) In this project, these firmware repos are built into separate C shared libraries, together with stub I/O implementations for parts of the AVR32 API. The Rack plugin will load a new copy of this firmware library into memory for each module instance you place, so statics and globals work as expected within each copy of the module.
 
 ### Who did this?
 
 Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
 
-[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale, meadowphysics, and earthsea.
+[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale, meadowphysics, earthsea, and teletype.
 
-Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues) or in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337). 
+Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues), in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337), or in [the thread on the VCV Rack Community Forum](https://community.vcvrack.com/t/monome-modules-thread/3683).
 
 ### What's next?
 
