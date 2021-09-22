@@ -26,8 +26,8 @@
 #define NMI 13
 
 TeletypeModule::TeletypeModule()
-: _iiDevice(this)
-, LibAVR32Module("teletype")
+: LibAVR32Module("teletype")
+, _iiDevice(this)
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");

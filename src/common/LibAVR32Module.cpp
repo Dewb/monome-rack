@@ -2,7 +2,6 @@
 #include "base64.h"
 #include <string.h>
 
-using namespace std;
 
 LibAVR32Module::LibAVR32Module(std::string firmwareName)
 : firmwareName(firmwareName)
@@ -30,10 +29,10 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
     gridConnection = newConnection;
     if (gridConnection)
     {
-        string id = gridConnection->getDevice().id;
+        std::string id = gridConnection->getDevice().id;
         lastConnectedDeviceId = id;
 
-        string wide_id;
+        std::string wide_id;
         for (size_t i = 0; i < id.length(); i++)
         {
             if (i == 1 && id[1] == 'v')
@@ -177,16 +176,18 @@ void LibAVR32Module::process(const ProcessArgs& args)
         firstStep = false;
     }
 
-    if (reloadRequested != ReloadRequest::None) {
-        switch (reloadRequested) {
-            case ReloadRequest::ReloadAndRestart:
-                reloadFirmware(false);
-                break;
-            case ReloadRequest::HotReload:
-                reloadFirmware(true);
-                break;
-            default:
-                break;
+    if (reloadRequested != ReloadRequest::None)
+    {
+        switch (reloadRequested)
+        {
+        case ReloadRequest::ReloadAndRestart:
+            reloadFirmware(false);
+            break;
+        case ReloadRequest::HotReload:
+            reloadFirmware(true);
+            break;
+        default:
+            break;
         }
         reloadRequested = ReloadRequest::None;
     }
@@ -251,7 +252,7 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
     jd = json_object_get(rootJ, "nvram");
     if (jd)
     {
-        string decoded = base64_decode(json_string_value(jd));
+        std::string decoded = base64_decode(json_string_value(jd));
 
         firmware.readNVRAM(&data, &size);
         if (data && size == decoded.length())
@@ -263,7 +264,7 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
     jd = json_object_get(rootJ, "vram");
     if (jd)
     {
-        string decoded = base64_decode(json_string_value(jd));
+        std::string decoded = base64_decode(json_string_value(jd));
 
         firmware.readVRAM(&data, &size);
         if (data && size == decoded.length())

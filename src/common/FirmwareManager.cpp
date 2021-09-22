@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <unordered_set>
 
-using namespace std;
-
 extern rack::Plugin* pluginInstance;
 
 #if ARCH_LIN
@@ -85,6 +83,8 @@ struct FirmwareManagerImpl
     DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
     DECLARE_PROC(void, hardware_iiUpdateFollowerData, (const uint16_t, const uint16_t));
     DECLARE_PROC(bool, hardware_iiPopMessage, (uint8_t * addr, uint8_t* data, uint8_t* length));
+    DECLARE_PROC(void, hardware_serializePreset, (tt_serializer_t * stream, uint8_t preset_num));
+    DECLARE_PROC(void, hardware_deserializePreset, (tt_deserializer_t * stream, uint8_t preset_num));
 
     float clockPeriod;
     float clockPhase;
@@ -241,12 +241,14 @@ struct FirmwareManagerImpl
         GET_PROC_ADDRESS(handle, hardware_hidMessage);
         GET_PROC_ADDRESS(handle, hardware_iiUpdateFollowerData);
         GET_PROC_ADDRESS(handle, hardware_iiPopMessage);
+        GET_PROC_ADDRESS(handle, hardware_serializePreset);
+        GET_PROC_ADDRESS(handle, hardware_deserializePreset);
 
         return true;
     }
 };
 
-unordered_set<string> FirmwareManagerImpl::alreadyLoadedPaths;
+std::unordered_set<std::string> FirmwareManagerImpl::alreadyLoadedPaths;
 
 FirmwareManager::FirmwareManager()
     : impl(nullptr)
@@ -258,7 +260,7 @@ FirmwareManager::~FirmwareManager()
     delete impl;
 }
 
-bool FirmwareManager::load(string modulePath)
+bool FirmwareManager::load(std::string modulePath)
 {
     delete impl;
     impl = new FirmwareManagerImpl();
@@ -472,4 +474,20 @@ bool FirmwareManager::iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length
         return impl->fw_fn_hardware_iiPopMessage(addr, data, length);
     }
     return false;
+}
+
+void FirmwareManager::serializePreset(tt_serializer_t* stream, uint8_t preset_num)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_serializePreset(stream, preset_num);
+    }
+}
+
+void FirmwareManager::deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_deserializePreset(stream, preset_num);
+    }
 }

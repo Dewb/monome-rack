@@ -2,6 +2,7 @@
 #include "CommonWidgets.hpp"
 #include "TeletypeModule.hpp"
 #include "TeletypeScreenWidget.hpp"
+#include "TeletypeSceneIO.hpp"
 
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 {
@@ -71,7 +72,9 @@ struct TeletypeKeystrokeItem : rack::ui::MenuItem
     uint8_t mod;
 
     TeletypeKeystrokeItem(TeletypeModule* module, uint8_t key, uint8_t mod, std::string _text, std::string _rightText = "")
-    : module(module), key(key), mod(mod)
+        : module(module)
+        , key(key)
+        , mod(mod)
     {
         text = _text;
         rightText = _rightText;
@@ -79,8 +82,11 @@ struct TeletypeKeystrokeItem : rack::ui::MenuItem
 
     void onAction(const rack::event::Action& e) override
     {
-        module->firmware.hidMessage(key, mod, false, false);
-        module->firmware.hidMessage(key, mod, false, true);
+        if (module)
+        {
+            module->firmware.hidMessage(key, mod, false, false);
+            module->firmware.hidMessage(key, mod, false, true);
+        }
     }
 };
 
@@ -92,6 +98,12 @@ void TeletypeWidget::appendContextMenu(rack::Menu* menu)
     assert(m);
 
     menu->addChild(construct<MenuEntry>());
+
+    menu->addChild(new InternalPresetSubmenu(m, "Import scenes", Load));
+    menu->addChild(new InternalPresetSubmenu(m, "Export scenes", Save));
+
+    menu->addChild(construct<MenuEntry>());
+
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Shortcuts"));
 
     menu->addChild(new TeletypeKeystrokeItem(m, 0x45, 0, "LIVE mode", "F12"));
