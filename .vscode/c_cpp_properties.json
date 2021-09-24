@@ -70,7 +70,7 @@
             ],
             "windowsSdkVersion": "10.0.18362.0",
             "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
-            "intelliSenseMode": "msvc-x64",
+            "intelliSenseMode": "windows-gcc-x64",
             "cStandard": "c11",
             "cppStandard": "c++17"
         }

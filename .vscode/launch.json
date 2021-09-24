@@ -5,45 +5,43 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb-Posix) Launch",
+            "name": "Debug Plugin in VCV Rack",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/Applications/Rack.app/Contents/MacOS/Rack",
-            "args": [],
+            "windows": {
+                "program": "c:\\Program Files\\VCV\\Rack\\Rack.exe",
+                "args": [],
+                "MIMode": "gdb",
+                "environment": [
+                    
+                ],
+                "miDebuggerPath": "c:\\msys64\\mingw64\\bin\\gdb.exe",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
+            },
+            "osx" : {
+                "program": "/Applications/Rack.app/Contents/MacOS/Rack",
+                "args": [],
+                "MIMode": "lldb",
+                "environment": [
+                    {
+                        "name": "DYLD_FALLBACK_LIBRARY_PATH",
+                        "value": "dep/lib"
+                    },
+                    {
+                        "name": "LD_LIBRARY_PATH",
+                        "value": "dep/lib"
+                    }
+                ]
+            },
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [
-                {
-                    "name": "DYLD_FALLBACK_LIBRARY_PATH",
-                    "value": "dep/lib"
-                },
-                {
-                    "name": "LD_LIBRARY_PATH",
-                    "value": "dep/lib"
-                }
-            ],
             "externalConsole": false,
-            "MIMode": "lldb"
-        },
-        {
-            "name": "(gdb-Windows) Launch",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "c:\\Program Files\\VCV\\Rack\\Rack.exe",
-            "environment": [],
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "c:\\msys64\\mingw64\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
         }
     ]
 }
