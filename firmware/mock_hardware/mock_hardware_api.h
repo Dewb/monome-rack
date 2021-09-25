@@ -61,3 +61,5 @@ MOCK_API(bool, iiPopMessage, (uint8_t* addr, uint8_t* data, uint8_t* length));
 
 MOCK_API(void, serializePreset, (tt_serializer_t* stream, uint8_t preset_num));
 MOCK_API(void, deserializePreset, (tt_deserializer_t* stream, uint8_t preset_num));
+
+MOCK_API(void, afterVRAMUpdate, ());

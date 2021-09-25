@@ -65,3 +65,13 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
         flash_write(preset_num, &scene, &text);
     }
 }
+
+void hardware_afterVRAMUpdate()
+{
+    tele_metro_updated();
+    tele_vars_updated();
+    set_preset_w_mode();
+    set_edit_mode_script(get_edit_script());
+    tele_pattern_updated();
+    scene_state.grid.grid_dirty = 1;
+}

@@ -455,3 +455,11 @@ void FirmwareManager::deserializePreset(tt_deserializer_t* stream, uint8_t prese
         return impl->fw_fn_hardware_deserializePreset(stream, preset_num);
     }
 }
+
+void FirmwareManager::afterVRAMUpdate()
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_afterVRAMUpdate();
+    }
+}
