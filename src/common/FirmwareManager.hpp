@@ -8,7 +8,7 @@
 #undef MOCK_API
 #endif
 #define MOCK_API(RET, METHODNAME, ARGS)
-#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
+#include "mock_hardware_api.h"
 #define MOCK_API_SKIP_TYPES
 
 struct FirmwareManager
@@ -27,7 +27,7 @@ struct FirmwareManager
 #endif
 #define MOCK_API(RET, METHODNAME, ARGS) RET METHODNAME ARGS
 
-#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
+#include "mock_hardware_api.h"
 
     struct FirmwareManagerImpl* impl;
 };

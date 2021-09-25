@@ -66,7 +66,7 @@ struct FirmwareManagerImpl
 #undef MOCK_API
 #endif
 #define MOCK_API DECLARE_PROC
-#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
+#include "mock_hardware_api.h"
 
     float clockPeriod;
     float clockPhase;
@@ -206,7 +206,7 @@ struct FirmwareManagerImpl
 #undef MOCK_API
 #endif
 #define MOCK_API GET_PROC_ADDRESS
-#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
+#include "mock_hardware_api.h"
 
         return true;
     }
