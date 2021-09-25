@@ -4,20 +4,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Rack plugin (Windows)",
+            "label": "Build Rack plugin with debug info",
             "type": "shell",
-            "command": "make -j4 dist",
-            "options": {
-                "cwd": "${workspaceRoot}",
-                "env": {
-                    "PATH": "C:/msys64/usr/bin;c:/msys64/mingw64/bin",
-                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
-                    "MSYSTEM": "MINGW64"
-                }
-            },
             "group": {
                 "kind": "build",
-                "isDefault": false
+                "isDefault": true
             },
             "presentation": {
                 "echo": true,
@@ -25,66 +16,89 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "problemMatcher": {
-                "owner": "cpp",
-                "fileLocation": [
-                    "absolute"
-                ],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
+            "command": "RACK_DIR=$PWD/Rack-SDK make -j4 install",
+            "options": {
+                "cwd": "${workspaceRoot}",
+                "env": {
+                    "STRIP": "echo"
                 }
+            },
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\usr\\bin;c:\\msys64\\mingw64\\bin",
+                        "MSYSTEM": "MINGW64",
+                        "CC": "gcc"
+                    },
+                    "shell": {
+                        "executable": "C:\\msys64\\usr\\bin\\bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },
+                "problemMatcher": {
+                    "owner": "cpp",
+                    "fileLocation": [
+                        "absolute"
+                    ],
+                    "pattern": {
+                        "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                        "file": 1,
+                        "line": 2,
+                        "column": 3,
+                        "severity": 4,
+                        "message": 5
+                    }
+                }
+            },
+            "osx": {
+
+            },
+            "linux": {
+                
             }
         },
         {
-            "label": "Clean Rack plugin (Windows)",
+            "label": "Clean Rack plugin",
             "type": "shell",
+            "group": "none",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
             "command": "make clean",
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {
                     "RACK_DIR": "${workspaceFolder}/Rack-SDK",
-                    "MSYSTEM": "MINGW64",
-                    "MSYS2_PATH_TYPE": "inherit"
-                }
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "Build Rack plugin (POSIX)",
-            "type": "shell",
-            "command": "make -j4 install",
-            "options": {
-                "env": {
-                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
                     "STRIP": "echo"
                 }
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
-        },
-        {
-            "label": "Clean Rack plugin (POSIX)",
-            "type": "shell",
-            "command": "make clean",
-            "options": {
-                "env": {
-                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
-                }
+            "windows": {
+                "options": {
+                    "env": {
+                        "PATH": "C:\\msys64\\usr\\bin;c:\\msys64\\mingw64\\bin",
+                        "MSYSTEM": "MINGW64"
+                    },
+                    "shell": {
+                        "executable": "C:\\msys64\\usr\\bin\\bash.exe",
+                        "args": [
+                            "-c"
+                        ]
+                    }
+                },
+                "problemMatcher": []
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build"
+            "osx": {
+
+            },
+            "linux": {
+
+            },
+            "problemMatcher": []
         }
     ]
 }

@@ -1,0 +1,54 @@
+#include "../teletype/module/edit_mode.h"
+#include "../teletype/module/preset_w_mode.h"
+#include "../teletype/module/flash.h"
+#include "../teletype/module/globals.h"
+#include "../teletype/src/teletype_io.h"
+#include "mock_hardware.h"
+
+
+void hardware_serializePreset(tt_serializer_t* stream, uint8_t preset_num)
+{
+    if (preset_num == 255) {
+        // save from active scene state and text
+        serialize_scene(stream, &scene_state, &scene_text);
+    }
+    else
+    {
+        // save from flash
+        scene_state_t scene;
+        ss_init(&scene);
+
+        char text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
+        memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+        
+        flash_read(preset_num, &scene, &text, 1, 1, 1);
+        serialize_scene(stream, &scene, &text);
+    }
+}
+
+void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
+{
+    if (preset_num == 255)
+    {
+        // load into active scene state and text
+        deserialize_scene(stream, &scene_state, &scene_text);
+
+        // refresh some obvious things that might have been affected by the load
+        set_preset_w_mode();
+        set_edit_mode_script(get_edit_script());
+        tele_pattern_updated();
+        scene_state.grid.grid_dirty = 1;
+    }
+    else
+    {
+        // load into flash
+        scene_state_t scene;
+        ss_init(&scene);
+
+        char text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
+        memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+
+        deserialize_scene(stream, &scene, &text);
+        flash_write(preset_num, &scene, &text);
+    }
+}

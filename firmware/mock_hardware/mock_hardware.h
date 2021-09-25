@@ -1,4 +1,5 @@
 #include <conf_board.h>
+#include "../teletype/src/serialize.h"
 
 typedef enum
 {
@@ -46,3 +47,6 @@ void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data);
 uint16_t hardware_iiGetFollowerData(uint16_t key);
 bool hardware_iiPushMessage(uint8_t addr, uint8_t* data, uint8_t length);
 bool hardware_iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);
+
+void hardware_serializePreset(tt_serializer_t* stream, uint8_t preset_num);
+void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num);

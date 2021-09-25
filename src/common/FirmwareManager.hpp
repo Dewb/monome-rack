@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <string>
 
+
 #pragma once
 
 typedef enum
@@ -9,6 +10,23 @@ typedef enum
     HID_BUS,
     NUM_BUSES
 } serial_bus_t;
+
+// from teletype/module/serialize.h -- todo: unify somehow
+typedef struct
+{
+    void (*write_buffer)(void* user_data, uint8_t* buffer, uint16_t size);
+    void (*write_char)(void* user_data, uint8_t c);
+    void (*print_dbg)(const char* str);
+    void *data;
+} tt_serializer_t;
+
+typedef struct
+{
+    uint16_t (*read_char)(void* user_data);
+    bool (*eof)(void* user_data);
+    void (*print_dbg)(const char* str);
+    void *data;
+} tt_deserializer_t;
 
 struct FirmwareManager
 {
@@ -50,6 +68,9 @@ struct FirmwareManager
 
     void iiUpdateFollowerData(uint16_t key, uint16_t value);
     bool iiPopMessage(uint8_t* addr, uint8_t* data, uint8_t* length);
+
+    void serializePreset(tt_serializer_t* stream, uint8_t preset_num);
+    void deserializePreset(tt_deserializer_t* stream, uint8_t preset_num);
 
     struct FirmwareManagerImpl* impl;
 };
