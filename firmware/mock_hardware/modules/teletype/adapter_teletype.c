@@ -1,10 +1,22 @@
 #include "../teletype/module/edit_mode.h"
-#include "../teletype/module/preset_w_mode.h"
 #include "../teletype/module/flash.h"
 #include "../teletype/module/globals.h"
+#include "../teletype/module/preset_w_mode.h"
 #include "../teletype/src/teletype_io.h"
 #include "mock_hardware.h"
+#include "types.h"
 
+void clock_null(uint8_t phase) { }
+typedef void (*clock_pulse_t)(uint8_t phase);
+volatile uint8_t clock_external;
+volatile clock_pulse_t clock_pulse = &clock_null;
+
+void tele_usb_disk() { }
+
+extern u8 get_revision(void)
+{
+    return 0;
+}
 
 void hardware_serializePreset(tt_serializer_t* stream, uint8_t preset_num)
 {

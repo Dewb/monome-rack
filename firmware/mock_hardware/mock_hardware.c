@@ -25,9 +25,6 @@ int vserial_in_read_index = 0;
 int vserial_in_write_index = 0;
 uint32_t vserial_in_message_size[VSERIAL_MAX_MESSAGES];
 
-float phase = 0.0;
-float clockRate = 0.001; // 1 ms
-
 void* nvram_ptr = NULL;
 void* vram_ptr = NULL;
 uint32_t nvram_size = 0;
@@ -461,11 +458,11 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
     }
     if (width)
     {
-        *width = 128;
+        *width = SCREEN_WIDTH;
     }
     if (height)
     {
-        *height = 64;
+        *height = SCREEN_HEIGHT;
     }
 }
 
@@ -473,7 +470,7 @@ void hardware_copyScreenBuffer(uint8_t* dest)
 {
     if (screenBuffer && dest)
     {
-        memcpy(dest, screenBuffer, 128 * 64);
+        memcpy(dest, screenBuffer, SCREEN_WIDTH * SCREEN_HEIGHT);
     }
 }
 

@@ -10,7 +10,7 @@ FLAGS = \
 	-g \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
-	-Imock_hardware/stubs \
+	-Imock_hardware/include \
 	-Imeadowphysics/libavr32/src \
 	-Imeadowphysics/libavr32/src/usb/midi \
 	-Imeadowphysics/libavr32/src/usb/hid \
@@ -28,11 +28,9 @@ SOURCES = \
 	meadowphysics/libavr32/src/events.c \
 	meadowphysics/libavr32/src/timers.c \
 	meadowphysics/libavr32/src/util.c \
-	mock_hardware/adapter.c \
-	mock_hardware/adapter_not_teletype.c \
-	mock_hardware/adapter_not_ansible.c \
-	mock_hardware/mock_hardware.c \
-	mock_hardware/monome.c 
+	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/common/*.c) \
+	$(wildcard mock_hardware/modules/trilogy/*.c) \
 
 TARGETNAME = ../res/firmware/meadowphysics
 

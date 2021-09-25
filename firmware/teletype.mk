@@ -12,7 +12,7 @@ FLAGS = \
 	-g \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
-	-Imock_hardware/stubs \
+	-Imock_hardware/include \
 	-Iteletype/libavr32/src \
 	-Iteletype/libavr32/src/usb/midi \
 	-Iteletype/libavr32/src/usb/hid \
@@ -47,11 +47,9 @@ SOURCES = \
 	teletype/libavr32/src/music.c \
 	teletype/libavr32/src/midi_common.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
-	mock_hardware/adapter.c \
-	mock_hardware/mock_hardware.c \
-	mock_hardware/adapter_not_ansible.c \
-	mock_hardware/adapter_teletype.c \
-	mock_hardware/monome.c \
+	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/common/*.c) \
+	$(wildcard mock_hardware/modules/teletype/*.c) \
 
 SOURCES := $(filter-out teletype/module/usb_disk_mode.c, $(SOURCES))
 

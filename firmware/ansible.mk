@@ -10,7 +10,7 @@ FLAGS = \
 	-g \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
-	-Imock_hardware/stubs \
+	-Imock_hardware/include \
 	-Iansible/libavr32/src \
 	-Iansible/libavr32/src/usb/midi \
 	-Iansible/libavr32/src/usb/hid \
@@ -51,11 +51,9 @@ SOURCES = \
 	ansible/libavr32/src/music.c \
 	ansible/libavr32/src/notes.c \
 	ansible/libavr32/src/random.c \
-	mock_hardware/adapter.c \
-	mock_hardware/adapter_not_teletype.c \
-	mock_hardware/mock_hardware.c \
-	mock_hardware/monome.c \
-	mock_hardware/ansible_usb_disk.c \
+	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/common/*.c) \
+	$(wildcard mock_hardware/modules/ansible/*.c) \
 
 TARGETNAME = ../res/firmware/ansible
 

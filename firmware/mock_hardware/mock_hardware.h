@@ -1,10 +1,12 @@
-#include <conf_board.h>
 #include "../teletype/src/serialize.h"
+#include "types.h"
+#include <conf_board.h>
+
 
 typedef enum
 {
     FTDI_BUS,
-    HID_BUS,
+    HID_BUS, // obselete: HID no longer uses the mocked serial bus, just FTDI.
     NUM_BUSES
 } serial_bus_t;
 
