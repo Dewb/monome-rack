@@ -9,4 +9,5 @@ struct TeletypeWidget : LibAVR32ModuleWidget
     TeletypeWidget(TeletypeModule* module);
 
     virtual void appendContextMenu(rack::ui::Menu* menu) override;
+    rack::widget::Widget* screen;
 };

@@ -28,7 +28,7 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     // addChild(createScrew<ScrewSilver>(Vec(11, 312)));
     // addChild(createScrew<ScrewSilver>(Vec(244, 312)));
 
-    auto screen = new TeletypeScreenWidget(module ? module->screenBuffer : nullptr, 128, 64);
+    screen = new TeletypeScreenWidget(module ? module->screenBuffer : nullptr, 128, 64);
     screen->box.pos = Vec(31, 202);
     screen->box.size = Vec(208, 108);
     addChild(screen);
@@ -68,11 +68,13 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 struct TeletypeKeystrokeItem : rack::ui::MenuItem
 {
     TeletypeModule* module;
+    rack::widget::Widget* screen;
     uint8_t key;
     uint8_t mod;
 
-    TeletypeKeystrokeItem(TeletypeModule* module, uint8_t key, uint8_t mod, std::string _text, std::string _rightText = "")
+    TeletypeKeystrokeItem(TeletypeModule* module, rack::widget::Widget* screen, uint8_t key, uint8_t mod, std::string _text, std::string _rightText = "")
         : module(module)
+        , screen(screen)
         , key(key)
         , mod(mod)
     {
@@ -86,6 +88,10 @@ struct TeletypeKeystrokeItem : rack::ui::MenuItem
         {
             module->firmware.hidMessage(key, mod, false, false);
             module->firmware.hidMessage(key, mod, false, true);
+
+            if (screen) {
+                APP->event->setSelected(screen);
+            }
         }
     }
 };
@@ -106,15 +112,15 @@ void TeletypeWidget::appendContextMenu(rack::Menu* menu)
 
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Shortcuts"));
 
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x45, 0, "LIVE mode", "F12"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x3a, 4, "EDIT mode", "Alt+F1"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x44, 0, "TRACKER mode", "F11"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x2b, 0, "Cycle LIVE/EDIT/TRACKER", "Tab"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x29, 0, "SCENE READ mode", "Esc"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x29, 4, "SCENE WRITE mode", "Alt+Esc"));
-    //menu->addChild(new TeletypeKeystrokeItem(m, 0x0a, 4, "GRID visualizer mode", "Alt+G"));
-    //menu->addChild(new TeletypeKeystrokeItem(m, 0x35, 0, "Toggle system variables display", "~"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x2f, 0, "Previous script/page/value/scene", "["));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x30, 0, "Next script/page/value/scene", "]"));
-    menu->addChild(new TeletypeKeystrokeItem(m, 0x0b, 4, "HELP mode", "Alt+H"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x45, 0, "LIVE mode", "F12"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x3a, 4, "EDIT mode", "Alt+F1"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x44, 0, "TRACKER mode", "F11"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x2b, 0, "Cycle LIVE/EDIT/TRACKER", "Tab"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x29, 0, "SCENE READ mode", "Esc"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x29, 4, "SCENE WRITE mode", "Alt+Esc"));
+    //menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x0a, 4, "GRID visualizer mode", "Alt+G"));
+    //menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x35, 0, "Toggle system variables display", "~"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x2f, 0, "Previous script/page/value/scene", "["));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x30, 0, "Next script/page/value/scene", "]"));
+    menu->addChild(new TeletypeKeystrokeItem(m, screen, 0x0b, 4, "HELP mode", "Alt+H"));
 }
