@@ -1,5 +1,6 @@
-#include "mock_hardware.h"
-#include "monome.h"
+#include "types.h"
+#include <stdbool.h>
+#include "uhc.h"
 
 void midi_read(void) { }
 bool midi_write(const u8* data, u32 bytes) { return true; }

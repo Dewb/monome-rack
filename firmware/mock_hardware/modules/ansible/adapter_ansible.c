@@ -1,7 +1,6 @@
 #include "types.h"
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
 
-#include <stdbool.h>
 
 void hid_parse_frame(u8* data, u8 sz)
 {

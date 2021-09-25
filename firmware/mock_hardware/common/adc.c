@@ -1,4 +1,5 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 
 void adc_convert(u16 adc[4])
 {

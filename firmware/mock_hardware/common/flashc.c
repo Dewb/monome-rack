@@ -1,4 +1,5 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 #include <string.h>
 
 void* flashc_memset64(void* dst, uint64_t src, size_t nbytes, bool erase)

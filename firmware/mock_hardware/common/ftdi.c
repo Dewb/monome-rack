@@ -1,5 +1,6 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
 #include "monome.h"
+#include "types.h"
 #include "events.h"
 #include <string.h>
 

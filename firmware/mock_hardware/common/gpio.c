@@ -1,4 +1,5 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 
 void gpio_set_gpio_pin(u32 pin)
 {

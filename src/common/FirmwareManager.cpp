@@ -28,13 +28,13 @@ extern rack::Plugin* pluginInstance;
 #include <direct.h>
 #include <windows.h>
 
-#define GET_PROC_ADDRESS(handle, name)                 \
-    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+#define GET_PROC_ADDRESS(returntype, name, argslist)   \
+    fw_fn_hardware_##name = reinterpret_cast<fw_fn_hardware_##name##_t>( \
         reinterpret_cast<void*>(                       \
-            GetProcAddress(handle, #name)));           \
-    if (!fw_fn_##name)                                 \
+            GetProcAddress(handle, "hardware_" #name)));           \
+    if (!fw_fn_hardware_##name)                                 \
     {                                                  \
-        WARN("Failed to find symbol '" #name "'");     \
+        WARN("Failed to find symbol 'hardware" #name "'");     \
         return false;                                  \
     }
 
@@ -44,47 +44,29 @@ extern rack::Plugin* pluginInstance;
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define GET_PROC_ADDRESS(handle, name)                 \
-    fw_fn_##name = reinterpret_cast<fw_fn_##name##_t>( \
+#define GET_PROC_ADDRESS(returntype, name, argslist)   \
+    fw_fn_hardware_##name = reinterpret_cast<fw_fn_hardware_##name##_t>( \
         reinterpret_cast<void*>(                       \
-            dlsym(handle, #name)));                    \
-    if (!fw_fn_##name)                                 \
+            dlsym(handle, "hardware_" #name)));                    \
+    if (!fw_fn_hardware_##name)                                 \
     {                                                  \
-        WARN("Failed to find symbol '" #name "'");     \
+        WARN("Failed to find symbol 'hardware_" #name "'");     \
         return false;                                  \
     }
 
 #endif
 
 #define DECLARE_PROC(returntype, name, argslist)    \
-    typedef returntype(*fw_fn_##name##_t) argslist; \
-    fw_fn_##name##_t fw_fn_##name;
+    typedef returntype(*fw_fn_hardware_##name##_t) argslist; \
+    fw_fn_hardware_##name##_t fw_fn_hardware_##name;
 
 struct FirmwareManagerImpl
 {
-    DECLARE_PROC(void, hardware_init, ())
-    DECLARE_PROC(void, hardware_step, ())
-    DECLARE_PROC(bool, hardware_getGPIO, (uint32_t pin))
-    DECLARE_PROC(void, hardware_setGPIO, (uint32_t pin, bool value))
-    DECLARE_PROC(uint16_t, hardware_getDAC, (int channel))
-    DECLARE_PROC(void, hardware_setADC, (int channel, uint16_t value))
-    DECLARE_PROC(void, hardware_serialConnectionChange, (serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial))
-    DECLARE_PROC(void, hardware_readSerial, (serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount))
-    DECLARE_PROC(void, hardware_writeSerial, (serial_bus_t bus, uint8_t* buf, uint32_t byteCount))
-    DECLARE_PROC(void, hardware_triggerInterrupt, (int interrupt))
-    DECLARE_PROC(void, hardware_readNVRAM, (void** ptr, uint32_t* bytes))
-    DECLARE_PROC(void, hardware_writeNVRAM, (const void* ptr, uint32_t bytes))
-    DECLARE_PROC(void, hardware_readVRAM, (void** ptr, uint32_t* bytes))
-    DECLARE_PROC(void, hardware_writeVRAM, (const void* ptr, uint32_t bytes))
-    DECLARE_PROC(void, hardware_getScreenBuffer, (uint8_t **ptr, uint16_t* width, uint16_t* height))
-    DECLARE_PROC(void, hardware_copyScreenBuffer, (uint8_t *ptr))
-    DECLARE_PROC(void, hardware_hidConnect, ());
-    DECLARE_PROC(void, hardware_hidDisconnect, ());
-    DECLARE_PROC(void, hardware_hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
-    DECLARE_PROC(void, hardware_iiUpdateFollowerData, (const uint16_t, const uint16_t));
-    DECLARE_PROC(bool, hardware_iiPopMessage, (uint8_t * addr, uint8_t* data, uint8_t* length));
-    DECLARE_PROC(void, hardware_serializePreset, (tt_serializer_t * stream, uint8_t preset_num));
-    DECLARE_PROC(void, hardware_deserializePreset, (tt_deserializer_t * stream, uint8_t preset_num));
+#ifdef MOCK_API
+#undef MOCK_API
+#endif
+#define MOCK_API DECLARE_PROC
+#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
 
     float clockPeriod;
     float clockPhase;
@@ -220,29 +202,11 @@ struct FirmwareManagerImpl
 
 #endif
 
-        GET_PROC_ADDRESS(handle, hardware_init);
-        GET_PROC_ADDRESS(handle, hardware_step);
-        GET_PROC_ADDRESS(handle, hardware_getGPIO);
-        GET_PROC_ADDRESS(handle, hardware_setGPIO);
-        GET_PROC_ADDRESS(handle, hardware_getDAC);
-        GET_PROC_ADDRESS(handle, hardware_setADC);
-        GET_PROC_ADDRESS(handle, hardware_serialConnectionChange);
-        GET_PROC_ADDRESS(handle, hardware_readSerial);
-        GET_PROC_ADDRESS(handle, hardware_writeSerial);
-        GET_PROC_ADDRESS(handle, hardware_triggerInterrupt);
-        GET_PROC_ADDRESS(handle, hardware_readNVRAM);
-        GET_PROC_ADDRESS(handle, hardware_writeNVRAM);
-        GET_PROC_ADDRESS(handle, hardware_readVRAM);
-        GET_PROC_ADDRESS(handle, hardware_writeVRAM);
-        GET_PROC_ADDRESS(handle, hardware_getScreenBuffer);
-        GET_PROC_ADDRESS(handle, hardware_copyScreenBuffer);
-        GET_PROC_ADDRESS(handle, hardware_hidConnect);
-        GET_PROC_ADDRESS(handle, hardware_hidDisconnect);
-        GET_PROC_ADDRESS(handle, hardware_hidMessage);
-        GET_PROC_ADDRESS(handle, hardware_iiUpdateFollowerData);
-        GET_PROC_ADDRESS(handle, hardware_iiPopMessage);
-        GET_PROC_ADDRESS(handle, hardware_serializePreset);
-        GET_PROC_ADDRESS(handle, hardware_deserializePreset);
+#ifdef MOCK_API
+#undef MOCK_API
+#endif
+#define MOCK_API GET_PROC_ADDRESS
+#include "..\..\firmware\mock_hardware\mock_hardware_api.h"
 
         return true;
     }
@@ -289,7 +253,7 @@ void FirmwareManager::step()
     }
 }
 
-bool FirmwareManager::getGPIO(uint32_t pin) const
+bool FirmwareManager::getGPIO(uint32_t pin)
 {
     if (impl)
     {

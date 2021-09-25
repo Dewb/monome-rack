@@ -1,4 +1,5 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 #include <string.h>
 
 u8 _is_screen_flipped = 0;

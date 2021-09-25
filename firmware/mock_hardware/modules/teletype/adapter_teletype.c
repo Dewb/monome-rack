@@ -2,8 +2,9 @@
 #include "../teletype/module/flash.h"
 #include "../teletype/module/globals.h"
 #include "../teletype/module/preset_w_mode.h"
+#include "../teletype/src/serialize.h"
 #include "../teletype/src/teletype_io.h"
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
 #include "types.h"
 
 void clock_null(uint8_t phase) { }

@@ -1,5 +1,6 @@
 #include "i2c.h"
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 
 uint8_t last_port = 0;
 int i2c_leader_tx(uint8_t addr, uint8_t* data, uint8_t l)

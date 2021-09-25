@@ -1,4 +1,5 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
+#include "types.h"
 
 void cdc_write(uint8_t* data, uint32_t bytes)
 {

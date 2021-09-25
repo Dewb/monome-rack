@@ -1,10 +1,14 @@
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
 #include "events.h"
 #include "hid.h"
 #include "monome.h"
 #include "timers.h"
 #include <stdio.h>
 #include <string.h>
+
+#define B08 40
+#define B09 41
+#define NMI 13
 
 #define GPIO_NUM_PINS 50
 bool gpioBlock[GPIO_NUM_PINS];
@@ -34,7 +38,7 @@ uint8_t* screenBuffer = NULL;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-// hardware interface points
+// module main interface points
 extern void initialize_module(void);
 extern void check_events(void);
 

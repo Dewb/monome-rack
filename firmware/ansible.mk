@@ -51,7 +51,7 @@ SOURCES = \
 	ansible/libavr32/src/music.c \
 	ansible/libavr32/src/notes.c \
 	ansible/libavr32/src/random.c \
-	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/mock_hardware_api.c) \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/ansible/*.c) \
 

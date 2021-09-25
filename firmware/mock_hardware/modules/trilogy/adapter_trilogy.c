@@ -1,7 +1,6 @@
 #include "types.h"
-#include "mock_hardware.h"
+#include "mock_hardware_api.h"
 
-#include <stdbool.h>
 
 void clock_null(uint8_t phase) { }
 typedef void (*clock_pulse_t)(uint8_t phase);

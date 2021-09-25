@@ -28,7 +28,7 @@ SOURCES = \
 	meadowphysics/libavr32/src/events.c \
 	meadowphysics/libavr32/src/timers.c \
 	meadowphysics/libavr32/src/util.c \
-	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/mock_hardware_api.c) \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/trilogy/*.c) \
 

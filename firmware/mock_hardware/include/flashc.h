@@ -1,6 +1,5 @@
-// TODO: find a better way to make sure these are defined here
-#define NMI 13
-#define B11 43
+#include <stdint.h>
+#include "conf_board.h"
 
 void hardware_declareNVRAM(const void* ptr, uint32_t bytes);
 void hardware_declareVRAM(const void* ptr, uint32_t bytes);

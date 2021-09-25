@@ -47,7 +47,7 @@ SOURCES = \
 	teletype/libavr32/src/music.c \
 	teletype/libavr32/src/midi_common.c \
 	$(wildcard teletype/libavr32/src/euclidean/*.c) \
-	$(wildcard mock_hardware/mock_hardware.c) \
+	$(wildcard mock_hardware/mock_hardware_api.c) \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/teletype/*.c) \
 
