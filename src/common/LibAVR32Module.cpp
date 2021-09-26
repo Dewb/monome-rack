@@ -23,7 +23,7 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
 {
     if (gridConnection != nullptr)
     {
-        //firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
+        firmware.serialConnectionChange(FTDI_BUS, false, 0, 0, 0);
     }
 
     gridConnection = newConnection;
@@ -32,30 +32,15 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         std::string id = gridConnection->getDevice().id;
         lastConnectedDeviceId = id;
 
-        std::string wide_id;
-        for (size_t i = 0; i < id.length(); i++)
-        {
-            if (i == 1 && id[1] == 'v')
-                i++;
-
-            wide_id.append(id, i, 1);
-            wide_id.append(" ");
-        }
-
-        firmware.serialConnectionChange(FTDI_BUS, 1, "m o n o m e", "p r o d u c t", wide_id.c_str());
-
-        uint8_t buf[6] = { 0, 1, 0, 0, 0, 0 };
-        buf[2] = (gridConnection->getDevice().width * gridConnection->getDevice().height) / 64;
-        firmware.writeSerial(FTDI_BUS, buf, 6);
-        uint8_t buf2[6] = { 0, 0, 0, 0, 0, 0 };
-        firmware.writeSerial(FTDI_BUS, buf2, 6);
+        auto d = gridConnection->getDevice();
+        firmware.serialConnectionChange(FTDI_BUS, true, d.protocol, d.width, d.height);
     }
 }
 
 void LibAVR32Module::gridDisconnected()
 {
     gridConnection = nullptr;
-    //firmware.serialConnectionChange(FTDI_BUS, 0, NULL, NULL, NULL);
+    firmware.serialConnectionChange(FTDI_BUS, false, 0, 0, 0);
 }
 
 void LibAVR32Module::gridButtonEvent(int x, int y, bool state)

@@ -3,14 +3,19 @@
 
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 {
-    config(w * h, 0, 0, w * h);
+    if (w * h > GRID_MAX_SIZE) {
+        FATAL("Unsupported grid size");
+        assert(0);
+    }
+
+    config(w * h, 0, 0, 0);
 
     for (unsigned j = 0; j < h; j++)
     {
         for (unsigned i = 0; i < w; i++)
         {
             int n = i + j * w;
-            // set an infinite bound so it won't be serialized [and also won't be midi mappable ): ]
+            // set an infinite bound so the params won't be serialized [and also won't be midi mappable ): ]
             configParam(n, 0.0, INFINITY, 0.0);
         }
     }
@@ -22,9 +27,11 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
     device.id = "mv000000";
     device.prefix = "";
     device.type = "virtual " + std::to_string(w * h);
+    device.protocol = PROTOCOL_MEXT;
 
     clearAll();
     firstStep = true;
+    theme = GridTheme::Yellow;
 }
 
 VirtualGridModule::~VirtualGridModule()
@@ -51,7 +58,6 @@ void VirtualGridModule::process(const ProcessArgs& args)
                 pressedState[n] = state;
                 GridConnectionManager::get()->dispatchButtonMessage(&this->device, i, j, pressedState[n]);
             }
-            lights[n].setBrightness(ledBuffer[n] / 255.0);
         }
     }
 }
@@ -60,12 +66,30 @@ json_t* VirtualGridModule::dataToJson()
 {
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
+    json_object_set_new(rootJ, "protocol", json_integer(device.protocol));
+    json_object_set_new(rootJ, "theme", json_integer(theme));
     return rootJ;
 }
 
 void VirtualGridModule::dataFromJson(json_t* rootJ)
 {
-    device.id = json_string_value(json_object_get(rootJ, "deviceId"));
+    auto json_id = json_object_get(rootJ, "deviceId");
+    if (json_id)
+    {
+        device.id = json_string_value(json_id);
+    }
+
+    auto json_proto = json_object_get(rootJ, "protocol");
+    if (json_proto)
+    {
+        device.protocol = static_cast<MonomeProtocol>(json_integer_value(json_proto));
+    }
+
+    auto json_theme = json_object_get(rootJ, "theme");
+    if (json_theme)
+    {
+        theme = static_cast<GridTheme>(json_integer_value(json_theme));
+    }
 }
 
 const MonomeDevice& VirtualGridModule::getDevice()
@@ -78,7 +102,7 @@ void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
     uint8_t* ptr = ledBuffer + y * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {
-        *ptr++ = ((bitfield & (1 << i)) > 0) ? 104 : 0;
+        *ptr++ = ((bitfield & (1 << i)) > 0) ? 0xF : 0;
     }
 }
 

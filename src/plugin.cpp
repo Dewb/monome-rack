@@ -32,8 +32,9 @@ void init(Plugin* p)
     Model* modelTeletypeExpander = createModel<TTExpanderModule, TTExpanderWidget>("teletype-expander");
     Model* modelAnsible = createModel<AnsibleModule, AnsibleWidget>("ansible");
 
-    Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8, 5>, VirtualGridWidgetTemplate<16, 8, 5>>("grid128");
-    Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8, 5>, VirtualGridWidgetTemplate<8, 8, 5>>("grid64");
+    Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8>, VirtualGridWidgetTemplate<16, 8>>("grid128");
+    Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8>, VirtualGridWidgetTemplate<8, 8>>("grid64");
+    Model* modelGrid256 = createModel<VirtualGridModuleTemplate<16, 16>, VirtualGridWidgetTemplate<16, 16>>("grid256");
 
     Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
 
@@ -47,6 +48,7 @@ void init(Plugin* p)
 
     p->addModel(modelGrid128);
     p->addModel(modelGrid64);
+    p->addModel(modelGrid256);
 
     p->addModel(modelFaderbank);
 

@@ -42,7 +42,7 @@ uint8_t* screenBuffer = NULL;
 extern void initialize_module(void);
 extern void check_events(void);
 
-extern void mock_ftdi_change(u8 plug, const char* manstr, const char* prodstr, const char* serstr);
+extern void mock_setup_ftdi_funcs();
 extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
 volatile u64 tcTicks = 0;
@@ -73,7 +73,7 @@ void simulate_tc_interrupt()
 
 void simulate_clock_normal_interrupt()
 {
-    event_t e;
+    static event_t e;
     e.type = kEventClockNormal;
     e.data = !hardware_getGPIO(B09);
     event_post(&e);
@@ -81,7 +81,7 @@ void simulate_clock_normal_interrupt()
 
 void simulate_external_clock_interrupt()
 {
-    event_t e;
+    static event_t e;
     e.type = kEventClockExt;
     e.data = hardware_getGPIO(B08);
     event_post(&e);
@@ -89,7 +89,7 @@ void simulate_external_clock_interrupt()
 
 void simulate_front_button_interrupt()
 {
-    event_t e;
+    static event_t e;
     e.type = kEventFront;
     e.data = hardware_getGPIO(NMI);
     event_post(&e);
@@ -97,24 +97,29 @@ void simulate_front_button_interrupt()
 
 void simulate_ansible_key_interrupt(int pin, int offset)
 {
-    event_t e = { .type = kEventKey, .data = hardware_getGPIO(pin) + offset };
+    static event_t e;
+    e.type = kEventKey;
+    e.data = hardware_getGPIO(pin) + offset;
     event_post(&e);
 }
 
 void simulate_trigger_interrupt(int pin)
 {
-    event_t e = { .type = kEventTrigger, .data = pin };
+    static event_t e;
+    e.type = kEventTrigger;
+    e.data = pin;
     event_post(&e);
 }
 
 void simulate_ansible_tr_interrupt(int pin, int offset)
 {
-    event_t e = { .type = kEventTr, .data = hardware_getGPIO(pin) + offset };
+    static event_t e;
+    e.type = kEventTr;
+    e.data = hardware_getGPIO(pin) + offset;
     event_post(&e);
 }
 
 extern void set_funcs();
-extern void monome_connect_write_event();
 
 // protocol enumeration
 typedef enum
@@ -139,22 +144,43 @@ typedef struct e_monomeDesc
 
 extern monomeDesc mdesc;
 
-static void simulate_monome_setup_mext(int rows, int cols)
+static void simulate_monome_setup(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
 {
-    ftdi_setup();
-    mdesc.protocol = eProtocolMext;
-    mdesc.vari = 1;
-    mdesc.device = eDeviceGrid;
-    mdesc.rows = rows;
-    mdesc.cols = cols;
-    mdesc.tilt = 1;
-    set_funcs();
-    monome_connect_write_event();
+    if (connected)
+    {
+        // fill out the global mdesc structure
+        mdesc.protocol = (eMonomeProtocol)protocol;
+        mdesc.vari = mdesc.protocol == eProtocolMext;
+        mdesc.device = eDeviceGrid;
+        mdesc.rows = height;
+        mdesc.cols = width;
+        mdesc.tilt = 1;
+
+        // set device-specific event handlers based on the global mdesc
+        set_funcs();
+        mock_setup_ftdi_funcs();
+
+        // push a connection event
+        static event_t ev;
+        ev.type = kEventMonomeConnect;
+        u8* data = (u8*)(&(ev.data));
+        *data++ = (u8)(mdesc.device);
+        *data++ = mdesc.cols;
+        *data++ = mdesc.rows;
+        event_post(&ev);
+    }
+    else
+    {
+        // push a disconnect event
+        static event_t ev;
+        ev.type = kEventMonomeDisconnect;
+        event_post(&ev);
+    }
 }
 
 void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
 {
-    event_t ev;
+    static event_t ev;
     uint8_t* data = (uint8_t*)(&(ev.data));
     data[0] = x;
     data[1] = y;
@@ -170,14 +196,14 @@ void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
 
 void hardware_hidConnect()
 {
-    event_t ev;
+    static event_t ev;
     ev.type = kEventHidConnect;
     event_post(&ev);
 }
 
 void hardware_hidDisconnect()
 {
-    event_t ev;
+    static event_t ev;
     ev.type = kEventHidDisconnect;
     event_post(&ev);
 }
@@ -320,12 +346,11 @@ void hardware_resetSerialOut()
     vserial_out_write_index = 0;
 }
 
-void hardware_serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial)
+void hardware_serialConnectionChange(serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height)
 {
     if (bus == FTDI_BUS)
     {
-        //mock_ftdi_change(connected, manufacturer, product, serial);
-        simulate_monome_setup_mext(8, 16);
+        simulate_monome_setup(connected, protocol, width, height);
     }
     else if (bus == HID_BUS)
     {

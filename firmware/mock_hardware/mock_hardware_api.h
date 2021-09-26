@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+
 typedef enum
 {
     FTDI_BUS,
@@ -33,7 +34,7 @@ MOCK_API(void, initSerial, ());
 MOCK_API(void, resetSerialIn, ());
 MOCK_API(void, resetSerialOut, ());
 
-MOCK_API(void, serialConnectionChange, (serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial));
+MOCK_API(void, serialConnectionChange, (serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height));
 
 MOCK_API(void, readSerial, (serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount));
 MOCK_API(void, writeSerial, (serial_bus_t bus, uint8_t* buf, uint32_t byteCount));
