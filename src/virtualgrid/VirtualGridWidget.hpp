@@ -25,8 +25,6 @@ struct VirtualGridWidget : rack::app::ModuleWidget
 
 protected:
     friend struct MonomeKey;
-    bool isDraggingKeys;
-    std::unordered_set<MonomeKey*> keysTouchedThisDrag;
 
     rack::Vec margins;
     GridTheme theme;

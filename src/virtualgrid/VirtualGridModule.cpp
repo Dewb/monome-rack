@@ -10,7 +10,8 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
         for (unsigned i = 0; i < w; i++)
         {
             int n = i + j * w;
-            configParam(n, 0.0, 2.0, 0.0);
+            // set an infinite bound so it won't be serialized [and also won't be midi mappable ): ]
+            configParam(n, 0.0, INFINITY, 0.0);
         }
     }
 
@@ -44,10 +45,11 @@ void VirtualGridModule::process(const ProcessArgs& args)
         for (int j = 0; j < device.height; j++)
         {
             int n = i + (j * device.width);
-            if ((params[n].value > 0) != pressedState[n])
+            bool state = params[n].getValue() > 0;
+            if (state != pressedState[n])
             {
-                GridConnectionManager::get()->dispatchButtonMessage(&this->device, i, j, params[n].value > 0);
-                pressedState[n] = params[n].value > 0;
+                pressedState[n] = state;
+                GridConnectionManager::get()->dispatchButtonMessage(&this->device, i, j, pressedState[n]);
             }
             lights[n].setBrightness(ledBuffer[n] / 255.0);
         }
@@ -96,4 +98,5 @@ void VirtualGridModule::updateQuadrant(int x_offset, int y_offset, uint8_t* leds
 void VirtualGridModule::clearAll()
 {
     memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+    memset(pressedState, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
 }

@@ -131,37 +131,30 @@ struct MonomeKey : rack::app::ParamWidget
 
     void onDragStart(const rack::event::DragStart& e) override
     {
-        getGrid()->keysTouchedThisDrag.clear();
-        getGrid()->keysTouchedThisDrag.insert(this);
-        getGrid()->isDraggingKeys = true;
+        beginPress();
     }
 
     void onDragEnd(const rack::event::DragEnd& e) override
     {
-        endPress();
-        getGrid()->keysTouchedThisDrag.clear();
-        getGrid()->isDraggingKeys = false;
+        if (e.getTarget() == nullptr || e.getTarget()->parent == this->parent) 
+        {
+            endPress();
+        }
     }
 
     void onDragLeave(const rack::event::DragLeave& e) override
     {
-        if (getGrid()->isDraggingKeys)
+        if (e.origin->parent == this->parent)
         {
             endPress();
-            getGrid()->keysTouchedThisDrag.erase(this);
         }
     }
 
     void onDragEnter(const rack::event::DragEnter& e) override
     {
-        if (getGrid()->isDraggingKeys)
+        if (e.origin->parent == this->parent) 
         {
-            auto ret = getGrid()->keysTouchedThisDrag.insert(this);
-            if (ret.second)
-            {
-                // this button wasn't already in the touched set
-                beginPress();
-            }
+            beginPress();
         }
     }
 };
@@ -218,23 +211,27 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
 
     theme = model == 5 ? VariYellow : MonoRed;
 
-    box.size = Vec(43.125 * w + 30, 47.5 * h);
+    box.size = Vec(43.125 * w + 45, 380);
 
-    margins.x = 15;
-    margins.y = 15;
+    margins.x = 16;
+    margins.y = 16;
 
-    int spacing = 8;
+    // create an opaque child underneath the keys to defeat module dragging in between the buttons
+    auto gridZone = new OpaqueWidget();
+    gridZone->setSize(Vec(box.size.x - 2 * margins.x, box.size.y - 2 * margins.y));
+    gridZone->setPosition(Vec(margins.x, margins.y));
+    addChild(gridZone);
 
-    //int max_width = (box.size.x - margins.x * 2 - (w - 1) * spacing) / w;
-    int max_height = (box.size.y - margins.y * 2 - (h - 1) * spacing) / h;
-    int button_size = max_height; // max_width > max_height ? max_width : max_height;
+    float spacingRatio = 0.14;
+    float button_size = (box.size.y - margins.y * 2) / (h + (h - 1) * spacingRatio);
+    float spacing = button_size * spacingRatio;
 
     for (unsigned j = 0; j < h; j++)
     {
         for (unsigned i = 0; i < w; i++)
         {
-            int x = margins.x + i * (button_size + spacing);
-            int y = margins.y + j * (button_size + spacing);
+            float x = margins.x + i * (button_size + spacing);
+            float y = margins.y + j * (button_size + spacing);
             int n = i + j * w;
 
             MonomeKey* key = (MonomeKey*)createParam<MonomeKey>(Vec(x, y), module, n);
@@ -252,8 +249,6 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     PanelBorder* pb = new PanelBorder;
     pb->box.size = box.size;
     addChild(pb);
-
-    isDraggingKeys = false;
 }
 
 void VirtualGridWidget::draw(const DrawArgs& args)
@@ -278,11 +273,6 @@ void VirtualGridWidget::clearHeldKeys()
 
 void VirtualGridWidget::onDragEnter(const event::DragEnter& e)
 {
-    // Disable key drag-tapping if this drag began anyhwere but on a child key of this module
-    if (e.origin->parent != this)
-    {
-        isDraggingKeys = false;
-    }
 }
 
 void VirtualGridWidget::onDragStart(const event::DragStart& e)
@@ -296,21 +286,6 @@ void VirtualGridWidget::onDragStart(const event::DragStart& e)
             clearHeldKeys();
             e.consume(this);
             return;
-        }
-        else
-        {
-            // Allow drag only at edges of module
-            /* TODO: fix
-            if (e.pos.x < margins.x || e.pos.x > box.size.x - margins.x || e.pos.y < margins.y || e.pos.y > box.size.y - margins.y)
-            {
-                return;
-            }
-            else
-            {
-                e.consumed = true;
-                e.target = NULL;
-            }
-            */
         }
     }
 }
