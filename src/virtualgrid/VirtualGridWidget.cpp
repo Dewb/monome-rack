@@ -85,13 +85,14 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     float spacingRatio = 0.14;
     float button_size = (box.size.y - margins.y * 2) / (h + (h - 1) * spacingRatio);
     float spacing = button_size * spacingRatio;
+    float keyMargin = 0.5 * spacing;
 
     for (unsigned j = 0; j < h; j++)
     {
         for (unsigned i = 0; i < w; i++)
         {
-            float x = margins.x + i * (button_size + spacing);
-            float y = margins.y + j * (button_size + spacing);
+            float x = margins.x + i * (button_size + spacing) - keyMargin;
+            float y = margins.y + j * (button_size + spacing) - keyMargin;
             int n = i + j * w;
 
             VirtualGridKey* key = (VirtualGridKey*)createParam<VirtualGridKey>(Vec(x, y), module, n);
@@ -100,8 +101,9 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
                 key->setKeyAddress(module->ledBuffer + i + j * 16);
                 key->theme = &(module->theme);
             }
-            key->box.size = Vec(button_size, button_size);
+            key->box.size = Vec(button_size + spacing, button_size + spacing);
             key->index = n;
+            key->margin = keyMargin;
             addParam(key);
         }
     }

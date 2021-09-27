@@ -6,6 +6,7 @@ struct VirtualGridKey : rack::app::ParamWidget
     uint8_t* ledAddress;
     int index;
     GridTheme* theme;
+    float margin;
 
     typedef enum
     {
@@ -34,6 +35,11 @@ struct VirtualGridKey : rack::app::ParamWidget
     {
         auto vg = args.vg;
         uint8_t val = ledAddress != NULL ? *ledAddress : 0;
+        auto rect = box.size;
+        rect.x -= 2 * margin;
+        rect.y -= 2 * margin;
+        float x = margin;
+        float y = margin;
 
         NVGcolor color1, color2;
         levelToGradient(
@@ -46,14 +52,14 @@ struct VirtualGridKey : rack::app::ParamWidget
         if (paramQuantity && paramQuantity->getValue() == HELD)
         {
             nvgBeginPath(vg);
-            nvgRoundedRect(vg, -3, -3, box.size.x + 6, box.size.y + 6, 6);
+            nvgRoundedRect(vg, x - 3, x - 3, rect.x + 6, rect.y + 6, 6);
             nvgFillColor(vg, nvgRGB(180, 180, 0));
             nvgFill(vg);
         }
 
         nvgBeginPath(vg);
-        auto paint = nvgBoxGradient(vg, 0, 0, box.size.x, box.size.y, box.size.x * 0.4, box.size.x * 1.2, color1, color2);
-        nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 4);
+        auto paint = nvgBoxGradient(vg, x, y, rect.x, rect.y, rect.x * 0.4, rect.x * 1.2, color1, color2);
+        nvgRoundedRect(vg, x, y, rect.x, rect.y, 4);
         if (val > 0)
         {
             nvgFillPaint(vg, paint);
