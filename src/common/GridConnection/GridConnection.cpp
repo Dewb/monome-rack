@@ -54,6 +54,9 @@ void GridConnectionManager::deregisterGrid(std::string id, bool deleteGrid)
         {
             disconnect(grid);
             grids.erase(grid);
+
+            // Connection manager owns the pointer, so deleteGrid should always be true,
+            // unless this is being called from the Grid destructor
             if (deleteGrid)
             {
                 delete grid;
@@ -71,12 +74,6 @@ void GridConnectionManager::deregisterGridConsumer(GridConsumer* consumer)
 
 void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
 {
-    //auto iter = consumerToGridMap.find(consumer);
-    // if (iter != consumerToGridMap.end() && iter->second == grid)
-    // {
-    //     // This connection is already established, ignore.
-    //     return;
-    // }
     disconnect(consumer);
     disconnect(grid);
 
@@ -97,26 +94,36 @@ bool GridConnectionManager::isConnected(std::string id)
 
 void GridConnectionManager::disconnect(Grid* grid)
 {
-    auto iter = idToConsumerMap.find(grid->getDevice().id);
-    if (iter != idToConsumerMap.end())
+    if (grid)
     {
-        GridConsumer* consumer = iter->second;
-        consumer->gridDisconnected();
-        idToConsumerMap.erase(grid->getDevice().id);
-        consumerToGridMap.erase(consumer);
+        grid->clearAll();
+        auto iter = idToConsumerMap.find(grid->getDevice().id);
+        if (iter != idToConsumerMap.end())
+        {
+            GridConsumer* consumer = iter->second;
+            consumer->gridDisconnected();
+            idToConsumerMap.erase(grid->getDevice().id);
+            consumerToGridMap.erase(consumer);
+        }
     }
 }
 
 void GridConnectionManager::disconnect(GridConsumer* consumer)
 {
-    auto iter = consumerToGridMap.find(consumer);
-    if (iter != consumerToGridMap.end())
+    if (consumer)
     {
-        Grid* grid = iter->second;
-        grid->clearAll();
-        consumer->gridDisconnected();
-        consumerToGridMap.erase(consumer);
-        idToConsumerMap.erase(grid->getDevice().id);
+        auto iter = consumerToGridMap.find(consumer);
+        if (iter != consumerToGridMap.end())
+        {
+            Grid* grid = iter->second;
+            if (grid)
+            {
+                grid->clearAll();
+                consumer->gridDisconnected();
+                consumerToGridMap.erase(consumer);
+                idToConsumerMap.erase(grid->getDevice().id);
+            }
+        }
     }
 }
 
