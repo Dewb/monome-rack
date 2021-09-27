@@ -15,6 +15,20 @@ SerialOscInterface::~SerialOscInterface()
 
 void SerialOscInterface::deviceFound(const MonomeDevice* const device)
 {
+    if (!device)
+    {
+        return;
+    }
+
+    // don't register the same device id twice
+    for (auto grid : GridConnectionManager::get()->getGrids())
+    {
+        if (grid->getDevice().id == device->id)
+        {
+            return;
+        }
+    }
+
     GridConnectionManager::get()->registerGrid(new SerialOscGrid(device));
 }
 
