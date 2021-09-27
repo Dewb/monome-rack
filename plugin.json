@@ -75,6 +75,14 @@
       "tags": [
         "controller"
       ]
+    },
+    {
+      "slug": "grid256",
+      "name": "grid 256",
+      "description": "",
+      "tags": [
+        "controller"
+      ]
     }
   ]
 }

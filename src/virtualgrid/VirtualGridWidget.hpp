@@ -1,20 +1,13 @@
 #include "rack.hpp"
-#include <unordered_set>
 
 #pragma once
 
-typedef enum
-{
-    MonoRed,
-    VariYellow
-} GridTheme;
-
-struct MonomeKey;
+struct VirtualGridKey;
 struct VirtualGridModule;
 
 struct VirtualGridWidget : rack::app::ModuleWidget
 {
-    VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h, unsigned model);
+    VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h);
 
     void draw(const DrawArgs& args) override;
     void onDragEnter(const rack::event::DragEnter& e) override;
@@ -24,19 +17,15 @@ struct VirtualGridWidget : rack::app::ModuleWidget
     void appendContextMenu(rack::ui::Menu* menu) override;
 
 protected:
-    friend struct MonomeKey;
-    bool isDraggingKeys;
-    std::unordered_set<MonomeKey*> keysTouchedThisDrag;
-
+    friend struct VirtualGridKey;
     rack::Vec margins;
-    GridTheme theme;
 };
 
-template <unsigned width, unsigned height, unsigned modelIndex>
+template <unsigned width, unsigned height>
 struct VirtualGridWidgetTemplate : VirtualGridWidget
 {
     VirtualGridWidgetTemplate(VirtualGridModule* module)
-        : VirtualGridWidget(module, width, height, modelIndex)
+        : VirtualGridWidget(module, width, height)
     {
     }
 };

@@ -1,8 +1,10 @@
 #pragma once
 #include "GridConnection.hpp"
+#include "VirtualGridTheme.hpp"
 #include "rack.hpp"
 
 #define GRID_MAX_SIZE 256
+
 
 struct VirtualGridModule : rack::Module, Grid
 {
@@ -25,11 +27,13 @@ struct VirtualGridModule : rack::Module, Grid
     void updateQuadrant(int x_offset, int y_offset, uint8_t* leds) override;
     void clearAll() override;
 
+    GridTheme theme;
+
 protected:
     bool firstStep;
 };
 
-template <unsigned width, unsigned height, unsigned modelIndex>
+template <unsigned width, unsigned height>
 struct VirtualGridModuleTemplate : VirtualGridModule
 {
     VirtualGridModuleTemplate()

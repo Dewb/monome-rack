@@ -94,6 +94,7 @@
         "codecvt": "cpp",
         "condition_variable": "cpp",
         "regex": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "mock_hardware_api.h": "c"
     }
 }

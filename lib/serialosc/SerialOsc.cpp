@@ -328,7 +328,8 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
                 device->prefix = "/" + device->prefix;
             }
 
-            listener->deviceFound(device);
+            // wait until after size message recieved -MD
+            // listener->deviceFound(device);
             sendDeviceInfoMessage(device->port);
 
             sendDevicePrefixMessage(port);
@@ -363,6 +364,9 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
                 auto device = *deviceIterator;
                 device->width = (iter++)->AsInt32();
                 device->height = (iter++)->AsInt32();
+
+                // wait to notify listeners here, after size is known -MD
+                listener->deviceFound(device);
             }
         }
         else if (address == "/sys/rotation")

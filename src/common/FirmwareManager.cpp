@@ -293,11 +293,11 @@ void FirmwareManager::setADC(int channel, uint16_t value)
     }
 }
 
-void FirmwareManager::serialConnectionChange(serial_bus_t bus, uint8_t connected, const char* manufacturer, const char* product, const char* serial)
+void FirmwareManager::serialConnectionChange(serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_serialConnectionChange(bus, connected, manufacturer, product, serial);
+        return impl->fw_fn_hardware_serialConnectionChange(bus, connected, protocol, width, height);
     }
 }
 
