@@ -4,55 +4,13 @@
 #include "VirtualGridModule.hpp"
 #include "window.hpp"
 
-#include <iomanip>
-#include <random>
-#include <sstream>
 
 using namespace rack;
 
 
-std::string getUniqueVirtualDeviceId(std::string prefix)
-{
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 999999);
-
-    bool uniqueIdFound = false;
-    while (true)
-    {
-        std::ostringstream ss;
-        ss << prefix << std::setw(6) << std::setfill('0') << dis(gen);
-        uniqueIdFound = true;
-
-        // enumerate modules
-        for (rack::Widget* w : APP->scene->rack->moduleContainer->children)
-        {
-            VirtualGridWidget* gridWidget = dynamic_cast<VirtualGridWidget*>(w);
-            if (gridWidget)
-            {
-                auto gridModule = dynamic_cast<VirtualGridModule*>(gridWidget->module);
-                if (gridModule->device.id == ss.str())
-                {
-                    uniqueIdFound = false;
-                    break;
-                }
-            }
-        }
-
-        if (uniqueIdFound)
-        {
-            return ss.str();
-        }
-    }
-}
-
 VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h)
 {
     setModule(module);
-    if (module)
-    {
-        module->device.id = getUniqueVirtualDeviceId("virt");
-    }
 
     float rackWidth = 0;
     if (w == h)

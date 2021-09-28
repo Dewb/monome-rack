@@ -1,6 +1,19 @@
 #include "VirtualGridModule.hpp"
 #include "LibAVR32Module.hpp"
 
+#include <iomanip>
+#include <sstream>
+
+std::string formatVirtualDeviceId(int id)
+{
+    std::string prefix("virt");
+
+    std::ostringstream ss;
+    ss << prefix << std::setw(6) << std::setfill('0') << id;
+
+    return ss.str();
+}
+
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 {
     if (w * h > GRID_MAX_SIZE) {
@@ -24,14 +37,14 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
     device.height = h;
     device.port = 0;
     device.rotation = 0;
-    device.id = "mv000000";
+    device.id = formatVirtualDeviceId(0);
     device.prefix = "";
     device.type = "virtual " + std::to_string(w * h);
     device.protocol = PROTOCOL_MEXT;
 
-    clearAll();
-    firstStep = true;
     theme = GridTheme::Yellow;
+
+    clearAll();
 }
 
 VirtualGridModule::~VirtualGridModule()
@@ -39,14 +52,14 @@ VirtualGridModule::~VirtualGridModule()
     GridConnectionManager::get()->deregisterGrid(this->device.id, false);
 }
 
+void VirtualGridModule::onAdd()
+{
+    device.id = formatVirtualDeviceId(id);
+    GridConnectionManager::get()->registerGrid(this);
+}
+
 void VirtualGridModule::process(const ProcessArgs& args)
 {
-    if (firstStep)
-    {
-        GridConnectionManager::get()->registerGrid(this);
-        firstStep = false;
-    }
-
     for (int i = 0; i < device.width; i++)
     {
         for (int j = 0; j < device.height; j++)
@@ -65,7 +78,6 @@ void VirtualGridModule::process(const ProcessArgs& args)
 json_t* VirtualGridModule::dataToJson()
 {
     json_t* rootJ = json_object();
-    json_object_set_new(rootJ, "deviceId", json_string(device.id.c_str()));
     json_object_set_new(rootJ, "protocol", json_integer(device.protocol));
     json_object_set_new(rootJ, "theme", json_integer(theme));
     return rootJ;
@@ -73,12 +85,6 @@ json_t* VirtualGridModule::dataToJson()
 
 void VirtualGridModule::dataFromJson(json_t* rootJ)
 {
-    auto json_id = json_object_get(rootJ, "deviceId");
-    if (json_id)
-    {
-        device.id = json_string_value(json_id);
-    }
-
     auto json_proto = json_object_get(rootJ, "protocol");
     if (json_proto)
     {
