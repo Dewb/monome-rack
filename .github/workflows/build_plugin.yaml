@@ -19,7 +19,7 @@ jobs:
             name: Linux,
             os: ubuntu-latest,
             shell: bash,
-            prepare-os: "sudo apt install -y libglu-dev ragel"
+            prepare-os: "sudo apt update; sudo apt install -y libglu-dev ragel"
           }
         - {
             name: MacOS,
