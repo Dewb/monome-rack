@@ -11,6 +11,7 @@ FLAGS = \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
 	-Imock_hardware/include \
+	-I../lib/cbbq \
 	-Iearthsea/libavr32/src \
 	-Iearthsea/libavr32/src/usb/midi \
 	-Iearthsea/libavr32/src/usb/hid \
@@ -33,7 +34,7 @@ SOURCES = \
 	earthsea/libavr32/src/random.c \
 	earthsea/libavr32/src/timers.c \
 	earthsea/libavr32/src/util.c \
-	$(wildcard mock_hardware/mock_hardware_api.c) \
+	$(wildcard mock_hardware/*.c) \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/trilogy/*.c) \
 

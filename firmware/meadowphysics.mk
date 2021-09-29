@@ -11,6 +11,7 @@ FLAGS = \
 	-Werror=implicit-function-declaration \
 	-Imock_hardware \
 	-Imock_hardware/include \
+	-I../lib/cbbq \
 	-Imeadowphysics/libavr32/src \
 	-Imeadowphysics/libavr32/src/usb/midi \
 	-Imeadowphysics/libavr32/src/usb/hid \
@@ -28,7 +29,7 @@ SOURCES = \
 	meadowphysics/libavr32/src/events.c \
 	meadowphysics/libavr32/src/timers.c \
 	meadowphysics/libavr32/src/util.c \
-	$(wildcard mock_hardware/mock_hardware_api.c) \
+	$(wildcard mock_hardware/*.c) \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/trilogy/*.c) \
 

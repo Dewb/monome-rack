@@ -293,32 +293,45 @@ void FirmwareManager::setADC(int channel, uint16_t value)
     }
 }
 
-void FirmwareManager::serialConnectionChange(serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height)
+void FirmwareManager::postEvent(uint32_t type, uint32_t data)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_serialConnectionChange(bus, connected, protocol, width, height);
+        impl->fw_fn_hardware_postEvent(type, data);
     }
 }
 
-void FirmwareManager::readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
+void FirmwareManager::serialConnectionChange(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_readSerial(bus, pbuf, pcount);
+        return impl->fw_fn_hardware_serialConnectionChange(connected, protocol, width, height);
+    }
+}
+
+int FirmwareManager::readSerial(uint8_t** pbuf, uint8_t* pcount)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_readSerial(pbuf, pcount);
     }
     else
     {
         *pbuf = NULL;
         *pcount = 0;
+        return -1;
     }
 }
 
-void FirmwareManager::writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
+int FirmwareManager::writeSerial(uint8_t* buf, uint8_t byteCount)
 {
     if (impl)
     {
-        impl->fw_fn_hardware_writeSerial(bus, buf, byteCount);
+        return impl->fw_fn_hardware_writeSerial(buf, byteCount);
+    }
+    else 
+    {
+        return -1;
     }
 }
 

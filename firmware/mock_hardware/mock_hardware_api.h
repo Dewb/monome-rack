@@ -2,14 +2,6 @@
 #include "../teletype/src/serializer.h"
 #include <stdint.h>
 #include <stdbool.h>
-
-
-typedef enum
-{
-    FTDI_BUS,
-    HID_BUS, // obselete: HID no longer uses the mocked serial bus, just FTDI.
-    NUM_BUSES
-} serial_bus_t;
 #endif
 
 #ifndef MOCK_API
@@ -30,17 +22,12 @@ MOCK_API(void, setADC, (int channel, uint16_t value));
 MOCK_API(uint16_t, getDAC, (int channel));
 MOCK_API(void, setDAC, (int channel, uint16_t value));
 
-MOCK_API(void, initSerial, ());
-MOCK_API(void, resetSerialIn, ());
-MOCK_API(void, resetSerialOut, ());
+MOCK_API(void, postEvent, (uint32_t type, uint32_t data));
 
-MOCK_API(void, serialConnectionChange, (serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height));
+MOCK_API(void, serialConnectionChange, (bool connected, uint8_t protocol, uint8_t width, uint8_t height));
 
-MOCK_API(void, readSerial, (serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount));
-MOCK_API(void, writeSerial, (serial_bus_t bus, uint8_t* buf, uint32_t byteCount));
-
-MOCK_API(void, readSerial_internal, (serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount));
-MOCK_API(void, writeSerial_internal, (serial_bus_t bus, uint8_t* buf, uint32_t byteCount));
+MOCK_API(int, readSerial, (uint8_t** pbuf, uint8_t* pcount));
+MOCK_API(int, writeSerial, (uint8_t* buf, uint8_t byteCount));
 
 MOCK_API(void, readNVRAM, (void** ptr, uint32_t* size));
 MOCK_API(void, writeNVRAM, (const void* src, uint32_t size));
