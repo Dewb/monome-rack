@@ -1,5 +1,6 @@
 #include "types.h"
 #include "mock_hardware_api.h"
+#include <string.h>
 
 
 void clock_null(uint8_t phase) { }
@@ -25,4 +26,13 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
 
 void hardware_afterVRAMUpdate()
 {
+}
+
+#ifndef GIT_VERSION
+#define GIT_VERSION "?"
+#endif
+
+void hardware_getVersion(char* buffer)
+{
+    strcpy(buffer, GIT_VERSION);
 }

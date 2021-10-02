@@ -59,6 +59,8 @@ endif
 
 OBJECTS += $(patsubst %, ../build/firmware/earthsea/%.o, $(SOURCES))
 
+FLAGS += -DGIT_VERSION="\"$(shell cut -d '-' -f 1 <<< $(shell cd earthsea; git describe --tags | cut -c 1-)) $(shell cd earthsea; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\""
+
 ../build/firmware/earthsea/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<

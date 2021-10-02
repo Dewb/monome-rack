@@ -25,7 +25,8 @@ FLAGS = \
 	-Iteletype/libavr32/asf/common/services/usb/uhc \
 	-Iteletype/libavr32/asf/common/services/usb/class/hid \
 	-Iteletype/src \
-	-Iteletype/src/ops
+	-Iteletype/src/ops \
+	-Iteletype/ \
 	
 CFLAGS += \
 	-std=c99

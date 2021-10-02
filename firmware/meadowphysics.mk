@@ -54,6 +54,8 @@ endif
 
 OBJECTS += $(patsubst %, ../build/firmware/meadowphysics/%.o, $(SOURCES))
 
+FLAGS += -DGIT_VERSION="\"$(shell cut -d '-' -f 1 <<< $(shell cd meadowphysics; git describe --tags | cut -c 1-)) $(shell cd meadowphysics; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\""
+
 ../build/firmware/meadowphysics/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<

@@ -54,6 +54,8 @@ endif
 
 OBJECTS += $(patsubst %, ../build/firmware/whitewhale/%.o, $(SOURCES))
 
+FLAGS += -DGIT_VERSION="\"$(shell cut -d '-' -f 1 <<< $(shell cd whitewhale; git describe --tags | cut -c 1-)) $(shell cd whitewhale; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\""
+
 ../build/firmware/whitewhale/%.c.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<

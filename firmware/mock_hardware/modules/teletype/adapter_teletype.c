@@ -1,9 +1,10 @@
-#include "../teletype/module/edit_mode.h"
-#include "../teletype/module/flash.h"
-#include "../teletype/module/globals.h"
-#include "../teletype/module/preset_w_mode.h"
-#include "../teletype/src/serialize.h"
-#include "../teletype/src/teletype_io.h"
+#include "module/edit_mode.h"
+#include "module/flash.h"
+#include "module/gitversion.h"
+#include "module/globals.h"
+#include "module/preset_w_mode.h"
+#include "src/serialize.h"
+#include "src/teletype_io.h"
 #include "mock_hardware_api.h"
 #include "types.h"
 
@@ -74,4 +75,9 @@ void hardware_afterVRAMUpdate()
     set_edit_mode_script(get_edit_script());
     tele_pattern_updated();
     scene_state.grid.grid_dirty = 1;
+}
+
+void hardware_getVersion(char* buffer)
+{
+    strcpy(buffer, git_version);
 }

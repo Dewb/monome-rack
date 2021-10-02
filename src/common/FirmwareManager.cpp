@@ -476,3 +476,11 @@ void FirmwareManager::afterVRAMUpdate()
         return impl->fw_fn_hardware_afterVRAMUpdate();
     }
 }
+
+void FirmwareManager::getVersion(char* buffer)
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_getVersion(buffer);
+    }
+}

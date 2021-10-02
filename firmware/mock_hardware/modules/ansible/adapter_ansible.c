@@ -1,5 +1,9 @@
+#include "gitversion.h"
 #include "types.h"
+
 #include "mock_hardware_api.h"
+
+#include <string.h>
 
 
 void hid_parse_frame(u8* data, u8 sz)
@@ -20,4 +24,9 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
 
 void hardware_afterVRAMUpdate()
 {
+}
+
+void hardware_getVersion(char* buffer)
+{
+    strcpy(buffer, git_version);
 }

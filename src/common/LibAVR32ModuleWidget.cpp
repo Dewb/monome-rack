@@ -47,9 +47,10 @@ struct FirmwareSubmenuItem : MenuItem
 
         Menu* menu = new Menu;
 
+        char versionbuf[512];
+        module->firmware.getVersion(versionbuf);
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, module->firmwareName));
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "todo: branch"));
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "todo: commit hash"));
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, versionbuf));
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";
