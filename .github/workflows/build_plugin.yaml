@@ -39,7 +39,7 @@ jobs:
         with:
           submodules: recursive
       - name: Fetch submodule tags
-       run: |
+        run: |
           git submodule foreach --recursive 'git fetch --tags'
       - name: Get Rack-SDK
         run: |
