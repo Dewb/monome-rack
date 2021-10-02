@@ -34,13 +34,12 @@ jobs:
             prepare-os: "export CC=gcc; vcpkg install ragel:x64-windows; export RAGEL=/c/vcpkg/packages/ragel_x64-windows/tools/ragel.exe; $RAGEL -v"
           }
     steps:
-      - name: Check out repository and submodules
+      - name: Check out repository
         uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - name: Fetch submodule tags
+      - name: Fetch submodule tags and contents
         run: |
           git submodule foreach --recursive 'git fetch --tags'
+          git submodule update --init --recursive
       - name: Get Rack-SDK
         run: |
           pushd $HOME
