@@ -102,13 +102,23 @@ void presetImportExportClipboardOperation(LibAVR32Module* module, Operation oper
         // Tabs in pattern/grid sections may have been turned into spaces. Turn them back
         auto patStart = rawclip.find("#P");
         auto gridStart = rawclip.find("#G");
-        auto start = std::min(patStart, gridStart);
-        std::regex r(" +");
-        std::string tab("\t");
-        std::string result = rawclip.substr(0, start);
-        std::regex_replace(std::back_inserter(result), rawclip.begin() + start, rawclip.end(), r, tab);
+        if (patStart != std::string::npos || gridStart != std::string::npos) {
+            auto start = patStart == std::string::npos ?
+                            gridStart :
+                            gridStart == std::string::npos ?
+                                patStart :
+                                std::min(patStart, gridStart);
+            std::regex r(" +");
+            std::string tab("\t");
+            std::string result = rawclip.substr(0, start);
+            std::regex_replace(std::back_inserter(result), rawclip.begin() + start, rawclip.end(), r, tab);
+            rawclip = result;
+        }
 
-        std::stringstream clip(result);
+        // Add a final newline, since a selection in discord/browser probably won't include it
+        rawclip += "\n";
+
+        std::stringstream clip(rawclip);
 
         tt_deserializer_t stream {
             .read_char = [](void* user_data)
