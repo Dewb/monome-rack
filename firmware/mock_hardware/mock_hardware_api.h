@@ -52,3 +52,4 @@ MOCK_API(void, deserializePreset, (tt_deserializer_t* stream, uint8_t preset_num
 
 MOCK_API(void, afterVRAMUpdate, ());
 MOCK_API(void, getVersion, (char* buffer));
+MOCK_API(double, getClockPeriod, ());

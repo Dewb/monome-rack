@@ -30,3 +30,8 @@ void hardware_getVersion(char* buffer)
 {
     strcpy(buffer, git_version);
 }
+
+double hardware_getClockPeriod()
+{
+    return 0.001;
+}

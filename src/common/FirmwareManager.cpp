@@ -68,8 +68,8 @@ struct FirmwareManagerImpl
 #define MOCK_API DECLARE_PROC
 #include "mock_hardware_api.h"
 
-    float clockPeriod;
-    float clockPhase;
+    double clockPeriod;
+    double clockPhase;
 
     std::string tempLibraryFolder;
     std::string tempLibraryFile;
@@ -207,6 +207,9 @@ struct FirmwareManagerImpl
 #endif
 #define MOCK_API GET_PROC_ADDRESS
 #include "mock_hardware_api.h"
+
+        // cache this so we don't have to call it constantly
+        clockPeriod = fw_fn_hardware_getClockPeriod();
 
         return true;
     }
@@ -482,5 +485,17 @@ void FirmwareManager::getVersion(char* buffer)
     if (impl)
     {
         return impl->fw_fn_hardware_getVersion(buffer);
+    }
+}
+
+double FirmwareManager::getClockPeriod()
+{
+    if (impl)
+    {
+        return impl->fw_fn_hardware_getClockPeriod();
+    }
+    else
+    {
+        return 0.001;
     }
 }
