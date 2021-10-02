@@ -345,6 +345,7 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
             {
                 std::remove(devices.begin(), devices.end(), *deviceIterator);
                 delete *deviceIterator;
+                devices.erase(deviceIterator);
 
                 listener->deviceRemoved(id);
 
