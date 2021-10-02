@@ -977,14 +977,3 @@ void monome_setup_mext() {
   set_funcs();
   monome_connect_write_event();
 }
-
-void mock_setup_ftdi_funcs()
-{
-    serial_read = &ftdi_read;
-    serial_write = &ftdi_write;
-    tx_busy = &ftdi_tx_busy;
-    rx_busy = &ftdi_rx_busy;
-    rx_buf = &ftdi_rx_buf;
-    rx_bytes = &ftdi_rx_bytes;
-    serial_connected = &ftdi_connected;
-}

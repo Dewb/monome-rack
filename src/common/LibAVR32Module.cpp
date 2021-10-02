@@ -23,7 +23,7 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
 {
     if (gridConnection != nullptr)
     {
-        firmware.serialConnectionChange(FTDI_BUS, false, 0, 0, 0);
+        firmware.serialConnectionChange(false, 0, 0, 0);
     }
 
     gridConnection = newConnection;
@@ -33,23 +33,63 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         lastConnectedDeviceId = id;
 
         auto d = gridConnection->getDevice();
-        firmware.serialConnectionChange(FTDI_BUS, true, d.protocol, d.width, d.height);
+        firmware.serialConnectionChange(true, d.protocol, d.width, d.height);
     }
 }
 
 void LibAVR32Module::gridDisconnected()
 {
     gridConnection = nullptr;
-    firmware.serialConnectionChange(FTDI_BUS, false, 0, 0, 0);
+    firmware.serialConnectionChange(false, 0, 0, 0);
 }
 
 void LibAVR32Module::gridButtonEvent(int x, int y, bool state)
 {
-    uint8_t msg[6] = { 0xF0, 0, 0, 0 };
-    msg[1] = (uint8_t)x;
-    msg[2] = (uint8_t)y;
-    msg[3] = state ? 1 : 0;
-    firmware.writeSerial(FTDI_BUS, msg, 4);
+    // send grid press as serial event
+    if (gridConnection)
+    {
+        switch (gridConnection->getDevice().protocol)
+        {
+            case PROTOCOL_40H:
+                {
+                    uint8_t msg[2] = {
+                        (uint8_t)(state ? 0x01 : 0x00),
+                        (uint8_t)(((0x0F & x) << 4) | (0x0F & y))
+                     };
+                    firmware.writeSerial(msg, 2);
+                }
+                break;
+
+            case PROTOCOL_SERIES:
+                {
+                    uint8_t msg[2] = {
+                        (uint8_t)(state ? 0x00 : 0x10),
+                        (uint8_t)(((0x0F & x) << 4) | (0x0F & y))
+                    };
+                    firmware.writeSerial(msg, 2);
+                }
+                break;
+
+            case PROTOCOL_MEXT:
+                {
+                    uint8_t msg[3] = {
+                        (uint8_t)(state ? 0x21 : 0x20),
+                        (uint8_t)x,
+                        (uint8_t)y
+                    };
+                    firmware.writeSerial(msg, 3);
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // alternative: send grid press directly to event queue
+    // performance is surprisingly much worse!
+    // uint32_t data = (0xF & x) | ((0xF & y) << 8) | ((state ? 0 : 1) << 16);
+    // firmware.postEvent(16 /* kEventMonomeGridKey */, data);
 }
 
 std::string LibAVR32Module::gridGetLastDeviceId()
@@ -60,24 +100,32 @@ std::string LibAVR32Module::gridGetLastDeviceId()
 void LibAVR32Module::readSerialMessages()
 {
     uint8_t* msg;
-    uint32_t count;
-    firmware.readSerial(FTDI_BUS, &msg, &count);
-    while (msg)
+    uint8_t count;
+
+    if (firmware.readSerial(&msg, &count) > 0)
     {
-        if ((msg[0] & 0xF0) == 0x70 && count >= 2)
+        if ((msg[0] & 0xF0) == 0x70)
         {
-            // 40h protocol row update
-            uint8_t y = msg[0] & 0x0F;
-            uint8_t bitfield = msg[1];
-            if (gridConnection)
+            while ((msg[0] & 0xF0) == 0x70 && count >= 2)
             {
-                gridConnection->updateRow(0, y, bitfield);
-            }
-            if (count > 2) // there are more 0x7x two-byte commands in this serial message
-            {
-                msg += 2;
-                count -= 2;
-                continue;
+                // 40h protocol row update
+                uint8_t y = msg[0] & 0x0F;
+                uint8_t bitfield = msg[1];
+
+                if (gridConnection)
+                {
+                    gridConnection->updateRow(0, y, bitfield);
+                }
+
+                if (count > 2) // there are more 0x7x two-byte commands in this serial message
+                {
+                    msg += 2;
+                    count -= 2;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
         else if (msg[0] == 0x1A && count >= 35)
@@ -97,7 +145,7 @@ void LibAVR32Module::readSerialMessages()
                 gridConnection->updateQuadrant(x, y, leds);
             }
         }
-        else if ((msg[0] & 0x80) == 0x80 && count >= 9)
+        else if ((msg[0] & 0xF0) == 0x80 && count >= 9)
         {
             // series protocol quadrant update
             int x = (msg[0] & 0x1) * 8;
@@ -116,12 +164,6 @@ void LibAVR32Module::readSerialMessages()
                 gridConnection->updateQuadrant(x, y, leds);
             }
         }
-        else if (msg[0] == 0x01)
-        {
-            // device info request
-            // ignore, we stuffed the response in the message queue in advance
-        }
-        firmware.readSerial(FTDI_BUS, &msg, &count);
     }
 }
 

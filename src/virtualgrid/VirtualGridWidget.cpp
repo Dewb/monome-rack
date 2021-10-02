@@ -178,7 +178,12 @@ VirtualGridWidget::appendContextMenu(Menu* menu)
     menu->addChild(new GridThemeItem(grid, "\tWhite", GridTheme::White));
     menu->addChild(construct<MenuLabel>());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Protocol"));
-    menu->addChild(new GridProtocolItem(grid, "\t40h", PROTOCOL_40H));
+
+    // 40h only on 8x8
+    if (grid->getDevice().width == 8 && grid->getDevice().height == 8)
+    {
+        menu->addChild(new GridProtocolItem(grid, "\t40h", PROTOCOL_40H));
+    }
     menu->addChild(new GridProtocolItem(grid, "\tSeries", PROTOCOL_SERIES));
     menu->addChild(new GridProtocolItem(grid, "\tMext", PROTOCOL_MEXT));
 

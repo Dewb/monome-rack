@@ -1,14 +1,16 @@
 #include "mock_hardware_api.h"
+#include "mock_serial.h"
+#include "mock_interrupt.h"
+
 #include "events.h"
 #include "hid.h"
-#include "monome.h"
-#include "timers.h"
+
+#include "cbbq.h"
+//#include "test/cbbq_utils.h"
+
 #include <stdio.h>
 #include <string.h>
 
-#define B08 40
-#define B09 41
-#define NMI 13
 
 #define GPIO_NUM_PINS 50
 bool gpioBlock[GPIO_NUM_PINS];
@@ -16,18 +18,11 @@ bool gpioBlock[GPIO_NUM_PINS];
 uint16_t adcBlock[4];
 uint16_t dacBlock[4];
 
-#define VSERIAL_BUFFER_SIZE 128
-#define VSERIAL_MAX_MESSAGES 32
+#define VSERIAL_IN_BUFFER_SIZE 512
+#define VSERIAL_OUT_BUFFER_SIZE 512
 
-uint8_t* vserial_out_buffer = NULL;
-int vserial_out_read_index = 0;
-int vserial_out_write_index = 0;
-uint32_t vserial_out_message_size[VSERIAL_MAX_MESSAGES];
-
-uint8_t* vserial_in_buffer = NULL;
-int vserial_in_read_index = 0;
-int vserial_in_write_index = 0;
-uint32_t vserial_in_message_size[VSERIAL_MAX_MESSAGES];
+cbbq serial_in_queue;
+cbbq serial_out_queue;
 
 void* nvram_ptr = NULL;
 void* vram_ptr = NULL;
@@ -38,156 +33,14 @@ uint8_t* screenBuffer = NULL;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-// module main interface points
+// main interface points to module code -- the two halves of main() in the original source
 extern void initialize_module(void);
 extern void check_events(void);
 
-extern void mock_setup_ftdi_funcs();
+// this *could* be simulated as an event, but key press/hold has already been calculated in glfw,
+// and getting module timing assumptions right is tricky, so just let's just skip to the handler
 extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
 
-volatile u64 tcTicks = 0;
-volatile u8 tcOverflow = 0;
-static const u64 tcMax = (U64)0x7fffffff;
-static const u64 tcMaxInv = (u64)0x10000000;
-
-u64 get_ticks(void)
-{
-    return tcTicks;
-}
-
-void simulate_tc_interrupt()
-{
-    tcTicks++;
-    // overflow control
-    if (tcTicks > tcMax)
-    {
-        tcTicks = 0;
-        tcOverflow = 1;
-    }
-    else
-    {
-        tcOverflow = 0;
-    }
-    process_timers();
-}
-
-void simulate_clock_normal_interrupt()
-{
-    static event_t e;
-    e.type = kEventClockNormal;
-    e.data = !hardware_getGPIO(B09);
-    event_post(&e);
-}
-
-void simulate_external_clock_interrupt()
-{
-    static event_t e;
-    e.type = kEventClockExt;
-    e.data = hardware_getGPIO(B08);
-    event_post(&e);
-}
-
-void simulate_front_button_interrupt()
-{
-    static event_t e;
-    e.type = kEventFront;
-    e.data = hardware_getGPIO(NMI);
-    event_post(&e);
-}
-
-void simulate_ansible_key_interrupt(int pin, int offset)
-{
-    static event_t e;
-    e.type = kEventKey;
-    e.data = hardware_getGPIO(pin) + offset;
-    event_post(&e);
-}
-
-void simulate_trigger_interrupt(int pin)
-{
-    static event_t e;
-    e.type = kEventTrigger;
-    e.data = pin;
-    event_post(&e);
-}
-
-void simulate_ansible_tr_interrupt(int pin, int offset)
-{
-    static event_t e;
-    e.type = kEventTr;
-    e.data = hardware_getGPIO(pin) + offset;
-    event_post(&e);
-}
-
-extern void set_funcs();
-
-// protocol enumeration
-typedef enum
-{
-    eProtocol40h, /// 40h and arduinome protocol (pre-2007)
-    eProtocolSeries, /// series protocol (2007-2011)
-    eProtocolMext, /// extended protocol (2011 - ? ), arcs + grids
-    eProtocolNumProtocols // dummy and count
-} eMonomeProtocol;
-
-// device descriptor
-typedef struct e_monomeDesc
-{
-    eMonomeProtocol protocol;
-    eMonomeDevice device;
-    u8 cols; // number of columns
-    u8 rows; // number of rows
-    u8 encs; // number of encoders
-    u8 tilt; // has tilt (??)
-    u8 vari; // is variable brightness, true/false
-} monomeDesc;
-
-extern monomeDesc mdesc;
-
-static void simulate_monome_setup(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
-{
-    if (connected)
-    {
-        // fill out the global mdesc structure
-        mdesc.protocol = (eMonomeProtocol)protocol;
-        mdesc.vari = mdesc.protocol == eProtocolMext;
-        mdesc.device = eDeviceGrid;
-        mdesc.rows = height;
-        mdesc.cols = width;
-        mdesc.tilt = 1;
-
-        // set device-specific event handlers based on the global mdesc
-        set_funcs();
-        mock_setup_ftdi_funcs();
-
-        // push a connection event
-        static event_t ev;
-        ev.type = kEventMonomeConnect;
-        u8* data = (u8*)(&(ev.data));
-        *data++ = (u8)(mdesc.device);
-        *data++ = mdesc.cols;
-        *data++ = mdesc.rows;
-        event_post(&ev);
-    }
-    else
-    {
-        // push a disconnect event
-        static event_t ev;
-        ev.type = kEventMonomeDisconnect;
-        event_post(&ev);
-    }
-}
-
-void simulate_monome_key(uint8_t x, uint8_t y, uint8_t val)
-{
-    static event_t ev;
-    uint8_t* data = (uint8_t*)(&(ev.data));
-    data[0] = x;
-    data[1] = y;
-    data[2] = val;
-    ev.type = kEventMonomeGridKey;
-    event_post(&ev);
-}
 
 void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
 {
@@ -196,21 +49,27 @@ void hardware_hidMessage(uint8_t key, uint8_t mod, bool held, bool release)
 
 void hardware_hidConnect()
 {
-    static event_t ev;
+    event_t ev;
     ev.type = kEventHidConnect;
     event_post(&ev);
 }
 
 void hardware_hidDisconnect()
 {
-    static event_t ev;
+    event_t ev;
     ev.type = kEventHidDisconnect;
     event_post(&ev);
 }
 
+void initialize_serial()
+{
+    queue_init(&serial_in_queue, VSERIAL_IN_BUFFER_SIZE);
+    queue_init(&serial_out_queue, VSERIAL_OUT_BUFFER_SIZE);
+}
+
 void hardware_init()
 {
-    hardware_initSerial();
+    initialize_serial();
     initialize_module();
 }
 
@@ -219,53 +78,12 @@ void hardware_step()
     uint8_t* msg;
     uint32_t count;
 
-    hardware_resetSerialOut();
-
     check_events();
-
-    hardware_readSerial_internal(FTDI_BUS, &msg, &count);
-    while (msg)
-    {
-        if (msg[0] == 0xF0 && count >= 4)
-        {
-            simulate_monome_key(msg[1], msg[2], msg[3]);
-        }
-        hardware_readSerial_internal(FTDI_BUS, &msg, &count);
-    }
-
-    hardware_resetSerialIn();
 }
 
 void hardware_triggerInterrupt(int interrupt)
 {
-    switch (interrupt)
-    {
-        // todo: make an enum for this
-        case 0: // system clock
-            simulate_tc_interrupt();
-            break;
-        case 1: // clock jack normal
-            simulate_clock_normal_interrupt();
-            break;
-        case 2: // external clock rising edge
-            simulate_external_clock_interrupt();
-            break;
-        case 3: // front button pressed
-            simulate_front_button_interrupt();
-            break;
-        case 4: // panel key1 pressed
-            simulate_ansible_key_interrupt(38, 0);
-            break;
-        case 5: // panel key2 pressed
-            simulate_ansible_key_interrupt(39, 2);
-            break;
-        case 6: // input 1 change
-            simulate_ansible_tr_interrupt(40, 0);
-            break;
-        case 7: // input 2 change
-            simulate_ansible_tr_interrupt(41, 2);
-            break;
-    }
+    mock_interrupt(interrupt);
 }
 
 bool hardware_getGPIO(uint32_t pin)
@@ -293,7 +111,7 @@ void hardware_setGPIO(uint32_t pin, bool value)
         // Trigger interrupt only on rising edge
         if (changed && value)
         {
-            simulate_trigger_interrupt(pin);
+            mock_gpio_interrupt(pin);
         }
     }
 }
@@ -318,104 +136,49 @@ void hardware_setDAC(int channel, uint16_t value)
     dacBlock[channel] = value;
 }
 
-void hardware_initSerial()
+void hardware_postEvent(uint32_t type, uint32_t data)
 {
-    if (vserial_in_buffer == NULL)
-    {
-        vserial_in_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
-    }
-
-    if (vserial_out_buffer == NULL)
-    {
-        vserial_out_buffer = (uint8_t*)malloc(VSERIAL_BUFFER_SIZE * VSERIAL_MAX_MESSAGES * sizeof(uint8_t));
-    }
-
-    hardware_resetSerialIn();
-    hardware_resetSerialOut();
+    event_t e;
+    e.type = type;
+    e.data = data;
+    event_post(&e);
 }
 
-void hardware_resetSerialIn()
+void hardware_serialConnectionChange(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
 {
-    vserial_in_read_index = 0;
-    vserial_in_write_index = 0;
+    mock_monome_serial_setup(connected, protocol, width, height);
 }
 
-void hardware_resetSerialOut()
+int hardware_readSerial(uint8_t** pbuf, uint8_t* pcount)
 {
-    vserial_out_read_index = 0;
-    vserial_out_write_index = 0;
+    int ret = queue_read(&serial_out_queue, pbuf, pcount);
+    // queue_display(&serial_out_queue);
+    // printf("hardware_readSerial queue_read returned: %d\n", ret);
+    return ret;
 }
 
-void hardware_serialConnectionChange(serial_bus_t bus, bool connected, uint8_t protocol, uint8_t width, uint8_t height)
+int hardware_writeSerial_internal(uint8_t* buf, uint8_t byteCount)
 {
-    if (bus == FTDI_BUS)
-    {
-        simulate_monome_setup(connected, protocol, width, height);
-    }
-    else if (bus == HID_BUS)
-    {
-    }
+    int ret = queue_write(&serial_out_queue, buf, byteCount);
+    // queue_display(&serial_out_queue);
+    // printf("hardware_writeSerial_internal queue_write returned: %d\n", ret);
+    return ret;
 }
 
-void hardware_readSerial(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
+int hardware_readSerial_internal(uint8_t** pbuf, uint8_t* pcount)
 {
-    if (vserial_out_read_index >= vserial_out_write_index)
-    {
-        *pbuf = NULL;
-        *pcount = 0;
-    }
-    else
-    {
-
-        *pbuf = vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_read_index;
-        *pcount = vserial_out_message_size[vserial_out_read_index];
-        vserial_out_read_index++;
-    }
+    int ret = queue_read(&serial_in_queue, pbuf, pcount);
+    // queue_display(&serial_in_queue);
+    // printf("hardware_readSerial_internal queue_read returned: %d\n", ret);
+    return ret;
 }
 
-void hardware_writeSerial_internal(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
+int hardware_writeSerial(uint8_t* buf, uint8_t byteCount)
 {
-    if (vserial_out_buffer && vserial_out_write_index < VSERIAL_MAX_MESSAGES)
-    {
-        uint8_t* dest = vserial_out_buffer + VSERIAL_BUFFER_SIZE * vserial_out_write_index;
-        memcpy(dest, buf, byteCount <= VSERIAL_BUFFER_SIZE ? byteCount : VSERIAL_BUFFER_SIZE);
-        vserial_out_message_size[vserial_out_write_index] = byteCount;
-        vserial_out_write_index++;
-    }
-    else
-    {
-        //fprintf(stderr, "Cannot write to outgoing serial line, buffer full.\n");
-    }
-}
-
-void hardware_readSerial_internal(serial_bus_t bus, uint8_t** pbuf, uint32_t* pcount)
-{
-    if (vserial_in_read_index >= vserial_in_write_index)
-    {
-        *pbuf = NULL;
-        *pcount = 0;
-    }
-    else
-    {
-        *pbuf = vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_read_index;
-        *pcount = vserial_in_message_size[vserial_in_read_index];
-        vserial_in_read_index++;
-    }
-}
-
-void hardware_writeSerial(serial_bus_t bus, uint8_t* buf, uint32_t byteCount)
-{
-    if (vserial_in_buffer && vserial_in_write_index < VSERIAL_MAX_MESSAGES)
-    {
-        uint8_t* dest = vserial_in_buffer + VSERIAL_BUFFER_SIZE * vserial_in_write_index;
-        memcpy(dest, buf, byteCount <= VSERIAL_BUFFER_SIZE ? byteCount : VSERIAL_BUFFER_SIZE);
-        vserial_in_message_size[vserial_in_write_index] = byteCount;
-        vserial_in_write_index++;
-    }
-    else
-    {
-        //fprintf(stderr, "Cannot write to incoming serial line, buffer full.\n");
-    }
+    int ret = queue_write(&serial_in_queue, buf, byteCount);
+    // queue_display(&serial_in_queue);
+    // printf("hardware_writeSerial queue_write returned: %d\n", ret);
+    return ret;
 }
 
 void hardware_declareNVRAM(void* ptr, uint32_t size)

@@ -55,9 +55,9 @@ THE SOFTWARE.
 #define ASSERT(expr) assert(expr);
 
 #define CHECK_INVARIANTS(q) \
-    ASSERT(q->read < q->watermark || q->watermark == 0); \
+    ASSERT(q->read <= q->watermark); \
     ASSERT(q->write <= q->watermark); \
-    ASSERT(q->read < q->size); \
+    ASSERT(q->read <= q->size); \
     ASSERT(q->write <= q->size); \
     ASSERT(q->watermark <= q->size); 
 #else
@@ -177,14 +177,24 @@ queue_read(cbbq* q, uint8_t** read_bytes, uint8_t* read_length)
 {
     CHECK_INVARIANTS(q)
 
-    // reads stop either at the write pointer or the watermark pointer, 
-    // depending on whether or not we're in the flipped state
-    uint8_t end = q->read > q->write ? q->watermark : q->write;
-
     // are there messages left to read?
-    if (q->read >= end) 
+    if (q->read == q->write)
     {
+        if (read_bytes)
+        {
+            *read_bytes = NULL;
+        }
+        if (read_length)
+        {
+            *read_length = 0;
+        }
         return NoMessagesAvailable;
+    }
+
+    // if we are flipped and the read pointer reaches the watermark, next read starts at 0
+    if (q->read > q->write && q->read >= q->watermark)
+    {
+        q->read = 0;
     }
 
     // get the message length from the buffer
@@ -204,12 +214,6 @@ queue_read(cbbq* q, uint8_t** read_bytes, uint8_t* read_length)
 
     // move the read pointer to the next message
     q->read = (q->read + msg_length + 1);
-
-    // if the read pointer reaches the watermark, next read starts at 0
-    if (q->read >= q->watermark)
-    {
-        q->read = 0;
-    }
 
     return Success;
 }
