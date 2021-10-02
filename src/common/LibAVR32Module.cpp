@@ -37,10 +37,14 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
     }
 }
 
-void LibAVR32Module::gridDisconnected()
+void LibAVR32Module::gridDisconnected(bool ownerChanged)
 {
     gridConnection = nullptr;
     firmware.serialConnectionChange(false, 0, 0, 0);
+    if (ownerChanged)
+    {
+        lastConnectedDeviceId = "";
+    }
 }
 
 void LibAVR32Module::gridButtonEvent(int x, int y, bool state)

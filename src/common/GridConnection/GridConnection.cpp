@@ -74,8 +74,8 @@ void GridConnectionManager::deregisterGridConsumer(GridConsumer* consumer)
 
 void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
 {
-    disconnect(consumer);
-    disconnect(grid);
+    disconnect(consumer, true);
+    disconnect(grid, true);
 
     consumerToGridMap[consumer] = grid;
     idToConsumerMap[grid->getDevice().id] = consumer;
@@ -92,7 +92,7 @@ bool GridConnectionManager::isConnected(std::string id)
     return idToConsumerMap.find(id) != idToConsumerMap.end();
 }
 
-void GridConnectionManager::disconnect(Grid* grid)
+void GridConnectionManager::disconnect(Grid* grid, bool ownerChanged)
 {
     if (grid)
     {
@@ -101,14 +101,14 @@ void GridConnectionManager::disconnect(Grid* grid)
         if (iter != idToConsumerMap.end())
         {
             GridConsumer* consumer = iter->second;
-            consumer->gridDisconnected();
+            consumer->gridDisconnected(ownerChanged);
             idToConsumerMap.erase(grid->getDevice().id);
             consumerToGridMap.erase(consumer);
         }
     }
 }
 
-void GridConnectionManager::disconnect(GridConsumer* consumer)
+void GridConnectionManager::disconnect(GridConsumer* consumer, bool ownerChanged)
 {
     if (consumer)
     {
@@ -119,7 +119,7 @@ void GridConnectionManager::disconnect(GridConsumer* consumer)
             if (grid)
             {
                 grid->clearAll();
-                consumer->gridDisconnected();
+                consumer->gridDisconnected(ownerChanged);
                 consumerToGridMap.erase(consumer);
                 idToConsumerMap.erase(grid->getDevice().id);
             }

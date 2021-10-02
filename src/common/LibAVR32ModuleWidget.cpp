@@ -14,7 +14,7 @@ struct ConnectGridItem : rack::ui::MenuItem
     {
         if (module && module->gridConnection == grid)
         {
-            GridConnectionManager::get()->disconnect(module);
+            GridConnectionManager::get()->disconnect(module, true);
         }
         else
         {

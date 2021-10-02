@@ -45,7 +45,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     // GridConsumer methods
     void gridConnected(Grid* grid) override;
-    void gridDisconnected() override;
+    void gridDisconnected(bool ownerChanged) override;
     void gridButtonEvent(int x, int y, bool state) override;
     std::string gridGetLastDeviceId() override;
 

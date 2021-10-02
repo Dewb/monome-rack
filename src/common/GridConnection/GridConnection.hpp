@@ -19,7 +19,7 @@ struct Grid
 struct GridConsumer
 {
     virtual void gridConnected(Grid* grid) = 0;
-    virtual void gridDisconnected() = 0;
+    virtual void gridDisconnected(bool ownerChanged) = 0;
     virtual std::string gridGetLastDeviceId() = 0;
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
 };
@@ -34,8 +34,8 @@ struct GridConnectionManager final
     void connect(Grid* grid, GridConsumer* consumer);
     bool isConnected(GridConsumer* consumer);
     bool isConnected(std::string id);
-    void disconnect(Grid* grid);
-    void disconnect(GridConsumer* consumer);
+    void disconnect(Grid* grid, bool ownerChanged = false);
+    void disconnect(GridConsumer* consumer, bool ownerChanged = false);
 
     void dispatchButtonMessage(MonomeDevice* device, int x, int y, bool state);
 
