@@ -38,6 +38,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
+      - name: Fetch submodule tags
+       run: |
+          git submodule foreach --recursive 'git fetch --tags'
       - name: Get Rack-SDK
         run: |
           pushd $HOME
