@@ -42,17 +42,17 @@ TARGETNAME = ../res/firmware/earthsea
 
 include $(RACK_DIR)/arch.mk
 
-ifeq ($(ARCH), lin)
+ifeq ($(ARCH_LIN), 1)
 	LDFLAGS += -shared
 	TARGET = $(TARGETNAME).so
 endif
 
-ifeq ($(ARCH), mac)
+ifeq ($(ARCH_MAC), 1)
 	LDFLAGS += -shared -undefined dynamic_lookup
 	TARGET = $(TARGETNAME).dylib
 endif
 
-ifeq ($(ARCH), win)
+ifeq ($(ARCH_WIN), 1)
 	LDFLAGS += -shared 
 	TARGET = $(TARGETNAME).dll
 endif

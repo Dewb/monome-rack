@@ -6,10 +6,15 @@ EarthseaModule::EarthseaModule()
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
-    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
-    configParam(CV1_PARAM, 0.0, 10.0, 5.0, "CV 1");
-    configParam(CV2_PARAM, 0.0, 10.0, 5.0, "CV 2");
-    configParam(CV3_PARAM, 0.0, 10.0, 5.0, "CV 3");
+    configButton(BUTTON_PARAM, "PRESET");
+    configParam(CV1_PARAM, 0, 10.0, 5.0, "SHAPE 1", "V");
+    configParam(CV2_PARAM, 0, 10.0, 5.0, "SHAPE 2", "V");
+    configParam(CV3_PARAM, 0, 10.0, 5.0, "SHAPE 3", "V");
+    configOutput(CV1_OUTPUT, "SHAPE 1");
+    configOutput(CV2_OUTPUT, "SHAPE 2");
+    configOutput(CV3_OUTPUT, "SHAPE 3");
+    configOutput(EDGE_OUTPUT, "EDGE");
+    configOutput(POS_OUTPUT, "POS");
 }
 
 void EarthseaModule::processInputs(const ProcessArgs& args)

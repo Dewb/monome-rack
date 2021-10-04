@@ -29,28 +29,28 @@ void init(Plugin* p)
     Model* modelEarthsea = createModel<EarthseaModule, EarthseaWidget>("earthsea");
 
     Model* modelTeletype = createModel<TeletypeModule, TeletypeWidget>("teletype");
-    Model* modelTeletypeExpander = createModel<TTExpanderModule, TTExpanderWidget>("teletype-expander");
+    // Model* modelTeletypeExpander = createModel<TTExpanderModule, TTExpanderWidget>("teletype-expander");
     Model* modelAnsible = createModel<AnsibleModule, AnsibleWidget>("ansible");
 
     Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8>, VirtualGridWidgetTemplate<16, 8>>("grid128");
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8>, VirtualGridWidgetTemplate<8, 8>>("grid64");
     Model* modelGrid256 = createModel<VirtualGridModuleTemplate<16, 16>, VirtualGridWidgetTemplate<16, 16>>("grid256");
 
-    Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
+    // Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
 
     p->addModel(modelWhiteWhale);
     p->addModel(modelMeadowphysics);
     p->addModel(modelEarthsea);
     
     p->addModel(modelTeletype);
-    p->addModel(modelTeletypeExpander);
+    // p->addModel(modelTeletypeExpander);
     p->addModel(modelAnsible);
 
     p->addModel(modelGrid128);
     p->addModel(modelGrid64);
     p->addModel(modelGrid256);
 
-    p->addModel(modelFaderbank);
+    // p->addModel(modelFaderbank);
 
     // initialize SerialOsc
     SerialOscInterface::get()->driver->getDeviceCount();

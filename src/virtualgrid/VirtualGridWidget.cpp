@@ -2,7 +2,6 @@
 #include "VirtualGridKey.hpp"
 #include "VirtualGridTheme.hpp"
 #include "VirtualGridModule.hpp"
-#include "window.hpp"
 
 
 using namespace rack;
@@ -82,11 +81,11 @@ void VirtualGridWidget::draw(const DrawArgs& args)
 
 void VirtualGridWidget::clearHeldKeys()
 {
-    for (auto p : params)
+    for (auto p : getParams())
     {
-        if (p->paramQuantity)
+        if (p->getParamQuantity())
         {
-            p->paramQuantity->setValue(VirtualGridKey::OFF);
+            p->getParamQuantity()->setValue(VirtualGridKey::OFF);
         }
     }
 }

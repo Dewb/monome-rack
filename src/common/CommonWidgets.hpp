@@ -9,11 +9,6 @@ struct USBAJack : TransparentWidget
     void draw(const DrawArgs& args) override;
 };
 
-struct MonomeKnob : rack::componentlibrary::RoundKnob
-{
-    MonomeKnob();
-};
-
 struct YellowWhiteLight : rack::componentlibrary::GrayModuleLightWidget
 {
     YellowWhiteLight() {

@@ -3,9 +3,19 @@
 TTExpanderModule::TTExpanderModule()
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(KEY1_PARAM, 0.0, 1.0, 0.0, "Key 1");
-    configParam(KEY2_PARAM, 0.0, 1.0, 0.0, "Key 2");
-    // configParam(MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
+    configButton(KEY1_PARAM, "KEY 1");
+    configButton(KEY2_PARAM, "KEY 2");
+    // configButton(MODE_PARAM, "MODE");
+    configInput(IN1_INPUT, "IN 1");
+    configInput(IN2_INPUT, "IN 2");
+    configOutput(TR1_OUTPUT, "TR 1");
+    configOutput(TR2_OUTPUT, "TR 2");
+    configOutput(TR3_OUTPUT, "TR 3");
+    configOutput(TR4_OUTPUT, "TR 4");
+    configOutput(CV1_OUTPUT, "CV 1");
+    configOutput(CV2_OUTPUT, "CV 2");
+    configOutput(CV3_OUTPUT, "CV 3");
+    configOutput(CV4_OUTPUT, "CV 4");
 }
 
 void TTExpanderModule::process(const ProcessArgs& args)

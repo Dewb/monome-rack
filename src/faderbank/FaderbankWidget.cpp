@@ -9,19 +9,19 @@ struct FaderbankSlider : app::SvgSlider
 {
     FaderbankSlider()
     {
-        maxHandlePos = app::mm2px(math::Vec(0.738, 2.738).plus(math::Vec(3.5, 0)));
-        minHandlePos = app::mm2px(math::Vec(0.738, 88.078).plus(math::Vec(3.5, 0)));
+        maxHandlePos = rack::window::mm2px(math::Vec(0.738, 2.8).plus(math::Vec(3.5, 0)));
+        minHandlePos = rack::window::mm2px(math::Vec(0.738, 88.3).plus(math::Vec(3.5, 0)));
         setBackgroundSvg(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/Fader.svg")));
+        setHandleSvg(APP->window->loadSvg(asset::system("res/ComponentLibrary/LEDSliderHandle.svg")));
+        box.grow(math::Vec(3, 1));
     }
 };
 
-struct FaderbankSliderYellow : FaderbankSlider
+struct FaderbankSliderYellow : LightSlider<FaderbankSlider, LEDSliderLight<YellowLight>>
 {
-    FaderbankSliderYellow()
-    {
-        setHandleSvg(APP->window->loadSvg(asset::system("res/ComponentLibrary/LEDSliderYellowHandle.svg")));
-    }
+    FaderbankSliderYellow() { }
 };
+
 
 FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 {
@@ -35,7 +35,7 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 
     for (int i = 0; i < NUM_FADERS; i++)
     {
-        addOutput(createOutput<PJ301MPort>(Vec(25 + 43 * i, 26), module, i));
+        addOutput(createOutput<PJ301MPort>(Vec(26 + 43 * i, 26), module, i));
         addParam(createParam<FaderbankSliderYellow>(Vec(23 + 43 * i, 66), module, i));
     }
 }

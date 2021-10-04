@@ -31,8 +31,12 @@ struct VirtualGridKey : rack::app::ParamWidget
         ledAddress = ledByte;
     }
 
-    void draw(const DrawArgs& args) override
+    void drawLayer(const DrawArgs& args, int layer) override
     {
+        if (layer != 1) {
+            return;
+        }
+
         auto vg = args.vg;
         uint8_t val = ledAddress != NULL ? *ledAddress : 0;
         auto rect = box.size;
@@ -49,7 +53,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             &color2
         );
 
-        if (paramQuantity && paramQuantity->getValue() == HELD)
+        if (getParamQuantity() && getParamQuantity()->getValue() == HELD)
         {
             nvgBeginPath(vg);
             nvgRoundedRect(vg, x - 3, x - 3, rect.x + 6, rect.y + 6, 6);
@@ -73,29 +77,29 @@ struct VirtualGridKey : rack::app::ParamWidget
 
     void beginPress()
     {
-        if (paramQuantity)
+        if (getParamQuantity())
         {
-            float value = paramQuantity->getValue();
+            float value = getParamQuantity()->getValue();
 
             if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL && value != HELD)
             {
                 // hold key down
-                paramQuantity->setValue(HELD);
+                getParamQuantity()->setValue(HELD);
             }
             else
             {
-                paramQuantity->setValue(PRESSED);
+                getParamQuantity()->setValue(PRESSED);
             }
         }
     }
 
     void endPress()
     {
-        if (paramQuantity)
+        if (getParamQuantity())
         {
-            if (paramQuantity->getValue() != HELD)
+            if (getParamQuantity()->getValue() != HELD)
             {
-                paramQuantity->setValue(OFF);
+                getParamQuantity()->setValue(OFF);
             }
         }
     }

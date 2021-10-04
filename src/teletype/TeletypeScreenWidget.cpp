@@ -186,60 +186,74 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
     e.consume(this);
 }
 
-void TeletypeScreenWidget::draw(NVGcontext* vg)
+void TeletypeScreenWidget::draw(const DrawArgs& args)
 {
+    drawLayer(args, 0);
+}
+
+void TeletypeScreenWidget::drawLayer(const DrawArgs& args, int layer)
+{
+    auto vg = args.vg;
+    
     int margin = 5;
 
     float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
     float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
 
-    if (this == APP->event->selectedWidget)
+    if (layer == 0)
     {
-        // draw keyboard focus highlight rectangle
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
-        nvgStrokeColor(vg, nvgRGB(190, 180, 0));
-        nvgStrokeWidth(vg, 3.5);
-        nvgStroke(vg);
-        nvgFillColor(vg, nvgRGB(190, 180, 0));
-        nvgFill(vg);
-    } else {
-        // draw skeumorphic shadow around screen
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, box.size.x - 1, -1, 2, box.size.y + 2, 2.5);
-        nvgFillColor(vg, nvgRGB(250, 250, 240));
-        nvgFill(vg);
+        if (this == APP->event->selectedWidget)
+        {
+            // draw keyboard focus highlight rectangle
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
+            nvgStrokeColor(vg, nvgRGB(190, 180, 0));
+            nvgStrokeWidth(vg, 3.5);
+            nvgStroke(vg);
+            nvgFillColor(vg, nvgRGB(190, 180, 0));
+            nvgFill(vg);
+        } else {
+            // draw skeumorphic shadow around screen
+            float t = 0.95;
+            float r = 2.75;
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
+            nvgFillColor(vg, nvgRGB(250, 250, 240));
+            nvgFill(vg);
 
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, -1, -1, box.size.x + 2, 2, 2.5);
-        nvgRoundedRect(vg, -1, -1, 2, box.size.y + 1, 2.5);
-        nvgFillColor(vg, nvgRGB(140, 140, 130));
-        nvgFill(vg);
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
+            nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
+            nvgFillColor(vg, nvgRGB(140, 140, 130));
+            nvgFill(vg);
 
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
+            nvgFillColor(vg, nvgRGB(250, 250, 240));
+            nvgFill(vg);
+        }
+
+        // the screen itself
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, -1, box.size.y - 1, box.size.x + 2, 2, 2.5);
-        nvgFillColor(vg, nvgRGB(250, 250, 240));
+        nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
+        nvgFillColor(vg, nvgRGB(0, 0, 0));
         nvgFill(vg);
     }
-
-    // the screen itself
-    nvgBeginPath(vg);
-    nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
-    nvgFillColor(vg, nvgRGB(0, 0, 0));
-    nvgFill(vg);
-
-    // now draw the pixels
-    if (buffer)
+    else if (layer == 1)
     {
-        uint8_t* ptr = buffer;
-        for (int j = 0; j < pixel_y; j++)
+        // now draw the pixels
+        if (buffer)
         {
-            for (int i = 0; i < pixel_x; i++)
+            uint8_t* ptr = buffer;
+            for (int j = 0; j < pixel_y; j++)
             {
-                float x = margin + i * pixel_width;
-                float y = margin + j * pixel_height;
+                for (int i = 0; i < pixel_x; i++)
+                {
+                    float x = margin + i * pixel_width;
+                    float y = margin + j * pixel_height;
 
-                drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
+                    drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
+                }
             }
         }
     }

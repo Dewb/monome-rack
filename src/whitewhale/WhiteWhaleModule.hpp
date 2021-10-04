@@ -21,10 +21,10 @@ struct WhiteWhaleModule : LibAVR32Module
     enum OutputIds
     {
         CLOCK_OUTPUT,
-        TRIG1_OUTPUT,
-        TRIG2_OUTPUT,
-        TRIG3_OUTPUT,
-        TRIG4_OUTPUT,
+        TR1_OUTPUT,
+        TR2_OUTPUT,
+        TR3_OUTPUT,
+        TR4_OUTPUT,
         CVA_OUTPUT,
         CVB_OUTPUT,
         NUM_OUTPUTS
@@ -33,10 +33,10 @@ struct WhiteWhaleModule : LibAVR32Module
     enum LightIds
     {
         CLOCK_LIGHT,
-        TRIG1_LIGHT,
-        TRIG2_LIGHT,
-        TRIG3_LIGHT,
-        TRIG4_LIGHT,
+        TR1_LIGHT,
+        TR2_LIGHT,
+        TR3_LIGHT,
+        TR4_LIGHT,
         CVA_LIGHT,
         CVB_LIGHT,
         NUM_LIGHTS

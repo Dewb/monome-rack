@@ -3,7 +3,6 @@
 
 #include "rack.hpp"
 
-using namespace rack;
 
 struct TeletypeModule : LibAVR32Module
 {
@@ -23,15 +22,15 @@ struct TeletypeModule : LibAVR32Module
         TRIG6_INPUT,
         TRIG7_INPUT,
         TRIG8_INPUT,
-        CV_INPUT,
+        IN_INPUT,
         NUM_INPUTS
     };
     enum OutputIds
     {
-        TRIGA_OUTPUT,
-        TRIGB_OUTPUT,
-        TRIGC_OUTPUT,
-        TRIGD_OUTPUT,
+        TR1_OUTPUT,
+        TR2_OUTPUT,
+        TR3_OUTPUT,
+        TR4_OUTPUT,
         CV1_OUTPUT,
         CV2_OUTPUT,
         CV3_OUTPUT,
@@ -40,10 +39,10 @@ struct TeletypeModule : LibAVR32Module
     };
     enum LightIds
     {
-        TRIGA_LIGHT,
-        TRIGB_LIGHT,
-        TRIGC_LIGHT,
-        TRIGD_LIGHT,
+        TR1_LIGHT,
+        TR2_LIGHT,
+        TR3_LIGHT,
+        TR4_LIGHT,
         CV1_LIGHT,
         CV2_LIGHT,
         CV3_LIGHT,
