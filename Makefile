@@ -33,7 +33,7 @@ SOURCES += \
 
 include $(RACK_DIR)/arch.mk
 
-ifeq ($(ARCH), win)
+ifeq ($(ARCH_WIN), 1)
 	SOURCES += $(wildcard lib/oscpack/ip/win32/*.cpp) 
 	LDFLAGS += -lws2_32 -lwinmm
 else

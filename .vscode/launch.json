@@ -9,8 +9,10 @@
             "type": "cppdbg",
             "request": "launch",
             "windows": {
-                "program": "c:\\Program Files\\VCV\\Rack\\Rack.exe",
-                "args": [],
+                "program": "${workspaceFolder}\\..\\Rack\\Rack.exe",
+                "args": [
+                    "-d"
+                ],
                 "MIMode": "gdb",
                 "environment": [
                     
@@ -25,7 +27,7 @@
                 ]
             },
             "osx" : {
-                "program": "/Applications/Rack.app/Contents/MacOS/Rack",
+                "program": "${workspaceFolder}\\..\\Rack\\Rack",
                 "args": [],
                 "MIMode": "lldb",
                 "environment": [
@@ -40,7 +42,7 @@
                 ]
             },
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}\\..\\Rack",
             "externalConsole": false,
         }
     ]

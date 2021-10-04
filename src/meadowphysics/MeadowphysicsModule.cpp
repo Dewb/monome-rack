@@ -4,8 +4,10 @@ MeadowphysicsModule::MeadowphysicsModule()
 : LibAVR32Module("meadowphysics")
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
-    configParam(CLOCK_PARAM, 0.0, 10.0, 5.0, "Clock");
+    configButton(BUTTON_PARAM, "PRESET");
+    configParam(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK");
+    configInput(CLOCK_INPUT, "CLOCK IN");
+    configOutput(CLOCK_OUTPUT, "CLOCK OUT");
 }
 
 void MeadowphysicsModule::processInputs(const ProcessArgs& args)
@@ -38,23 +40,23 @@ void MeadowphysicsModule::processOutputs(const ProcessArgs& args)
 {
     // Update lights from GPIO
     lights[CLOCK_LIGHT].setSmoothBrightness(firmware.getGPIO(B10), args.sampleTime);
-    lights[TRIG1_LIGHT].setSmoothBrightness(firmware.getGPIO(B00), args.sampleTime);
-    lights[TRIG2_LIGHT].setSmoothBrightness(firmware.getGPIO(B01), args.sampleTime);
-    lights[TRIG3_LIGHT].setSmoothBrightness(firmware.getGPIO(B02), args.sampleTime);
-    lights[TRIG4_LIGHT].setSmoothBrightness(firmware.getGPIO(B03), args.sampleTime);
-    lights[TRIG5_LIGHT].setSmoothBrightness(firmware.getGPIO(B04), args.sampleTime);
-    lights[TRIG6_LIGHT].setSmoothBrightness(firmware.getGPIO(B05), args.sampleTime);
-    lights[TRIG7_LIGHT].setSmoothBrightness(firmware.getGPIO(B06), args.sampleTime);
-    lights[TRIG8_LIGHT].setSmoothBrightness(firmware.getGPIO(B07), args.sampleTime);
+    lights[TR1_LIGHT].setSmoothBrightness(firmware.getGPIO(B00), args.sampleTime);
+    lights[TR2_LIGHT].setSmoothBrightness(firmware.getGPIO(B01), args.sampleTime);
+    lights[TR3_LIGHT].setSmoothBrightness(firmware.getGPIO(B02), args.sampleTime);
+    lights[TR4_LIGHT].setSmoothBrightness(firmware.getGPIO(B03), args.sampleTime);
+    lights[TR5_LIGHT].setSmoothBrightness(firmware.getGPIO(B04), args.sampleTime);
+    lights[TR6_LIGHT].setSmoothBrightness(firmware.getGPIO(B05), args.sampleTime);
+    lights[TR7_LIGHT].setSmoothBrightness(firmware.getGPIO(B06), args.sampleTime);
+    lights[TR8_LIGHT].setSmoothBrightness(firmware.getGPIO(B07), args.sampleTime);
 
     // Update output jacks from GPIO
     outputs[CLOCK_OUTPUT].setVoltage(firmware.getGPIO(B10) * 8.0);
-    outputs[TRIG1_OUTPUT].setVoltage(firmware.getGPIO(B00) * 8.0);
-    outputs[TRIG2_OUTPUT].setVoltage(firmware.getGPIO(B01) * 8.0);
-    outputs[TRIG3_OUTPUT].setVoltage(firmware.getGPIO(B02) * 8.0);
-    outputs[TRIG4_OUTPUT].setVoltage(firmware.getGPIO(B03) * 8.0);
-    outputs[TRIG5_OUTPUT].setVoltage(firmware.getGPIO(B04) * 8.0);
-    outputs[TRIG6_OUTPUT].setVoltage(firmware.getGPIO(B05) * 8.0);
-    outputs[TRIG7_OUTPUT].setVoltage(firmware.getGPIO(B06) * 8.0);
-    outputs[TRIG8_OUTPUT].setVoltage(firmware.getGPIO(B07) * 8.0);
+    outputs[TR1_OUTPUT].setVoltage(firmware.getGPIO(B00) * 8.0);
+    outputs[TR2_OUTPUT].setVoltage(firmware.getGPIO(B01) * 8.0);
+    outputs[TR3_OUTPUT].setVoltage(firmware.getGPIO(B02) * 8.0);
+    outputs[TR4_OUTPUT].setVoltage(firmware.getGPIO(B03) * 8.0);
+    outputs[TR5_OUTPUT].setVoltage(firmware.getGPIO(B04) * 8.0);
+    outputs[TR6_OUTPUT].setVoltage(firmware.getGPIO(B05) * 8.0);
+    outputs[TR7_OUTPUT].setVoltage(firmware.getGPIO(B06) * 8.0);
+    outputs[TR8_OUTPUT].setVoltage(firmware.getGPIO(B07) * 8.0);
 }

@@ -95,6 +95,8 @@
         "condition_variable": "cpp",
         "regex": "cpp",
         "shared_mutex": "cpp",
-        "mock_hardware_api.h": "c"
+        "mock_hardware_api.h": "c",
+        "__node_handle": "cpp",
+        "mock_hardware_api_private.h": "c"
     }
 }

@@ -16,7 +16,7 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "command": "RACK_DIR=$PWD/Rack-SDK make -j4 install",
+            "command": "RACK_DIR=$PWD/../Rack make -j4 dist && cp dist/*.vcvplugin ../Rack/plugins",
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {
@@ -73,7 +73,7 @@
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {
-                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
+                    "RACK_DIR": "${workspaceFolder}/../Rack",
                     "STRIP": "echo"
                 }
             },

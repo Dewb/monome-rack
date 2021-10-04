@@ -20,28 +20,28 @@ struct MeadowphysicsModule : LibAVR32Module
     enum OutputIds
     {
         CLOCK_OUTPUT,
-        TRIG1_OUTPUT,
-        TRIG2_OUTPUT,
-        TRIG3_OUTPUT,
-        TRIG4_OUTPUT,
-        TRIG5_OUTPUT,
-        TRIG6_OUTPUT,
-        TRIG7_OUTPUT,
-        TRIG8_OUTPUT,
+        TR1_OUTPUT,
+        TR2_OUTPUT,
+        TR3_OUTPUT,
+        TR4_OUTPUT,
+        TR5_OUTPUT,
+        TR6_OUTPUT,
+        TR7_OUTPUT,
+        TR8_OUTPUT,
         NUM_OUTPUTS
     };
 
     enum LightIds
     {
         CLOCK_LIGHT,
-        TRIG1_LIGHT,
-        TRIG2_LIGHT,
-        TRIG3_LIGHT,
-        TRIG4_LIGHT,
-        TRIG5_LIGHT,
-        TRIG6_LIGHT,
-        TRIG7_LIGHT,
-        TRIG8_LIGHT,
+        TR1_LIGHT,
+        TR2_LIGHT,
+        TR3_LIGHT,
+        TR4_LIGHT,
+        TR5_LIGHT,
+        TR6_LIGHT,
+        TR7_LIGHT,
+        TR8_LIGHT,
         NUM_LIGHTS
     };
 

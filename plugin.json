@@ -1,7 +1,7 @@
 {
   "slug": "monome",
   "name": "monome",
-  "version": "1.0.0-alpha4",
+  "version": "2.git.219bbaf1",
   "license": "GPL-2.0",
   "author": "",
   "authorEmail": "",
@@ -15,9 +15,10 @@
       "slug": "whitewhale",
       "name": "white whale",
       "description": "grid-enabled probabilistic step sequencer",
+      "modularGridUrl": "https://www.modulargrid.net/e/monome-white-whale",
       "tags": [
         "sequencer",
-        "clock",
+        "clock generator",
         "digital",
         "hardware clone",
         "external"
@@ -27,6 +28,7 @@
       "slug": "earthsea",
       "name": "earthsea",
       "description": "grid-enabled shape-memory pattern instrument",
+      "modularGridUrl": "https://www.modulargrid.net/e/monome-earthsea",
       "tags": [
         "sequencer",
         "digital",
@@ -38,9 +40,10 @@
       "slug": "meadowphysics",
       "name": "meadowphysics",
       "description": "grid-enabled rhizomatic cascading counter",
+      "modularGridUrl": "https://www.modulargrid.net/e/monome-meadowphysics",
       "tags": [
         "sequencer",
-        "clock",
+        "clock generator",
         "digital",
         "hardware clone",
         "external"
@@ -50,9 +53,33 @@
       "slug": "teletype",
       "name": "teletype",
       "description": "algorithmic ecosystem",
+      "modularGridUrl": "https://www.modulargrid.net/e/monome-teletype",
+      "keywords": "livecoding code scripting script",
       "tags": [
         "sequencer",
-        "clock",
+        "clock generator",
+        "clock modulator",
+        "logic",
+        "function generator",
+        "envelope generator",
+        "random",
+        "slew limiter",
+        "quantizer",
+        "sample and hold",
+        "utility",
+        "digital",
+        "hardware clone",
+        "external"
+      ]
+    },
+    {
+      "slug": "ansible",
+      "name": "ansible",
+      "description": "far communicator",
+      "modularGridUrl": "https://www.modulargrid.net/e/monome-ansible",
+      "tags": [
+        "sequencer",
+        "clock generator",
         "logic",
         "function generator",
         "digital",
@@ -65,6 +92,7 @@
       "name": "grid 128",
       "description": "",
       "tags": [
+        "hardware clone",
         "controller"
       ]
     },
@@ -73,6 +101,7 @@
       "name": "grid 64",
       "description": "",
       "tags": [
+        "hardware clone",
         "controller"
       ]
     },
@@ -81,6 +110,7 @@
       "name": "grid 256",
       "description": "",
       "tags": [
+        "hardware clone",
         "controller"
       ]
     }

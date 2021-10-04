@@ -181,8 +181,11 @@ struct FirmwareManagerImpl
 
 #if ARCH_WIN
 
+        wchar_t* libName = new wchar_t[4096];
+        MultiByteToWideChar(CP_ACP, 0, libraryToLoad.c_str(), -1, libName, 4096);
+
         SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        handle = LoadLibrary(libraryToLoad.c_str());
+        handle = LoadLibrary(libName);
         SetErrorMode(0);
         if (!handle)
         {

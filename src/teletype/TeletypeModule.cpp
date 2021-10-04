@@ -25,13 +25,41 @@
 #define B11 43
 #define NMI 13
 
+struct TTParamQuantity : rack::engine::ParamQuantity
+{
+    std::string getDisplayValueString() override
+    {
+        float v = getDisplayValue();
+        if (std::isnan(v))
+            return "NaN";
+        return rack::string::f("%d", (uint16_t)v);
+    }
+};
+
 TeletypeModule::TeletypeModule()
 : LibAVR32Module("teletype")
 , _iiDevice(this)
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam(BUTTON_PARAM, 0.0, 1.0, 0.0, "Presets");
-    configParam(PARAM_PARAM, 0.0, 10.0, 5.0, "Param");
+    configParam<TTParamQuantity>(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM", "", 0, 1638.3, 0);
+    configButton(BUTTON_PARAM, "SCENE");
+    configInput(IN_INPUT, "IN");
+    configInput(TRIG1_INPUT, "TRIGGER INPUT 1");
+    configInput(TRIG2_INPUT, "TRIGGER INPUT 2");
+    configInput(TRIG3_INPUT, "TRIGGER INPUT 3");
+    configInput(TRIG4_INPUT, "TRIGGER INPUT 4");
+    configInput(TRIG5_INPUT, "TRIGGER INPUT 5");
+    configInput(TRIG6_INPUT, "TRIGGER INPUT 6");
+    configInput(TRIG7_INPUT, "TRIGGER INPUT 7");
+    configInput(TRIG8_INPUT, "TRIGGER INPUT 8");
+    configOutput(TR1_OUTPUT, "TR 1");
+    configOutput(TR2_OUTPUT, "TR 2");
+    configOutput(TR3_OUTPUT, "TR 3");
+    configOutput(TR4_OUTPUT, "TR 4");
+    configOutput(CV1_OUTPUT, "CV 1");
+    configOutput(CV2_OUTPUT, "CV 2");
+    configOutput(CV3_OUTPUT, "CV 3");
+    configOutput(CV4_OUTPUT, "CV 4");
 }
 
 void TeletypeModule::processInputs(const ProcessArgs& args)
@@ -45,7 +73,7 @@ void TeletypeModule::processInputs(const ProcessArgs& args)
 
     // Convert knob float parameters to 12-bit ADC values
     firmware.setADC(1, voltsToAdc(params[PARAM_PARAM].getValue()));
-    firmware.setADC(0, voltsToAdc(inputs[CV_INPUT].getVoltage()));
+    firmware.setADC(0, voltsToAdc(inputs[IN_INPUT].getVoltage()));
 
     firmware.setGPIO(A00, isTriggered(inputs[TRIG1_INPUT].getVoltage()));
     firmware.setGPIO(A01, isTriggered(inputs[TRIG2_INPUT].getVoltage()));
@@ -80,20 +108,20 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
     bool tr4 = firmware.getGPIO(B11);
 
     // Update lights
-    lights[TRIGA_LIGHT].setSmoothBrightness(tr1, args.sampleTime);
-    lights[TRIGB_LIGHT].setSmoothBrightness(tr2, args.sampleTime);
-    lights[TRIGC_LIGHT].setSmoothBrightness(tr3, args.sampleTime);
-    lights[TRIGD_LIGHT].setSmoothBrightness(tr4, args.sampleTime);
+    lights[TR1_LIGHT].setSmoothBrightness(tr1, args.sampleTime);
+    lights[TR2_LIGHT].setSmoothBrightness(tr2, args.sampleTime);
+    lights[TR3_LIGHT].setSmoothBrightness(tr3, args.sampleTime);
+    lights[TR4_LIGHT].setSmoothBrightness(tr4, args.sampleTime);
     lights[CV1_LIGHT].setSmoothBrightness(cv1 / 10.0, args.sampleTime);
     lights[CV2_LIGHT].setSmoothBrightness(cv2 / 10.0, args.sampleTime);
     lights[CV3_LIGHT].setSmoothBrightness(cv3 / 10.0, args.sampleTime);
     lights[CV4_LIGHT].setSmoothBrightness(cv4 / 10.0, args.sampleTime);
 
     // Update TR outs from GPIO (8V)
-    outputs[TRIGA_OUTPUT].setVoltage(tr1 * 8.0);
-    outputs[TRIGB_OUTPUT].setVoltage(tr2 * 8.0);
-    outputs[TRIGC_OUTPUT].setVoltage(tr3 * 8.0);
-    outputs[TRIGD_OUTPUT].setVoltage(tr4 * 8.0);
+    outputs[TR1_OUTPUT].setVoltage(tr1 * 8.0);
+    outputs[TR2_OUTPUT].setVoltage(tr2 * 8.0);
+    outputs[TR3_OUTPUT].setVoltage(tr3 * 8.0);
+    outputs[TR4_OUTPUT].setVoltage(tr4 * 8.0);
 
     // Update CV outs from DAC
     outputs[CV1_OUTPUT].setVoltage(cv1);

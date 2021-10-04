@@ -15,9 +15,3 @@ void USBAJack::draw(const DrawArgs& args)
     nvgFillColor(vg, nvgRGB(120, 120, 120));
     nvgFill(vg);
 }
-
-MonomeKnob::MonomeKnob()
-{
-    setSvg(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/MonomeKnob.svg")));
-    box.size = rack::Vec(42, 42);
-}

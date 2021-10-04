@@ -2,7 +2,7 @@ name: Build VCV Rack Plugin
 on: [push, pull_request]
 
 env:
-  rack-sdk-version: 1.1.6
+  rack-sdk-version: 2.git.219bbaf1
 
 jobs:
   build:
@@ -19,18 +19,21 @@ jobs:
             name: Linux,
             os: ubuntu-latest,
             shell: bash,
+            sdk-postfix: "lin",
             prepare-os: "sudo apt update; sudo apt install -y libglu-dev ragel"
           }
         - {
             name: MacOS,
             os: macos-latest,
             shell: bash,
+            sdk-postfix: "mac",
             prepare-os: "brew install ragel"
           }
         - {
             name: Windows,
             os: windows-latest,
             shell: bash,
+            sdk-postfix: "win",
             prepare-os: "export CC=gcc; vcpkg install ragel:x64-windows; export RAGEL=/c/vcpkg/packages/ragel_x64-windows/tools/ragel.exe; $RAGEL -v"
           }
     steps:
@@ -43,7 +46,7 @@ jobs:
       - name: Get Rack-SDK
         run: |
           pushd $HOME
-          curl -o Rack-SDK.zip https://vcvrack.com/downloads/Rack-SDK-${{ env.rack-sdk-version }}.zip
+          curl -o Rack-SDK.zip https://vcvrack.com/downloads/Rack-SDK-${{ env.rack-sdk-version }}-${{ matrix.config.sdk-postfix }}.zip
           unzip Rack-SDK.zip
       - name: Windows - patch plugin.mk to use 7zip
         if: runner.os == 'Windows'
