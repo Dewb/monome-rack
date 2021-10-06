@@ -40,6 +40,17 @@ else
 	SOURCES += $(wildcard lib/oscpack/ip/posix/*.cpp) 
 endif
 
+# Dependencies
+ragel := dep/bin/ragel
+DEPS += $(ragel)
+
+$(ragel):
+	$(WGET) http://www.colm.net/files/ragel/ragel-6.10.tar.gz
+	cd dep && $(UNTAR) ../ragel-6.10.tar.gz
+	cd dep/ragel-6.10 && $(CONFIGURE)
+	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
+
+firmwares: export PATH := $(PWD)/dep/bin:$(PATH)
 firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
