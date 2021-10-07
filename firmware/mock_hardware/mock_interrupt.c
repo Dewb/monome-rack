@@ -63,14 +63,6 @@ void simulate_front_button_interrupt()
     event_post(&e);
 }
 
-void simulate_ansible_key_interrupt(int pin, int offset)
-{
-    event_t e;
-    e.type = kEventKey;
-    e.data = hardware_getGPIO(pin) + offset;
-    event_post(&e);
-}
-
 void mock_gpio_interrupt(int pin)
 {
     event_t e;
@@ -102,19 +94,13 @@ void mock_interrupt(int interrupt)
         case 2: // external clock rising edge
             simulate_external_clock_interrupt();
             break;
-        case 3: // front button pressed
+        case 3: // front button state change
             simulate_front_button_interrupt();
             break;
-        case 4: // panel key1 pressed
-            simulate_ansible_key_interrupt(38, 0);
-            break;
-        case 5: // panel key2 pressed
-            simulate_ansible_key_interrupt(39, 2);
-            break;
-        case 6: // input 1 change
+        case 6: // ansible input 1 change
             simulate_ansible_tr_interrupt(40, 0);
             break;
-        case 7: // input 2 change
+        case 7: // ansible input 2 change
             simulate_ansible_tr_interrupt(41, 2);
             break;
     }

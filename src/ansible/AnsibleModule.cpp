@@ -40,25 +40,19 @@ void AnsibleModule::processInputs(const ProcessArgs& args)
         firmware.triggerInterrupt(7);
     }
     bool key1Button = params[KEY1_PARAM].getValue() == 0;
-    if (key1Button != firmware.getGPIO(B06))
+    if (key1Button != firmware.getGPIO(B07))
     {
-        firmware.setGPIO(B06, key1Button);
-        firmware.triggerInterrupt(4);
+        firmware.setGPIO(B07, key1Button);
     }
     bool key2Button = params[KEY2_PARAM].getValue() == 0;
-    if (key2Button != firmware.getGPIO(B07))
+    if (key2Button != firmware.getGPIO(B06))
     {
-        firmware.setGPIO(B07, key2Button);
-        firmware.triggerInterrupt(5);
+        firmware.setGPIO(B06, key2Button);
     }
     bool modeButton = params[MODE_PARAM].getValue() == 0;
     if (modeButton != firmware.getGPIO(NMI))
     {
         firmware.setGPIO(NMI, modeButton);
-        if (modeButton)
-        {
-            firmware.triggerInterrupt(3);
-        }
     }
 }
 
