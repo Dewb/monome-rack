@@ -4,6 +4,51 @@
 
 using namespace rack;
 
+struct HoldableButton : TL1105
+{
+    bool heldThisGesture;
+
+    HoldableButton() : TL1105()
+    {
+        heldThisGesture = false;
+    }
+
+    void onButton(const ButtonEvent& e) override
+    {
+        // Shift from momentary to toggle if we're control-clicked, to enable a "hold" state
+        if (momentary &&
+            e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT &&
+            ((e.mods & RACK_MOD_MASK) == GLFW_MOD_CONTROL || (e.mods & RACK_MOD_MASK) == GLFW_MOD_SUPER))
+        {
+            momentary = false;
+            heldThisGesture = true;
+        }
+        // don't cancel the hold on the very first release event
+        else if (e.action == GLFW_RELEASE && heldThisGesture)
+        {
+            heldThisGesture = false;
+        }
+        else
+        {
+            momentary = true;
+            heldThisGesture = false;
+        }
+        TL1105::onButton(e);
+    }
+
+    void draw(const DrawArgs& args) override
+    {
+        if (!momentary) {
+            nvgBeginPath(args.vg);
+            nvgCircle(args.vg, box.size.x / 2, box.size.y / 2, box.size.x / 2 + 2);
+            nvgStrokeColor(args.vg, nvgRGB(190, 180, 0));
+            nvgStrokeWidth(args.vg, 4);
+            nvgStroke(args.vg);
+        }
+        TL1105::draw(args);
+    }
+};
+
 AnsibleWidget::AnsibleWidget(AnsibleModule* module)
 {
     setModule(module);
@@ -20,8 +65,8 @@ AnsibleWidget::AnsibleWidget(AnsibleModule* module)
     addChild(createWidget<USBAJack>(Vec(10, 338)));
 
     addParam(createParam<TL1105>(Vec(62, 336), module, AnsibleModule::MODE_PARAM));
-    addParam(createParam<TL1105>(Vec(17, 256), module, AnsibleModule::KEY1_PARAM));
-    addParam(createParam<TL1105>(Vec(54, 256), module, AnsibleModule::KEY2_PARAM));
+    addParam(createParam<HoldableButton>(Vec(17, 256), module, AnsibleModule::KEY1_PARAM));
+    addParam(createParam<HoldableButton>(Vec(54, 256), module, AnsibleModule::KEY2_PARAM));
 
     addOutput(createOutput<PJ301MPort>(Vec(13, 54), module, AnsibleModule::TR1_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 75), module, AnsibleModule::CV1_OUTPUT));
