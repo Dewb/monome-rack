@@ -48,6 +48,6 @@ struct AnsibleModule : LibAVR32Module
     };
 
     AnsibleModule();
-    void processInputs() override;
-    void processOutputs() override;
+    void processInputs(const ProcessArgs& args) override;
+    void processOutputs(const ProcessArgs& args) override;
 };

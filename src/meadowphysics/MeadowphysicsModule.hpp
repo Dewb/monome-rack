@@ -46,6 +46,6 @@ struct MeadowphysicsModule : LibAVR32Module
     };
 
     MeadowphysicsModule();
-    void processInputs() override;
-    void processOutputs() override;
+    void processInputs(const ProcessArgs& args) override;
+    void processOutputs(const ProcessArgs& args) override;
 };

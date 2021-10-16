@@ -10,6 +10,9 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
     firstStep = true;
     reloadRequested = ReloadRequest::None;
 
+    dacOffsetVolts = 0.0007;
+    triggerThresholdVolts = 2.21;
+
     firmware.load(firmwareName);
     firmware.init();
 }
@@ -224,7 +227,7 @@ void LibAVR32Module::process(const ProcessArgs& args)
     }
 
     // Module-specific code to bind Rack inputs to GPIO/ADC
-    processInputs();
+    processInputs(args);
 
     // Advance hardware timers
     firmware.advanceClock(args.sampleTime);
@@ -233,7 +236,7 @@ void LibAVR32Module::process(const ProcessArgs& args)
     firmware.step();
 
     // Module-specific code to bind GPIO/DAC to Rack outputs & lights
-    processOutputs();
+    processOutputs(args);
 
     // Act on serial output from module to the outside world (grid LEDs, etc.)
     readSerialMessages();

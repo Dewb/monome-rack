@@ -9,7 +9,7 @@ AnsibleModule::AnsibleModule()
     configParam(MODE_PARAM, 0.0, 1.0, 0.0, "Mode");
 }
 
-void AnsibleModule::processInputs()
+void AnsibleModule::processInputs(const ProcessArgs& args)
 {
     bool cv1Normal = !inputs[IN1_INPUT].isConnected();
     if (cv1Normal != firmware.getGPIO(B10))
@@ -52,28 +52,39 @@ void AnsibleModule::processInputs()
     }
 }
 
-void AnsibleModule::processOutputs()
+void AnsibleModule::processOutputs(const ProcessArgs& args)
 {
-    // Update lights from GPIO (B00/B01 -> single bicolor LED)
-    lights[MODE_YELLOW_LIGHT].setSmoothBrightness(firmware.getGPIO(B00) * 0.7, 1.f);
-    lights[MODE_WHITE_LIGHT].setSmoothBrightness(firmware.getGPIO(B01) * 0.4, 1.f);
+    float cv1 = dacToVolts(firmware.getDAC(2));
+    float cv2 = dacToVolts(firmware.getDAC(3));
+    float cv3 = dacToVolts(firmware.getDAC(0));
+    float cv4 = dacToVolts(firmware.getDAC(1));
 
-    lights[TR1_LIGHT].setSmoothBrightness(firmware.getGPIO(B02), 0.3f);
-    lights[TR2_LIGHT].setSmoothBrightness(firmware.getGPIO(B03), 0.3f);
-    lights[TR3_LIGHT].setSmoothBrightness(firmware.getGPIO(B04), 0.3f);
-    lights[TR4_LIGHT].setSmoothBrightness(firmware.getGPIO(B05), 0.3f);
-    lights[CV1_LIGHT].setSmoothBrightness(10.0 * firmware.getDAC(2) / 65536.0, 0.3f);
-    lights[CV2_LIGHT].setSmoothBrightness(10.0 * firmware.getDAC(3) / 65536.0, 0.3f);
-    lights[CV3_LIGHT].setSmoothBrightness(10.0 * firmware.getDAC(0) / 65536.0, 0.3f);
-    lights[CV4_LIGHT].setSmoothBrightness(10.0 * firmware.getDAC(1) / 65536.0, 0.3f);
+    bool tr1 = firmware.getGPIO(B02);
+    bool tr2 = firmware.getGPIO(B03);
+    bool tr3 = firmware.getGPIO(B04);
+    bool tr4 = firmware.getGPIO(B05);
+
+    // Update bicolor mode light from B00/B01
+    lights[MODE_YELLOW_LIGHT].setSmoothBrightness(firmware.getGPIO(B00) * 0.7, args.sampleTime);
+    lights[MODE_WHITE_LIGHT].setSmoothBrightness(firmware.getGPIO(B01) * 0.4, args.sampleTime);
+
+    // Update normal lights
+    lights[TR1_LIGHT].setSmoothBrightness(tr1, args.sampleTime);
+    lights[TR2_LIGHT].setSmoothBrightness(tr2, args.sampleTime);
+    lights[TR3_LIGHT].setSmoothBrightness(tr3, args.sampleTime);
+    lights[TR4_LIGHT].setSmoothBrightness(tr4, args.sampleTime);
+    lights[CV1_LIGHT].setSmoothBrightness(cv1 / 10.0, args.sampleTime);
+    lights[CV2_LIGHT].setSmoothBrightness(cv2 / 10.0, args.sampleTime);
+    lights[CV3_LIGHT].setSmoothBrightness(cv3 / 10.0, args.sampleTime);
+    lights[CV4_LIGHT].setSmoothBrightness(cv4 / 10.0, args.sampleTime);
 
     // Update output jacks from GPIO & DAC
-    outputs[TR1_OUTPUT].setVoltage(firmware.getGPIO(B02) * 8.0);
-    outputs[TR2_OUTPUT].setVoltage(firmware.getGPIO(B03) * 8.0);
-    outputs[TR3_OUTPUT].setVoltage(firmware.getGPIO(B04) * 8.0);
-    outputs[TR4_OUTPUT].setVoltage(firmware.getGPIO(B05) * 8.0);
-    outputs[CV1_OUTPUT].setVoltage(10.0 * firmware.getDAC(2) / 65536.0);
-    outputs[CV2_OUTPUT].setVoltage(10.0 * firmware.getDAC(3) / 65536.0);
-    outputs[CV3_OUTPUT].setVoltage(10.0 * firmware.getDAC(0) / 65536.0);
-    outputs[CV4_OUTPUT].setVoltage(10.0 * firmware.getDAC(1) / 65536.0);
+    outputs[TR1_OUTPUT].setVoltage(tr1 * 8.0);
+    outputs[TR2_OUTPUT].setVoltage(tr2 * 8.0);
+    outputs[TR3_OUTPUT].setVoltage(tr3 * 8.0);
+    outputs[TR4_OUTPUT].setVoltage(tr4 * 8.0);
+    outputs[CV1_OUTPUT].setVoltage(cv1);
+    outputs[CV2_OUTPUT].setVoltage(cv2);
+    outputs[CV3_OUTPUT].setVoltage(cv3);
+    outputs[CV4_OUTPUT].setVoltage(cv4);
 }

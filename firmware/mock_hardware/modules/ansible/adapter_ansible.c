@@ -2,6 +2,7 @@
 #include "types.h"
 
 #include "mock_hardware_api.h"
+#include "mock_hardware_api_private.h"
 
 #include <string.h>
 
@@ -23,6 +24,10 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
 }
 
 void hardware_afterVRAMUpdate()
+{
+}
+
+void hardware_afterInit()
 {
 }
 

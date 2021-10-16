@@ -43,6 +43,6 @@ struct WhiteWhaleModule : LibAVR32Module
     };
 
     WhiteWhaleModule();
-    void processInputs() override;
-    void processOutputs() override;
+    void processInputs(const ProcessArgs& args) override;
+    void processOutputs(const ProcessArgs& args) override;
 };

@@ -1,4 +1,5 @@
 #include "mock_hardware_api.h"
+#include "mock_hardware_api_private.h"
 #include "mock_serial.h"
 #include "mock_interrupt.h"
 
@@ -71,13 +72,11 @@ void hardware_init()
 {
     initialize_serial();
     initialize_module();
+    hardware_afterInit();
 }
 
 void hardware_step()
 {
-    uint8_t* msg;
-    uint32_t count;
-
     check_events();
 }
 

@@ -39,6 +39,6 @@ struct EarthseaModule : LibAVR32Module
     };
 
     EarthseaModule();
-    void processInputs() override;
-    void processOutputs() override;
+    void processInputs(const ProcessArgs& args) override;
+    void processOutputs(const ProcessArgs& args) override;
 };

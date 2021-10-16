@@ -40,8 +40,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void onReset() override;
 
     // MonomeModuleBase virtual methods
-    virtual void processInputs() = 0;
-    virtual void processOutputs() = 0;
+    virtual void processInputs(const ProcessArgs& args) = 0;
+    virtual void processOutputs(const ProcessArgs& args) = 0;
 
     // GridConsumer methods
     void gridConnected(Grid* grid) override;
@@ -52,6 +52,10 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     virtual void readSerialMessages();
     void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
 
+    float dacToVolts(uint16_t adc);
+    uint16_t voltsToAdc(float volts);
+    bool isTriggered(float value);
+
     Grid* gridConnection;
     std::string lastConnectedDeviceId;
     std::string firmwareName;
@@ -61,4 +65,24 @@ private:
 
     bool firstStep;
     ReloadRequest reloadRequested;
+
+    float dacOffsetVolts;
+    float triggerThresholdVolts;
 };
+
+inline float LibAVR32Module::dacToVolts(uint16_t dac)
+{
+    // 12 bits of information left aligned in a 16-bit word, add a small offset to get the 12-bit data closer to true
+    return (10.0 * dac / (0xFFFF * 1.0)) + dacOffsetVolts;
+}
+
+inline uint16_t LibAVR32Module::voltsToAdc(float volts)
+{
+    // Scale to 12-bit ADC, right-aligned in 16-bit word
+    return (uint16_t)(rack::math::clamp(volts, 0.0, 10.0) * 0.1 * 0xFFF);
+}
+
+inline bool LibAVR32Module::isTriggered(float value)
+{
+    return value > triggerThresholdVolts;
+}

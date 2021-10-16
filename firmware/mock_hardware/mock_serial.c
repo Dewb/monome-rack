@@ -1,5 +1,6 @@
 // libavr32 headers
 #include "monome.h"
+#include "mock_hardware_api_private.h"
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -33,10 +34,6 @@ extern void set_funcs();
 
 
 // end types and declarations from monome.c
-
-// private functions in mock_hardware_api.c
-extern int hardware_readSerial_internal(uint8_t** pbuf, uint8_t* pcount);
-extern int hardware_writeSerial_internal(uint8_t* buf, uint8_t byteCount);
 
 u8* mock_serial_current_message_buffer;
 u8 mock_serial_current_message_length;

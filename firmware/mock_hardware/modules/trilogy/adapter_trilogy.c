@@ -1,7 +1,9 @@
-#include "types.h"
 #include "mock_hardware_api.h"
-#include <string.h>
+#include "mock_hardware_api_private.h"
 
+#include "types.h"
+
+#include <string.h>
 
 void clock_null(uint8_t phase) { }
 typedef void (*clock_pulse_t)(uint8_t phase);
@@ -25,6 +27,10 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
 }
 
 void hardware_afterVRAMUpdate()
+{
+}
+
+void hardware_afterInit()
 {
 }
 
