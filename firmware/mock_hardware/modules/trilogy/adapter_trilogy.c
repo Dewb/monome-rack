@@ -34,6 +34,10 @@ void hardware_afterInit()
 {
 }
 
+void hardware_afterStep()
+{
+}
+
 #ifndef GIT_VERSION
 #define GIT_VERSION "?"
 #endif

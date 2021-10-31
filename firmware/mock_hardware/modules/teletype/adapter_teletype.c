@@ -95,6 +95,19 @@ void hardware_afterInit()
     calibrate_adc();
 }
 
+int ss_defeat_counter = 0;
+extern void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key, bool is_release);
+
+void hardware_afterStep()
+{
+    if (++ss_defeat_counter > 48000)
+    {
+        // send a fake keypress to reset screensaver timer
+        process_keypress(0xFF, 0, false, true);
+        ss_defeat_counter = 0;
+    }
+}
+
 void hardware_getVersion(char* buffer)
 {
     strcpy(buffer, git_version);

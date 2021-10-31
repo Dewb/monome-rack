@@ -31,6 +31,10 @@ void hardware_afterInit()
 {
 }
 
+void hardware_afterStep()
+{
+}
+
 void hardware_getVersion(char* buffer)
 {
     strcpy(buffer, git_version);

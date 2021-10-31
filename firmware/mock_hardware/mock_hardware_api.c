@@ -78,6 +78,7 @@ void hardware_init()
 void hardware_step()
 {
     check_events();
+    hardware_afterStep();
 }
 
 void hardware_triggerInterrupt(int interrupt)
