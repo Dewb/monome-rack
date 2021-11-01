@@ -36,6 +36,34 @@ struct ReloadFirmwareItem : rack::ui::MenuItem
     }
 };
 
+struct ioRateItem : rack::ui::MenuItem
+{
+    int* target = nullptr;
+    int defaultValue = 0;
+
+    ui::Menu* createChildMenu() override
+    {
+        ui::Menu* menu = new ui::Menu;
+
+        std::string names[] = { "1x", "/2", "/4", "/8", "/16" };
+        std::string right[] = { "(audio rate)", "", "", "", "(lowest CPU)" };
+
+        for (int i = 0; i < 5; i++)
+        {
+            int value = 1 << i;
+            menu->addChild(createCheckMenuItem(
+                names[i],
+                (value == defaultValue) ? "(default)" : right[i],
+                [=]()
+                { return *target == value; },
+                [=]()
+                { *target = value; }));
+        }
+
+        return menu;
+    }
+};
+
 struct FirmwareSubmenuItem : MenuItem
 {
     LibAVR32Module* module;
@@ -51,6 +79,14 @@ struct FirmwareSubmenuItem : MenuItem
         module->firmware.getVersion(versionbuf);
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, module->firmwareName));
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, versionbuf));
+
+        menu->addChild(construct<ioRateItem>(
+            &MenuItem::text, "Input rate", &MenuItem::rightText, RIGHT_ARROW,
+            &ioRateItem::defaultValue, 2, &ioRateItem::target, &m->inputRate));
+
+        menu->addChild(construct<ioRateItem>(
+            &MenuItem::text, "Output rate", &MenuItem::rightText, RIGHT_ARROW,
+            &ioRateItem::defaultValue, 4, &ioRateItem::target, &m->outputRate));
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";

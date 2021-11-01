@@ -60,6 +60,9 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     std::string lastConnectedDeviceId;
     std::string firmwareName;
 
+    int inputRate;
+    int outputRate;
+
 private:
     void reloadFirmware(bool preserveMemory);
 

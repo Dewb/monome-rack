@@ -13,6 +13,9 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
     dacOffsetVolts = 0.0007;
     triggerThresholdVolts = 2.21;
 
+    inputRate = 2;
+    outputRate = 4;
+
     firmware.load(firmwareName);
     firmware.init();
 }
@@ -226,8 +229,12 @@ void LibAVR32Module::process(const ProcessArgs& args)
         reloadRequested = ReloadRequest::None;
     }
 
-    // Module-specific code to bind Rack inputs to GPIO/ADC
-    processInputs(args);
+    // Run inputs at 1/2 audio rate by default, configurable in right-click menu
+    if (args.frame % inputRate == 0)
+    {
+        // Module-specific code to bind Rack inputs to GPIO/ADC
+        processInputs(args);
+    }
 
     // Advance hardware timers
     firmware.advanceClock(args.sampleTime);
@@ -235,8 +242,12 @@ void LibAVR32Module::process(const ProcessArgs& args)
     // Pump hardware event loop
     firmware.step();
 
-    // Module-specific code to bind GPIO/DAC to Rack outputs & lights
-    processOutputs(args);
+    // Run outputs at 1/4 audio rate by default, configurable in right-click menu
+    if (args.frame % outputRate == 0)
+    {
+        // Module-specific code to bind GPIO/DAC to Rack outputs & lights
+        processOutputs(args);
+    }
 
     // Act on serial output from module to the outside world (grid LEDs, etc.)
     readSerialMessages();
@@ -267,6 +278,9 @@ json_t* LibAVR32Module::dataToJson()
     {
         json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
     }
+
+    json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
+    json_object_set_new(rootJ, "outputRate", json_integer(outputRate));
 
     return rootJ;
 }
@@ -305,6 +319,26 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
         {
             firmware.writeVRAM((void*)decoded.c_str(), size);
             firmware.afterVRAMUpdate();
+        }
+    }
+
+    jd = json_object_get(rootJ, "inputRate");
+    if (jd)
+    {
+        int value = json_integer_value(jd);
+        if (value == 1 || value == 2 || value == 4 || value == 8 || value == 16)
+        {
+            inputRate = value;
+        }
+    }
+
+    jd = json_object_get(rootJ, "outputRate");
+    if (jd)
+    {
+        int value = json_integer_value(jd);
+        if (value == 1 || value == 2 || value == 4 || value == 8 || value == 16)
+        {
+            outputRate = value;
         }
     }
 }
