@@ -226,12 +226,8 @@ void LibAVR32Module::process(const ProcessArgs& args)
         reloadRequested = ReloadRequest::None;
     }
 
-    // Run inputs at 1/2 audio rate
-    if (args.frame % 2 == 0)
-    {
-        // Module-specific code to bind Rack inputs to GPIO/ADC
-        processInputs(args);
-    }
+    // Module-specific code to bind Rack inputs to GPIO/ADC
+    processInputs(args);
 
     // Advance hardware timers
     firmware.advanceClock(args.sampleTime);
@@ -239,12 +235,8 @@ void LibAVR32Module::process(const ProcessArgs& args)
     // Pump hardware event loop
     firmware.step();
 
-    // Run outputs at 1/4 audio rate
-    if (args.frame % 4 == 0)
-    {
-        // Module-specific code to bind GPIO/DAC to Rack outputs & lights
-        processOutputs(args);
-    }
+    // Module-specific code to bind GPIO/DAC to Rack outputs & lights
+    processOutputs(args);
 
     // Act on serial output from module to the outside world (grid LEDs, etc.)
     readSerialMessages();
