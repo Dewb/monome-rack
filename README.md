@@ -7,23 +7,27 @@ This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synth
 
 This plugin is still in development. [The extremely hypothetical release roadmap is here](../../projects/1). 
 
-<img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/33818500-4c54d158-de13-11e7-8a74-3b8b1fe8b21d.png">
+<img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://repository-images.githubusercontent.com/112882255/a09c18bc-06f4-4aa5-8b2c-6db57a7f2648">
 
 This plugin currently includes:
 * Virtual versions of the venerable [monome grid 64 and 128](https://monome.org/docs/grid/), a series of open, interactive grid instruments, in 8x8 and 16x8 versions.
-* The [white whale](https://monome.org/docs/modular/whitewhale/) grid-enabled probabilistic step sequencer
+* The [white whale](https://monome.org/docs/whitewhale/) grid-enabled probabilistic step sequencer
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
    * Controlled by internal or external clock
-* The [meadowphysics](https://monome.org/docs/modular/meadowphysics/) grid-enabled rhizomatic cascading counter
+* The [meadowphysics](https://monome.org/docs/meadowphysics/) grid-enabled rhizomatic cascading counter
    * An event sequencer for polyrhythms and rule-based evolving patterns
    * 8 trigger outs
    * Controlled by internal or external clock
-* The [earthsea](https://monome.org/docs/modular/earthsea/) grid-enabled shape-memory pattern instrument
+* The [earthsea](https://monome.org/docs/earthsea/) grid-enabled shape-memory pattern instrument
    * A live keyboard that can sequence melodies and recall CV with gestures
    * 1 trigger out, 4 CV outs
+ * The [teletype](https://monome.org/docs/teletype/) algorithmic ecosystem
+   * a dynamic, musical, scriptable event triggering platform.
+   * 8 trigger ins, 1 CV in, 4 CV and 4 trigger outs
+ 
    
-All three of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
+All of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
 
 Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
 
@@ -42,9 +46,10 @@ More detailed instructions are available in the [Rack documentation on installin
 #### Going deeper
 
 * Read the manuals for the modules:
-   * [white whale manual](https://monome.org/docs/modular/whitewhale/)
-   * [meadowphysics manual](https://monome.org/docs/modular/meadowphysics/)
-   * [earthsea manual](https://monome.org/docs/modular/earthsea/)
+   * [white whale manual](https://monome.org/docs/whitewhale/)
+   * [meadowphysics manual](https://monome.org/docs/meadowphysics/)
+   * [earthsea manual](https://monome.org/docs/earthsea/)
+   * [teletype manual](https://monome.org/docs/teletype/)
 * Watch these videos:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial part 1](https://vimeo.com/105368808)
@@ -55,7 +60,6 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics tutorial](https://vimeo.com/107586549)
    * [meadowphysics two](https://vimeo.com/146731772)
    * [earthsea introduction](https://vimeo.com/113231441)
-* Read the manuals again, watch the videos again, repeat.
 
 ### Why is this?
 
