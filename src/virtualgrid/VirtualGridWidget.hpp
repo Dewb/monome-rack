@@ -8,6 +8,7 @@ struct VirtualGridModule;
 struct VirtualGridWidget : rack::app::ModuleWidget
 {
     VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h);
+    ~VirtualGridWidget();
 
     void draw(const DrawArgs& args) override;
     void onDragEnter(const rack::event::DragEnter& e) override;

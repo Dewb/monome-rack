@@ -23,6 +23,11 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     // addChild(createScrew<ScrewSilver>(Vec(239, 0)));
     // addChild(createScrew<ScrewSilver>(Vec(239, 365)));
 
+    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
+    addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+    addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+
     addChild(createWidget<USBAJack>(Vec(10, 337)));
     addParam(createParam<TL1105>(Vec(62, 337), module, TeletypeModule::BUTTON_PARAM));
 
@@ -104,12 +109,12 @@ void TeletypeWidget::appendContextMenu(rack::Menu* menu)
     TeletypeModule* m = dynamic_cast<TeletypeModule*>(module);
     assert(m);
 
-    menu->addChild(construct<MenuEntry>());
+    menu->addChild(new MenuSeparator());
 
     menu->addChild(new InternalPresetSubmenu(m, "Import scenes", Load));
     menu->addChild(new InternalPresetSubmenu(m, "Export scenes", Save));
 
-    menu->addChild(construct<MenuEntry>());
+    menu->addChild(new MenuSeparator());
 
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Shortcuts"));
 

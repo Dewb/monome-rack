@@ -26,6 +26,7 @@ struct GridConsumer
 
 struct GridConnectionManager final
 {
+    // Only call these from the UI thread
     void registerGrid(Grid* grid);
     void registerGridConsumer(GridConsumer* consumer);
     void deregisterGrid(std::string id, bool deleteGrid = false);

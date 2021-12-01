@@ -18,6 +18,9 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
         addChild(panel);
     }
 
+    // Screws positioned for sliding nuts :)
+    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, 0)));
+    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
     addChild(createWidget<USBAJack>(Vec(10, 338)));
 
     addParam(createParam<TL1105>(Vec(62, 336), module, EarthseaModule::BUTTON_PARAM));
@@ -29,11 +32,11 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
     addOutput(createOutput<PJ301MPort>(Vec(50, 166), module, EarthseaModule::CV2_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 248), module, EarthseaModule::CV3_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, EarthseaModule::POS_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(13, 268), module, EarthseaModule::EDGE_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(13, 265), module, EarthseaModule::EDGE_OUTPUT));
 
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 78), module, EarthseaModule::CV1_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 162), module, EarthseaModule::CV2_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 244), module, EarthseaModule::CV3_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 282), module, EarthseaModule::POS_LIGHT));
-    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 286), module, EarthseaModule::EDGE_LIGHT));
+    addChild(createLight<MediumLight<YellowLight>>(Vec(2, 282), module, EarthseaModule::EDGE_LIGHT));
 }

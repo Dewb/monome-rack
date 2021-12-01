@@ -9,9 +9,8 @@
             "type": "cppdbg",
             "request": "launch",
             "windows": {
-                "program": "${workspaceFolder}\\..\\Rack\\Rack.exe",
+                "program": "C:\\Program Files\\VCV\\Rack2Free\\Rack.exe",
                 "args": [
-                    "-d"
                 ],
                 "MIMode": "gdb",
                 "environment": [
@@ -27,7 +26,7 @@
                 ]
             },
             "osx" : {
-                "program": "${workspaceFolder}\\..\\Rack\\Rack",
+                "program": "/Applications/VCV Rack 2 Free.app/Contents/MacOS/Rack",
                 "args": [],
                 "MIMode": "lldb",
                 "environment": [
@@ -42,7 +41,7 @@
                 ]
             },
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}\\..\\Rack",
+            "cwd": "${workspaceFolder}",
             "externalConsole": false,
         }
     ]
