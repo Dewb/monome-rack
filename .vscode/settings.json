@@ -97,6 +97,7 @@
         "shared_mutex": "cpp",
         "mock_hardware_api.h": "c",
         "__node_handle": "cpp",
-        "mock_hardware_api_private.h": "c"
+        "mock_hardware_api_private.h": "c",
+        "__functional_03": "cpp"
     }
 }

@@ -16,7 +16,7 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "command": "RACK_DIR=$PWD/../Rack make -j4 dist && cp dist/*.vcvplugin ../Rack/plugins",
+            "command": "RACK_DIR=$PWD/Rack-SDK make -j4 install",
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {
@@ -28,7 +28,8 @@
                     "env": {
                         "PATH": "C:\\msys64\\usr\\bin;c:\\msys64\\mingw64\\bin",
                         "MSYSTEM": "MINGW64",
-                        "CC": "gcc"
+                        "CC": "gcc",
+                        "RACK_USER_DIR": "${OneDrive}\\Documents\\Rack2"
                     },
                     "shell": {
                         "executable": "C:\\msys64\\usr\\bin\\bash.exe",
@@ -73,7 +74,7 @@
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {
-                    "RACK_DIR": "${workspaceFolder}/../Rack",
+                    "RACK_DIR": "${workspaceFolder}/Rack-SDK",
                     "STRIP": "echo"
                 }
             },

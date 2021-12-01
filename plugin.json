@@ -1,7 +1,7 @@
 {
   "slug": "monome",
   "name": "monome",
-  "version": "2.git.219bbaf1",
+  "version": "2.0.0-alpha5",
   "license": "GPL-2.0",
   "author": "",
   "authorEmail": "",
@@ -85,7 +85,8 @@
         "digital",
         "hardware clone",
         "external"
-      ]
+      ],
+      "hidden": true
     },
     {
       "slug": "grid128",

@@ -10,6 +10,12 @@ using namespace rack;
 VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h)
 {
     setModule(module);
+    if (module)
+    {
+        VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
+        assert(grid);
+        GridConnectionManager::get()->registerGrid(grid);
+    }
 
     float rackWidth = 0;
     if (w == h)
@@ -70,13 +76,24 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     addChild(pb);
 }
 
+VirtualGridWidget::~VirtualGridWidget()
+{
+    if (module)
+    {
+        VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
+        assert(grid);
+        GridConnectionManager::get()->deregisterGrid(grid->device.id);
+    }
+}
+
 void VirtualGridWidget::draw(const DrawArgs& args)
 {
     nvgBeginPath(args.vg);
     nvgRect(args.vg, 0.0, 0.0, box.size.x, box.size.y);
-    nvgFillColor(args.vg, nvgRGB(0xe6, 0xe6, 0xe6));
+    nvgFillColor(args.vg, nvgRGB(0xf0, 0xf0, 0xf0));
     nvgFill(args.vg);
-    Widget::draw(args);
+
+    rack::app::ModuleWidget::draw(args);
 }
 
 void VirtualGridWidget::clearHeldKeys()
@@ -109,84 +126,30 @@ void VirtualGridWidget::onDragStart(const event::DragStart& e)
     }
 }
 
-struct GridReleaseHeldKeysItem : MenuItem
+void setProtocol(VirtualGridModule* grid, MonomeProtocol protocol)
 {
-    VirtualGridWidget* grid;
-    void onAction(const event::Action& e) override
+    if (protocol != grid->device.protocol)
     {
-        if (grid) 
-        {
-            grid->clearHeldKeys();
-        }
+        GridConnectionManager::get()->deregisterGrid(grid->device.id, false);
+        grid->device.protocol = protocol;
+        GridConnectionManager::get()->registerGrid(grid);
     }
-};
+}
 
-struct GridThemeItem : MenuItem
-{
-    VirtualGridModule* module;
-    GridTheme theme;
-    
-    GridThemeItem(VirtualGridModule* module, std::string str, GridTheme theme) 
-    : module(module), theme(theme) {
-        text = str;
-        rightText = (module->theme == theme) ? CHECKMARK_STRING : "";
-    };
-
-    void onAction(const event::Action& e) override
-    {
-        if (module)
-        {
-            module->theme = theme;
-        }
-    }
-};
-
-struct GridProtocolItem : MenuItem
-{
-    VirtualGridModule* module;
-    MonomeProtocol protocol;
-
-    GridProtocolItem(VirtualGridModule* module, std::string str, MonomeProtocol protocol)
-     : module(module), protocol(protocol) {
-        text = str;
-        rightText = (module->device.protocol == protocol) ? CHECKMARK_STRING : "";
-    };
-
-    void onAction(const event::Action& e) override
-    {
-        if (module && protocol != module->device.protocol) 
-        {
-            GridConnectionManager::get()->deregisterGrid(module->device.id, false);
-            module->device.protocol = protocol;
-            GridConnectionManager::get()->registerGrid(module);
-        }
-    }
-};
-
-void
-VirtualGridWidget::appendContextMenu(Menu* menu)
+void VirtualGridWidget::appendContextMenu(Menu * menu)
 {
     VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
     assert(grid);
 
-    menu->addChild(construct<MenuLabel>());
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Theme"));
-    menu->addChild(new GridThemeItem(grid, "\tRed", GridTheme::Red));
-    menu->addChild(new GridThemeItem(grid, "\tOrange", GridTheme::Orange));
-    menu->addChild(new GridThemeItem(grid, "\tYellow", GridTheme::Yellow));
-    menu->addChild(new GridThemeItem(grid, "\tWhite", GridTheme::White));
-    menu->addChild(construct<MenuLabel>());
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Protocol"));
+    menu->addChild(new MenuSeparator());
+    menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &grid->theme));
+    menu->addChild(createIndexSubmenuItem("Protocol", {"40h", "Series", "Mext (varibright)"}, 
+        [=]() { return grid ? grid->device.protocol : 0; },
+        [=](size_t index) {
+            setProtocol(grid, static_cast<MonomeProtocol>(index));
+        }));
 
-    // 40h only on 8x8
-    if (grid->getDevice().width == 8 && grid->getDevice().height == 8)
-    {
-        menu->addChild(new GridProtocolItem(grid, "\t40h", PROTOCOL_40H));
-    }
-    menu->addChild(new GridProtocolItem(grid, "\tSeries", PROTOCOL_SERIES));
-    menu->addChild(new GridProtocolItem(grid, "\tMext", PROTOCOL_MEXT));
-
-    menu->addChild(construct<MenuLabel>());
-    menu->addChild(construct<GridReleaseHeldKeysItem>(&MenuItem::text, "Release Held Keys", &MenuItem::rightText, "Ctrl+Click", &GridReleaseHeldKeysItem::grid, this));
+    menu->addChild(createMenuItem("Release Held Keys", "Ctrl+Click", [this]()
+        { this->clearHeldKeys(); }));
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + grid->device.id + ")"));
 }

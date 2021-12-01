@@ -49,13 +49,11 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 
 VirtualGridModule::~VirtualGridModule()
 {
-    GridConnectionManager::get()->deregisterGrid(this->device.id, false);
 }
 
 void VirtualGridModule::onAdd()
 {
     device.id = formatVirtualDeviceId(id);
-    GridConnectionManager::get()->registerGrid(this);
 }
 
 void VirtualGridModule::process(const ProcessArgs& args)

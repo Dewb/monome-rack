@@ -77,13 +77,15 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
     assert(m);
 
+    menu->addChild(new MenuSeparator());
+
     auto firmwareMenu = new FirmwareSubmenuItem();
     firmwareMenu->text = "Firmware";
     firmwareMenu->module = m;
     firmwareMenu->rightText = "▸";
     menu->addChild(firmwareMenu);
 
-    menu->addChild(construct<MenuEntry>());
+    menu->addChild(new MenuSeparator());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
 
     // enumerate registered grid devices
