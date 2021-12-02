@@ -6,6 +6,28 @@
 
 using namespace rack;
 
+uint8_t samplePattern[] = {
+     0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,
+     0, 15,  0, 14,  0,  0,  0,  0,  0, 15,  0, 14,  0,  0,  0,  0,
+     0, 14,  0, 12,  0,  0, 15,  0,  0, 14,  0, 12,  0, 15,  0,  0,
+     0, 12,  0,  9, 15,  0, 14,  0,  0, 12,  0,  9,  0, 14,  0,  0,
+    15,  9,  0,  5, 14,  0, 12,  0,  0,  9,  0,  5,  0, 12,  0, 15,
+    14,  5,  0,  1, 12,  0,  9,  0,  0,  5,  0,  1,  0,  9,  0, 14,
+    12,  1,  0,  0,  9,  0,  5,  0, 15,  1,  0,  0,  0,  5,  0, 12,
+     9,  0,  0,  0,  5,  0,  1,  0, 14,  0,  0,  0,  0,  1,  0,  9,
+     5,  0,  0,  0,  1, 15,  0,  0, 12,  0,  0,  0,  0,  0, 15,  5,
+     1,  0, 15,  0,  0, 14,  0,  0,  9,  0,  0,  0,  0,  0, 14,  1,
+     0,  0, 14,  0,  0, 12,  0,  0,  5,  0, 15,  0,  0,  0, 12,  0,
+     0,  0, 12,  0,  0,  9,  0,  0,  1,  0, 14,  0, 15,  0,  9,  0,
+     0,  0,  9,  0,  0,  5,  0, 15,  0,  0, 12,  0, 14,  0,  5,  0,
+     0,  0,  5,  0,  0,  1,  0, 14,  0,  0,  9,  0, 12,  0,  1,  0,
+     0,  0,  1,  0,  0,  0,  0, 12,  0,  0,  5,  0,  9,  0,  0,  0,
+     0,  0,  0,  0,  0,  0,  0,  9,  0,  0,  1,  0,  5,  0,  0,  0,
+};
+
+GridTheme sampleThemeYellow = GridTheme::Yellow;
+GridTheme sampleThemeOrange = GridTheme::Orange;
+GridTheme sampleThemeRed = GridTheme::Red;
 
 VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h)
 {
@@ -18,18 +40,21 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     }
 
     float rackWidth = 0;
+    GridTheme* sampleTheme;
+
     if (w == h)
     {
         rackWidth = 375;
         margins.x = 13.5;
         margins.y = 16;
-
+        sampleTheme = h == 8 ? &sampleThemeOrange : &sampleThemeRed;
     }
     else if (w == 2 * h)
     {
         rackWidth = 735;
         margins.x = 16;
         margins.y = 16;
+        sampleTheme = &sampleThemeYellow;
     }
     else
     {
@@ -63,6 +88,9 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             {
                 key->setKeyAddress(module->ledBuffer + i + j * 16);
                 key->theme = &(module->theme);
+            } else {
+                key->setKeyAddress(samplePattern + i + j * 16);
+                key->theme = sampleTheme;
             }
             key->box.size = Vec(button_size + spacing, button_size + spacing);
             key->index = n;
