@@ -58,6 +58,9 @@ void VirtualGridModule::onAdd()
 
 void VirtualGridModule::process(const ProcessArgs& args)
 {
+    std::vector<std::tuple<int, int>> presses;
+    std::vector<std::tuple<int, int>> releases;
+
     for (int i = 0; i < device.width; i++)
     {
         for (int j = 0; j < device.height; j++)
@@ -67,10 +70,23 @@ void VirtualGridModule::process(const ProcessArgs& args)
             if (state != pressedState[n])
             {
                 pressedState[n] = state;
-                GridConnectionManager::get()->dispatchButtonMessage(&this->device, i, j, pressedState[n]);
+                if (state) {
+                    presses.push_back(std::make_tuple(i, j));
+                } else {
+                    releases.push_back(std::make_tuple(i, j));
+                }
             }
         }
     }
+
+    // ensure any near-simultaneous releases and presses are processed releases-first
+    std::for_each(releases.begin(), releases.end(), [=](std::tuple<int, int> c) {
+        GridConnectionManager::get()->dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), false);
+    });
+
+    std::for_each(presses.begin(), presses.end(), [=](std::tuple<int, int> c) {
+        GridConnectionManager::get()->dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), true);
+    });
 }
 
 json_t* VirtualGridModule::dataToJson()
