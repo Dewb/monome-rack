@@ -37,6 +37,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
         VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
         assert(grid);
         GridConnectionManager::get()->registerGrid(grid);
+        id = grid->device.id;
     }
 
     float rackWidth = 0;
@@ -106,12 +107,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
 
 VirtualGridWidget::~VirtualGridWidget()
 {
-    if (module)
-    {
-        VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
-        assert(grid);
-        GridConnectionManager::get()->deregisterGrid(grid->device.id);
-    }
+    GridConnectionManager::get()->deregisterGrid(id);
 }
 
 void VirtualGridWidget::draw(const DrawArgs& args)
@@ -179,5 +175,5 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
 
     menu->addChild(createMenuItem("Release Held Keys", "Ctrl+Click", [this]()
         { this->clearHeldKeys(); }));
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + grid->device.id + ")"));
+    menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + id + ")"));
 }

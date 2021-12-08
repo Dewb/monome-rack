@@ -20,6 +20,7 @@ struct VirtualGridWidget : rack::app::ModuleWidget
 protected:
     friend struct VirtualGridKey;
     rack::Vec margins;
+    std::string id;
 };
 
 template <unsigned width, unsigned height>
