@@ -6,8 +6,16 @@ MeadowphysicsModule::MeadowphysicsModule()
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configButton(BUTTON_PARAM, "PRESET");
     configParam(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK");
-    configInput(CLOCK_INPUT, "CLOCK IN");
-    configOutput(CLOCK_OUTPUT, "CLOCK OUT");
+    configInput(CLOCK_INPUT, "CLOCK");
+    configOutput(CLOCK_OUTPUT, "CLOCK");
+    configOutput(TR1_OUTPUT, "TR 1");
+    configOutput(TR2_OUTPUT, "TR 2");
+    configOutput(TR3_OUTPUT, "TR 3");
+    configOutput(TR4_OUTPUT, "TR 4");
+    configOutput(TR5_OUTPUT, "TR 5");
+    configOutput(TR6_OUTPUT, "TR 6");
+    configOutput(TR7_OUTPUT, "TR 7");
+    configOutput(TR8_OUTPUT, "TR 8");
 }
 
 void MeadowphysicsModule::processInputs(const ProcessArgs& args)

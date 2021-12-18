@@ -201,4 +201,9 @@ struct VirtualGridKey : rack::app::ParamWidget
             beginPress();
         }
     }
+
+    void onEnter(const EnterEvent& e) override
+    {
+        // override base class to prevent tooltip creation
+    }
 };

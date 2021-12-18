@@ -7,8 +7,8 @@ WhiteWhaleModule::WhiteWhaleModule()
     configButton(BUTTON_PARAM, "PRESET");
     configParam(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM");
     configParam(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK");
-    configInput(CLOCK_INPUT, "CLOCK IN");
-    configOutput(CLOCK_OUTPUT, "CLOCK OUT");
+    configInput(CLOCK_INPUT, "CLOCK");
+    configOutput(CLOCK_OUTPUT, "CLOCK");
     configOutput(TR1_OUTPUT, "TR 1");
     configOutput(TR2_OUTPUT, "TR 2");
     configOutput(TR3_OUTPUT, "TR 3");
