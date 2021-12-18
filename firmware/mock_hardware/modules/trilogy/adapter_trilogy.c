@@ -22,7 +22,7 @@ void hardware_serializePreset(tt_serializer_t* stream, uint8_t preset_num)
 {
 }
 
-void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
+void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, bool clearExisting)
 {
 }
 

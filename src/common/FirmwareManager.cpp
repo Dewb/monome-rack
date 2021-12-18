@@ -467,11 +467,11 @@ void FirmwareManager::serializePreset(tt_serializer_t* stream, uint8_t preset_nu
     }
 }
 
-void FirmwareManager::deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
+void FirmwareManager::deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, bool clearExisting)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_deserializePreset(stream, preset_num);
+        return impl->fw_fn_hardware_deserializePreset(stream, preset_num, clearExisting);
     }
 }
 

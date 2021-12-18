@@ -63,6 +63,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     int inputRate;
     int outputRate;
 
+    std::mutex processMutex;
+
 private:
     void reloadFirmware(bool preserveMemory);
 

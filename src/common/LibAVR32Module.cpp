@@ -213,6 +213,8 @@ void LibAVR32Module::process(const ProcessArgs& args)
         firstStep = false;
     }
 
+    std::lock_guard<std::mutex> lock(processMutex);
+
     if (reloadRequested != ReloadRequest::None)
     {
         switch (reloadRequested)

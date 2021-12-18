@@ -64,11 +64,11 @@ void presetImportExportFileOperation(LibAVR32Module* module, Operation operation
             .data = (void*)file,
         };
 
-        module->firmware.deserializePreset(&stream, preset_num);
+        module->firmware.deserializePreset(&stream, preset_num, true);
     }
 }
 
-void presetImportExportClipboardOperation(LibAVR32Module* module, Operation operation, int preset_num)
+void presetImportExportClipboardOperation(LibAVR32Module* module, Operation operation, int preset_num, bool clearExisting)
 {
     if (!module)
     {
@@ -98,7 +98,7 @@ void presetImportExportClipboardOperation(LibAVR32Module* module, Operation oper
 
         // Remove any linefeeds
         rawclip.erase(std::remove(rawclip.begin(), rawclip.end(), '\r'), rawclip.end());
-        
+
         // Tabs in pattern/grid sections may have been turned into spaces. Turn them back
         auto patStart = rawclip.find("#P");
         auto gridStart = rawclip.find("#G");
@@ -129,7 +129,9 @@ void presetImportExportClipboardOperation(LibAVR32Module* module, Operation oper
             .data = (void*)&clip,
         };
 
-        module->firmware.deserializePreset(&stream, preset_num);
+        std::lock_guard<std::mutex> lock(module->processMutex);
+
+        module->firmware.deserializePreset(&stream, preset_num, clearExisting);
     }
 }
 
@@ -192,18 +194,22 @@ struct InternalPresetClipboardItem : rack::ui::MenuItem
     LibAVR32Module* module;
     int preset_num;
     Operation operation;
+    bool clearExisting;
 
-    InternalPresetClipboardItem(LibAVR32Module* module, int preset_num, Operation operation)
+    InternalPresetClipboardItem(LibAVR32Module* module, int preset_num, Operation operation, bool clearExisting = true)
         : module(module)
         , preset_num(preset_num)
         , operation(operation)
+        , clearExisting(clearExisting)
     {
-        text = (operation == Load ? "Paste from clipboard" : "Copy to clipboard");
+        text = (operation == Save ?
+            "Copy to clipboard" :
+            (clearExisting ? "Paste and init new scene from clipboard" : "Paste and merge clipboard into current scene"));
     }
 
     void onAction(const rack::event::Action& e) override
     {
-        presetImportExportClipboardOperation(module, operation, preset_num);
+        presetImportExportClipboardOperation(module, operation, preset_num, clearExisting);
     }
 };
 
@@ -274,6 +280,9 @@ struct InternalPresetActiveSubmenu : rack::ui::MenuItem
 
         menu->addChild(new InternalPresetItem(module, -1, operation));
         menu->addChild(new InternalPresetClipboardItem(module, -1, operation));
+        if (operation == Load) {
+            menu->addChild(new InternalPresetClipboardItem(module, -1, operation, false));  // paste and merge
+        }
 
         return menu;
     }

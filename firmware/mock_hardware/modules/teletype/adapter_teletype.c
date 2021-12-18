@@ -5,6 +5,7 @@
 #include "module/flash.h"
 #include "module/gitversion.h"
 #include "module/globals.h"
+#include "module/live_mode.h"
 #include "module/preset_w_mode.h"
 #include "src/serialize.h"
 #include "src/teletype_io.h"
@@ -42,12 +43,73 @@ void hardware_serializePreset(tt_serializer_t* stream, uint8_t preset_num)
     }
 }
 
-void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num)
+
+// copied and modified from module/flash.c
+void fake_flash_read(scene_state_t* src_scene, scene_state_t* dest_scene,
+    char (*src_text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS], char (*dest_text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS],
+    uint8_t init_pattern, uint8_t init_grid,
+    uint8_t init_i2c_op_address)
+{
+    memcpy(ss_scripts_ptr(dest_scene), ss_scripts_ptr(src_scene),
+        // Exclude size of TEMP script as above
+        ss_scripts_size() - sizeof(scene_script_t));
+
+    if (init_pattern)
+    {
+        memcpy(ss_patterns_ptr(dest_scene), ss_patterns_ptr(src_scene),
+            ss_patterns_size());
+    }
+    if (init_grid)
+    {
+        memcpy(&dest_scene->grid, &src_scene->grid, sizeof(scene_grid_t));
+    }
+    memcpy(dest_text, src_text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+    // need to reset timestamps
+    uint32_t ticks = tele_get_ticks();
+    for (size_t i = 0; i < TEMP_SCRIPT; i++)
+        dest_scene->scripts[i].last_time = ticks;
+    dest_scene->variables.time = 0;
+
+    if (init_i2c_op_address)
+        dest_scene->i2c_op_address = -1;
+    ss_midi_init(dest_scene);
+}
+
+// copied and modified from module/flash.c
+void fake_do_preset_read(scene_state_t* src_scene, scene_state_t* dest_scene,
+    char (*src_text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS], char (*dest_text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS],
+    uint8_t init_pattern, uint8_t init_grid,
+    uint8_t init_i2c_op_address, uint8_t run_init)
+{
+    ss_grid_init(dest_scene);
+    fake_flash_read(src_scene, dest_scene, src_text, dest_text, init_pattern, init_grid, init_i2c_op_address);
+
+    set_dash_updated();
+    if (run_init) {
+        scene_state.initializing = true;
+        run_script(&scene_state, INIT_SCRIPT);
+        scene_state.initializing = false;
+    }
+}
+
+void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, bool clearExisting)
 {
     if (preset_num == 255)
     {
+        scene_state_t scene;
+        ss_init(&scene);
+
+        char text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
+        memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+
+        if (!clearExisting) {
+            memcpy_s(&scene, sizeof(scene_state_t), &scene_state, sizeof(scene_state_t));
+            memcpy_s(text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS, scene_text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+        }
+        deserialize_scene(stream, &scene, &text);
+
         // load into active scene state and text
-        deserialize_scene(stream, &scene_state, &scene_text);
+        fake_do_preset_read(&scene, &scene_state, &text, &scene_text, 1, 1, 1, clearExisting ? 1 : 0);
 
         // refresh some obvious things that might have been affected by the load
         set_preset_w_mode();
