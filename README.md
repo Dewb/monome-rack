@@ -10,7 +10,6 @@ This plugin is still in development. [The extremely hypothetical release roadmap
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://repository-images.githubusercontent.com/112882255/a09c18bc-06f4-4aa5-8b2c-6db57a7f2648">
 
 This plugin currently includes:
-* Virtual versions of the venerable [monome grid 64 and 128](https://monome.org/docs/grid/), a series of open, interactive grid instruments, in 8x8 and 16x8 versions.
 * The [white whale](https://monome.org/docs/whitewhale/) grid-enabled probabilistic step sequencer
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
@@ -25,8 +24,8 @@ This plugin currently includes:
  * The [teletype](https://monome.org/docs/teletype/) algorithmic ecosystem
    * a dynamic, musical, scriptable event triggering platform.
    * 8 trigger ins, 1 CV in, 4 CV and 4 trigger outs
- 
-   
+* Support for [monome grid](https://monome.org/docs/grid/) hardware controllers, both current editions and older models, plus virtual versions of the controllers within VCV Rack, in 64, 128, and 256-key flavors.
+    
 All of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
 
 Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
