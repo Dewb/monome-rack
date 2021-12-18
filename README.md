@@ -61,6 +61,7 @@ More detailed instructions are available in the [Rack documentation on installin
    * [earthsea introduction](https://vimeo.com/113231441)
    * ["teletype talk" series by Joe Filbrun](https://www.youtube.com/watch?v=mMAhjRKrpZE&list=PLoxHBVkj2rip4Ce4kxdz_k7mK9Z8Wygo-)
    * [teletype videos by The Ghost Saboteur](https://www.youtube.com/playlist?list=PLMHhQKTYXU657VGx48aj-0rs_tjoz7-Eo)
+   * [flash crash livecoding events](https://flashcrash.net/) for teletype in performance
 
 ### Why is this?
 
