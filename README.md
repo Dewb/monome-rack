@@ -42,14 +42,14 @@ More detailed instructions are available in the [Rack documentation on installin
 * Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
 * If you have a hardware grid connected, right-click the module and select your hardware grid from the list. The virtual grid should go dark and your physical grid should light up.
 
-#### Going deeper
+#### Learning
 
-* Read the manuals for the modules:
-   * [white whale manual](https://monome.org/docs/whitewhale/)
-   * [meadowphysics manual](https://monome.org/docs/meadowphysics/)
-   * [earthsea manual](https://monome.org/docs/earthsea/)
-   * [teletype manual](https://monome.org/docs/teletype/)
-* Watch these videos:
+* The offical docs for the hardware modules:
+   * [white whale](https://monome.org/docs/whitewhale/)
+   * [meadowphysics](https://monome.org/docs/meadowphysics/)
+   * [earthsea](https://monome.org/docs/earthsea/)
+   * [teletype](https://monome.org/docs/teletype/) + [manual](https://monome.org/docs/teletype/manual) + [command cheatsheet](https://monome.org/docs/teletype/TT_commands_3.0.pdf)
+* Videos on using the hardware:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial part 1](https://vimeo.com/105368808)
    * [white whale tutorial part 2](https://vimeo.com/105368874)
@@ -59,6 +59,8 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics tutorial](https://vimeo.com/107586549)
    * [meadowphysics two](https://vimeo.com/146731772)
    * [earthsea introduction](https://vimeo.com/113231441)
+   * ["teletype talk" series by Joe Filbrun](https://www.youtube.com/watch?v=mMAhjRKrpZE&list=PLoxHBVkj2rip4Ce4kxdz_k7mK9Z8Wygo-)
+   * [teletype videos by The Ghost Saboteur](https://www.youtube.com/playlist?list=PLMHhQKTYXU657VGx48aj-0rs_tjoz7-Eo)
 
 ### Why is this?
 
