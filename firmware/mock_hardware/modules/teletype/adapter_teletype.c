@@ -103,8 +103,8 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, b
         memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
 
         if (!clearExisting) {
-            memcpy_s(&scene, sizeof(scene_state_t), &scene_state, sizeof(scene_state_t));
-            memcpy_s(text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS, scene_text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
+            memcpy(&scene, &scene_state, sizeof(scene_state_t));
+            memcpy(text, scene_text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
         }
         deserialize_scene(stream, &scene, &text);
 
