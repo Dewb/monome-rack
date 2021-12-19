@@ -37,64 +37,13 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
         mod |= 0x8;
     }
 
-    // Use Rack's keyName field for internationalization of printable chars on main keyboard; leave other codes alone
-    if (e.keyName.length() == 1 && e.keyName[0] >= 'a' && e.keyName[0] <= 'z') // A-Z
+    if (e.key >= GLFW_KEY_A && e.key <= GLFW_KEY_Z) // A-Z
     {
-        key = (e.keyName[0] - 'a') + 0x4;
+        key = (e.key - GLFW_KEY_A) + 0x4;
     }
-    else if (e.keyName.length() == 1 && 
-                e.keyName[0] >= '1' && e.keyName[0] <= '9' && 
-                !(e.key >= GLFW_KEY_KP_1 && e.key <= GLFW_KEY_KP_9))
+    else if (e.key >= GLFW_KEY_1 && e.key <= GLFW_KEY_9) // 0 is mapped separately
     {
-        key = (e.keyName[0] - '1') + 0x1e;
-    }
-    else if (e.keyName == "0" && e.key != GLFW_KEY_KP_0) 
-    {
-        key = 0x27;
-    }
-    else if (e.keyName == "." && e.key != GLFW_KEY_KP_DECIMAL) // GLFW_KEY_PERIOD
-    {
-        key = 0x37;
-    }
-    else if (e.keyName == "/" && e.key != GLFW_KEY_KP_DIVIDE) // GLFW_KEY_SLASH
-    {
-        key = 0x38;
-    }
-    else if (e.keyName == "[") // GLFW_KEY_LEFT_BRACKET
-    {
-        key = 0x2F;
-    }
-    else if (e.keyName == "]") // GLFW_KEY_RIGHT_BRACKET
-    {
-        key = 0x30;
-    }
-    else if (e.keyName == "-" && e.key != GLFW_KEY_KP_SUBTRACT) // GLFW_KEY_MINUS
-    {
-        key = 0x2d;
-    }
-    else if (e.keyName == "=") // GLFW_KEY_EQUAL
-    {
-        key = 0x2e;
-    }
-    else if (e.keyName == ";") // GLFW_KEY_SEMICOLON
-    {
-        key = 0x33;
-    }
-    else if (e.keyName == "'") // GLFW_KEY_APOSTROPHE
-    {
-        key = 0x34;
-    }
-    else if (e.keyName == "\\") // GLFW_KEY_BACKSLASH
-    {
-        key = 0x31;
-    }
-    else if (e.keyName == "`") // GLFW_KEY_GRAVE_ACCENT:
-    {
-        key = 0x35;
-    }
-    else if (e.keyName == ",") // GLFW_KEY_COMMA
-    {
-        key = 0x36;
+        key = (e.key - GLFW_KEY_1) + 0x1e;
     }
     else if (e.key >= GLFW_KEY_RIGHT && e.key <= GLFW_KEY_UP)
     {
@@ -121,11 +70,47 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
             case GLFW_KEY_BACKSPACE:
                 key = 0x2a;
                 break;
+            case GLFW_KEY_PERIOD:
+                key = 0x37;
+                break;
+            case GLFW_KEY_SLASH:
+                key = 0x38;
+                break;
+            case GLFW_KEY_0:
+                key = 0x27;
+                break;
             case GLFW_KEY_KP_0:
                 key = 0x62;
                 break;
+            case GLFW_KEY_LEFT_BRACKET:
+                key = 0x2f;
+                break;
+            case GLFW_KEY_RIGHT_BRACKET:
+                key = 0x30;
+                break;
             case GLFW_KEY_TAB:
                 key = 0x2b;
+                break;
+            case GLFW_KEY_MINUS:
+                key = 0x2d;
+                break;
+            case GLFW_KEY_EQUAL:
+                key = 0x2e;
+                break;
+            case GLFW_KEY_SEMICOLON:
+                key = 0x33;
+                break;
+            case GLFW_KEY_APOSTROPHE:
+                key = 0x34;
+                break;
+            case GLFW_KEY_BACKSLASH:
+                key = 0x31;
+                break;
+            case GLFW_KEY_GRAVE_ACCENT:
+                key = 0x35;
+                break;
+            case GLFW_KEY_COMMA:
+                key = 0x36;
                 break;
             case GLFW_KEY_ESCAPE:
                 key = 0x29;
