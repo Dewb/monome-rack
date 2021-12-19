@@ -10,7 +10,6 @@ This plugin is still in development. [The extremely hypothetical release roadmap
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://repository-images.githubusercontent.com/112882255/a09c18bc-06f4-4aa5-8b2c-6db57a7f2648">
 
 This plugin currently includes:
-* Virtual versions of the venerable [monome grid 64 and 128](https://monome.org/docs/grid/), a series of open, interactive grid instruments, in 8x8 and 16x8 versions.
 * The [white whale](https://monome.org/docs/whitewhale/) grid-enabled probabilistic step sequencer
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
@@ -25,8 +24,8 @@ This plugin currently includes:
  * The [teletype](https://monome.org/docs/teletype/) algorithmic ecosystem
    * a dynamic, musical, scriptable event triggering platform.
    * 8 trigger ins, 1 CV in, 4 CV and 4 trigger outs
- 
-   
+* Support for [monome grid](https://monome.org/docs/grid/) hardware controllers, both current editions and older models, plus virtual versions of the controllers within VCV Rack, in 64, 128, and 256-key flavors.
+    
 All of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
 
 Through the virtual grid, all features of each module are accessible, but some features are awkward to use without multiple fingers on a real grid. Control-clicking (Linux/Windows) or Command-clicking (Mac OS) will allow you to "hold" keys to perform multi-press gestures.
@@ -43,14 +42,14 @@ More detailed instructions are available in the [Rack documentation on installin
 * Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
 * If you have a hardware grid connected, right-click the module and select your hardware grid from the list. The virtual grid should go dark and your physical grid should light up.
 
-#### Going deeper
+#### Learning
 
-* Read the manuals for the modules:
-   * [white whale manual](https://monome.org/docs/whitewhale/)
-   * [meadowphysics manual](https://monome.org/docs/meadowphysics/)
-   * [earthsea manual](https://monome.org/docs/earthsea/)
-   * [teletype manual](https://monome.org/docs/teletype/)
-* Watch these videos:
+* The offical docs for the hardware modules:
+   * [white whale](https://monome.org/docs/whitewhale/)
+   * [meadowphysics](https://monome.org/docs/meadowphysics/)
+   * [earthsea](https://monome.org/docs/earthsea/)
+   * [teletype](https://monome.org/docs/teletype/) + [manual](https://monome.org/docs/teletype/manual) + [command cheatsheet](https://monome.org/docs/teletype/TT_commands_3.0.pdf)
+* Videos on using the hardware:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial part 1](https://vimeo.com/105368808)
    * [white whale tutorial part 2](https://vimeo.com/105368874)
@@ -60,6 +59,9 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics tutorial](https://vimeo.com/107586549)
    * [meadowphysics two](https://vimeo.com/146731772)
    * [earthsea introduction](https://vimeo.com/113231441)
+   * ["teletype talk" series by Joe Filbrun](https://www.youtube.com/watch?v=mMAhjRKrpZE&list=PLoxHBVkj2rip4Ce4kxdz_k7mK9Z8Wygo-)
+   * [teletype videos by The Ghost Saboteur](https://www.youtube.com/playlist?list=PLMHhQKTYXU657VGx48aj-0rs_tjoz7-Eo)
+   * [flash crash livecoding events](https://flashcrash.net/) for teletype in performance
 
 ### Why is this?
 
