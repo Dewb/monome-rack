@@ -7,7 +7,7 @@
   "authorEmail": "",
   "authorUrl": "",
   "pluginUrl": "",
-  "manualUrl": "https://monome.org/docs",
+  "manualUrl": "https://github.com/Dewb/monome-rack/blob/main/README.md",
   "sourceUrl": "https://github.com/Dewb/monome-rack",
   "donateUrl": "",
   "modules": [
@@ -52,9 +52,8 @@
     {
       "slug": "teletype",
       "name": "teletype",
-      "description": "algorithmic ecosystem",
+      "description": "grid-enabled algorithmic ecosystem for musical code",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-teletype",
-      "keywords": "livecoding code scripting script",
       "tags": [
         "sequencer",
         "clock generator",
@@ -75,7 +74,7 @@
     {
       "slug": "ansible",
       "name": "ansible",
-      "description": "far communicator",
+      "description": "grid-enabled far communicator",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-ansible",
       "tags": [
         "sequencer",
