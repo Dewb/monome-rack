@@ -21,15 +21,17 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
         assert(0);
     }
 
-    config(w * h, 0, 0, 0);
+    config(w * h * 2, 0, 0, 0);
 
     for (unsigned j = 0; j < h; j++)
     {
         for (unsigned i = 0; i < w; i++)
         {
-            int n = i + j * w;
-            // set an infinite bound so the params won't be serialized [and also won't be midi mappable ): ]
-            configParam(n, 0.0, INFINITY, 0.0);
+            int n = i + j * w * 2;
+            // first set of params, for midi mapping
+            configButton(n, rack::string::f("(%d,%d)", i , j));
+            // second set of params, for interactive use
+            configButton(n + 1, rack::string::f("(%d,%d)", i, j));
         }
     }
 
@@ -65,8 +67,12 @@ void VirtualGridModule::process(const ProcessArgs& args)
     {
         for (int j = 0; j < device.height; j++)
         {
+            // we need to check the pressed state of two parameters per button,
+            // one for MIDI mapping, one for interactive presses, in order to
+            // prevent midi-mappings from locking a button at 0 and preventing clicking.
             int n = i + (j * device.width);
-            bool state = params[n].getValue() > 0;
+            int p = n * 2;
+            bool state = (params[p].getValue() > 0) || (params[p + 1].getValue() > 0);
             if (state != pressedState[n])
             {
                 pressedState[n] = state;

@@ -4,15 +4,13 @@
 struct VirtualGridKey : rack::app::ParamWidget
 {
     uint8_t* ledAddress;
-    int index;
     GridTheme* theme;
     float margin;
 
     typedef enum
     {
         OFF,
-        PRESSED,
-        HELD
+        PRESSED
     } KeyPressState;
 
     VirtualGridKey()
@@ -54,8 +52,8 @@ struct VirtualGridKey : rack::app::ParamWidget
             &color2
         );
 
-        bool pushed = getParamQuantity() && (getParamQuantity()->getValue() == HELD || getParamQuantity()->getValue() == PRESSED);
-        int pushAmount = 2.1;
+        bool pushed = isPushed();
+        int pushAmount = 2.6;
 
         if (!pushed) {
             // highlight top and side edges
@@ -90,15 +88,6 @@ struct VirtualGridKey : rack::app::ParamWidget
             }
         }
 
-        // selection-hold ring
-        // if (getParamQuantity() && getParamQuantity()->getValue() == HELD)
-        // {
-        //     nvgBeginPath(vg);
-        //     nvgRoundedRect(vg, x - 3, y - 3 + pushAmount, rect.x + 6, rect.y + 6 - pushAmount, 6);
-        //     nvgFillColor(vg, nvgRGB(180, 180, 0));
-        //     nvgFill(vg);
-        // }
-
         // button vertical face
         if (!pushed) {
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
@@ -126,51 +115,67 @@ struct VirtualGridKey : rack::app::ParamWidget
         }
     }
 
+    rack::engine::ParamQuantity* getSecondaryParamQuantity()
+    {
+        if (!module)
+            return NULL;
+        return module->paramQuantities[paramId + 1];
+    }
+
+    bool isPushed()
+    {
+        return
+            (getParamQuantity() && getParamQuantity()->getValue() == PRESSED) ||
+            (getSecondaryParamQuantity() && getSecondaryParamQuantity()->getValue() == PRESSED);
+    }
+
     void beginPress()
     {
-        if (getParamQuantity())
+        if (getSecondaryParamQuantity())
         {
-            float value = getParamQuantity()->getValue();
-
-            if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL && value != HELD)
+            // if we're Ctrl/Mac-clicking an already-held button, release it
+            if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL &&
+                getSecondaryParamQuantity()->getValue() > 0)
             {
-                // hold key down
-                getParamQuantity()->setValue(HELD);
+                getSecondaryParamQuantity()->setValue(OFF);
             }
             else
             {
-                getParamQuantity()->setValue(PRESSED);
+                getSecondaryParamQuantity()->setValue(PRESSED);
             }
         }
     }
 
     void endPress()
     {
-        if (getParamQuantity())
+        // Ignore mouseup when Ctrl/Apple held, to enable "press and hold" behavior
+        if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL)
         {
-            if (getParamQuantity()->getValue() != HELD)
-            {
-                getParamQuantity()->setValue(OFF);
-            }
+            return;
+        }
+
+        if (getSecondaryParamQuantity())
+        {
+            getSecondaryParamQuantity()->setValue(OFF);
         }
     }
 
     void onButton(const rack::event::Button& e) override
     {
-        if (e.button != GLFW_MOUSE_BUTTON_LEFT)
+        if (e.button == GLFW_MOUSE_BUTTON_LEFT)
         {
-            return;
+            if (e.action == GLFW_PRESS)
+            {
+                beginPress();
+            }
+            else
+            {
+                endPress();
+            }
         }
-        e.consume(this);
 
-        if (e.action == GLFW_PRESS)
-        {
-            beginPress();
-        }
-        else
-        {
-            endPress();
-        }
+        // pass to base class to enable MIDI mapping, right-click menu, etc.
+        ParamWidget::onButton(e);
     }
 
     void onDragStart(const rack::event::DragStart& e) override

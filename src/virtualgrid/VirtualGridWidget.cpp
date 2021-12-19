@@ -41,7 +41,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     }
 
     float rackWidth = 0;
-    GridTheme* sampleTheme;
+    GridTheme* sampleTheme = &sampleThemeYellow;
 
     if (w == h)
     {
@@ -84,7 +84,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             float y = margins.y + j * (button_size + spacing) - keyMargin;
             int n = i + j * w;
 
-            VirtualGridKey* key = (VirtualGridKey*)createParam<VirtualGridKey>(Vec(x, y), module, n);
+            VirtualGridKey* key = (VirtualGridKey*)createParam<VirtualGridKey>(Vec(x, y), module, n * 2);
             if (module)
             {
                 key->setKeyAddress(module->ledBuffer + i + j * 16);
@@ -94,7 +94,6 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
                 key->theme = sampleTheme;
             }
             key->box.size = Vec(button_size + spacing, button_size + spacing);
-            key->index = n;
             key->margin = keyMargin;
             addParam(key);
         }
