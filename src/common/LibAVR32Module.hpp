@@ -64,11 +64,11 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     int outputRate;
 
     std::mutex processMutex;
+    bool firstStep;
 
 private:
     void reloadFirmware(bool preserveMemory);
 
-    bool firstStep;
     ReloadRequest reloadRequested;
 
     float dacOffsetVolts;

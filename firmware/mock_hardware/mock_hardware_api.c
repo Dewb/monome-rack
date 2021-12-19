@@ -229,20 +229,20 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
         memset(screenBuffer, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
 
         // initialize a distinctive pattern for debugging purposes
-        for (int j = 0; j < SCREEN_HEIGHT; j++)
-        {
-            for (int i = 0; i < SCREEN_WIDTH; i++)
-            {
-                if ((j / 16) % 2)
-                {
-                    screenBuffer[i + SCREEN_WIDTH * j] = i % 16;
-                }
-                else
-                {
-                    screenBuffer[i + SCREEN_WIDTH * j] = 15 - (i % 16);
-                }
-            }
-        }
+        // for (int j = 0; j < SCREEN_HEIGHT; j++)
+        // {
+        //     for (int i = 0; i < SCREEN_WIDTH; i++)
+        //     {
+        //         if ((j / 16) % 2)
+        //         {
+        //             screenBuffer[i + SCREEN_WIDTH * j] = i % 16;
+        //         }
+        //         else
+        //         {
+        //             screenBuffer[i + SCREEN_WIDTH * j] = 15 - (i % 16);
+        //         }
+        //     }
+        // }
     }
     if (ptr)
     {
@@ -258,13 +258,6 @@ void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
     }
 }
 
-void hardware_copyScreenBuffer(uint8_t* dest)
-{
-    if (screenBuffer && dest)
-    {
-        memcpy(dest, screenBuffer, SCREEN_WIDTH * SCREEN_HEIGHT);
-    }
-}
 
 // TODO: make this generic for all followers somehow
 uint16_t faderbank[16];

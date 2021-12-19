@@ -34,7 +34,7 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     // addChild(createScrew<ScrewSilver>(Vec(11, 312)));
     // addChild(createScrew<ScrewSilver>(Vec(244, 312)));
 
-    screen = new TeletypeScreenWidget(module ? module->screenBuffer : nullptr, 128, 64);
+    screen = new TeletypeScreenWidget(module);
     screen->box.pos = Vec(30, 200);
     screen->box.size = Vec(210, 112);
     addChild(screen);

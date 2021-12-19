@@ -1,10 +1,8 @@
 #include "TeletypeScreenWidget.hpp"
 #include "TeletypeModule.hpp"
 
-TeletypeScreenWidget::TeletypeScreenWidget(uint8_t* buffer, int x, int y)
-    : buffer(buffer)
-    , pixel_x(x)
-    , pixel_y(y)
+TeletypeScreenWidget::TeletypeScreenWidget(LibAVR32Module* module)
+: module(module)
 {
 }
 
@@ -177,24 +175,19 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
         }
     }
 
-    auto mw = static_cast<ModuleWidget*>(parent);
-    if (mw)
+    if (module)
     {
-        auto tt = static_cast<TeletypeModule*>(mw->module);
-        if (tt)
+        if (e.action == GLFW_PRESS)
         {
-            if (e.action == GLFW_PRESS)
-            {
-                tt->firmware.hidMessage(key, mod, false, false);
-            }
-            else if (e.action == GLFW_REPEAT)
-            {
-                tt->firmware.hidMessage(key, mod, true, false);
-            }
-            else if (e.action == GLFW_RELEASE)
-            {
-                tt->firmware.hidMessage(key, mod, false, true);
-            }
+            module->firmware.hidMessage(key, mod, false, false);
+        }
+        else if (e.action == GLFW_REPEAT)
+        {
+            module->firmware.hidMessage(key, mod, true, false);
+        }
+        else if (e.action == GLFW_RELEASE)
+        {
+            module->firmware.hidMessage(key, mod, false, true);
         }
     }
 
@@ -203,72 +196,86 @@ void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
 
 void TeletypeScreenWidget::draw(const DrawArgs& args)
 {
-    drawLayer(args, 0);
+    drawFrame(args.vg);
 }
 
 void TeletypeScreenWidget::drawLayer(const DrawArgs& args, int layer)
 {
-    auto vg = args.vg;
-    
-    int margin = 5;
-
-    float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
-    float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
-
-    if (layer == 0)
+    if (layer == 1)
     {
-        if (this == APP->event->selectedWidget)
-        {
-            // draw keyboard focus highlight rectangle
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
-            nvgStrokeColor(vg, nvgRGB(190, 180, 0));
-            nvgStrokeWidth(vg, 3.5);
-            nvgStroke(vg);
-            nvgFillColor(vg, nvgRGB(190, 180, 0));
-            nvgFill(vg);
-        } else {
-            // draw skeumorphic shadow around screen
-            float t = 0.95;
-            float r = 2.75;
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
-            nvgFillColor(vg, nvgRGB(250, 250, 240));
-            nvgFill(vg);
+        drawPixels(args.vg);
+    }
+}
 
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
-            nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
-            nvgFillColor(vg, nvgRGB(140, 140, 130));
-            nvgFill(vg);
-
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
-            nvgFillColor(vg, nvgRGB(250, 250, 240));
-            nvgFill(vg);
-        }
-
-        // the screen itself
+void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
+{
+    if (this == APP->event->selectedWidget)
+    {
+        // draw keyboard focus highlight rectangle
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
-        nvgFillColor(vg, nvgRGB(0, 0, 0));
+        nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
+        nvgStrokeColor(vg, nvgRGB(190, 180, 0));
+        nvgStrokeWidth(vg, 3.5);
+        nvgStroke(vg);
+        nvgFillColor(vg, nvgRGB(190, 180, 0));
         nvgFill(vg);
     }
-    else if (layer == 1)
+    else
     {
-        // now draw the pixels
-        if (buffer)
-        {
-            uint8_t* ptr = buffer;
-            for (int j = 0; j < pixel_y; j++)
-            {
-                for (int i = 0; i < pixel_x; i++)
-                {
-                    float x = margin + i * pixel_width;
-                    float y = margin + j * pixel_height;
+        // draw skeumorphic shadow around screen
+        float t = 0.95;
+        float r = 2.75;
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
+        nvgFillColor(vg, nvgRGB(250, 250, 240));
+        nvgFill(vg);
 
-                    drawPixel(vg, x, y, pixel_width, pixel_height, *ptr++);
-                }
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
+        nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
+        nvgFillColor(vg, nvgRGB(140, 140, 130));
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
+        nvgFillColor(vg, nvgRGB(250, 250, 240));
+        nvgFill(vg);
+    }
+
+    // draw the empty screen
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
+    nvgFillColor(vg, nvgRGB(0, 0, 0));
+    nvgFill(vg);
+}
+
+void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
+{
+    if (!module || module->firstStep)
+    {
+        return;
+    }
+
+    uint8_t* buffer;
+    uint16_t pixel_x = 0;
+    uint16_t pixel_y = 0;
+
+    module->firmware.getScreenBuffer(&buffer, &pixel_x, &pixel_y);
+
+    if (buffer)
+    {
+        int margin = 5;
+        float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
+        float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
+
+        for (int j = 0; j < pixel_y; j++)
+        {
+            for (int i = 0; i < pixel_x; i++)
+            {
+                float x = margin + i * pixel_width;
+                float y = margin + j * pixel_height;
+
+                drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
             }
         }
     }

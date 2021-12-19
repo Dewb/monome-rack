@@ -128,6 +128,4 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
     outputs[CV2_OUTPUT].setVoltage(cv2);
     outputs[CV3_OUTPUT].setVoltage(cv3);
     outputs[CV4_OUTPUT].setVoltage(cv4);
-
-    firmware.copyScreenBuffer(screenBuffer);
 }

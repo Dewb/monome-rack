@@ -51,10 +51,9 @@ struct TeletypeModule : LibAVR32Module
     };
 
     TeletypeModule();
+
     void processInputs(const ProcessArgs& args) override;
     void processOutputs(const ProcessArgs& args) override;
-
-    uint8_t screenBuffer[128 * 64];
 
 protected:
     iiDevice _iiDevice;

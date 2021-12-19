@@ -410,14 +410,6 @@ void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* 
     }
 }
 
-void FirmwareManager::copyScreenBuffer(uint8_t* dest)
-{
-    if (impl)
-    {
-        impl->fw_fn_hardware_copyScreenBuffer(dest);
-    }
-}
-
 void FirmwareManager::hidConnect()
 {
     if (impl)
