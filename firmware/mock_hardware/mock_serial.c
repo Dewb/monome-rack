@@ -119,7 +119,8 @@ void mock_monome_serial_setup(bool connected, uint8_t protocol, uint8_t width, u
     {
         // push a disconnect event
         event_t ev;
-        ev.type = kEventMonomeDisconnect;
+        // kEventFtdiDisconnect is the low-level disconnect event for both FTDI and CDC devices
+        ev.type = kEventFtdiDisconnect;
         event_post(&ev);
 
         mock_serial_isconnected = false;
