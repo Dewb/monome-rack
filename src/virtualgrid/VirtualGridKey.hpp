@@ -173,9 +173,38 @@ struct VirtualGridKey : rack::app::ParamWidget
                 endPress();
             }
         }
+        else if (e.button == GLFW_MOUSE_BUTTON_RIGHT)
+        {
+            // If this key has not been MIDI mapped, the right-click menu
+            // is not useful, so show the module menu
+            auto* paramHandle = module
+                ? APP->engine->getParamHandle(module->id, paramId)
+                : NULL;
+            if (!paramHandle)
+            {
+                return;
+            }
+        }
 
-        // pass to base class to enable MIDI mapping, right-click menu, etc.
-        ParamWidget::onButton(e);
+        // Repeat logic from ParamWidget::onButton() with minor modifications
+        OpaqueWidget::onButton(e);
+
+        // Record touch so MIDI mapping works
+        if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT && (e.mods & RACK_MOD_MASK) == 0)
+        {
+            if (module)
+            {
+                APP->scene->rack->touchedParam = this;
+            }
+            e.consume(this);
+        }
+
+        if (e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_RIGHT && (e.mods & RACK_MOD_MASK) == 0)
+        {
+            destroyTooltip();
+            createContextMenu();
+            e.consume(NULL); // replaces e.consume(this), which causes key to get pressed on right click for some reason
+        }
     }
 
     void onDragStart(const rack::event::DragStart& e) override

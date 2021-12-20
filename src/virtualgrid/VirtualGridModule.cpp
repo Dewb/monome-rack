@@ -29,9 +29,15 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
         {
             int n = i + j * w * 2;
             // first set of params, for midi mapping
-            configButton(n, rack::string::f("(%d,%d)", i , j));
+            auto param = configButton(n, rack::string::f("(%d,%d)", i , j));
+            param->resetEnabled = false;
+            param->smoothEnabled = false;
+            param->randomizeEnabled = false;
             // second set of params, for interactive use
-            configButton(n + 1, rack::string::f("(%d,%d)", i, j));
+            param = configButton(n + 1, rack::string::f("(%d,%d)", i, j));
+            param->resetEnabled = false;
+            param->smoothEnabled = false;
+            param->randomizeEnabled = false;
         }
     }
 
