@@ -13,6 +13,7 @@ struct Grid
     virtual const MonomeDevice& getDevice() = 0;
     virtual void updateRow(int x_offset, int y, uint8_t bitfield) = 0;
     virtual void updateQuadrant(int x, int y, uint8_t* leds) = 0;
+    virtual void updateRing(int n, uint8_t leds[64]) = 0;
     virtual void clearAll() = 0;
 };
 
@@ -22,6 +23,7 @@ struct GridConsumer
     virtual void gridDisconnected(bool ownerChanged) = 0;
     virtual std::string gridGetLastDeviceId() = 0;
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
+    virtual void encDeltaEvent(int n, int d) = 0;
 };
 
 struct GridConnectionManager final
@@ -39,7 +41,7 @@ struct GridConnectionManager final
     void disconnect(GridConsumer* consumer, bool ownerChanged = false);
 
     void dispatchButtonMessage(MonomeDevice* device, int x, int y, bool state);
-
+    void dispatchEncDeltaMessage(MonomeDevice* device, int n, int d);
     const std::set<Grid*>& getGrids();
 
     static GridConnectionManager* get();

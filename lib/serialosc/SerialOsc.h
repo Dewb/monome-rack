@@ -22,6 +22,7 @@ public:
         virtual void deviceFound(const MonomeDevice* const device) {}
         virtual void deviceRemoved(const std::string& id) {}
         virtual void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) = 0;
+        virtual void encDeltaMessageReceived(MonomeDevice* device, int n, int delta) = 0;
     };
 
     typedef std::vector<MonomeDevice*> MonomeDeviceCollection;
@@ -52,6 +53,7 @@ public:
     void sendDeviceLedRowCommand(const MonomeDevice* const device, int x_offset, int y, uint8_t stateBits);
     void sendDeviceLedMapCommand(const MonomeDevice* const device, int x, int y, uint8_t* stateMap);
     void sendDeviceLedLevelMapCommand(const MonomeDevice* const device, int x, int y, uint8_t* stateMap);
+    void sendDeviceRingMapCommand(const MonomeDevice* const device, int n, uint8_t leds[64]);
 
 protected:
     void runThread(void);

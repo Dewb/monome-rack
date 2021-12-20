@@ -88,17 +88,23 @@ void setup_mock_serial()
     serial_connected = &mock_serial_connected;
 }
 
-void mock_monome_serial_setup(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
+void mock_monome_serial_setup(bool connected, uint8_t type, uint8_t protocol, uint8_t width, uint8_t height)
 {
     if (connected)
     {
         // fill out the global mdesc structure
         mdesc.protocol = (eMonomeProtocol)protocol;
         mdesc.vari = mdesc.protocol == eProtocolMext;
-        mdesc.device = eDeviceGrid;
-        mdesc.rows = height;
-        mdesc.cols = width;
-        mdesc.tilt = 1;
+        if (type == 0) {
+            mdesc.device = eDeviceGrid;
+            mdesc.rows = height;
+            mdesc.cols = width;
+            mdesc.tilt = 1;
+        } else {
+            mdesc.device = eDeviceArc;
+            mdesc.tilt = 1;
+            mdesc.encs = width;
+        }
 
         // set device-specific event handlers based on the global mdesc
         set_funcs();
@@ -109,7 +115,7 @@ void mock_monome_serial_setup(bool connected, uint8_t protocol, uint8_t width, u
         ev.type = kEventMonomeConnect;
         u8* data = (u8*)(&(ev.data));
         *data++ = (u8)(mdesc.device);
-        *data++ = mdesc.cols;
+        *data++ = type? mdesc.encs : mdesc.cols;
         *data++ = mdesc.rows;
         event_post(&ev);
 

@@ -29,7 +29,7 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
 {
     if (gridConnection != nullptr)
     {
-        firmware.serialConnectionChange(false, 0, 0, 0);
+        firmware.serialConnectionChange(false, 0, 0, 0, 0);
     }
 
     gridConnection = newConnection;
@@ -39,14 +39,21 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         lastConnectedDeviceId = id;
 
         auto d = gridConnection->getDevice();
-        firmware.serialConnectionChange(true, d.protocol, d.width, d.height);
+        if (d.type == "monome arc 4")
+        {
+            firmware.serialConnectionChange(true, 1, d.protocol, 4, 1);
+        } else if (d.type == "monome arc 2") {
+            firmware.serialConnectionChange(true, 1, d.protocol, 2, 1);
+        } else {
+            firmware.serialConnectionChange(true, 0, d.protocol, d.width, d.height);
+        }
     }
 }
 
 void LibAVR32Module::gridDisconnected(bool ownerChanged)
 {
     gridConnection = nullptr;
-    firmware.serialConnectionChange(false, 0, 0, 0);
+    firmware.serialConnectionChange(false, 0, 0, 0, 0);
     if (ownerChanged)
     {
         lastConnectedDeviceId = "";
@@ -100,6 +107,19 @@ void LibAVR32Module::gridButtonEvent(int x, int y, bool state)
     // performance is surprisingly much worse!
     // uint32_t data = (0xF & x) | ((0xF & y) << 8) | ((state ? 0 : 1) << 16);
     // firmware.postEvent(16 /* kEventMonomeGridKey */, data);
+}
+
+void LibAVR32Module::encDeltaEvent(int n, int d)
+{
+    if (gridConnection)
+    {
+        uint8_t msg[3] = {
+            (uint8_t)0x50,
+            (uint8_t)n,
+            (uint8_t)d
+        };
+        firmware.writeSerial(msg, 3);
+    }
 }
 
 std::string LibAVR32Module::gridGetLastDeviceId()
@@ -172,6 +192,18 @@ void LibAVR32Module::readSerialMessages()
             if (gridConnection)
             {
                 gridConnection->updateQuadrant(x, y, leds);
+            }
+        }
+        else if (msg[0] == 0x92 && count >= 32)
+        {
+            if (gridConnection)
+            {
+                uint8_t leds[64];
+                for (int i = 0; i < 32; i++) {
+                    leds[i * 2] = msg[2 + i] >> 4;
+                    leds[i * 2 + 1] = msg[2 + i] & 0x0F;
+                }
+                gridConnection->updateRing(msg[1], leds);
             }
         }
     }

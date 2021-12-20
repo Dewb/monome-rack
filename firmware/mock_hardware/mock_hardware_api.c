@@ -144,9 +144,9 @@ void hardware_postEvent(uint32_t type, uint32_t data)
     event_post(&e);
 }
 
-void hardware_serialConnectionChange(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
+void hardware_serialConnectionChange(bool connected, uint8_t type, uint8_t protocol, uint8_t width, uint8_t height)
 {
-    mock_monome_serial_setup(connected, protocol, width, height);
+    mock_monome_serial_setup(connected, type, protocol, width, height);
 }
 
 int hardware_readSerial(uint8_t** pbuf, uint8_t* pcount)

@@ -307,11 +307,11 @@ void FirmwareManager::postEvent(uint32_t type, uint32_t data)
     }
 }
 
-void FirmwareManager::serialConnectionChange(bool connected, uint8_t protocol, uint8_t width, uint8_t height)
+void FirmwareManager::serialConnectionChange(bool connected, uint8_t type, uint8_t protocol, uint8_t width, uint8_t height)
 {
     if (impl)
     {
-        return impl->fw_fn_hardware_serialConnectionChange(connected, protocol, width, height);
+        return impl->fw_fn_hardware_serialConnectionChange(connected, type, protocol, width, height);
     }
 }
 

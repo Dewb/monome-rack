@@ -8,6 +8,7 @@ struct SerialOscInterface final : public SerialOsc::Listener
     void deviceFound(const MonomeDevice* const device) override;
     void deviceRemoved(const std::string& id) override;
     void buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state) override;
+    void encDeltaMessageReceived(MonomeDevice* device, int n, int delta) override;
 
     SerialOsc* driver;
 

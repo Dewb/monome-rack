@@ -136,6 +136,15 @@ void GridConnectionManager::dispatchButtonMessage(MonomeDevice* device, int x, i
     }
 }
 
+void GridConnectionManager::dispatchEncDeltaMessage(MonomeDevice* device, int n, int d)
+{
+    auto iter = idToConsumerMap.find(device->id);
+    if (iter != idToConsumerMap.end())
+    {
+        iter->second->encDeltaEvent(n, d);
+    }
+}
+
 const std::set<Grid*>& GridConnectionManager::getGrids()
 {
     return grids;

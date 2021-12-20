@@ -56,6 +56,11 @@ void SerialOscGrid::updateQuadrant(int x, int y, uint8_t* leds)
     }
 }
 
+void SerialOscGrid::updateRing(int n, uint8_t leds[64])
+{
+    SerialOscInterface::get()->driver->sendDeviceRingMapCommand(&device, n, leds);
+}
+
 void SerialOscGrid::clearAll()
 {
     SerialOscInterface::get()->driver->sendDeviceLedAllCommand(&device, false);

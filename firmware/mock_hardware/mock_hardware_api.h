@@ -24,7 +24,7 @@ MOCK_API(void, setDAC, (int channel, uint16_t value));
 
 MOCK_API(void, postEvent, (uint32_t type, uint32_t data));
 
-MOCK_API(void, serialConnectionChange, (bool connected, uint8_t protocol, uint8_t width, uint8_t height));
+MOCK_API(void, serialConnectionChange, (bool connected, uint8_t type, uint8_t protocol, uint8_t width, uint8_t height));
 
 MOCK_API(int, readSerial, (uint8_t** pbuf, uint8_t* pcount));
 MOCK_API(int, writeSerial, (uint8_t* buf, uint8_t byteCount));

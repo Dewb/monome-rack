@@ -269,6 +269,28 @@ void SerialOsc::sendDeviceLedLevelMapCommand(const MonomeDevice* const device, i
     transmitSocket.Send(p.Data(), p.Size());
 }
 
+void SerialOsc::sendDeviceRingMapCommand(const MonomeDevice* const device, int n, uint8_t leds[64])
+{
+    UdpTransmitSocket transmitSocket(IpEndpointName(SERIALOSC_ADDRESS, device->port));
+    char buffer[OSC_BUFFER_SIZE];
+    osc::OutboundPacketStream p(buffer, OSC_BUFFER_SIZE);
+    std::string address = (device->prefix + "/ring/map");
+
+    p << osc::BeginBundleImmediate
+      << osc::BeginMessage(address.c_str())
+      << n;
+
+    for (int i = 0; i < 64; i++)
+    {
+        p << leds[i];
+    }
+
+    p << osc::EndMessage
+      << osc::EndBundle;
+
+    transmitSocket.Send(p.Data(), p.Size());
+}
+
 void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint)
 {
     std::string address = m.AddressPattern();
@@ -389,6 +411,15 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
             bool state = (iter++)->AsInt32() > 0;
 
             listener->buttonPressMessageReceived(*deviceIterator, x, y, state);
+        }
+        else if (address == ("/" + devicePrefix + "/enc/delta"))
+        {
+            auto deviceIterator = std::find_if(devices.begin(), devices.end(), [=](const MonomeDevice* x) { return x->port == remoteEndpoint.port; });
+
+            int n = (iter++)->AsInt32();
+            int d = (iter++)->AsInt32();
+
+            listener->encDeltaMessageReceived(*deviceIterator, n, d);
         }
         // TODO : Handle other incoming device commands
     }
