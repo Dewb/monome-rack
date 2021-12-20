@@ -245,6 +245,8 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
     uint16_t pixel_x = 0;
     uint16_t pixel_y = 0;
 
+    std::lock_guard<std::mutex> lock(module->firmwareMutex);
+
     module->firmware.getScreenBuffer(&buffer, &pixel_x, &pixel_y);
 
     if (buffer)

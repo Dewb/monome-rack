@@ -64,6 +64,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     int outputRate;
 
     std::mutex processMutex;
+    std::mutex firmwareMutex;
+
     bool firstStep;
 
 private:

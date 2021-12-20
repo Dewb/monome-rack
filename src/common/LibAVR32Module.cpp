@@ -179,6 +179,8 @@ void LibAVR32Module::readSerialMessages()
 
 void LibAVR32Module::reloadFirmware(bool preserveMemory)
 {
+    std::lock_guard<std::mutex> lock(firmwareMutex);
+
     void *data, *nvram_copy, *vram_copy = 0;
     uint32_t nvram_size, vram_size = 0;
 
