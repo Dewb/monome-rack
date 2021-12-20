@@ -1,16 +1,14 @@
-#include <LibAVR32ModuleWidget.hpp>
+#include <string>
+
+struct LibAVR32Module;
 
 typedef enum
 {
     Load = 0,
     Save
-} Operation;
+} SceneOperation;
 
-struct InternalPresetSubmenu : rack::ui::MenuItem
-{
-    LibAVR32Module* module;
-    Operation operation;
+void presetImportString(LibAVR32Module* module, std::string scene, int preset_num, bool clearExisting);
 
-    InternalPresetSubmenu(LibAVR32Module* module, std::string _text, Operation operation);
-    rack::ui::Menu* createChildMenu() override;
-};
+void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, std::string fileName);
+void presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, bool clearExisting);

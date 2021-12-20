@@ -98,6 +98,7 @@
         "mock_hardware_api.h": "c",
         "__node_handle": "cpp",
         "mock_hardware_api_private.h": "c",
-        "__functional_03": "cpp"
+        "__functional_03": "cpp",
+        "mutex": "cpp"
     }
 }

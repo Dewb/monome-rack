@@ -1,0 +1,22 @@
+{
+  "plugin": "monome",
+  "model": "teletype",
+  "version": "2.0.0-alpha5",
+  "params": [
+    {
+      "value": 0.0,
+      "id": 0
+    },
+    {
+      "value": 0.0,
+      "id": 1
+    }
+  ],
+  "data": {
+    "loadScript": {
+      "active": true,
+      "flash": 0,
+      "data": "MOOD RING\n3 VOICE JAZZ BOX GENERATOR\n\nCV 1-3 TO VCO PITCH\nTR A-C TO ENVELOPES\n\nTR 1-4 CHANGE ROOT NOTE\n1: DOWN 2ND\n2: UP 2ND\n3: DOWN 3RD\n4: UP 4TH\n\nTR 5-8 IMPROVISE SCALES\n5: DOWN 2ND\n6: UP 2ND\n7: UP 3RD\n8: UP 4TH\n\nTR 1 HAS A RHYTHM SET BY\nMETRO TIME.\n\nDRIVE TR1-4 WITH A SLOW CLOCK\nOR MANUALLY WITH WALK.\n\nDRIVE TR5-8 WITH A FAST CLOCK\nOR MULTIPLE CLOCK INPUTS\nFOR ALGORITHMIC SOLOING.\n\n\n\n#1\nX WRAP SUB X 1 0 6\nS: CV 1 N PN 0 X\nIF EQ X 6: P.N 3\nELIF EQ X 4: P.N 2\nELIF EQ 0 MOD X 3: P.N 0\nELSE: P.N 1\n\n#2\nX WRAP ADD X 1 0 6\nS: CV 1 N PN 0 X\nIF EQ X 6: P.N 3\nELIF EQ X 4: P.N 2\nELIF EQ 0 MOD X 3: P.N 0\nELSE: P.N 1\n\n#3\nX WRAP SUB X 2 0 6\nS: CV 1 N PN 0 X\nIF EQ X 6: P.N 3\nELIF EQ X 4: P.N 2\nELIF EQ 0 MOD X 3: P.N 0\nELSE: P.N 1\n\n#4\nX WRAP ADD X 3 0 6\nS: CV 1 N PN 0 X\nIF EQ X 6: P.N 3\nELIF EQ X 4: P.N 2\nELIF EQ 0 MOD X 3: P.N 0\nELSE: P.N 1\n\n#5\nY PN 0 X\nP.I WRAP SUB P.I 1 0 14\nCV 3 N ADD Y P.HERE\nZ ADD 2 MUL 4 TOSS\nCV 2 N PN P.N ADD Z X\nPROB 70: TR.PULSE 3\n\n#6\nY PN 0 X\nP.I WRAP ADD P.I 1 0 14\nCV 3 N ADD Y P.HERE\nZ ADD 2 MUL 4 TOSS\nCV 2 N ADD Y PN P.N Z\nPROB 70: TR.PULSE 3\n\n#7\nY PN 0 X\nP.I WRAP ADD P.I 2 0 14\nCV 3 N ADD Y P.HERE\nZ ADD 2 MUL 4 TOSS\nCV 2 N ADD Y PN P.N Z\nPROB 70: TR.PULSE 3\n\n#8\nY PN 0 X\nP.I WRAP ADD P.I 3 0 14\nCV 3 N ADD Y P.HERE\nZ ADD 2 MUL 4 TOSS\nCV 2 N ADD Y PN P.N Z\nPROB 70: TR.PULSE 3\n\n#M\nS.POP\nPROB 50: TR.PULSE A\nDEL MUL T RRAND 1 5: TR.TOG A\nDEL MUL T 4: TR.PULSE A\nDEL MUL T 7: TR.PULSE A\nPROB 80: TR.PULSE B\n\n#I\nM 750\nT 93\nL A D: TR.TIME 25\nL 1 4: CV.SLEW I 12\n\n#P\n15\t15\t17\t15\n1\t1\t1\t1\n0\t0\t0\t0\n14\t14\t16\t14\n\n0\t0\t0\t0\n2\t2\t1\t2\n4\t3\t3\t3\n5\t5\t4\t5\n7\t7\t6\t6\n9\t9\t7\t8\n11\t10\t9\t10\n12\t12\t10\t12\n14\t14\t12\t14\n16\t15\t13\t15\n17\t17\t15\t17\n19\t19\t16\t18\n21\t21\t18\t20\n23\t22\t19\t22\n24\t24\t21\t24\n0\t0\t22\t0\n0\t0\t24\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n\n#G\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n"
+    }
+  }
+}

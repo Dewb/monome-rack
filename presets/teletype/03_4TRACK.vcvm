@@ -1,0 +1,22 @@
+{
+  "plugin": "monome",
+  "model": "teletype",
+  "version": "2.0.0-alpha5",
+  "params": [
+    {
+      "value": 0.0,
+      "id": 0
+    },
+    {
+      "value": 0.0,
+      "id": 1
+    }
+  ],
+  "data": {
+    "loadScript": {
+      "active": true,
+      "flash": 0,
+      "data": "4TRACK\n\n1-4: CLOCK INDIVIDUAL TRACK\n5: CLOCK ALL\n6: RESET\n7: DRUNK POSITION\n\nTILDE ENTERS TRACKER MODE TO\nEDIT NOTES\n\nCOLS 1-3 ARE NOTES, 4 IS CV\n0-1000 FOR OV-10.00V CV/TR\nOUT PER COLUMN\n\n\n\n#1\nP.N 0\nCV 1 N P.NEXT\nTR.PULSE A\n\n#2\nP.N 1\nCV 2 N P.NEXT\nTR.PULSE B\n\n#3\nP.N 2\nCV 3 N P.NEXT\nTR.PULSE C\n\n#4\nP.N 3\nCV 4 VV P.NEXT\nTR.TOG D\n\n#5\nP.N 0\nCV 1 N P.NEXT\nCV 2 N PN 1 P.HERE\nCV 3 N PN 2 P.HERE\nCV 4 N PN 3 P.HERE\nL A D: TR.PULSE I\n\n#6\nP.I P.END\n\n#7\nP.I ADD P.I RRAND -2 1\n\n#8\n\n#M\n\n#I\nL A D: TR.TIME 30\nL 1 4: CV.SLEW 50\n\n#P\n8\t8\t8\t8\n1\t1\t1\t1\n0\t0\t0\t0\n7\t63\t63\t63\n\n0\t0\t0\t0\n2\t4\t0\t845\n7\t0\t0\t0\n14\t12\t0\t613\n18\t0\t0\t30\n11\t16\t0\t500\n4\t0\t0\t800\n0\t0\t0\t50\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n\n#G\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n"
+    }
+  }
+}

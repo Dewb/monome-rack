@@ -55,6 +55,8 @@ struct TeletypeModule : LibAVR32Module
     void processInputs(const ProcessArgs& args) override;
     void processOutputs(const ProcessArgs& args) override;
 
+    void dataFromJson(json_t* rootJ) override;
+
 protected:
     iiDevice _iiDevice;
 };

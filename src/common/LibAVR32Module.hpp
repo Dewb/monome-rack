@@ -68,7 +68,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     bool firstStep;
 
-private:
+protected:
     void reloadFirmware(bool preserveMemory);
 
     ReloadRequest reloadRequested;

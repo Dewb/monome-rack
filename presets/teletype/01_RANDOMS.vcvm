@@ -1,0 +1,22 @@
+{
+  "plugin": "monome",
+  "model": "teletype",
+  "version": "2.0.0-alpha5",
+  "params": [
+    {
+      "value": 0.0,
+      "id": 0
+    },
+    {
+      "value": 0.0,
+      "id": 1
+    }
+  ],
+  "data": {
+    "loadScript": {
+      "active": true,
+      "flash": 0,
+      "data": "RANDOMS\n\n1: RANDOM STATE (TR A)\n2: RAND DIMINISHED NOTES (CV1)\n3: BURST GEN (TR B)\n4: DRUNK SLEWED VOLTS (CV2)\n5: START/RESET LFO\n6: 1/F MELODY GENERATOR (CV3)\n7: (FROM TR D)\n8: (FROM TR C)\n\nINS CORRESPOND TO OUTPUT JACKS\nBENEATH.\n\nPATCH TR C TO INS, AND TR D TO\nIN7 FOR LFO FUNCTIONS.\n\nPARAM KNOB SETS BURST RATE.\n\n\n\n#1\nTR A TOSS\n\n#2\nCV 1 N QT RAND 36 3\n\n#3\nY ADD 200 RSH PARAM 4\nTR.PULSE B\nDEL RAND Y: TR.PULSE B\nDEL RAND Y: TR.PULSE B\nDEL RAND Y: TR.PULSE B\nDEL ADD 40 Y: TR B 0\n\n#4\nZ V RRAND -2 2\nCV 2 ADD CV 2 Z\n\n#5\nT RRAND 10 10000\nCV.SET 4 0\nCV.SLEW 4 T\nCV 4 V 8\nDEL T: TR.PULSE C\n\n#6\nX ADD X RRAND -1 1\nPROB 50: X ADD X RRAND -2 2\nPROB 25: X ADD X RRAND -4 4\nPROB 12: X ADD X RRAND -8 8\nPROB 6: X ADD X RRAND -16 16\nCV 3 N WRAP X 0 48\n\n#7\nT RRAND 10 10000\nCV.SLEW 4 T\nCV 4 V 8\nDEL T: TR.PULSE C\n\n#8\nT RRAND 10 10000\nCV.SLEW 4 T\nCV 4 0\nDEL T: TR.PULSE D\n\n#M\n\n#I\nL A B: TR.TIME I 25\nDRUNK 12\nCV.SLEW 2 1000\nTR.PULSE D\nCV.SLEW 3 5\n\n#P\n0\t0\t0\t0\n1\t1\t1\t1\n0\t0\t0\t0\n63\t63\t63\t63\n\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n0\t0\t0\t0\n\n#G\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n0000000000000000\n\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\n"
+    }
+  }
+}

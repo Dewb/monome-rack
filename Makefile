@@ -49,6 +49,8 @@ firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 
 all: firmwares
 
-DISTRIBUTABLES += $(wildcard LICENSE*) res 
+DISTRIBUTABLES += res
+DISTRIBUTABLES += $(wildcard LICENSE*)
+DISTRIBUTABLES += $(wildcard presets)
 
 include $(RACK_DIR)/plugin.mk

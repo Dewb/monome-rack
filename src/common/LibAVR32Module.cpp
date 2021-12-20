@@ -267,6 +267,8 @@ json_t* LibAVR32Module::dataToJson()
 
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
+    json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
+    json_object_set_new(rootJ, "outputRate", json_integer(outputRate));
 
     void* data = 0;
     uint32_t size = 0;
@@ -282,9 +284,6 @@ json_t* LibAVR32Module::dataToJson()
     {
         json_object_set_new(rootJ, "vram", json_string(base64_encode((unsigned char*)data, size).c_str()));
     }
-
-    json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
-    json_object_set_new(rootJ, "outputRate", json_integer(outputRate));
 
     return rootJ;
 }

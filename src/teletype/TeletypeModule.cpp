@@ -1,5 +1,5 @@
 #include "TeletypeModule.hpp"
-
+#include "TeletypeSceneIO.hpp"
 
 #include <string.h>
 
@@ -128,4 +128,45 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
     outputs[CV2_OUTPUT].setVoltage(cv2);
     outputs[CV3_OUTPUT].setVoltage(cv3);
     outputs[CV4_OUTPUT].setVoltage(cv4);
+}
+
+void TeletypeModule::dataFromJson(json_t* rootJ)
+{
+    LibAVR32Module::dataFromJson(rootJ);
+
+    // Special json key only in factory presets, not saved in dataToJson
+    json_t* jd = json_object_get(rootJ, "loadScript");
+    if (jd)
+    {
+        json_t* scriptDataJson = json_object_get(jd, "data");
+        json_t* jsonActive = json_object_get(jd, "active");
+        json_t* jsonFlash = json_object_get(jd, "flash");
+
+        bool loadActive = jsonActive && json_is_true(jsonActive);
+        bool loadFlash = jsonFlash && json_is_number(jsonFlash);
+
+        if ((loadActive || loadFlash) && scriptDataJson && json_is_string(scriptDataJson))
+        {
+            std::string script = json_string_value(scriptDataJson);
+            reloadFirmware(false);
+
+            if (loadActive)
+            {
+                presetImportString(this, script, 255, true);
+            }
+
+            if (loadFlash)
+            {
+                int num = json_integer_value(jsonFlash);
+                if (num >= 0 && num < 32)
+                {
+                    presetImportString(this, script, num, true);
+                }
+            }
+
+            // send an ESC press/release to open preset description
+            firmware.hidMessage(0x29, 0, false, false);
+            firmware.hidMessage(0x29, 0, false, true);
+        }
+    }
 }
