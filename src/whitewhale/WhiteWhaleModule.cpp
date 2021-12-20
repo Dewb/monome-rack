@@ -1,4 +1,5 @@
 #include "WhiteWhaleModule.hpp"
+#include "Clock12BitParam.hpp"
 
 WhiteWhaleModule::WhiteWhaleModule()
 : LibAVR32Module("whitewhale")
@@ -6,7 +7,7 @@ WhiteWhaleModule::WhiteWhaleModule()
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configButton(BUTTON_PARAM, "PRESET");
     configParam(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM");
-    configParam(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK");
+    configParam<Clock12BitParam>(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK", "ms", 0, 1638.3, 0);
     configInput(CLOCK_INPUT, "CLOCK");
     configOutput(CLOCK_OUTPUT, "CLOCK");
     configOutput(TR1_OUTPUT, "TR 1");
