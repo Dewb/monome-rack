@@ -95,21 +95,24 @@ jobs:
           fi
       - name: Create Release
         uses: actions/create-release@v1
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: ${{ github.ref }}
           body: |
             ${{ env.GITHUB_REPOSITORY_NAME }} VCV Rack Plugin ${{ env.GITHUB_REF_NAME }}
-          draft: false
-          prerelease: false
+          draft: true
+          prerelease: true
       - uses: actions/download-artifact@v2
         with:
           path: _artifacts
       - name: Upload release assets
         uses: svenstaro/upload-release-action@v2
         with:
+          overwrite: true
+          prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: _artifacts/**/*.vcvplugin
           tag: ${{ github.ref }}
