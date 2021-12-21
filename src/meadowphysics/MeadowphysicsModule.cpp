@@ -28,7 +28,7 @@ void MeadowphysicsModule::processInputs(const ProcessArgs& args)
         firmware.setGPIO(B09, clockNormal);
         firmware.triggerInterrupt(1);
     }
-    bool externalClock = isTriggered(CLOCK_INPUT);
+    bool externalClock = isTriggered(inputs[CLOCK_INPUT].getVoltage());
     if (externalClock != firmware.getGPIO(B08))
     {
         firmware.setGPIO(B08, externalClock);
