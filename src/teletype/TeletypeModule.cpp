@@ -32,7 +32,9 @@ struct TTParamQuantity : rack::engine::ParamQuantity
         float v = getDisplayValue();
         if (std::isnan(v))
             return "NaN";
-        return rack::string::f("%d", (uint16_t)v);
+        // this is usually within 0-1 of the PARAM variable display in TT, but can be 2-4 units off
+        // need to more carefully match behavior, including calibration rescaling, etc.
+        return rack::string::f("%d", (uint16_t)(v * 1638.3) & 0xFFFF);
     }
 };
 
@@ -41,7 +43,7 @@ TeletypeModule::TeletypeModule()
 , _iiDevice(this)
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
-    configParam<TTParamQuantity>(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM", "", 0, 1638.3, 0);
+    configParam<TTParamQuantity>(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM", "");
     configButton(BUTTON_PARAM, "SCENE");
     configInput(IN_INPUT, "IN");
     configInput(TRIG1_INPUT, "TRIGGER 1");
