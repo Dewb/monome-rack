@@ -49,7 +49,7 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics](https://monome.org/docs/meadowphysics/)
    * [earthsea](https://monome.org/docs/earthsea/)
    * [teletype](https://monome.org/docs/teletype/) + [manual](https://monome.org/docs/teletype/manual) + [command cheatsheet](https://monome.org/docs/teletype/TT_commands_3.0.pdf)
-* Videos on using the hardware:
+* Video tutorials for the trilogy hardware:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial part 1](https://vimeo.com/105368808)
    * [white whale tutorial part 2](https://vimeo.com/105368874)
@@ -59,9 +59,12 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics tutorial](https://vimeo.com/107586549)
    * [meadowphysics two](https://vimeo.com/146731772)
    * [earthsea introduction](https://vimeo.com/113231441)
+* Video tutorials & resources for the Teletype hardware:
    * ["teletype talk" series by Joe Filbrun](https://www.youtube.com/watch?v=mMAhjRKrpZE&list=PLoxHBVkj2rip4Ce4kxdz_k7mK9Z8Wygo-)
    * [teletype videos by The Ghost Saboteur](https://www.youtube.com/playlist?list=PLMHhQKTYXU657VGx48aj-0rs_tjoz7-Eo)
    * [flash crash livecoding events](https://flashcrash.net/) for teletype in performance
+* VCV Rack-specific tutorials:
+   * [Microtutorials by Obakegaku](https://youtube.com/playlist?list=PLt9Y2vOdxouMOWfxDrgVIY0hMZvFCSBw7) and [patch files](https://patchstorage.com/author/obakegaku/)
 
 ### Why is this?
 
