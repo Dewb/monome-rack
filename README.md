@@ -59,7 +59,8 @@ More detailed instructions are available in the [Rack documentation on installin
    * [meadowphysics tutorial](https://vimeo.com/107586549)
    * [meadowphysics two](https://vimeo.com/146731772)
    * [earthsea introduction](https://vimeo.com/113231441)
-* Video tutorials & resources for the Teletype hardware:
+* Tutorials, videos, and resources for the Teletype hardware:
+   * [A user's guide to the wonderful world of teletype](https://llllllll.co/t/a-users-guide-to-the-wonderful-world-of-teletype/35971)
    * ["teletype talk" series by Joe Filbrun](https://www.youtube.com/watch?v=mMAhjRKrpZE&list=PLoxHBVkj2rip4Ce4kxdz_k7mK9Z8Wygo-)
    * [teletype videos by The Ghost Saboteur](https://www.youtube.com/playlist?list=PLMHhQKTYXU657VGx48aj-0rs_tjoz7-Eo)
    * [flash crash livecoding events](https://flashcrash.net/) for teletype in performance
