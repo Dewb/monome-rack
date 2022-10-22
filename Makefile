@@ -47,7 +47,8 @@ DEPS += $(ragel)
 $(ragel):
 	$(WGET) http://www.colm.net/files/ragel/ragel-6.10.tar.gz
 	cd dep && $(UNTAR) ../ragel-6.10.tar.gz
-	cd dep/ragel-6.10 && $(CONFIGURE)
+	# Temporarily override the cross-compilation build flags to build ragel on build host (since we don't want to cross-compile it).
+	cd dep/ragel-6.10 && CC=gcc CXX=g++ STRIP=strip FLAGS= CFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix="$(DEP_PATH)"
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
 firmwares: export PATH := $(PWD)/dep/bin:$(PATH)
