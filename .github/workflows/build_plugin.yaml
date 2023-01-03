@@ -68,7 +68,7 @@ jobs:
         run: |
           ${{ matrix.config.prepare-os }}
           export RACK_DIR=$HOME/Rack-SDK
-          export WGET=curl -O
+          export WGET="curl -O"
           make -j dep
           make -j dist
       - name: Upload artifact
