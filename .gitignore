@@ -8,3 +8,5 @@ plugin.so
 .vscode/ipch
 /Rack-SDK
 Rack-SDK*.zip
+/dep
+ragel*.tar.gz
