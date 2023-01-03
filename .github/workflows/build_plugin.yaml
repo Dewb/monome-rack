@@ -20,7 +20,7 @@ jobs:
             os: ubuntu-latest,
             shell: bash,
             sdk-postfix: "lin-x64",
-            prepare-os: "sudo apt update; sudo apt install -y libglu-dev"
+            prepare-os: "sudo apt-get update; sudo apt-get install -y libglu-dev"
           }
         - {
             name: MacOS x64,
@@ -37,6 +37,9 @@ jobs:
             prepare-os: "choco install wget --no-progress"
           }
     steps:
+      - name: Prepare builder
+        run: |
+          ${{ matrix.config.prepare-os }}
       - name: Check out repository
         uses: actions/checkout@v3
       - name: Fetch submodule tags and contents
@@ -66,7 +69,6 @@ jobs:
           cat <<< `jq --arg VERSION "$pluginversion-$gitrev" '.version=$VERSION' plugin.json` > plugin.json
       - name: Build plugin
         run: |
-          ${{ matrix.config.prepare-os }}
           export RACK_DIR=$HOME/Rack-SDK
           make -j dep
           make -j dist
