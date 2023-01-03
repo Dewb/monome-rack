@@ -59,7 +59,7 @@ jobs:
           name: ${{ matrix.platform }}
 
   build-mac:
-    name: mac
+    name: mac-${{ matrix.platform }}
     needs: modify-plugin-version
     runs-on: macos-latest
     strategy:
