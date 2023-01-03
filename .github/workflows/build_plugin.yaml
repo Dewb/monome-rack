@@ -38,7 +38,7 @@ jobs:
           }
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Fetch submodule tags and contents
         run: |
           git submodule foreach --recursive 'git fetch --tags'
@@ -72,7 +72,7 @@ jobs:
           make -j dep
           make -j dist
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: dist
           name: ${{ matrix.config.name }}
