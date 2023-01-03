@@ -20,21 +20,21 @@ jobs:
             os: ubuntu-latest,
             shell: bash,
             sdk-postfix: "lin",
-            prepare-os: "sudo apt update; sudo apt install -y libglu-dev ragel"
+            prepare-os: "sudo apt update; sudo apt install -y libglu-dev"
           }
         - {
             name: MacOS,
             os: macos-latest,
             shell: bash,
             sdk-postfix: "mac",
-            prepare-os: "brew install ragel"
+            prepare-os: "find /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs -iname *.sdk"
           }
         - {
             name: Windows,
             os: windows-latest,
             shell: bash,
             sdk-postfix: "win",
-            prepare-os: "export CC=gcc; vcpkg install ragel:x64-windows; export RAGEL=/c/vcpkg/packages/ragel_x64-windows/tools/ragel.exe; $RAGEL -v"
+            prepare-os: "choco install wget --no-progress"
           }
     steps:
       - name: Check out repository
@@ -68,7 +68,6 @@ jobs:
         run: |
           ${{ matrix.config.prepare-os }}
           export RACK_DIR=$HOME/Rack-SDK
-          export WGET="curl -O"
           make -j dep
           make -j dist
       - name: Upload artifact
