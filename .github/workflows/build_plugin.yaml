@@ -19,21 +19,21 @@ jobs:
             name: Linux,
             os: ubuntu-latest,
             shell: bash,
-            sdk-postfix: "lin",
+            sdk-postfix: "lin-x64",
             prepare-os: "sudo apt update; sudo apt install -y libglu-dev"
           }
         - {
-            name: MacOS,
+            name: MacOS x64,
             os: macos-latest,
             shell: bash,
-            sdk-postfix: "mac",
+            sdk-postfix: "mac-x64",
             prepare-os: "find /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs -iname *.sdk"
           }
         - {
             name: Windows,
             os: windows-latest,
             shell: bash,
-            sdk-postfix: "win",
+            sdk-postfix: "win-x64",
             prepare-os: "choco install wget --no-progress"
           }
     steps:
