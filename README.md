@@ -88,7 +88,7 @@ See [DEVELOPING.md](DEVELOPING.md).
 
 ### Who did this?
 
-Original hardware and firmware code in linked submodules is by [monome](monome.org) with contributions from the community at [lines](https://llllllll.co). The VCVRack-specific code in this repository is a separate effort, and again, no support or warranty is implied.
+The original hardware and firmware projects were initiated by [@tehn](https://github.com/tehn) at [monome](https://monome.org) with contributions from many members of the [lines community](https://llllllll.co). See the [individual submodule repositories](firmware) for more details. The VCVRack-specific code in this repository is a separate community effort, and again, no support or warranty is implied.
 
 [Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale, meadowphysics, earthsea, and teletype.
 
@@ -104,4 +104,4 @@ The original monome firmware is licensed under the GPL version 2. Panel graphics
 
 The new code in this repository is also licensed under the GPL version 2.
 
-The base64, oscpack, and serialosc libraries are licensed from their authors via GPL-compatible licenses according to the LICENSE file in each subfolder under lib/.
+The base64, oscpack, and serialosc libraries are licensed from their authors via GPL-compatible licenses according to the LICENSE file in each subfolder under [lib/](lib).
