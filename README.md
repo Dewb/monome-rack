@@ -96,7 +96,7 @@ Additional community contributions and feedback are very welcome! Discuss either
 
 ### What's next?
 
-See the [release plan](../../projects/1).
+See the [release plan](https://github.com/users/Dewb/projects/1) for the current thinking.
 
 ## License
 
