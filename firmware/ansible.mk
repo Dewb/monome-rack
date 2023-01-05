@@ -1,17 +1,9 @@
-.DEFAULT_GOAL := all
-
-SHELL:=/bin/bash -O extglob
+TARGET_NAME := ansible
 
 FLAGS = \
-	-DNULL=0 \
-	-o0 \
 	-D__AVR32_UC3B0256__ \
-	-fPIC \
-	-g \
-	-Werror=implicit-function-declaration \
 	-Imock_hardware \
 	-Imock_hardware/include \
-	-I../lib/cbbq \
 	-Iansible/libavr32/src \
 	-Iansible/libavr32/src/usb/midi \
 	-Iansible/libavr32/src/usb/hid \
@@ -22,9 +14,6 @@ FLAGS = \
 	-Iansible/libavr32/conf \
 	-Iansible/libavr32/conf/trilogy \
 	-Iansible/src
-
-CFLAGS += \
-	-std=c99
 		
 SOURCES = \
 	ansible/src/main.c \
@@ -56,39 +45,8 @@ SOURCES = \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/ansible/*.c) \
 
-TARGETNAME = ../res/firmware/ansible
-
-include $(RACK_DIR)/arch.mk
-
-ifeq ($(ARCH_LIN), 1)
-	LDFLAGS += -shared
-	TARGET = $(TARGETNAME).so
-endif
-
-ifeq ($(ARCH_MAC), 1)
-	LDFLAGS += -shared -undefined dynamic_lookup
-	TARGET = $(TARGETNAME).dylib
-endif
-
-ifeq ($(ARCH_WIN), 1)
-	LDFLAGS += -shared 
-	TARGET = $(TARGETNAME).dll
-endif
-
-OBJECTS += $(patsubst %, ../build/firmware/ansible/%.o, $(SOURCES))
-
 # Add the git commit id to a file for use when printing out the version
 ansible/src/gitversion.c: ansible
 	echo "const char *git_version = \"$(shell cut -d '-' -f 1 <<< $(shell cd ansible; git describe --tags | cut -c 1-)) $(shell cd ansible; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\";" > $@
 
-../build/firmware/ansible/%.c.o: %.c
-	@mkdir -p $(@D)
-	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
-
-$(TARGET): $(OBJECTS)
-	$(CC) -o $@ $^ $(LDFLAGS)
-
-all: $(TARGET)
-
-clean:
-	rm -rfv ../build/firmware/ansible
+include common.mk
