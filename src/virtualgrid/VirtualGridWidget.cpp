@@ -123,9 +123,10 @@ void VirtualGridWidget::clearHeldKeys()
 {
     for (auto p : getParams())
     {
-        if (p->getParamQuantity())
+        auto key = static_cast<VirtualGridKey*>(p);
+        if (key)
         {
-            p->getParamQuantity()->setValue(VirtualGridKey::OFF);
+            key->getSecondaryParamQuantity()->setValue(VirtualGridKey::OFF);
         }
     }
 }
