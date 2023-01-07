@@ -14,12 +14,12 @@ void levelToGradient(GridTheme theme, uint8_t level, NVGcolor* color1, NVGcolor*
     }
     else if (theme == GridTheme::White)
     {
-        if (color1) *color1 = nvgRGB(level * 11 + 90, level * 11 + 90, level * 8 + 96);
-        if (color2) *color2 = nvgRGB(level * 9 + 48, level * 9 + 49, level * 12 + 54);
+        if (color1) *color1 = nvgRGB(level * 14 + 45, level * 14 + 45, level * 10 + 64);
+        if (color2) *color2 = nvgRGB(level * 9 + 24, level * 9 + 36, level * 12 + 54);
     }
     else // if (theme == GridTheme::Yellow)
     {
-        if (color1) *color1 = nvgRGB(level * 11 + 90, level * 10 + 63, level * 7 + 42);
-        if (color2) *color2 = nvgRGB(level * 10 + 48, level * 9 + 41, level * 3 + 12);
+        if (color1) *color1 = nvgRGB(level * 14 + 45, level * 14 + 40, level * 8 + 22);
+        if (color2) *color2 = nvgRGB(level * 11 + 38, level * 10 + 26, level * 13 + 12);
     }
 }
