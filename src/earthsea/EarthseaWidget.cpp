@@ -32,7 +32,7 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
     addOutput(createOutput<PJ301MPort>(Vec(50, 166), module, EarthseaModule::CV2_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 248), module, EarthseaModule::CV3_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, EarthseaModule::POS_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(13, 265), module, EarthseaModule::EDGE_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(15, 265), module, EarthseaModule::EDGE_OUTPUT));
 
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 78), module, EarthseaModule::CV1_LIGHT));
     addChild(createLight<MediumLight<WhiteLight>>(Vec(77, 162), module, EarthseaModule::CV2_LIGHT));

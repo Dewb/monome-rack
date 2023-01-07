@@ -31,8 +31,8 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
     addOutput(createOutput<PJ301MPort>(Vec(50, 121), module, WhiteWhaleModule::TR2_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 159), module, WhiteWhaleModule::TR3_OUTPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 197), module, WhiteWhaleModule::TR4_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(13, 101), module, WhiteWhaleModule::CVA_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(13, 139), module, WhiteWhaleModule::CVB_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(15, 101), module, WhiteWhaleModule::CVA_OUTPUT));
+    addOutput(createOutput<PJ301MPort>(Vec(15, 139), module, WhiteWhaleModule::CVB_OUTPUT));
     addInput(createInput<PJ301MPort>(Vec(13, 286), module, WhiteWhaleModule::CLOCK_INPUT));
     addOutput(createOutput<PJ301MPort>(Vec(50, 286), module, WhiteWhaleModule::CLOCK_OUTPUT));
 
@@ -41,6 +41,6 @@ WhiteWhaleWidget::WhiteWhaleWidget(WhiteWhaleModule* module)
     addChild(createLight<MediumLight<YellowLight>>(Vec(77, 155), module, WhiteWhaleModule::TR3_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(77, 193), module, WhiteWhaleModule::TR4_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(77, 282), module, WhiteWhaleModule::CLOCK_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 117), module, WhiteWhaleModule::CVA_LIGHT));
-    addChild(createLight<MediumLight<WhiteLight>>(Vec(2, 155), module, WhiteWhaleModule::CVB_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(3, 117), module, WhiteWhaleModule::CVA_LIGHT));
+    addChild(createLight<MediumLight<WhiteLight>>(Vec(3, 155), module, WhiteWhaleModule::CVB_LIGHT));
 }
