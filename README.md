@@ -7,7 +7,7 @@ This is a *PRERELEASE* plugin for the [VCVRack open-source virtual modular synth
 
 This plugin is still in development. [The extremely hypothetical release roadmap is here](https://github.com/users/Dewb/projects/1). 
 
-<img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://repository-images.githubusercontent.com/112882255/a09c18bc-06f4-4aa5-8b2c-6db57a7f2648">
+<img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://user-images.githubusercontent.com/712405/211141286-85785c64-74d3-46a0-a81d-241824a77178.png">
 
 This plugin currently includes:
 * [teletype](https://monome.org/docs/teletype/), an algorithmic ecosystem
