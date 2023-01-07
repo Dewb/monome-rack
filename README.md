@@ -10,20 +10,24 @@ This plugin is still in development. [The extremely hypothetical release roadmap
 <img width="90%" alt="monome modules and virtual grid in VCVRack" src="https://repository-images.githubusercontent.com/112882255/a09c18bc-06f4-4aa5-8b2c-6db57a7f2648">
 
 This plugin currently includes:
-* The [white whale](https://monome.org/docs/whitewhale/) grid-enabled probabilistic step sequencer
+* [teletype](https://monome.org/docs/teletype/), an algorithmic ecosystem
+   * a dynamic, musical, scriptable event triggering platform.
+   * 8 trigger ins, 1 CV in, 4 CV and 4 trigger outs
+* [ansible](https://monome.org/docs/ansible/), a multi-mode module
+   * with a grid, can run the [kria](https://monome.org/docs/ansible/kria/) sequencer, plus polyphonic versions of the [meadowphysics](https://monome.org/docs/ansible/meadowphysics/) and [earthsea](https://monome.org/docs/ansible/earthsea/) modules
+   * with an arc controller, can run the apps [levels](https://monome.org/docs/ansible/levels/) or [cycles](https://monome.org/docs/ansible/cycles/)
+   * 4 CV outs, 4 trigger outs, 2 trigger ins
+* [white whale](https://monome.org/docs/whitewhale/), a grid-enabled probabilistic step sequencer
    * A 16-step sequencer with a focus on live-manipulation and controlled variations
    * 4 trigger outs, 2 CV outs
    * Controlled by internal or external clock
-* The [meadowphysics](https://monome.org/docs/meadowphysics/) grid-enabled rhizomatic cascading counter
+* [meadowphysics](https://monome.org/docs/meadowphysics/), a grid-enabled rhizomatic cascading counter
    * An event sequencer for polyrhythms and rule-based evolving patterns
    * 8 trigger outs
    * Controlled by internal or external clock
-* The [earthsea](https://monome.org/docs/earthsea/) grid-enabled shape-memory pattern instrument
+* [earthsea](https://monome.org/docs/earthsea/), a grid-enabled shape-memory pattern instrument
    * A live keyboard that can sequence melodies and recall CV with gestures
    * 1 trigger out, 4 CV outs
- * The [teletype](https://monome.org/docs/teletype/) algorithmic ecosystem
-   * a dynamic, musical, scriptable event triggering platform.
-   * 8 trigger ins, 1 CV in, 4 CV and 4 trigger outs
 * Support for [monome grid](https://monome.org/docs/grid/) hardware controllers, both current editions and older models, plus virtual versions of the controllers within VCV Rack, in 64, 128, and 256-key flavors.
     
 All of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
@@ -32,7 +36,8 @@ Through the virtual grid, all features of each module are accessible, but some f
 
 ### How do I use this?
 
-Download a release for your platform from the [Releases page](../../releases) and place it in your `Rack\plugins-v1` folder.
+1. Install [serialosc](https://monome.org/docs/setup/).
+2. Download a release for your platform from the [Releases page](../../releases) and place it in your `Rack2\plugins` folder.
 
 More detailed instructions are available in the [Rack documentation on installing non-library plugins](https://vcvrack.com/manual/Installing#Installing-plugins-not-available-on-the-VCV-Library).
 
@@ -45,11 +50,12 @@ More detailed instructions are available in the [Rack documentation on installin
 #### Learning
 
 * The offical docs for the hardware modules:
+   * [teletype](https://monome.org/docs/teletype/) + [manual](https://monome.org/docs/teletype/manual) + [command cheatsheet](https://monome.org/docs/teletype/TT_commands_3.0.pdf)
+   * [ansible](https://monome.org/docs/ansible/)
    * [white whale](https://monome.org/docs/whitewhale/)
    * [meadowphysics](https://monome.org/docs/meadowphysics/)
    * [earthsea](https://monome.org/docs/earthsea/)
-   * [teletype](https://monome.org/docs/teletype/) + [manual](https://monome.org/docs/teletype/manual) + [command cheatsheet](https://monome.org/docs/teletype/TT_commands_3.0.pdf)
-* Video tutorials for the trilogy hardware:
+* Video tutorials for the original "trilogy" hardware:
    * [white whale possibilities](https://vimeo.com/104881064)
    * [white whale tutorial part 1](https://vimeo.com/105368808)
    * [white whale tutorial part 2](https://vimeo.com/105368874)
