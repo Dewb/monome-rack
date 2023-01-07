@@ -140,7 +140,12 @@ void calibrate_adc()
     ss_set_param_max(&scene_state, 16380);
 }
 
-void hardware_afterVRAMUpdate()
+void hardware_beforeReadVRAM(void* ptr, uint32_t size)
+{
+
+}
+
+void hardware_afterWriteVRAM(void* ptr, uint32_t size)
 {
     tele_metro_updated();
     tele_vars_updated();

@@ -26,7 +26,11 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, b
 {
 }
 
-void hardware_afterVRAMUpdate()
+void hardware_beforeReadVRAM(void* ptr, uint32_t size)
+{
+}
+
+void hardware_afterWriteVRAM(void* ptr, uint32_t size)
 {
 }
 

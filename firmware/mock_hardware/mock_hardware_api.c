@@ -206,6 +206,8 @@ void hardware_declareVRAM(void* ptr, uint32_t size)
 
 void hardware_readVRAM(void** ptr, uint32_t* size)
 {
+    hardware_beforeReadVRAM(vram_ptr, vram_size);
+
     if (ptr)
     {
         *ptr = vram_ptr;
@@ -219,6 +221,7 @@ void hardware_readVRAM(void** ptr, uint32_t* size)
 void hardware_writeVRAM(const void* src, uint32_t size)
 {
     memcpy(vram_ptr, src, vram_size >= size ? size : vram_size);
+    hardware_afterWriteVRAM(vram_ptr, vram_size);
 }
 
 void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)

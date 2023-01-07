@@ -6,6 +6,8 @@
 
 #include <string.h>
 
+#include "main.h"
+#include "flashc.h"
 
 void hid_parse_frame(u8* data, u8 sz)
 {
@@ -23,8 +25,27 @@ void hardware_deserializePreset(tt_deserializer_t* stream, uint8_t preset_num, b
 {
 }
 
-void hardware_afterVRAMUpdate()
+nvram_data_t ansible_vram;
+DECLARE_VRAM(&ansible_vram, sizeof(nvram_data_t))
+
+void hardware_beforeReadVRAM(void* ptr, uint32_t size)
 {
+    save_tuning(&ansible_vram);
+    save_levels(&ansible_vram);
+    save_cycles(&ansible_vram);
+    save_kria(&ansible_vram);
+    save_mp(&ansible_vram);
+    save_es(&ansible_vram);
+}
+
+void hardware_afterWriteVRAM(void* ptr, uint32_t size)
+{
+    init_tuning(&ansible_vram);
+    init_levels(&ansible_vram);
+    init_cycles(&ansible_vram);
+    init_kria(&ansible_vram);
+    init_mp(&ansible_vram);
+    init_es(&ansible_vram);
 }
 
 void hardware_afterInit()

@@ -353,7 +353,6 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
         if (data && size == decoded.length())
         {
             firmware.writeVRAM((void*)decoded.c_str(), size);
-            firmware.afterVRAMUpdate();
         }
     }
 
