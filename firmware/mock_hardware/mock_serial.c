@@ -46,7 +46,7 @@ u8 mock_serial_connected()
 
 void mock_serial_read(void)
 {
-    if (hardware_readSerial_internal(&mock_serial_current_message_buffer, &mock_serial_current_message_length) > 0)
+    while (hardware_readSerial_internal(&mock_serial_current_message_buffer, &mock_serial_current_message_length) > 0)
     {
         (*monome_read_serial)();
     }
