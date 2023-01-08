@@ -3,27 +3,8 @@
 
 #include <string.h>
 
-#define A00 0
-#define A01 1
-#define A02 2
-#define A03 3
-#define A04 4
-#define A05 5
-#define A06 6
-#define A07 7
-#define B00 32
-#define B01 33
-#define B02 34
-#define B03 35
-#define B04 36
-#define B05 37
-#define B06 38
-#define B07 39
-#define B08 40
-#define B09 41
-#define B10 42
-#define B11 43
-#define NMI 13
+#define TO_Q15(x) ((x) << 15)
+#define FROM_Q15(x) ((((x) >> 14) + 1) >> 1)
 
 struct TTParamQuantity : rack::engine::ParamQuantity
 {
@@ -32,9 +13,20 @@ struct TTParamQuantity : rack::engine::ParamQuantity
         float v = getDisplayValue();
         if (std::isnan(v))
             return "NaN";
-        // this is usually within 0-1 of the PARAM variable display in TT, but can be 2-4 units off
-        // need to more carefully match behavior, including calibration rescaling, etc.
-        return rack::string::f("%d", (uint16_t)(v * 1638.3) & 0xFFFF);
+
+        // Calculate the same value that the TT firmware will calculate from this voltage.
+        // 0-10V 12-bit ADC, shifted left 2 bits (to 0-16380), then scaled to 0-16383 in Q15 fixed-point
+        uint16_t rawval = ((uint16_t)(v * 0.1f * 4095.0f) & 0xFFF) << 2;
+        return rack::string::f("%d", FROM_Q15(TO_Q15(16383) / 16380 * rawval));
+    }
+
+    void setDisplayValueString(std::string s) override
+    {
+        // Reverse the above calc to set the float voltage that the ADC will turn into the given value
+        uint16_t val = rack::math::clamp(stoi(s), 0, 16383);
+        uint16_t rawval = FROM_Q15(TO_Q15(16380) / 16383 * val);
+        // Add the same 12-bit sampling error correction offset here
+        setDisplayValue(rawval * (10.0 / 16380.0) + 0.0007);
     }
 };
 

@@ -4,6 +4,14 @@
 
 #pragma once
 
+#define A00 0
+#define A01 1
+#define A02 2
+#define A03 3
+#define A04 4
+#define A05 5
+#define A06 6
+#define A07 7
 #define B00 32
 #define B01 33
 #define B02 34
@@ -15,6 +23,7 @@
 #define B08 40
 #define B09 41
 #define B10 42
+#define B11 43
 #define NMI 13
 
 struct GridConnection;
