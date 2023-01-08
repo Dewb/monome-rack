@@ -35,12 +35,17 @@ public:
     void start(Listener* listener);
     void stop(void);
 
+    bool isServiceDetected() const;
+    std::string getVersionString() const;
+
     int getListenPort(void) const { return listenPort; }
     int getDeviceCount(void) const { return devices.size(); }
     const MonomeDeviceCollection& getDevices(void) const { return devices; }
 
 public:
     // Serialosc messages
+    void sendStatusMessage(void);
+    void sendVersionMessage(void);
     void sendDeviceQueryMessage(void);
     void sendDeviceNotifyMessage(void);
     void sendDeviceInfoMessage(int port);
@@ -68,6 +73,8 @@ protected:
     int listenPort;
     int portsToScan;
     std::thread thread;
+    bool serviceDetected;
+    std::string versionString;
 };
 
 #endif //_SERIALOSC_H__

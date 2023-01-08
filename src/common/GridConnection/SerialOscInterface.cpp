@@ -13,6 +13,16 @@ SerialOscInterface::~SerialOscInterface()
     delete driver;
 }
 
+bool SerialOscInterface::isServiceDetected() const
+{
+    return driver->isServiceDetected();
+}
+
+std::string SerialOscInterface::getServiceVersion() const
+{
+    return driver->getVersionString();
+}
+
 void SerialOscInterface::deviceFound(const MonomeDevice* const device)
 {
     if (!device)

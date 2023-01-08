@@ -12,6 +12,7 @@ SerialOsc::SerialOsc(std::string devicePrefix, int defaultPort, int maxPortsToSc
     , devicePrefix(devicePrefix)
     , listenPort(defaultPort)
     , portsToScan(maxPortsToScan < 1 ? 1 : maxPortsToScan)
+    , serviceDetected(false)
 {
 }
 
@@ -64,6 +65,8 @@ void SerialOsc::start(Listener* listener)
     {
         thread = std::thread(&SerialOsc::runThread, this);
 
+        sendStatusMessage();
+        sendVersionMessage();
         sendDeviceQueryMessage();
         sendDeviceNotifyMessage();
     }
@@ -79,12 +82,54 @@ void SerialOsc::stop(void)
     }
 }
 
+bool SerialOsc::isServiceDetected(void) const
+{
+    return serviceDetected;
+}
+
+std::string SerialOsc::getVersionString(void) const
+{
+    return versionString;
+}
+
 void SerialOsc::runThread(void)
 {
     if (listenSocket != nullptr)
     {
         listenSocket->Run();
     }
+}
+
+void SerialOsc::sendStatusMessage(void)
+{
+    UdpTransmitSocket transmitSocket(IpEndpointName(SERIALOSC_ADDRESS, SERIALOSC_PORT));
+    char buffer[OSC_BUFFER_SIZE];
+    osc::OutboundPacketStream p(buffer, OSC_BUFFER_SIZE);
+
+    p << osc::BeginBundleImmediate
+      << osc::BeginMessage("/serialosc/status")
+      << SERIALOSC_ADDRESS
+      << listenPort
+      << osc::EndMessage
+      << osc::EndBundle;
+
+    transmitSocket.Send(p.Data(), p.Size());
+}
+
+void SerialOsc::sendVersionMessage(void)
+{
+    UdpTransmitSocket transmitSocket(IpEndpointName(SERIALOSC_ADDRESS, SERIALOSC_PORT));
+    char buffer[OSC_BUFFER_SIZE];
+    osc::OutboundPacketStream p(buffer, OSC_BUFFER_SIZE);
+
+    p << osc::BeginBundleImmediate
+      << osc::BeginMessage("/serialosc/version")
+      << SERIALOSC_ADDRESS
+      << listenPort
+      << osc::EndMessage
+      << osc::EndBundle;
+
+    transmitSocket.Send(p.Data(), p.Size());
 }
 
 void SerialOsc::sendDeviceQueryMessage(void)
@@ -298,7 +343,22 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
 
     try
     {
-        if (address == "/serialosc/device" || address == "/serialosc/add")
+        if (address == "/serialosc/status")
+        {
+            int state = (iter++)->AsInt32();
+            if (state == 1)
+            {
+                serviceDetected = true;
+            }
+        }
+        else if (address == "/serialosc/version")
+        {
+            std::string version = (iter++)->AsString();
+            std::string commit = (iter++)->AsString();
+
+            versionString = version + " (" + commit + ")";
+        }
+        else if (address == "/serialosc/device" || address == "/serialosc/add")
         {
             std::string id = (iter++)->AsString();
             std::string type = (iter++)->AsString();

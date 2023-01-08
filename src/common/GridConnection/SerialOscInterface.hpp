@@ -2,7 +2,11 @@
 
 struct SerialOscInterface final : public SerialOsc::Listener
 {
+    // constructor is private
     ~SerialOscInterface();
+
+    bool isServiceDetected() const;
+    std::string getServiceVersion() const;
 
     // SerialOsc::Listener methods
     void deviceFound(const MonomeDevice* const device) override;

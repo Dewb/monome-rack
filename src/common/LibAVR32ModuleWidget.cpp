@@ -2,6 +2,7 @@
 #include "LibAVR32Module.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
+#include "SerialOscInterface.hpp"
 
 using namespace rack;
 
@@ -123,6 +124,21 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
 
     menu->addChild(new MenuSeparator());
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
+
+    if (SerialOscInterface::get()->isServiceDetected())
+    {
+        menu->addChild(
+            construct<MenuLabel>(
+                &MenuLabel::text,
+                "└ serialosc version " + SerialOscInterface::get()->getServiceVersion()));
+    } else {
+        menu->addChild(
+            createMenuItem("└ serialosc service not detected, click here to install", "",
+                [=]()
+                {
+                    system::openBrowser("https://monome.org/docs/serialosc/setup/");
+                }));
+    }
 
     // enumerate registered grid devices
     int deviceCount = 0;
