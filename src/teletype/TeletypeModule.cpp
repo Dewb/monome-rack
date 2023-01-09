@@ -69,16 +69,17 @@ void TeletypeModule::processInputs(const ProcessArgs& args)
     firmware.setADC(1, voltsToAdc(params[PARAM_PARAM].getValue()));
     firmware.setADC(0, voltsToAdc(inputs[IN_INPUT].getVoltage()));
 
-    firmware.setGPIO(A00, isTriggered(inputs[TRIG1_INPUT].getVoltage()));
-    firmware.setGPIO(A01, isTriggered(inputs[TRIG2_INPUT].getVoltage()));
-    firmware.setGPIO(A02, isTriggered(inputs[TRIG3_INPUT].getVoltage()));
-    firmware.setGPIO(A03, isTriggered(inputs[TRIG4_INPUT].getVoltage()));
-    firmware.setGPIO(A04, isTriggered(inputs[TRIG5_INPUT].getVoltage()));
-    firmware.setGPIO(A05, isTriggered(inputs[TRIG6_INPUT].getVoltage()));
-    firmware.setGPIO(A06, isTriggered(inputs[TRIG7_INPUT].getVoltage()));
-    firmware.setGPIO(A07, isTriggered(inputs[TRIG8_INPUT].getVoltage()));
+    for (int i = 0; i < 8; i++)
+    {
+        inputTriggers[i].process(
+            inputs[TRIG1_INPUT + i].getVoltage(),
+            triggerLowThreshold,
+            triggerHighThreshold);
 
-    for (const auto & [ key, value ] : iiBus::FollowerData)
+        firmware.setGPIO(A00 + i, inputTriggers[i].isHigh());
+    }
+
+    for (const auto& [key, value] : iiBus::FollowerData)
     {
         firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
     }

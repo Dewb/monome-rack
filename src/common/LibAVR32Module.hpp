@@ -64,7 +64,6 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
-    bool isTriggered(float value);
 
     Grid* gridConnection;
     std::string lastConnectedDeviceId;
@@ -84,7 +83,8 @@ protected:
     ReloadRequest reloadRequested;
 
     float dacOffsetVolts;
-    float triggerThresholdVolts;
+    float triggerHighThreshold;
+    float triggerLowThreshold;
 };
 
 inline float LibAVR32Module::dacToVolts(uint16_t dac)
@@ -99,7 +99,3 @@ inline uint16_t LibAVR32Module::voltsToAdc(float volts)
     return (uint16_t)(rack::math::clamp(volts, 0.0, 10.0) * 0.1 * 0xFFF);
 }
 
-inline bool LibAVR32Module::isTriggered(float value)
-{
-    return value > triggerThresholdVolts;
-}

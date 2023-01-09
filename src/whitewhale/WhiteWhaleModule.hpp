@@ -42,6 +42,8 @@ struct WhiteWhaleModule : LibAVR32Module
         NUM_LIGHTS
     };
 
+    rack::dsp::SchmittTrigger clockTrigger;
+
     WhiteWhaleModule();
     void processInputs(const ProcessArgs& args) override;
     void processOutputs(const ProcessArgs& args) override;

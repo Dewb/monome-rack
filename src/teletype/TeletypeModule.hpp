@@ -57,6 +57,8 @@ struct TeletypeModule : LibAVR32Module
 
     void dataFromJson(json_t* rootJ) override;
 
+    rack::dsp::SchmittTrigger inputTriggers[8];
+
 protected:
     iiDevice _iiDevice;
 };

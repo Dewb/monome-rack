@@ -11,7 +11,8 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
     reloadRequested = ReloadRequest::None;
 
     dacOffsetVolts = 0.0007;
-    triggerThresholdVolts = 2.21;
+    triggerHighThreshold = 2.21;
+    triggerLowThreshold = 0.8;
 
     inputRate = 2;
     outputRate = 4;
