@@ -6,16 +6,18 @@
   "author": "",
   "authorEmail": "",
   "authorUrl": "",
-  "pluginUrl": "",
+  "pluginUrl": "https://github.com/Dewb/monome-rack",
   "manualUrl": "https://github.com/Dewb/monome-rack/blob/main/README.md",
   "sourceUrl": "https://github.com/Dewb/monome-rack",
   "donateUrl": "",
+  "changelogUrl": "https://github.com/Dewb/monome-rack/releases",
   "modules": [
     {
       "slug": "whitewhale",
       "name": "white whale",
       "description": "grid-enabled probabilistic step sequencer",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-white-whale",
+      "manualUrl": "https://monome.org/docs/whitewhale/",
       "tags": [
         "sequencer",
         "clock generator",
@@ -29,6 +31,7 @@
       "name": "earthsea",
       "description": "grid-enabled shape-memory pattern instrument",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-earthsea",
+      "manualUrl": "https://monome.org/docs/earthsea/",
       "tags": [
         "sequencer",
         "digital",
@@ -41,6 +44,7 @@
       "name": "meadowphysics",
       "description": "grid-enabled rhizomatic cascading counter",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-meadowphysics",
+      "manualUrl": "https://monome.org/docs/meadowphysics/",
       "tags": [
         "sequencer",
         "clock generator",
@@ -52,18 +56,21 @@
     {
       "slug": "teletype",
       "name": "teletype",
-      "description": "grid-enabled algorithmic ecosystem for musical code",
+      "description": "algorithmic ecosystem: a dynamic, musical event triggering platform",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-teletype",
+      "manualUrl": "https://monome.org/docs/teletype/",
       "tags": [
-        "sequencer",
+        "arpeggiator",
         "clock generator",
         "clock modulator",
-        "logic",
-        "function generator",
+        "envelope follower",
         "envelope generator",
-        "random",
-        "slew limiter",
+        "function generator",
+        "logic",
         "quantizer",
+        "random",
+        "sequencer",
+        "slew limiter",
         "sample and hold",
         "utility",
         "digital",
@@ -74,8 +81,9 @@
     {
       "slug": "ansible",
       "name": "ansible",
-      "description": "grid-enabled far communicator",
+      "description": "multi-mode sequencer and control voltage generator, for grid and arc controllers",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-ansible",
+      "manualUrl": "https://monome.org/docs/ansible/",
       "tags": [
         "sequencer",
         "clock generator",
@@ -91,6 +99,7 @@
       "name": "grid 128",
       "description": "",
       "tags": [
+        "digital",
         "hardware clone",
         "controller"
       ]
@@ -100,6 +109,7 @@
       "name": "grid 64",
       "description": "",
       "tags": [
+        "digital",
         "hardware clone",
         "controller"
       ]
@@ -109,6 +119,7 @@
       "name": "grid 256",
       "description": "",
       "tags": [
+        "digital",
         "hardware clone",
         "controller"
       ]
