@@ -79,15 +79,15 @@ void TeletypeModule::processInputs(const ProcessArgs& args)
         firmware.setGPIO(A00 + i, inputTriggers[i].isHigh());
     }
 
-    for (const auto& [key, value] : iiBus::FollowerData)
-    {
-        firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
-    }
+    // for (const auto& [key, value] : iiBus::FollowerData)
+    // {
+    //     firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
+    // }
 
-    iiCommand msg;
-    while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {
-        _iiDevice.transmit(msg);
-    }
+    // iiCommand msg;
+    // while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {
+    //     _iiDevice.transmit(msg);
+    // }
 }
 
 void TeletypeModule::processOutputs(const ProcessArgs& args)

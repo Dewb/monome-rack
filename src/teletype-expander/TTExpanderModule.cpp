@@ -20,12 +20,12 @@ TTExpanderModule::TTExpanderModule()
 
 void TTExpanderModule::process(const ProcessArgs& args)
 {
-    float data;
+    // float data;
 
-    bool input1 = inputs[IN1_INPUT].getVoltage() > 0;
-    bool input2 = inputs[IN2_INPUT].getVoltage() > 0;
-    bool key1Button = params[KEY1_PARAM].getValue() == 0;
-    bool key2Button = params[KEY2_PARAM].getValue() == 0;
+    // bool input1 = inputs[IN1_INPUT].getVoltage() > 0;
+    // bool input2 = inputs[IN2_INPUT].getVoltage() > 0;
+    // bool key1Button = params[KEY1_PARAM].getValue() == 0;
+    // bool key2Button = params[KEY2_PARAM].getValue() == 0;
     // bool modeButton = params[MODE_PARAM].getValue() == 0;
 
     // lights[MODE_YELLOW_LIGHT].setSmoothBrightness(data * 0.7, 1.f);

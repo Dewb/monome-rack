@@ -53,7 +53,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         );
 
         bool pushed = isPushed();
-        int pushAmount = 2.6;
+        float pushAmount = 2.6;
 
         if (!pushed) {
             // highlight top and side edges
