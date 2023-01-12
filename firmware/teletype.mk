@@ -1,6 +1,6 @@
 TARGET_NAME := teletype
 
-FLAGS = \
+FLAGS += \
 	-D__AVR32_UC3B0512__ \
 	-Imock_hardware \
 	-Imock_hardware/include \

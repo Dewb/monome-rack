@@ -51,6 +51,16 @@ $(ragel):
 	cd dep/ragel-6.10 && CC=gcc CXX=g++ STRIP=strip FLAGS= CFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix="$(DEP_PATH)"
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
+# pass selected environment variables to sub-make processes
+firmwares: export CC := $(CC)
+firmwares: export CXX := $(CXX)
+firmwares: export STRIP := $(STRIP)
+firmwares: export FLAGS := $(FLAGS)
+firmwares: export CFLAGS := $(CFLAGS)
+firmwares: export CXXFLAGS := $(CXXFLAGS)
+firmwares: export LDFLAGS := $(LDFLAGS)
+firmwares: export RACK_DIR := $(RACK_DIR)
+# add ragel to path
 firmwares: export PATH := $(PWD)/dep/bin:$(PATH)
 firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk

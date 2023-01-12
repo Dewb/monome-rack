@@ -1,6 +1,6 @@
 TARGET_NAME := whitewhale
 
-FLAGS = \
+FLAGS += \
 	-D__AVR32_UC3B0256__ \
 	-Imock_hardware \
 	-Imock_hardware/include \
