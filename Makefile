@@ -51,6 +51,12 @@ $(ragel):
 	cd dep/ragel-6.10 && CC=gcc CXX=g++ STRIP=strip FLAGS= CFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix="$(DEP_PATH)"
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
+DISTRIBUTABLES += res
+DISTRIBUTABLES += $(wildcard LICENSE*)
+DISTRIBUTABLES += $(wildcard presets)
+
+include $(RACK_DIR)/plugin.mk
+
 # pass selected environment variables to sub-make processes
 firmwares: export CC := $(CC)
 firmwares: export CXX := $(CXX)
@@ -71,8 +77,3 @@ firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 
 all: firmwares
 
-DISTRIBUTABLES += res
-DISTRIBUTABLES += $(wildcard LICENSE*)
-DISTRIBUTABLES += $(wildcard presets)
-
-include $(RACK_DIR)/plugin.mk
