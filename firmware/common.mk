@@ -6,7 +6,6 @@ TARGET_DIR := ../res/firmware/
 FLAGS += \
 	-DDEBUG \
 	-DNULL=0 \
-	-o0 \
 	-DARCH_AVR32=1 \
 	-fPIC \
 	-g \
