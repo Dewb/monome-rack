@@ -2,7 +2,6 @@ SHELL := /bin/bash -O extglob
 RACK_DIR ?= ../../..
 
 TARGET_DIR := ../res/firmware/
-BUILD_DIR := ../build/firmware/
 
 FLAGS += \
 	-DDEBUG \
@@ -34,20 +33,8 @@ ifeq ($(ARCH_WIN), 1)
 	TARGET = $(TARGET_DIR)$(TARGET_NAME).dll
 endif
 
-OBJECTS += $(patsubst %, $(BUILD_DIR)$(TARGET_NAME)/%.o, $(SOURCES))
-
-$(BUILD_DIR)$(TARGET_NAME)/%.c.o: %.c
-	@mkdir -p $(@D)
-	$(CC) $(FLAGS) $(CFLAGS) -c -o $@ $<
-
-$(TARGET): $(OBJECTS)
-	echo $(OBJECTS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+include $(RACK_DIR)/compile.mk
 
 all: $(TARGET)
-
-clean:
-	rm -rfv $(BUILD_DIR)$(TARGET_NAME)
-	rm -rfv $(TARGET)
 
 .DEFAULT_GOAL := all

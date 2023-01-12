@@ -70,7 +70,7 @@
                 "focus": false,
                 "panel": "shared"
             },
-            "command": "make clean",
+            "command": "make clean; rm -rf firmware/build; rm -rf res/firmware/*.*",
             "options": {
                 "cwd": "${workspaceRoot}",
                 "env": {

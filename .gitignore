@@ -4,6 +4,7 @@ plugin.dll
 plugin.so
 .DS_Store
 /res/firmware
+/firmware/build
 /dist
 .vscode/ipch
 /Rack-SDK
