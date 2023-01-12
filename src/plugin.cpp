@@ -9,8 +9,6 @@
 #include "SerialOscInterface.hpp"
 #include "TeletypeModule.hpp"
 #include "TeletypeWidget.hpp"
-#include "TTExpanderModule.hpp"
-#include "TTExpanderWidget.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
@@ -29,7 +27,6 @@ void init(Plugin* p)
     Model* modelEarthsea = createModel<EarthseaModule, EarthseaWidget>("earthsea");
 
     Model* modelTeletype = createModel<TeletypeModule, TeletypeWidget>("teletype");
-    // Model* modelTeletypeExpander = createModel<TTExpanderModule, TTExpanderWidget>("teletype-expander");
     Model* modelAnsible = createModel<AnsibleModule, AnsibleWidget>("ansible");
 
     Model* modelGrid128 = createModel<VirtualGridModuleTemplate<16, 8>, VirtualGridWidgetTemplate<16, 8>>("grid128");
@@ -43,7 +40,6 @@ void init(Plugin* p)
     p->addModel(modelEarthsea);
     
     p->addModel(modelTeletype);
-    // p->addModel(modelTeletypeExpander);
     p->addModel(modelAnsible);
 
     p->addModel(modelGrid128);

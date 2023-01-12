@@ -10,7 +10,6 @@ FLAGS += \
 	-Isrc/meadowphysics \
 	-Isrc/earthsea \
 	-Isrc/teletype \
-	-Isrc/teletype-expander \
 	-Isrc/ansible \
 	-Isrc/faderbank \
 	-Ilib/base64 \
