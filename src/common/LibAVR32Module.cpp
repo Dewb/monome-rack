@@ -7,7 +7,6 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 : firmwareName(firmwareName)
 {
     gridConnection = nullptr;
-    firstStep = true;
     reloadRequested = ReloadRequest::None;
 
     dacOffsetVolts = 0.0007;
@@ -19,11 +18,16 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 
     firmware.load(firmwareName);
     firmware.init();
+
+    firmware.advanceClock(0.02);
+    firmware.step();
+
+    GridConnectionManager::get().registerGridConsumer(this);
 }
 
 LibAVR32Module::~LibAVR32Module()
 {
-    GridConnectionManager::get()->deregisterGridConsumer(this);
+    GridConnectionManager::get().deregisterGridConsumer(this);
 }
 
 void LibAVR32Module::gridConnected(Grid* newConnection)
@@ -242,12 +246,6 @@ void LibAVR32Module::reloadFirmware(bool preserveMemory)
 
 void LibAVR32Module::process(const ProcessArgs& args)
 {
-    if (firstStep)
-    {
-        GridConnectionManager::get()->registerGridConsumer(this);
-        firstStep = false;
-    }
-
     std::lock_guard<std::mutex> lock(processMutex);
 
     if (reloadRequested != ReloadRequest::None)

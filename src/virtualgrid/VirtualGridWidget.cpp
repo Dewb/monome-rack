@@ -36,7 +36,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     {
         VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
         assert(grid);
-        GridConnectionManager::get()->registerGrid(grid);
+        GridConnectionManager::get().registerGrid(grid);
         id = grid->device.id;
     }
 
@@ -106,7 +106,7 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
 
 VirtualGridWidget::~VirtualGridWidget()
 {
-    GridConnectionManager::get()->deregisterGrid(id);
+    GridConnectionManager::get().deregisterGrid(id);
 }
 
 void VirtualGridWidget::draw(const DrawArgs& args)
@@ -154,9 +154,9 @@ void setProtocol(VirtualGridModule* grid, MonomeProtocol protocol)
 {
     if (protocol != grid->device.protocol)
     {
-        GridConnectionManager::get()->deregisterGrid(grid->device.id, false);
+        GridConnectionManager::get().deregisterGrid(grid->device.id, false);
         grid->device.protocol = protocol;
-        GridConnectionManager::get()->registerGrid(grid);
+        GridConnectionManager::get().registerGrid(grid);
     }
 }
 

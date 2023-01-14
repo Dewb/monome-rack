@@ -15,11 +15,11 @@ struct ConnectGridItem : rack::ui::MenuItem
     {
         if (module && module->gridConnection == grid)
         {
-            GridConnectionManager::get()->disconnect(module, true);
+            GridConnectionManager::get().disconnect(module, true);
         }
         else
         {
-            GridConnectionManager::get()->connect(grid, module);
+            GridConnectionManager::get().connect(grid, module);
         }
     }
 };
@@ -142,7 +142,7 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
 
     // enumerate registered grid devices
     int deviceCount = 0;
-    for (Grid* grid : GridConnectionManager::get()->getGrids())
+    for (Grid* grid : GridConnectionManager::get().getGrids())
     {
         auto connectItem = new ConnectGridItem();
         connectItem->text = grid->getDevice().type + " (" + grid->getDevice().id + ")";

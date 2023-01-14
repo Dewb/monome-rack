@@ -93,11 +93,11 @@ void VirtualGridModule::process(const ProcessArgs& args)
 
     // ensure any near-simultaneous releases and presses are processed releases-first
     std::for_each(releases.begin(), releases.end(), [=](std::tuple<int, int> c) {
-        GridConnectionManager::get()->dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), false);
+        GridConnectionManager::get().dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), false);
     });
 
     std::for_each(presses.begin(), presses.end(), [=](std::tuple<int, int> c) {
-        GridConnectionManager::get()->dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), true);
+        GridConnectionManager::get().dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), true);
     });
 }
 

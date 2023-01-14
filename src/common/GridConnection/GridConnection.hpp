@@ -44,10 +44,11 @@ struct GridConnectionManager final
     void dispatchEncDeltaMessage(MonomeDevice* device, int n, int d);
     const std::set<Grid*>& getGrids();
 
-    static GridConnectionManager* get();
+    static GridConnectionManager& get();
 
 private:
-    GridConnectionManager();
+    GridConnectionManager() = default;
+    ~GridConnectionManager() = default;
     GridConnectionManager(const GridConnectionManager&) = delete;
     GridConnectionManager& operator=(const GridConnectionManager&) = delete;
     GridConnectionManager(GridConnectionManager&&) = delete;

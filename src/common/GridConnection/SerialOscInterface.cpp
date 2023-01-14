@@ -31,7 +31,7 @@ void SerialOscInterface::deviceFound(const MonomeDevice* const device)
     }
 
     // don't register the same device id twice
-    for (auto grid : GridConnectionManager::get()->getGrids())
+    for (auto grid : GridConnectionManager::get().getGrids())
     {
         if (grid->getDevice().id == device->id)
         {
@@ -39,22 +39,22 @@ void SerialOscInterface::deviceFound(const MonomeDevice* const device)
         }
     }
 
-    GridConnectionManager::get()->registerGrid(new SerialOscGrid(device));
+    GridConnectionManager::get().registerGrid(new SerialOscGrid(device));
 }
 
 void SerialOscInterface::deviceRemoved(const std::string& id)
 {
-    GridConnectionManager::get()->deregisterGrid(id, true);
+    GridConnectionManager::get().deregisterGrid(id, true);
 }
 
 void SerialOscInterface::buttonPressMessageReceived(MonomeDevice* device, int x, int y, bool state)
 {
-    GridConnectionManager::get()->dispatchButtonMessage(device, x, y, state);
+    GridConnectionManager::get().dispatchButtonMessage(device, x, y, state);
 }
 
 void SerialOscInterface::encDeltaMessageReceived(MonomeDevice* device, int n, int d)
 {
-    GridConnectionManager::get()->dispatchEncDeltaMessage(device, n, d);
+    GridConnectionManager::get().dispatchEncDeltaMessage(device, n, d);
 }
 
 SerialOscInterface* SerialOscInterface::get()

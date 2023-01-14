@@ -150,12 +150,8 @@ const std::set<Grid*>& GridConnectionManager::getGrids()
     return grids;
 }
 
-GridConnectionManager::GridConnectionManager()
+GridConnectionManager& GridConnectionManager::get()
 {
-}
-
-GridConnectionManager* GridConnectionManager::get()
-{
-    static GridConnectionManager* instance = new GridConnectionManager();
+    static GridConnectionManager instance;
     return instance;
 }
