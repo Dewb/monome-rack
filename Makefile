@@ -16,6 +16,7 @@ FLAGS += \
 	-Ilib/oscpack \
 	-Ilib/serialosc \
 	-Ifirmware/mock_hardware \
+	-g \
 
 CFLAGS +=
 CXXFLAGS += 
@@ -51,7 +52,7 @@ $(ragel):
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
 firmwares: export PATH := $(PWD)/dep/bin:$(PATH)
-firmwares: export RACK_DIR := $(RACK_DIR)
+firmwares: export RACK_DIR := $(realpath $(RACK_DIR))
 firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
