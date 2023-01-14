@@ -4,13 +4,13 @@
 #include <iomanip>
 #include <sstream>
 
-std::string formatVirtualDeviceId(int id)
+std::string formatVirtualDeviceId(int64_t id)
 {
+    std::ostringstream ss;
     std::string prefix("virt");
 
-    std::ostringstream ss;
-    ss << prefix << std::setw(6) << std::setfill('0') << id;
-
+    // Rack IDs are in the range 0-2^53
+    ss << prefix << std::setw(14) << std::setfill('0') << std::hex << id;
     return ss.str();
 }
 
