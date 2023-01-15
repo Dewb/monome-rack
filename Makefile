@@ -62,7 +62,9 @@ firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 
 all: firmwares
 
-DISTRIBUTABLES += res
+RESOURCES = $(wildcard res/**)
+JPEGS = $(wildcard res/*.jpg)
+DISTRIBUTABLES += $(filter-out $(JPEGS),$(RESOURCES))
 DISTRIBUTABLES += $(wildcard LICENSE*)
 DISTRIBUTABLES += $(wildcard presets)
 
