@@ -131,17 +131,22 @@ struct VirtualGridKey : rack::app::ParamWidget
             levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lightLockColor, nullptr);
             darkLockColor = nvgRGB(0, 0, 0);
 
+            float cx = x + rect.x / 2;
+            float cy = y + rect.y / 2;
+            float bend = y + rect.y / 2.3;
+            float r = rect.x / 6.4;
+
             nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + rect.x / 4, y + rect.y / 2, rect.x / 2, rect.y / 3, 1.0);
+            nvgRoundedRect(vg, x + rect.x / 4, cy, rect.x / 2, rect.y / 3, 1.0);
             nvgFillColor(vg, val > 3 ? darkLockColor : lightLockColor);
             nvgFill(vg);
 
             nvgBeginPath(vg);
-            nvgShapeAntiAlias(vg, 1);
-            nvgArc(vg, x + rect.x / 2, y + rect.y / 2.3, rect.x / 6.4, 0, 3.14159, NVG_CCW);
-            nvgLineTo(vg, x + rect.x / 2 - rect.x / 6.4, y + rect.y / 2);
-            nvgMoveTo(vg, x + rect.x / 2 + rect.x / 6.4, y + rect.y / 2.3);
-            nvgLineTo(vg, x + rect.x / 2 + rect.x / 6.4, y + rect.y / 2);
+            nvgMoveTo(vg, cx + r, cy + 2.0);
+            nvgLineTo(vg, cx + r, bend);
+            nvgArcTo(vg, cx + r, bend - r, cx, bend - r, r);
+            nvgArcTo(vg, cx - r, bend - r, cx - r, bend, r);
+            nvgLineTo(vg, cx - r, cy + 2.0);
             nvgStrokeColor(vg, val > 3 ? darkLockColor : lightLockColor);
             nvgStrokeWidth(vg, 3.5);
             nvgStroke(vg);
