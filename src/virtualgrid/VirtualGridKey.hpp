@@ -126,31 +126,46 @@ struct VirtualGridKey : rack::app::ParamWidget
 
         if (isLocked())
         {
-            NVGcolor lightLockColor, darkLockColor;
+            NVGcolor lockColor = nvgRGB(0, 0, 0);
 
-            levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lightLockColor, nullptr);
-            darkLockColor = nvgRGB(0, 0, 0);
+            if (val < 4)
+            {
+                levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lockColor, nullptr);
+            }
 
-            float cx = x + rect.x / 2;
-            float cy = y + rect.y / 2;
-            float bend = y + rect.y / 2.3;
-            float r = rect.x / 6.4;
+            drawLock(args, x, y + rect.y/2, rect.x/2, rect.y/2, lockColor);
 
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, x + rect.x / 4, cy, rect.x / 2, rect.y / 3, 1.0);
-            nvgFillColor(vg, val > 3 ? darkLockColor : lightLockColor);
-            nvgFill(vg);
-
-            nvgBeginPath(vg);
-            nvgMoveTo(vg, cx + r, cy + 2.0);
-            nvgLineTo(vg, cx + r, bend);
-            nvgArcTo(vg, cx + r, bend - r, cx, bend - r, r);
-            nvgArcTo(vg, cx - r, bend - r, cx - r, bend, r);
-            nvgLineTo(vg, cx - r, cy + 2.0);
-            nvgStrokeColor(vg, val > 3 ? darkLockColor : lightLockColor);
-            nvgStrokeWidth(vg, 3.5);
-            nvgStroke(vg);
+            // dots instead of lock
+            // nvgBeginPath(vg);
+            // nvgCircle(vg, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin);
+            // nvgFillColor(vg, lockColor);
+            // nvgFill(vg);
         }
+    }
+
+    void drawLock(const DrawArgs& args, float x, float y, float w, float h, NVGcolor& color)
+    {
+        auto vg = args.vg;
+
+        float cx = x + w / 2;
+        float cy = y + h / 2;
+        float bend = y + h / 2.3;
+        float r = w / 6.4;
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x + w / 4, cy, w / 2, h / 3, 1.0);
+        nvgFillColor(vg, color);
+        nvgFill(vg);
+
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, cx + r, cy + 2.0);
+        nvgLineTo(vg, cx + r, bend);
+        nvgArcTo(vg, cx + r, bend - r, cx, bend - r, r);
+        nvgArcTo(vg, cx - r, bend - r, cx - r, bend, r);
+        nvgLineTo(vg, cx - r, cy + 2.0);
+        nvgStrokeColor(vg, color);
+        nvgStrokeWidth(vg, h * 0.09);
+        nvgStroke(vg);
     }
 
     rack::engine::ParamQuantity* getSecondaryParamQuantity()
