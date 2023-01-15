@@ -124,8 +124,21 @@ void VirtualGridWidget::clearHeldKeys()
     for (auto p : getParams())
     {
         auto key = static_cast<VirtualGridKey*>(p);
-        if (key)
+        if (key && !key->isLocked())
         {
+            key->getSecondaryParamQuantity()->setValue(VirtualGridKey::OFF);
+        }
+    }
+}
+
+void VirtualGridWidget::clearLockedKeys()
+{
+    for (auto p : getParams())
+    {
+        auto key = static_cast<VirtualGridKey*>(p);
+        if (key && key->isLocked())
+        {
+            key->setLocked(false);
             key->getSecondaryParamQuantity()->setValue(VirtualGridKey::OFF);
         }
     }
@@ -138,16 +151,30 @@ void VirtualGridWidget::onDragEnter(const event::DragEnter& e)
 void VirtualGridWidget::onDragStart(const event::DragStart& e)
 {
     ModuleWidget::onDragStart(e);
+}
 
-    if (e.getTarget() == this && e.button == GLFW_MOUSE_BUTTON_LEFT)
+void VirtualGridWidget::onHoverKey(const rack::Widget::HoverKeyEvent& e)
+{
+#if defined ARCH_MAC
+    bool isHoldModifier = e.key == GLFW_KEY_LEFT_SUPER || e.key == GLFW_KEY_RIGHT_SUPER;
+#else
+    bool isHoldModifier = e.key == GLFW_KEY_LEFT_CONTROL || e.key == GLFW_KEY_RIGHT_CONTROL;
+#endif
+
+    if (isHoldModifier && e.action == GLFW_RELEASE)
     {
-        if ((APP->window->getMods() & RACK_MOD_MASK) == RACK_MOD_CTRL)
-        {
-            clearHeldKeys();
-            e.consume(this);
-            return;
-        }
+        clearHeldKeys();
     }
+    else if (e.key == GLFW_KEY_ESCAPE && e.action == GLFW_PRESS)
+    {
+        clearHeldKeys();
+        clearLockedKeys();
+    }
+}
+
+void VirtualGridWidget::onLeave(const rack::Widget::LeaveEvent& e)
+{
+    clearHeldKeys();
 }
 
 void setProtocol(VirtualGridModule* grid, MonomeProtocol protocol)
@@ -173,7 +200,9 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
             setProtocol(grid, static_cast<MonomeProtocol>(index));
         }));
 
-    menu->addChild(createMenuItem("Release Held Keys", "Ctrl+Click", [this]()
-        { this->clearHeldKeys(); }));
+    menu->addChild(createMenuItem("Release Locked Keys", "Esc", [this]() {
+        this->clearLockedKeys();
+    }));
+
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + id + ")"));
 }

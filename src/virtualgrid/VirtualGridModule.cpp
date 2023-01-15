@@ -109,6 +109,13 @@ json_t* VirtualGridModule::dataToJson()
     return rootJ;
 }
 
+json_t* VirtualGridModule::paramsToJson()
+{
+    // don't serialize key states
+    json_t* rootJ = json_array();
+    return rootJ;
+}
+
 void VirtualGridModule::dataFromJson(json_t* rootJ)
 {
     auto json_proto = json_object_get(rootJ, "protocol");
@@ -155,4 +162,9 @@ void VirtualGridModule::clearAll()
 {
     memset(ledBuffer, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
     memset(pressedState, 0, sizeof(uint8_t) * GRID_MAX_SIZE);
+
+    for (auto p : params)
+    {
+        p.setValue(0);
+    }
 }

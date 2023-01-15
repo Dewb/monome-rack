@@ -21,6 +21,7 @@ struct VirtualGridModule : rack::Module, Grid
     void onAdd() override;
     void process(const ProcessArgs& args) override;
     json_t* dataToJson() override;
+    json_t* paramsToJson() override;
     void dataFromJson(json_t* rootJ) override;
 
     // Grid virtual methods

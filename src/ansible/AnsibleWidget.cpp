@@ -18,7 +18,7 @@ struct HoldableButton : TL1105
         // Shift from momentary to toggle if we're control-clicked, to enable a "hold" state
         if (momentary &&
             e.action == GLFW_PRESS && e.button == GLFW_MOUSE_BUTTON_LEFT &&
-            ((e.mods & RACK_MOD_MASK) == GLFW_MOD_CONTROL || (e.mods & RACK_MOD_MASK) == GLFW_MOD_SUPER))
+            (e.mods & RACK_MOD_CTRL) == RACK_MOD_CTRL)
         {
             momentary = false;
             heldThisGesture = true;

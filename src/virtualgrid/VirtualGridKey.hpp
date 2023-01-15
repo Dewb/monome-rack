@@ -16,6 +16,7 @@ struct VirtualGridKey : rack::app::ParamWidget
     VirtualGridKey()
     : ledAddress(nullptr)
     , theme(nullptr)
+    , _locked(false)
     {
     }
 
@@ -43,6 +44,8 @@ struct VirtualGridKey : rack::app::ParamWidget
         rect.y -= 2 * margin;
         float x = margin;
         float y = margin;
+        float pushAmount = 2.6;
+        float pushed = isPushed(); // sample this once so it's consistent
 
         NVGcolor color1, color2;
         levelToGradient(
@@ -52,10 +55,17 @@ struct VirtualGridKey : rack::app::ParamWidget
             &color2
         );
 
-        bool pushed = isPushed();
-        float pushAmount = 2.6;
+        // if (isLocked())
+        // {
+        //     // draw highlight rect around key
+        //     nvgBeginPath(vg);
+        //     nvgRoundedRect(vg, 0, pushAmount, rect.x + 2 * margin, rect.y + margin, 5.3);
+        //     nvgFillColor(vg, nvgRGB(190, 180, 0));
+        //     nvgFill(vg);
+        // }
 
-        if (!pushed) {
+        if (!pushed)
+        {
             // highlight top and side edges
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
@@ -113,6 +123,29 @@ struct VirtualGridKey : rack::app::ParamWidget
             }
             nvgFill(vg);
         }
+
+        if (isLocked())
+        {
+            NVGcolor lightLockColor, darkLockColor;
+
+            levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lightLockColor, nullptr);
+            darkLockColor = nvgRGB(0, 0, 0);
+
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, x + rect.x / 4, y + rect.y / 2, rect.x / 2, rect.y / 3, 1.0);
+            nvgFillColor(vg, val > 3 ? darkLockColor : lightLockColor);
+            nvgFill(vg);
+
+            nvgBeginPath(vg);
+            nvgShapeAntiAlias(vg, 1);
+            nvgArc(vg, x + rect.x / 2, y + rect.y / 2.3, rect.x / 6.4, 0, 3.14159, NVG_CCW);
+            nvgLineTo(vg, x + rect.x / 2 - rect.x / 6.4, y + rect.y / 2);
+            nvgMoveTo(vg, x + rect.x / 2 + rect.x / 6.4, y + rect.y / 2.3);
+            nvgLineTo(vg, x + rect.x / 2 + rect.x / 6.4, y + rect.y / 2);
+            nvgStrokeColor(vg, val > 3 ? darkLockColor : lightLockColor);
+            nvgStrokeWidth(vg, 3.5);
+            nvgStroke(vg);
+        }
     }
 
     rack::engine::ParamQuantity* getSecondaryParamQuantity()
@@ -129,13 +162,36 @@ struct VirtualGridKey : rack::app::ParamWidget
             (getSecondaryParamQuantity() && getSecondaryParamQuantity()->getValue() == PRESSED);
     }
 
+    bool isLocked()
+    {
+        return _locked;
+    }
+
+    void setLocked(bool b)
+    {
+        _locked = b;
+    }
+
     void beginPress()
     {
         if (getSecondaryParamQuantity())
         {
+            // If shift+ctrl is held and this key is not already locked, lock it
+            // If the key is locked, unlock it.
+            if (isLocked())
+            {
+                setLocked(false);
+            }
+            else if ((APP->window->getMods() & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT &&
+                (APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL)
+            {
+                setLocked(true);
+                getSecondaryParamQuantity()->setValue(PRESSED);
+                return;
+            }
+
             // if we're Ctrl/Mac-clicking an already-held button, release it
-            if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL &&
-                getSecondaryParamQuantity()->getValue() > 0)
+            if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL && getSecondaryParamQuantity()->getValue() > 0)
             {
                 getSecondaryParamQuantity()->setValue(OFF);
             }
@@ -148,8 +204,8 @@ struct VirtualGridKey : rack::app::ParamWidget
 
     void endPress()
     {
-        // Ignore mouseup when Ctrl/Apple held, to enable "press and hold" behavior
-        if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL)
+        // Ignore mouseup if the key is locked, or when Ctrl is held down
+        if (isLocked() || (APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL)
         {
             return;
         }
@@ -240,4 +296,7 @@ struct VirtualGridKey : rack::app::ParamWidget
     {
         // override base class to prevent tooltip creation
     }
+
+protected:
+        bool _locked;
 };
