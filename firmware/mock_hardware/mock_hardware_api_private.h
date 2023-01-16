@@ -8,3 +8,5 @@ extern void hardware_afterStep();
 
 extern void hardware_beforeReadVRAM(void* ptr, uint32_t size);
 extern void hardware_afterWriteVRAM(void* ptr, uint32_t size);
+
+extern void hardware_getScreenBuffer(uint8_t **ptr, uint16_t* width, uint16_t* height);

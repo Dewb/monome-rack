@@ -236,34 +236,32 @@ void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
 
 void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
 {
-    if (!module || module->firstStep)
+    if (!module)
     {
         return;
     }
 
-    uint8_t* buffer;
-    uint16_t pixel_x = 0;
-    uint16_t pixel_y = 0;
+    uint8_t* buffer = module->getScreenBuffer();
+    uint16_t pixel_x = 128;
+    uint16_t pixel_y = 64;
 
-    std::lock_guard<std::mutex> lock(module->firmwareMutex);
-
-    module->firmware.getScreenBuffer(&buffer, &pixel_x, &pixel_y);
-
-    if (buffer)
+    if (buffer == NULL || pixel_x == 0 || pixel_y == 0)
     {
-        int margin = 5;
-        float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
-        float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
+       return;
+    }
 
-        for (int j = 0; j < pixel_y; j++)
+    int margin = 5;
+    float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
+    float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
+
+    for (int j = 0; j < pixel_y; j++)
+    {
+        for (int i = 0; i < pixel_x; i++)
         {
-            for (int i = 0; i < pixel_x; i++)
-            {
-                float x = margin + i * pixel_width;
-                float y = margin + j * pixel_height;
+            float x = margin + i * pixel_width;
+            float y = margin + j * pixel_height;
 
-                drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
-            }
+            drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
         }
     }
 }

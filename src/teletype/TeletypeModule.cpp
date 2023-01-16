@@ -34,6 +34,8 @@ TeletypeModule::TeletypeModule()
 : LibAVR32Module("teletype")
 , _iiDevice(this)
 {
+    firmware.setScreenBuffer(getScreenBuffer());
+
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configParam<TTParamQuantity>(PARAM_PARAM, 0.0, 10.0, 5.0, "PARAM", "");
     configButton(BUTTON_PARAM, "SCENE");

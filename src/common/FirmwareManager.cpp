@@ -402,11 +402,11 @@ void FirmwareManager::writeVRAM(const void* ptr, uint32_t size)
     }
 }
 
-void FirmwareManager::getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
+void FirmwareManager::setScreenBuffer(uint8_t* ptr)
 {
     if (impl)
     {
-        impl->fw_fn_hardware_getScreenBuffer(ptr, width, height);
+        impl->fw_fn_hardware_setScreenBuffer(ptr);
     }
 }
 

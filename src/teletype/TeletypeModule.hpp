@@ -59,6 +59,10 @@ struct TeletypeModule : LibAVR32Module
 
     rack::dsp::SchmittTrigger inputTriggers[8];
 
+    virtual uint8_t* getScreenBuffer() override { return screenBuffer; }
+
 protected:
     iiDevice _iiDevice;
+
+    uint8_t screenBuffer[128 * 64];
 };

@@ -35,7 +35,7 @@ MOCK_API(void, writeNVRAM, (const void* src, uint32_t size));
 MOCK_API(void, readVRAM, (void** ptr, uint32_t* size));
 MOCK_API(void, writeVRAM, (const void* src, uint32_t size));
 
-MOCK_API(void, getScreenBuffer, (uint8_t * *ptr, uint16_t* width, uint16_t* height));
+MOCK_API(void, setScreenBuffer, (uint8_t *ptr));
 
 MOCK_API(void, hidConnect, ());
 MOCK_API(void, hidDisconnect, ());

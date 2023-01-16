@@ -226,41 +226,17 @@ void hardware_writeVRAM(const void* src, uint32_t size)
 
 void hardware_getScreenBuffer(uint8_t** ptr, uint16_t* width, uint16_t* height)
 {
-    if (!screenBuffer)
-    {
-        screenBuffer = (uint8_t*)malloc(sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
-        memset(screenBuffer, 0, sizeof(uint8_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
-
-        // initialize a distinctive pattern for debugging purposes
-        // for (int j = 0; j < SCREEN_HEIGHT; j++)
-        // {
-        //     for (int i = 0; i < SCREEN_WIDTH; i++)
-        //     {
-        //         if ((j / 16) % 2)
-        //         {
-        //             screenBuffer[i + SCREEN_WIDTH * j] = i % 16;
-        //         }
-        //         else
-        //         {
-        //             screenBuffer[i + SCREEN_WIDTH * j] = 15 - (i % 16);
-        //         }
-        //     }
-        // }
-    }
-    if (ptr)
-    {
-        *ptr = screenBuffer;
-    }
+    if (ptr) *ptr = screenBuffer;
     if (width)
-    {
-        *width = SCREEN_WIDTH;
-    }
+        *width = 128;
     if (height)
-    {
-        *height = SCREEN_HEIGHT;
-    }
+        *height = 64;
 }
 
+void hardware_setScreenBuffer(uint8_t* buf)
+{
+    screenBuffer = buf;
+}
 
 // TODO: make this generic for all followers somehow
 uint16_t faderbank[16];

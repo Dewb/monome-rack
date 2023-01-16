@@ -73,9 +73,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     int outputRate;
 
     std::mutex processMutex;
-    std::mutex firmwareMutex;
 
-    bool firstStep;
+    virtual uint8_t* getScreenBuffer() { return 0; }
 
 protected:
     void reloadFirmware(bool preserveMemory);

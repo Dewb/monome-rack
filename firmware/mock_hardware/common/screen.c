@@ -1,4 +1,5 @@
 #include "mock_hardware_api.h"
+#include "mock_hardware_api_private.h"
 #include "types.h"
 #include <string.h>
 
@@ -10,8 +11,13 @@ void screen_startup(void) { }
 void screen_draw_region(u8 x, u8 y, u8 w, u8 h, u8* data)
 {
     u8* screen;
-    uint16_t width, height;
+    uint16_t width = 128, height = 64;
     hardware_getScreenBuffer(&screen, &width, &height);
+
+    if (screen == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
 
     if (!_is_screen_flipped)
     {
@@ -52,5 +58,11 @@ void screen_clear(void)
     u8* screen;
     uint16_t width, height;
     hardware_getScreenBuffer(&screen, &width, &height);
+
+    if (screen == NULL || width == 0 || height == 0)
+    {
+        return;
+    }
+
     memset(screen, 0, sizeof(uint8_t) * width * height);
 }
