@@ -21,34 +21,39 @@ AnsibleModule::AnsibleModule()
 
 void AnsibleModule::processInputs(const ProcessArgs& args)
 {
-    bool cv1Normal = !inputs[IN1_INPUT].isConnected();
-    if (cv1Normal != firmware.getGPIO(B10))
+    bool in1Normal = !inputs[IN1_INPUT].isConnected();
+    if (in1Normal != firmware.getGPIO(B10))
     {
-        firmware.setGPIO(B10, cv1Normal);
+        firmware.setGPIO(B10, in1Normal);
         firmware.triggerInterrupt(1);
     }
-    bool input1 = inputs[IN1_INPUT].getVoltage() > 0;
-    if (input1 != firmware.getGPIO(B08))
+
+    for (int i = 0; i < 2; i++)
     {
-        firmware.setGPIO(B08, input1);
-        firmware.triggerInterrupt(6);
+        inputTriggers[i].process(
+            inputs[IN1_INPUT + i].getVoltage(),
+            triggerLowThreshold,
+            triggerHighThreshold);
+
+        if (inputTriggers[i].isHigh() != firmware.getGPIO(B08 + i))
+        {
+            firmware.setGPIO(B08 + i, inputTriggers[i].isHigh());
+            firmware.triggerInterrupt(6 + i);
+        }
     }
-    bool input2 = inputs[IN2_INPUT].getVoltage() > 0;
-    if (input2 != firmware.getGPIO(B09))
-    {
-        firmware.setGPIO(B09, input2);
-        firmware.triggerInterrupt(7);
-    }
+
     bool key1Button = params[KEY1_PARAM].getValue() == 0;
     if (key1Button != firmware.getGPIO(B07))
     {
         firmware.setGPIO(B07, key1Button);
     }
+
     bool key2Button = params[KEY2_PARAM].getValue() == 0;
     if (key2Button != firmware.getGPIO(B06))
     {
         firmware.setGPIO(B06, key2Button);
     }
+
     bool modeButton = params[MODE_PARAM].getValue() == 0;
     if (modeButton != firmware.getGPIO(NMI))
     {

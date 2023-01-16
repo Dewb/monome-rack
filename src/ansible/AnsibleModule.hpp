@@ -50,4 +50,6 @@ struct AnsibleModule : LibAVR32Module
     AnsibleModule();
     void processInputs(const ProcessArgs& args) override;
     void processOutputs(const ProcessArgs& args) override;
+
+    rack::dsp::SchmittTrigger inputTriggers[2];
 };
