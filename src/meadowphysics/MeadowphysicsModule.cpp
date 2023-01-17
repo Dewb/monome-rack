@@ -6,7 +6,7 @@ MeadowphysicsModule::MeadowphysicsModule()
 {
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
     configButton(BUTTON_PARAM, "PRESET");
-    configParam<Clock12BitParam<1>>(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK", "ms");
+    configParam<Clock12BitParam<1, CLOCK_INPUT>>(CLOCK_PARAM, 0.0, 10.0, 5.0, "CLOCK", "ms");
     configInput(CLOCK_INPUT, "CLOCK");
     configOutput(CLOCK_OUTPUT, "CLOCK");
     configOutput(TR1_OUTPUT, "TR 1");
