@@ -1,5 +1,5 @@
 ---
-name: Build error
+name: Build issue
 about: Report a problem building the modules in your own environment
 title: "[BUILD ISSUE]"
 labels: ''
