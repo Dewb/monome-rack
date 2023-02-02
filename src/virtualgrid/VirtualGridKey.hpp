@@ -133,14 +133,49 @@ struct VirtualGridKey : rack::app::ParamWidget
                 levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lockColor, nullptr);
             }
 
-            drawLock(args, x, y + rect.y/2, rect.x/2, rect.y/2, lockColor);
-
-            // dots instead of lock
-            // nvgBeginPath(vg);
-            // nvgCircle(vg, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin);
-            // nvgFillColor(vg, lockColor);
-            // nvgFill(vg);
+            // drawLock(args, x, y + rect.y/2, rect.x/2, rect.y/2, lockColor);
+            // drawDot(args, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin, lockColor);
+            drawPin(args, x + 1.5 * margin, y + rect.y * 0.6, rect.x * 0.4 - 1.5 * margin, rect.y * 0.4 - 1.5 * margin, lockColor);
         }
+    }
+
+    void drawPin(const DrawArgs& args, float x, float y, float w, float h, NVGcolor& color)
+    {
+        auto vg = args.vg;
+
+        float d = w / (2 / 1.41421356 + 1);
+        float s = w - d;
+
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x, y + w);
+        nvgLineTo(vg, x + s, y + d);
+        nvgStrokeColor(vg, color);
+        nvgStrokeWidth(vg, h * 0.12);
+        nvgLineCap(vg, NVG_ROUND);
+        nvgStroke(vg);
+
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x, y + d);
+        nvgLineTo(vg, x + s, y + w);
+
+        nvgLineTo(vg, x + s, y + 2 * d);
+        nvgLineTo(vg, x + w, y + d);
+        nvgLineTo(vg, x + s, y);
+        nvgLineTo(vg, x + s - d, y + d);
+        nvgLineTo(vg, x, y + d);
+        nvgFillColor(vg, color);
+        nvgLineJoin(vg, NVG_ROUND);
+        nvgFill(vg);
+    }
+
+    void drawDot(const DrawArgs& args, float cx, float cy, float r, NVGcolor& color)
+    {
+        auto vg = args.vg;
+
+        nvgBeginPath(vg);
+        nvgCircle(vg, cx, cy, r);
+        nvgFillColor(vg, color);
+        nvgFill(vg);
     }
 
     void drawLock(const DrawArgs& args, float x, float y, float w, float h, NVGcolor& color)

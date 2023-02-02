@@ -200,7 +200,7 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
             setProtocol(grid, static_cast<MonomeProtocol>(index));
         }));
 
-    menu->addChild(createMenuItem("Release Locked Keys", "Esc", [this]() {
+    menu->addChild(createMenuItem("Release Pinned Keys", "Esc", [this]() {
         this->clearLockedKeys();
     }));
 
