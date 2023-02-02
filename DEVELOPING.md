@@ -15,6 +15,12 @@
    $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip
    $ unzip Rack-SDK-1.1.6.zip
    ```
+
+* Build dependencies.
+   ```bash
+   $ RACK_DIR=$(PWD)/Rack-SDK make dep
+   ```
+
 * Build with `make install`.
    ```bash
    $ RACK_DIR=$(PWD)/Rack-SDK make install
@@ -36,12 +42,13 @@
    $ cd plugins
    $ git clone https://github.com/Dewb/monome-rack
    ```
-* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`
+* Change into the `monome-rack` folder and clone the plugin's submodules with `git submodule update --init --recursive`, then `make dep` to build dependencies.
    ```bash
    $ cd monome-rack
    $ git submodule update --init --recursive
+   $ make dep
    ```
 * Build with `make`, or open the `monome-rack` folder in Visual Studio Code and select `Tasks > Run Build Task`.
    ```bash
-   $ RACK_DIR=$(PWD)/../.. make
+   $ make
    ```
