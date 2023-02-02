@@ -1,6 +1,7 @@
 #include "FirmwareManager.hpp"
 #include "GridConnection.hpp"
 #include "rack.hpp"
+#include <queue>
 
 #pragma once
 
@@ -72,9 +73,10 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     int inputRate;
     int outputRate;
 
-    std::mutex processMutex;
-
     virtual uint8_t* getScreenBuffer() { return 0; }
+
+    typedef std::function<void(void)> Action;
+    void queueAudioThreadAction(Action action) { audioThreadActions.push(action); }
 
 protected:
     void reloadFirmware(bool preserveMemory);
@@ -84,6 +86,12 @@ protected:
     float dacOffsetVolts;
     float triggerHighThreshold;
     float triggerLowThreshold;
+
+    // std::deque is not thread safe in the general case, but the hypothesis is
+    // that we can safely have the UI thread pushing on infrequent user-initiated events,
+    // and the audio thread popping, with no reallocations or calls to other methods
+    typedef std::queue<Action> ActionQueue;
+    ActionQueue audioThreadActions;
 };
 
 inline float LibAVR32Module::dacToVolts(uint16_t dac)

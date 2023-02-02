@@ -245,7 +245,11 @@ void LibAVR32Module::reloadFirmware(bool preserveMemory)
 
 void LibAVR32Module::process(const ProcessArgs& args)
 {
-    std::lock_guard<std::mutex> lock(processMutex);
+    while (audioThreadActions.size())
+    {
+        audioThreadActions.front()();
+        audioThreadActions.pop();
+    }
 
     if (reloadRequested != ReloadRequest::None)
     {

@@ -3,6 +3,7 @@
 
 #include "osdialog.h"
 #include <regex>
+#include <fstream>
 
 #include "rack.hpp"
 
@@ -39,27 +40,13 @@ void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation oper
     }
     else
     {
-        FILE* file = std::fopen(fileName.c_str(), "r");
-        if (!file)
-        {
-            std::string message("Couldn't read from file.");
-            osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
-            return;
-        }
-        DEFER({
-            std::fclose(file);
-        });
+        std::ifstream ifs(fileName);
+        std::string scene(
+            (std::istreambuf_iterator<char>(ifs)),
+            (std::istreambuf_iterator<char>())
+        );
 
-        tt_deserializer_t stream {
-            .read_char = [](void* user_data)
-            { return static_cast<uint16_t>(std::fgetc(static_cast<FILE*>(user_data))); },
-            .eof = [](void* user_data)
-            { return std::feof(static_cast<FILE*>(user_data)) != 0; },
-            .print_dbg = [](const char* c) {},
-            .data = (void*)file,
-        };
-
-        module->firmware.deserializePreset(&stream, preset_num, true);
+        presetImportString(module, scene, preset_num, true);
     }
 }
 
@@ -122,18 +109,18 @@ void presetImportString(LibAVR32Module* module, std::string scene, int preset_nu
     // Add a final newline, since a selection in discord/browser probably won't include it
     scene += "\n";
 
-    std::stringstream clip(scene);
+    module->queueAudioThreadAction([=]() {
+        std::stringstream clip(scene);
 
-    tt_deserializer_t stream {
-        .read_char = [](void* user_data)
-        { return static_cast<uint16_t>(static_cast<std::stringstream*>(user_data)->get()); },
-        .eof = [](void* user_data)
-        { return static_cast<std::stringstream*>(user_data)->eof(); },
-        .print_dbg = [](const char* c) {},
-        .data = (void*)&clip,
-    };
+        tt_deserializer_t stream {
+            .read_char = [](void* user_data)
+            { return static_cast<uint16_t>(static_cast<std::stringstream*>(user_data)->get()); },
+            .eof = [](void* user_data)
+            { return static_cast<std::stringstream*>(user_data)->eof(); },
+            .print_dbg = [](const char* c) {},
+            .data = (void*)&clip,
+        };
 
-    std::lock_guard<std::mutex> lock(module->processMutex);
-
-    module->firmware.deserializePreset(&stream, preset_num, clearExisting);
+        module->firmware.deserializePreset(&stream, preset_num, clearExisting);
+    });
 }
