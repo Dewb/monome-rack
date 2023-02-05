@@ -13,6 +13,8 @@ struct VirtualGridWidget : rack::app::ModuleWidget
     void draw(const DrawArgs& args) override;
     void onDragEnter(const rack::event::DragEnter& e) override;
     void onDragStart(const rack::event::DragStart& e) override;
+    void onDragEnd(const rack::event::DragEnd& e) override;
+    void onDragLeave(const rack::event::DragLeave& e) override;
     void onHoverKey(const rack::Widget::HoverKeyEvent& e) override;
     void onLeave(const rack::Widget::LeaveEvent& e) override;
     void appendContextMenu(rack::ui::Menu* menu) override;

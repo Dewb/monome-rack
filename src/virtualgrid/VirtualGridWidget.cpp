@@ -153,6 +153,17 @@ void VirtualGridWidget::onDragStart(const event::DragStart& e)
     ModuleWidget::onDragStart(e);
 }
 
+void VirtualGridWidget::onDragEnd(const event::DragEnd& e)
+{
+    ModuleWidget::onDragEnd(e);
+}
+
+void VirtualGridWidget::onDragLeave(const event::DragLeave& e)
+{
+    clearHeldKeys();
+    ModuleWidget::onDragLeave(e);
+}
+
 void VirtualGridWidget::onHoverKey(const rack::Widget::HoverKeyEvent& e)
 {
 #if defined ARCH_MAC
@@ -200,7 +211,7 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
             setProtocol(grid, static_cast<MonomeProtocol>(index));
         }));
 
-    menu->addChild(createMenuItem("Release Pinned Keys", "Esc", [this]() {
+    menu->addChild(createMenuItem("Release Locked Keys", "Esc", [this]() {
         this->clearLockedKeys();
     }));
 

@@ -44,7 +44,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         rect.y -= 2 * margin;
         float x = margin;
         float y = margin;
-        float pushAmount = 2.6;
+        float pushAmount = 3.8;
         float pushed = isPushed(); // sample this once so it's consistent
 
         NVGcolor color1, color2;
@@ -134,8 +134,8 @@ struct VirtualGridKey : rack::app::ParamWidget
             }
 
             // drawLock(args, x, y + rect.y/2, rect.x/2, rect.y/2, lockColor);
-            // drawDot(args, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin, lockColor);
-            drawPin(args, x + 1.5 * margin, y + rect.y * 0.6, rect.x * 0.4 - 1.5 * margin, rect.y * 0.4 - 1.5 * margin, lockColor);
+            drawDot(args, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin, lockColor);
+            // drawPin(args, x + 1.5 * margin, y + rect.y * 0.6, rect.x * 0.4 - 1.5 * margin, rect.y * 0.4 - 1.5 * margin, lockColor);
         }
     }
 
