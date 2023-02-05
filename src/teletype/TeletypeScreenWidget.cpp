@@ -1,8 +1,15 @@
 #include "TeletypeScreenWidget.hpp"
 #include "TeletypeModule.hpp"
+#include "TeletypeScreenWidgetExampleScreen.hpp"
+
+#ifdef SAVE_SCREEN_FILENAME
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#endif
 
 TeletypeScreenWidget::TeletypeScreenWidget(LibAVR32Module* module)
-: module(module)
+    : module(module)
 {
 }
 
@@ -236,12 +243,7 @@ void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
 
 void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
 {
-    if (!module)
-    {
-        return;
-    }
-
-    uint8_t* buffer = module->getScreenBuffer();
+    uint8_t* buffer = module ? module->getScreenBuffer() : exampleScreen;
     uint16_t pixel_x = 128;
     uint16_t pixel_y = 64;
 
@@ -264,6 +266,18 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
             drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
         }
     }
+
+#ifdef SAVE_SCREEN_FILENAME
+    std::ofstream ss(SAVE_SCREEN_FILENAME);
+    ss << "{ ";
+    for (int i = 0; i < 128 * 64; i++)
+    {
+        int d = buffer[i];
+        ss << "0x" << std::hex << d << ", ";
+    }
+    ss << "};\n";
+#endif
+
 }
 
 void TeletypeScreenWidget::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
