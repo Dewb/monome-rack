@@ -2,6 +2,7 @@
 #include "TeletypeModule.hpp"
 #include "TeletypeScreenWidgetExampleScreen.hpp"
 
+// #define SAVE_SCREEN_FILENAME "/tmp/ttscreen.txt"
 #ifdef SAVE_SCREEN_FILENAME
 #include <fstream>
 #include <iomanip>
@@ -252,6 +253,16 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
        return;
     }
 
+#ifdef SAVE_SCREEN_FILENAME
+    std::ofstream ss(SAVE_SCREEN_FILENAME);
+    ss << "unsigned char exampleScreen[128 * 64] = {\n" << std::hex;
+    for (int i = 0; i < 128 * 64; i++)
+    {
+       ss << "0x" << static_cast<uint16_t>(buffer[i]) << ", ";
+    }
+    ss << "\n};\n";
+#endif
+
     int margin = 5;
     float pixel_width = (box.size.x - 2 * margin) / (pixel_x * 1.0);
     float pixel_height = (box.size.y - 2 * margin) / (pixel_y * 1.0);
@@ -266,18 +277,6 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
             drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
         }
     }
-
-#ifdef SAVE_SCREEN_FILENAME
-    std::ofstream ss(SAVE_SCREEN_FILENAME);
-    ss << "{ ";
-    for (int i = 0; i < 128 * 64; i++)
-    {
-        int d = buffer[i];
-        ss << "0x" << std::hex << d << ", ";
-    }
-    ss << "};\n";
-#endif
-
 }
 
 void TeletypeScreenWidget::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
