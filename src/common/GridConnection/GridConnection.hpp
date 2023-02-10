@@ -21,7 +21,7 @@ struct GridConsumer
 {
     virtual void gridConnected(Grid* grid) = 0;
     virtual void gridDisconnected(bool ownerChanged) = 0;
-    virtual std::string gridGetLastDeviceId() = 0;
+    virtual std::string gridGetLastDeviceId(bool owned) = 0;
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
     virtual void encDeltaEvent(int n, int d) = 0;
 };
