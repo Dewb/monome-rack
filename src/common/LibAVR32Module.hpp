@@ -58,7 +58,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void gridDisconnected(bool ownerChanged) override;
     void gridButtonEvent(int x, int y, bool state) override;
     void encDeltaEvent(int n, int d) override;
-    std::string gridGetLastDeviceId() override;
+    std::string gridGetLastDeviceId(bool owned) override;
 
     virtual void readSerialMessages();
     void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
@@ -68,6 +68,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     Grid* gridConnection;
     std::string lastConnectedDeviceId;
+    bool connectionOwned;
+
     std::string firmwareName;
 
     int inputRate;

@@ -105,6 +105,26 @@ struct FirmwareSubmenuItem : MenuItem
     }
 };
 
+void LibAVR32ModuleWidget::reacquireGrid()
+{
+    LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
+    if (!m) {
+        return;
+    }
+
+    if (m->lastConnectedDeviceId != "" && m->gridConnection == nullptr)
+    {
+        for (Grid* grid : GridConnectionManager::get().getGrids())
+        {
+            if (m->gridGetLastDeviceId(false) == grid->getDevice().id)
+            {
+                GridConnectionManager::get().connect(grid, m);
+                return;
+            }
+        }
+    }
+}
+
 LibAVR32ModuleWidget::LibAVR32ModuleWidget()
 {
 }
@@ -146,7 +166,18 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     {
         auto connectItem = new ConnectGridItem();
         connectItem->text = grid->getDevice().type + " (" + grid->getDevice().id + ")";
-        connectItem->rightText = (m->gridConnection && m->gridConnection->getDevice().id == grid->getDevice().id) ? "✔" : "";
+
+        auto rightText = "";
+        if (m->gridConnection && m->gridConnection->getDevice().id == grid->getDevice().id)
+        {
+            rightText = "✔";
+        }
+        else if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) == grid->getDevice().id)
+        {
+            rightText = "⋯";
+        }
+
+        connectItem->rightText = rightText;
         connectItem->module = m;
         connectItem->grid = grid;
         menu->addChild(connectItem);
@@ -156,5 +187,12 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     if (deviceCount == 0)
     {
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, "(no physical or virtual devices found)"));
+    }
+
+    if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) != "")
+    {
+        menu->addChild(createMenuItem("Reacquire grid", "", [this]()
+            { this->reacquireGrid(); }
+        ));
     }
 }

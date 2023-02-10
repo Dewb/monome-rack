@@ -12,7 +12,7 @@ void GridConnectionManager::registerGrid(Grid* grid)
     GridConsumer* consumerToConnect = nullptr;
     for (auto consumer : consumers)
     {
-        if (!isConnected(consumer) && grid->getDevice().id == consumer->gridGetLastDeviceId())
+        if (!isConnected(consumer) && grid->getDevice().id == consumer->gridGetLastDeviceId(true))
         {
             consumerToConnect = consumer;
             break;
@@ -33,7 +33,7 @@ void GridConnectionManager::registerGridConsumer(GridConsumer* consumer)
     Grid* gridToConnect = nullptr;
     for (auto grid : grids)
     {
-        if (!isConnected(grid->getDevice().id) && consumer->gridGetLastDeviceId() == grid->getDevice().id)
+        if (!isConnected(grid->getDevice().id) && consumer->gridGetLastDeviceId(true) == grid->getDevice().id)
         {
             gridToConnect = grid;
             break;

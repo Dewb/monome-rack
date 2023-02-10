@@ -42,6 +42,7 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
     {
         std::string id = gridConnection->getDevice().id;
         lastConnectedDeviceId = id;
+        connectionOwned = true;
 
         auto d = gridConnection->getDevice();
         if (d.type == "monome arc 4")
@@ -61,7 +62,7 @@ void LibAVR32Module::gridDisconnected(bool ownerChanged)
     firmware.serialConnectionChange(false, 0, 0, 0, 0);
     if (ownerChanged)
     {
-        lastConnectedDeviceId = "";
+        connectionOwned = false;
     }
 }
 
@@ -127,8 +128,13 @@ void LibAVR32Module::encDeltaEvent(int n, int d)
     }
 }
 
-std::string LibAVR32Module::gridGetLastDeviceId()
+std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
 {
+    if (owned && !connectionOwned)
+    {
+        return "";
+    }
+
     return lastConnectedDeviceId;
 }
 
@@ -301,6 +307,7 @@ json_t* LibAVR32Module::dataToJson()
 
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
+    json_object_set_new(rootJ, "connectionOwned", json_boolean(connectionOwned));
     json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
     json_object_set_new(rootJ, "outputRate", json_integer(outputRate));
 
@@ -328,6 +335,12 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
     if (id)
     {
         lastConnectedDeviceId = json_string_value(id);
+    }
+
+    json_t* owned = json_object_get(rootJ, "connectionOwned");
+    if (owned)
+    {
+        connectionOwned = json_boolean_value(owned);
     }
 
     void* data = 0;
