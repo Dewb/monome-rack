@@ -10,10 +10,10 @@
    $ cd monome-rack
    $ git submodule update --init --recursive
    ```
-* Download the Rack SDK.
+* Download the latest Rack 2.x SDK.
    ```bash
-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-1.1.6.zip
-   $ unzip Rack-SDK-1.1.6.zip
+   $ curl -O https://vcvrack.com/downloads/Rack-SDK-2.2.3.zip
+   $ unzip Rack-SDK-2.2.3.zip
    ```
 
 * Build dependencies.
@@ -30,7 +30,7 @@
 
 * Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Run and test Rack to make sure it works as expected.
    ```bash
-   $ git clone https://github.com/VCVRack/Rack
+   $ git clone -b v2 https://github.com/VCVRack/Rack
    $ cd Rack
    $ git submodule update --init --recursive
    $ make dep
