@@ -22,7 +22,6 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
     firmware.advanceClock(0.02);
     firmware.step();
 
-    GridConnectionManager::get().registerGridConsumer(this);
 }
 
 LibAVR32Module::~LibAVR32Module()
@@ -405,6 +404,8 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
             outputRate = value;
         }
     }
+
+    GridConnectionManager::get().registerGridConsumer(this);
 }
 
 void LibAVR32Module::onReset() {
