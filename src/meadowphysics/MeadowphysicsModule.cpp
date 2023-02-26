@@ -17,7 +17,7 @@ MeadowphysicsModule::MeadowphysicsModule()
     configOutput(TR6_OUTPUT, "TR 6");
     configOutput(TR7_OUTPUT, "TR 7");
     configOutput(TR8_OUTPUT, "TR 8");
-    configButton(USB_PARAM, "USB");
+    configButton(USB_PARAM, "USB Device Port");
 }
 
 void MeadowphysicsModule::processInputs(const ProcessArgs& args)

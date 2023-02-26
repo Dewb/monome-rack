@@ -10,4 +10,5 @@ struct LibAVR32ModuleWidget : rack::app::ModuleWidget
     LibAVR32ModuleWidget();
 
     virtual void appendContextMenu(rack::ui::Menu* menu) override;
+    void appendConnectionMenu(rack::Menu* menu);
 };

@@ -6,11 +6,11 @@ using namespace rack;
 
 struct USBAJack : MomentarySwitch<Switch>
 {
-    USBAJack()
-        : action(nullptr) {};
+    USBAJack();
 
     void draw(const DrawArgs& args) override;
     void onButton(const ButtonEvent& e) override;
+    void appendContextMenu(ui::Menu* menu) override;
 
     std::function<void(void)> action;
 };

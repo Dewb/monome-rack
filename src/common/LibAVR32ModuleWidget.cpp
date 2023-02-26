@@ -16,6 +16,7 @@ struct ConnectGridItem : rack::ui::MenuItem
         if (module && module->gridConnection == grid)
         {
             GridConnectionManager::get().disconnect(module, true);
+            module->lastConnectedDeviceId = "";
         }
         else
         {
@@ -123,6 +124,14 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(firmwareMenu);
 
     menu->addChild(new MenuSeparator());
+    appendConnectionMenu(menu);
+}
+
+void LibAVR32ModuleWidget::appendConnectionMenu(rack::Menu* menu)
+{
+    LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
+    assert(m);
+
     menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
 
     if (SerialOscInterface::get()->isServiceDetected())
@@ -130,8 +139,10 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
         menu->addChild(
             construct<MenuLabel>(
                 &MenuLabel::text,
-                "└ serialosc version " + SerialOscInterface::get()->getServiceVersion()));
-    } else {
+                "serialosc version " + SerialOscInterface::get()->getServiceVersion()));
+    }
+    else
+    {
         menu->addChild(
             createMenuItem("└ serialosc service not detected, click here to install", "",
                 [=]()
@@ -145,9 +156,10 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     for (Grid* grid : GridConnectionManager::get().getGrids())
     {
         auto connectItem = new ConnectGridItem();
-        connectItem->text = grid->getDevice().type + " (" + grid->getDevice().id + ")";
+        connectItem->text = "└ " + grid->getDevice().type + "(" + grid->getDevice().id + ") ";
 
-        auto rightText = "";
+            auto rightText
+            = "";
         if (m->gridConnection && m->gridConnection->getDevice().id == grid->getDevice().id)
         {
             rightText = "✔";
@@ -166,13 +178,12 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
 
     if (deviceCount == 0)
     {
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "(no physical or virtual devices found)"));
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "  (no physical or virtual devices found)"));
     }
 
     if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) != "")
     {
         menu->addChild(createMenuItem("Reacquire grid", "", [=]()
-            { m->reacquireGrid(); }
-        ));
+            { m->reacquireGrid(); }));
     }
 }
