@@ -15,7 +15,7 @@ EarthseaModule::EarthseaModule()
     configOutput(CV3_OUTPUT, "SHAPE 3");
     configOutput(EDGE_OUTPUT, "EDGE");
     configOutput(POS_OUTPUT, "POS");
-    configButton(USB_PARAM, "USB");
+    configButton(USB_PARAM, "USB Device Port");
 }
 
 void EarthseaModule::processInputs(const ProcessArgs& args)

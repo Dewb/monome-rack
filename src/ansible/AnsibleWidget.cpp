@@ -65,7 +65,7 @@ AnsibleWidget::AnsibleWidget(AnsibleModule* module)
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, 0)));
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-    auto usb = createParam<USBAJack>(Vec(10, 338), module, AnsibleModule::USB_PARAM);
+    auto usb = createParam<USBAJack>(Vec(7, 333), module, AnsibleModule::USB_PARAM);
     if (module && usb)
     {
         usb->action = [=]()
