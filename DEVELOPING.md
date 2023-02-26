@@ -28,9 +28,9 @@
 
 #### To build with the complete VCV Rack source:
 
-* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Build the `v1` branch. Run and test Rack to make sure it works as expected.
+* Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Run and test Rack to make sure it works as expected.
    ```bash
-   $ git clone -b v1 https://github.com/VCVRack/Rack
+   $ git clone https://github.com/VCVRack/Rack
    $ cd Rack
    $ git submodule update --init --recursive
    $ make dep
