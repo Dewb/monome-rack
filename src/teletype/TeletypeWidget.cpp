@@ -28,7 +28,16 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
     addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-    addChild(createWidget<USBAJack>(Vec(10, 337)));
+    auto usb = createParam<USBAJack>(Vec(10, 338), module, TeletypeModule::USB_PARAM);
+    if (module && usb)
+    {
+        usb->action = [=]()
+        {
+            module->reacquireGrid();
+        };
+        addChild(usb);
+    }
+
     addParam(createParam<TL1105>(Vec(62, 337), module, TeletypeModule::BUTTON_PARAM));
 
     // addChild(createScrew<ScrewSilver>(Vec(11, 312)));

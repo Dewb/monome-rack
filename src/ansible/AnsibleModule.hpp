@@ -9,6 +9,7 @@ struct AnsibleModule : LibAVR32Module
         KEY1_PARAM,
         KEY2_PARAM,
         MODE_PARAM,
+        USB_PARAM,
         NUM_PARAMS
     };
 

@@ -105,26 +105,6 @@ struct FirmwareSubmenuItem : MenuItem
     }
 };
 
-void LibAVR32ModuleWidget::reacquireGrid()
-{
-    LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
-    if (!m) {
-        return;
-    }
-
-    if (m->lastConnectedDeviceId != "" && m->gridConnection == nullptr)
-    {
-        for (Grid* grid : GridConnectionManager::get().getGrids())
-        {
-            if (m->gridGetLastDeviceId(false) == grid->getDevice().id)
-            {
-                GridConnectionManager::get().connect(grid, m);
-                return;
-            }
-        }
-    }
-}
-
 LibAVR32ModuleWidget::LibAVR32ModuleWidget()
 {
 }
@@ -191,8 +171,8 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
 
     if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) != "")
     {
-        menu->addChild(createMenuItem("Reacquire grid", "", [this]()
-            { this->reacquireGrid(); }
+        menu->addChild(createMenuItem("Reacquire grid", "", [=]()
+            { m->reacquireGrid(); }
         ));
     }
 }

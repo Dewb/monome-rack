@@ -60,6 +60,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void encDeltaEvent(int n, int d) override;
     std::string gridGetLastDeviceId(bool owned) override;
 
+    void reacquireGrid();
+
     virtual void readSerialMessages();
     void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
 

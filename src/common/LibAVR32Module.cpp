@@ -138,6 +138,21 @@ std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
     return lastConnectedDeviceId;
 }
 
+void LibAVR32Module::reacquireGrid()
+{
+    if (lastConnectedDeviceId != "" && gridConnection == nullptr)
+    {
+        for (Grid* grid : GridConnectionManager::get().getGrids())
+        {
+            if (gridGetLastDeviceId(false) == grid->getDevice().id)
+            {
+                GridConnectionManager::get().connect(grid, this);
+                return;
+            }
+        }
+    }
+}
+
 void LibAVR32Module::readSerialMessages()
 {
     uint8_t* msg;

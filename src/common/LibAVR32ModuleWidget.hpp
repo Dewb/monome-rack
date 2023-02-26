@@ -9,7 +9,5 @@ struct LibAVR32ModuleWidget : rack::app::ModuleWidget
 {
     LibAVR32ModuleWidget();
 
-    void reacquireGrid();
-
     virtual void appendContextMenu(rack::ui::Menu* menu) override;
 };

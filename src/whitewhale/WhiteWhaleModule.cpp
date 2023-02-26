@@ -16,6 +16,7 @@ WhiteWhaleModule::WhiteWhaleModule()
     configOutput(TR4_OUTPUT, "TR 4");
     configOutput(CVA_OUTPUT, "CV A");
     configOutput(CVB_OUTPUT, "CV B");
+    configButton(USB_PARAM, "USB");
 }
 
 void WhiteWhaleModule::processInputs(const ProcessArgs& args)

@@ -9,6 +9,7 @@ struct WhiteWhaleModule : LibAVR32Module
         CLOCK_PARAM,
         PARAM_PARAM,
         BUTTON_PARAM,
+        USB_PARAM,
         NUM_PARAMS
     };
 
