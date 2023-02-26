@@ -56,6 +56,7 @@ TeletypeModule::TeletypeModule()
     configOutput(CV2_OUTPUT, "CV 2");
     configOutput(CV3_OUTPUT, "CV 3");
     configOutput(CV4_OUTPUT, "CV 4");
+    configButton(USB_PARAM, "USB");
 }
 
 void TeletypeModule::processInputs(const ProcessArgs& args)

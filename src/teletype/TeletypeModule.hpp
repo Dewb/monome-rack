@@ -10,6 +10,7 @@ struct TeletypeModule : LibAVR32Module
     {
         PARAM_PARAM,
         BUTTON_PARAM,
+        USB_PARAM,
         NUM_PARAMS
     };
     enum InputIds

@@ -64,7 +64,16 @@ AnsibleWidget::AnsibleWidget(AnsibleModule* module)
 
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, 0)));
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-    addChild(createWidget<USBAJack>(Vec(10, 338)));
+
+    auto usb = createParam<USBAJack>(Vec(10, 338), module, AnsibleModule::USB_PARAM);
+    if (module && usb)
+    {
+        usb->action = [=]()
+        {
+            module->reacquireGrid();
+        };
+        addChild(usb);
+    }
 
     addParam(createParam<TL1105>(Vec(62, 336), module, AnsibleModule::MODE_PARAM));
     addParam(createParam<HoldableButton>(Vec(19, 256), module, AnsibleModule::KEY1_PARAM));

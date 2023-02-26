@@ -10,6 +10,7 @@ struct EarthseaModule : LibAVR32Module
         CV2_PARAM,
         CV3_PARAM,
         BUTTON_PARAM,
+        USB_PARAM,
         NUM_PARAMS
     };
 

@@ -8,6 +8,7 @@ struct MeadowphysicsModule : LibAVR32Module
     {
         CLOCK_PARAM,
         BUTTON_PARAM,
+        USB_PARAM,
         NUM_PARAMS
     };
 
