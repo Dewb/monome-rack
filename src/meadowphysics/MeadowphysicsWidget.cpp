@@ -22,16 +22,7 @@ MeadowphysicsWidget::MeadowphysicsWidget(MeadowphysicsModule* module)
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, 0)));
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-    auto usb = createParam<USBAJack>(Vec(7, 333), module, MeadowphysicsModule::USB_PARAM);
-    if (module && usb)
-    {
-        usb->action = [=]()
-        {
-            module->reacquireGrid();
-        };
-        addChild(usb);
-    }
-
+    addParam(createParam<USBAJack>(Vec(7, 333), module, MeadowphysicsModule::USB_PARAM));
     addParam(createParam<TL1105>(Vec(62, 336), module, MeadowphysicsModule::BUTTON_PARAM));
     addParam(createParam<SifamTPN111GrayBlackStripe>(Vec(12, 232), module, MeadowphysicsModule::CLOCK_PARAM));
 

@@ -60,7 +60,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void encDeltaEvent(int n, int d) override;
     std::string gridGetLastDeviceId(bool owned) override;
 
-    void reacquireGrid();
+    void userReacquireGrid();
+    void userToggleGridConnection(Grid* grid);
 
     virtual void readSerialMessages();
     void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
@@ -68,8 +69,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
 
-    Grid* gridConnection;
     std::string lastConnectedDeviceId;
+    std::string currentConnectedDeviceId;
     bool connectionOwned;
 
     std::string firmwareName;
@@ -84,6 +85,11 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
 protected:
     void reloadFirmware(bool preserveMemory);
+
+    Grid* gridConnection;
+    int usbParamId;
+    void setDeviceConnectionParam(int paramId) { usbParamId = paramId; }
+    void processDeviceConnectionParam();
 
     ReloadRequest reloadRequested;
 

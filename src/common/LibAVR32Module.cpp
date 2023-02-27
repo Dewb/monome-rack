@@ -2,9 +2,11 @@
 #include "base64.h"
 #include <string.h>
 
-
 LibAVR32Module::LibAVR32Module(std::string firmwareName)
-: firmwareName(firmwareName)
+: lastConnectedDeviceId("")
+, currentConnectedDeviceId("")
+, firmwareName(firmwareName)
+, usbParamId(-1)
 {
     gridConnection = nullptr;
     reloadRequested = ReloadRequest::None;
@@ -21,7 +23,6 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 
     firmware.advanceClock(0.02);
     firmware.step();
-
 }
 
 LibAVR32Module::~LibAVR32Module()
@@ -41,6 +42,7 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
     {
         std::string id = gridConnection->getDevice().id;
         lastConnectedDeviceId = id;
+        currentConnectedDeviceId = id;
         connectionOwned = true;
 
         auto d = gridConnection->getDevice();
@@ -52,16 +54,27 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         } else {
             firmware.serialConnectionChange(true, 0, d.protocol, d.width, d.height);
         }
+
+        if (usbParamId >= 0)
+        {
+            params[usbParamId].setValue(1.0);
+        }
     }
 }
 
 void LibAVR32Module::gridDisconnected(bool ownerChanged)
 {
     gridConnection = nullptr;
+    currentConnectedDeviceId = "";
     firmware.serialConnectionChange(false, 0, 0, 0, 0);
     if (ownerChanged)
     {
         connectionOwned = false;
+    }
+
+    if (usbParamId >= 0)
+    {
+        params[usbParamId].setValue(0.0);
     }
 }
 
@@ -137,7 +150,7 @@ std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
     return lastConnectedDeviceId;
 }
 
-void LibAVR32Module::reacquireGrid()
+void LibAVR32Module::userReacquireGrid()
 {
     if (lastConnectedDeviceId != "" && gridConnection == nullptr)
     {
@@ -149,6 +162,19 @@ void LibAVR32Module::reacquireGrid()
                 return;
             }
         }
+    }
+}
+
+void LibAVR32Module::userToggleGridConnection(Grid* grid)
+{
+    if (gridConnection == grid)
+    {
+        GridConnectionManager::get().disconnect(this, true);
+        lastConnectedDeviceId = "";
+    }
+    else
+    {
+        GridConnectionManager::get().connect(grid, this);
     }
 }
 
@@ -309,6 +335,9 @@ void LibAVR32Module::process(const ProcessArgs& args)
 
     // Act on serial output from module to the outside world (grid LEDs, etc.)
     readSerialMessages();
+
+    // Keep USB param state in sync with device connection state
+    processDeviceConnectionParam();
 }
 
 json_t* LibAVR32Module::dataToJson()
@@ -411,4 +440,18 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
 void LibAVR32Module::onReset() {
     rack::engine::Module::onReset();
     reloadFirmware(false);
+}
+
+void LibAVR32Module::processDeviceConnectionParam()
+{
+    if (usbParamId >= 0)
+    {
+        float usbParamState = params[usbParamId].getValue();
+        if (usbParamState > 0 && gridConnection == nullptr)
+        {
+            userReacquireGrid();
+        }
+
+        params[usbParamId].setValue(gridConnection != nullptr ? 1.0 : 0.0);
+    }
 }
