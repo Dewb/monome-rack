@@ -18,6 +18,8 @@ AnsibleModule::AnsibleModule()
     configOutput(CV3_OUTPUT, "CV 3");
     configOutput(CV4_OUTPUT, "CV 4");
     configButton(USB_PARAM, "USB Device Port");
+
+    setDeviceConnectionParam(USB_PARAM);
 }
 
 void AnsibleModule::processInputs(const ProcessArgs& args)

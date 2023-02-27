@@ -22,16 +22,7 @@ EarthseaWidget::EarthseaWidget(EarthseaModule* module)
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, 0)));
     addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH / 2, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-    auto usb = createParam<USBAJack>(Vec(7, 333), module, EarthseaModule::USB_PARAM);
-    if (module && usb)
-    {
-        usb->action = [=]()
-        {
-            module->reacquireGrid();
-        };
-        addChild(usb);
-    }
-
+    addParam(createParam<USBAJack>(Vec(7, 333), module, EarthseaModule::USB_PARAM));
     addParam(createParam<TL1105>(Vec(62, 336), module, EarthseaModule::BUTTON_PARAM));
     addParam(createParam<SifamTPN111GrayBlackStripe>(Vec(12.5, 30), module, EarthseaModule::CV1_PARAM));
     addParam(createParam<SifamTPN111GrayBlackStripe>(Vec(12.5, 116), module, EarthseaModule::CV2_PARAM));

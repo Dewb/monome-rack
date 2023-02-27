@@ -17,6 +17,8 @@ WhiteWhaleModule::WhiteWhaleModule()
     configOutput(CVA_OUTPUT, "CV A");
     configOutput(CVB_OUTPUT, "CV B");
     configButton(USB_PARAM, "USB Device Port");
+
+    setDeviceConnectionParam(USB_PARAM);
 }
 
 void WhiteWhaleModule::processInputs(const ProcessArgs& args)

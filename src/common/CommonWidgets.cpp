@@ -5,7 +5,6 @@
 extern rack::Plugin* pluginInstance;
 
 USBAJack::USBAJack()
-: action(nullptr)
 {
     box.size = Vec(44, 23.75);
 }
@@ -19,7 +18,8 @@ void USBAJack::draw(const DrawArgs& args)
     float h = box.size.y;
     float z = 4.75;
 
-    if (m && m->connectionOwned && m->gridConnection)
+    engine::ParamQuantity* pq = getParamQuantity();
+    if (pq && pq->getValue() >= 1.0)
     {
         // draw shadow
         nvgBeginPath(vg);
@@ -40,13 +40,12 @@ void USBAJack::draw(const DrawArgs& args)
         nvgFill(vg);
 
         // draw embossed text label
-        auto id = m->gridConnection->getDevice().id;
-        std::string label = id.substr(0, 11);
+        std::string label = m->currentConnectedDeviceId.substr(0, 11);
         nvgFontSize(vg, 6.0);
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
         nvgFillColor(vg, nvgRGB(250, 250, 250));
         nvgText(vg, w - 4.1, z + 12.4, label.c_str(), 0);
-        nvgFillColor(vg, nvgRGB(160, 160, 160));
+        nvgFillColor(vg, nvgRGB(150, 150, 150));
         nvgText(vg, w - 4.5, z + 12, label.c_str(), 0);
     }
     else
@@ -79,19 +78,6 @@ void USBAJack::draw(const DrawArgs& args)
         nvgFillColor(vg, nvgRGB(120, 120, 120));
         nvgFill(vg);
     }
-}
-
-void USBAJack::onButton(const ButtonEvent& e)
-{
-    if (e.button == GLFW_MOUSE_BUTTON_LEFT)
-    {
-        if (action != nullptr)
-        {
-            action();
-        }
-    }
-
-    MomentarySwitch<Switch>::onButton(e);
 }
 
 void USBAJack::appendContextMenu(ui::Menu* menu)

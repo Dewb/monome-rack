@@ -13,15 +13,7 @@ struct ConnectGridItem : rack::ui::MenuItem
 
     void onAction(const rack::event::Action& e) override
     {
-        if (module && module->gridConnection == grid)
-        {
-            GridConnectionManager::get().disconnect(module, true);
-            module->lastConnectedDeviceId = "";
-        }
-        else
-        {
-            GridConnectionManager::get().connect(grid, module);
-        }
+        module->queueAudioThreadAction([=]() { module->userToggleGridConnection(grid); });
     }
 };
 
@@ -153,20 +145,22 @@ void LibAVR32ModuleWidget::appendConnectionMenu(rack::Menu* menu)
 
     // enumerate registered grid devices
     int deviceCount = 0;
+    bool preferredDeviceFound = false;
     for (Grid* grid : GridConnectionManager::get().getGrids())
     {
         auto connectItem = new ConnectGridItem();
-        connectItem->text = "└ " + grid->getDevice().type + "(" + grid->getDevice().id + ") ";
+        connectItem->text = "└ " + grid->getDevice().type + " (" + grid->getDevice().id + ") ";
 
-            auto rightText
-            = "";
-        if (m->gridConnection && m->gridConnection->getDevice().id == grid->getDevice().id)
+        auto rightText = "";
+        if (m->currentConnectedDeviceId == grid->getDevice().id)
         {
             rightText = "✔";
+            preferredDeviceFound = true;
         }
-        else if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) == grid->getDevice().id)
+        else if (m->currentConnectedDeviceId == "" && m->gridGetLastDeviceId(false) == grid->getDevice().id)
         {
             rightText = "⋯";
+            preferredDeviceFound = true;
         }
 
         connectItem->rightText = rightText;
@@ -181,9 +175,15 @@ void LibAVR32ModuleWidget::appendConnectionMenu(rack::Menu* menu)
         menu->addChild(construct<MenuLabel>(&MenuLabel::text, "  (no physical or virtual devices found)"));
     }
 
-    if (m->gridConnection == nullptr && m->gridGetLastDeviceId(false) != "")
+    if (m->currentConnectedDeviceId == "" && m->gridGetLastDeviceId(false) != "")
     {
-        menu->addChild(createMenuItem("Reacquire grid", "", [=]()
-            { m->reacquireGrid(); }));
+        if (preferredDeviceFound)
+        {
+            menu->addChild(createMenuItem("Reacquire grid", "", [=]() { m->userReacquireGrid(); }));
+        }
+        else
+        {
+            menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Can't reacquire grid (" + m->gridGetLastDeviceId(false) + " not found)"));
+        }
     }
 }
