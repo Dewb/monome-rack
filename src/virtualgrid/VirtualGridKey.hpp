@@ -6,6 +6,8 @@ struct VirtualGridKey : rack::app::ParamWidget
     uint8_t* ledAddress;
     GridTheme* theme;
     float margin;
+    float pushAmount;
+    float cornerRadius;
 
     typedef enum
     {
@@ -16,6 +18,9 @@ struct VirtualGridKey : rack::app::ParamWidget
     VirtualGridKey()
     : ledAddress(nullptr)
     , theme(nullptr)
+    , margin(0.0)
+    , pushAmount(0.0)
+    , cornerRadius(0.0)
     , _locked(false)
     {
     }
@@ -44,8 +49,8 @@ struct VirtualGridKey : rack::app::ParamWidget
         rect.y -= 2 * margin;
         float x = margin;
         float y = margin;
-        float pushAmount = 3.8;
         float pushed = isPushed(); // sample this once so it's consistent
+        float innerCornerRadius = cornerRadius * 4.0 / 4.3;
 
         NVGcolor color1, color2;
         levelToGradient(
@@ -69,7 +74,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             // highlight top and side edges
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
-                nvgRoundedRect(vg, x - 0.3, y - 0.3, rect.x + 0.6, rect.y + 0.3, 4.3);
+                nvgRoundedRect(vg, x - 0.3, y - 0.3, rect.x + 0.6, rect.y + 0.3, cornerRadius);
                 nvgFillColor(vg, val > 0 ? color1 : nvgRGB(180, 180, 180));
                 nvgFill(vg);
             }
@@ -77,7 +82,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             // shadow
             if (layer == 0) {
                 nvgBeginPath(vg);
-                nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 1.2, 4);
+                nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 1.2, innerCornerRadius);
                 nvgFillColor(vg, nvgRGB(160, 160, 160));
                 nvgFill(vg);
             }
@@ -85,14 +90,14 @@ struct VirtualGridKey : rack::app::ParamWidget
             // highlight top and side edges
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
-                nvgRoundedRect(vg, x - 0.3, y - 0.3 + pushAmount, rect.x + 0.6, rect.y - pushAmount + 0.3, 4.3);
+                nvgRoundedRect(vg, x - 0.3, y - 0.3 + pushAmount, rect.x + 0.6, rect.y - pushAmount + 0.3, cornerRadius);
                 nvgFillColor(vg, val > 0 ? color1 : nvgRGB(180, 180, 180));
                 nvgFill(vg);
             }
             // shadow
             if (layer == 0) {
                 nvgBeginPath(vg);
-                nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 0.8, 4);
+                nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 0.8, innerCornerRadius);
                 nvgFillColor(vg, nvgRGB(160, 160, 160));
                 nvgFill(vg);
             }
@@ -102,7 +107,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         if (!pushed) {
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
-                nvgRoundedRect(vg, x, y + rect.y - (pushAmount + 10), rect.x, pushAmount + 10, 4);
+                nvgRoundedRect(vg, x, y + rect.y - (pushAmount + 10), rect.x, pushAmount + 10, innerCornerRadius);
                 nvgFillColor(vg, val > 0 ? color2 : nvgRGB(58, 58, 58));
                 nvgFill(vg);
             }
@@ -112,7 +117,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         if (layer == 1) {
             nvgBeginPath(vg);
             auto paint = nvgBoxGradient(vg, x, y + (pushed ? pushAmount : 0), rect.x, rect.y - pushAmount, rect.x * 0.4, rect.x * 1.2, color1, color2);
-            nvgRoundedRect(vg, x, y + (pushed ? pushAmount : 0), rect.x, rect.y - pushAmount, 4);
+            nvgRoundedRect(vg, x, y + (pushed ? pushAmount : 0), rect.x, rect.y - pushAmount, innerCornerRadius);
             if (val > 0)
             {
                 nvgFillPaint(vg, paint);

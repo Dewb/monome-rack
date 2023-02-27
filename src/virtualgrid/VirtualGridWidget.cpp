@@ -95,6 +95,8 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             }
             key->box.size = Vec(button_size + spacing, button_size + spacing);
             key->margin = keyMargin;
+            key->pushAmount = h == 16 ? 2.1 : 3.8;
+            key->cornerRadius = h == 16 ? 2.5 : 4.3;
             addParam(key);
         }
     }
