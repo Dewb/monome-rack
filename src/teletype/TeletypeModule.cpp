@@ -33,6 +33,7 @@ struct TTParamQuantity : rack::engine::ParamQuantity
 TeletypeModule::TeletypeModule()
 : LibAVR32Module("teletype")
 , _iiDevice(this)
+, screenBuffer({})
 {
     firmware.setScreenBuffer(getScreenBuffer());
 
