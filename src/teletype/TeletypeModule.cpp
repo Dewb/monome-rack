@@ -23,7 +23,7 @@ struct TTParamQuantity : rack::engine::ParamQuantity
     void setDisplayValue(float dv) override
     {
         // Reverse the above calc to set the float voltage that the ADC will turn into the given value
-        uint16_t val = rack::math::clamp(floor(dv), 0, 16383);
+        uint16_t val = rack::math::clamp((int)floor(dv), 0, 16383);
         uint16_t rawval = FROM_Q15(TO_Q15(16380) / 16383 * val);
         // Add the same 12-bit sampling error correction offset here
         setValue(rawval * (10.0 / 16380.0) + 0.0007);

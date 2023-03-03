@@ -63,7 +63,7 @@ struct Clock12BitParam : rack::engine::ParamQuantity
 
     void setDisplayValue(float dv) override
     {
-        uint16_t period = rack::math::clamp(floor(dv), 22 * Multiplier, 1000 * Multiplier);
+        uint16_t period = rack::math::clamp((int)floor(dv), 22 * Multiplier, 1000 * Multiplier);
         uint16_t word = (Multiplier * 12500 / (period / 2) - 25) << 4;
         setValue(word * (10.0 / 16383.0) + 0.0007);
     }
