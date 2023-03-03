@@ -135,9 +135,22 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
     outputs[CV4_OUTPUT].setVoltage(cv4);
 }
 
+json_t* TeletypeModule::dataToJson()
+{
+    json_t* rootJ = json_object();
+    json_object_set_new(rootJ, "theme", json_integer(theme));
+    return rootJ;
+}
+
 void TeletypeModule::dataFromJson(json_t* rootJ)
 {
     LibAVR32Module::dataFromJson(rootJ);
+
+    auto json_theme = json_object_get(rootJ, "theme");
+    if (json_theme)
+    {
+        theme = static_cast<GridTheme>(json_integer_value(json_theme));
+    }
 
     // Special json key only in factory presets, not saved in dataToJson
     json_t* jd = json_object_get(rootJ, "loadScript");

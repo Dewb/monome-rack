@@ -111,6 +111,10 @@ void TeletypeWidget::appendContextMenu(rack::Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
+    menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &m->theme));
+
+    menu->addChild(new MenuSeparator());
+
     menu->addChild(new InternalPresetSubmenu(m, "Import scenes", Load));
     menu->addChild(new InternalPresetSubmenu(m, "Export scenes", Save));
 

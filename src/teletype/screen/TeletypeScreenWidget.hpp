@@ -1,5 +1,6 @@
-#include "rack.hpp"
 #include "LibAVR32Module.hpp"
+#include "VirtualGridTheme.hpp"
+#include "rack.hpp"
 
 using namespace rack;
 
@@ -16,7 +17,7 @@ struct TeletypeScreenWidget : OpaqueWidget
 protected:
     void drawFrame(NVGcontext* vg);
     void drawPixels(NVGcontext* vg);
-    void drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data);
+    void drawPixel(NVGcontext* vg, GridTheme theme, float x, float y, float width, float height, int data);
 
     LibAVR32Module* module;
 };

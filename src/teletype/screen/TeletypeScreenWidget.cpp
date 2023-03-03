@@ -205,12 +205,14 @@ void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
     if (this == APP->event->selectedWidget)
     {
         // draw keyboard focus highlight rectangle
+        NVGcolor color;
+        levelToGradient(module->theme, 14, &color, nullptr);
         nvgBeginPath(vg);
         nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
-        nvgStrokeColor(vg, nvgRGB(190, 180, 0));
+        nvgStrokeColor(vg, color);
         nvgStrokeWidth(vg, 3.5);
         nvgStroke(vg);
-        nvgFillColor(vg, nvgRGB(190, 180, 0));
+        nvgFillColor(vg, color);
         nvgFill(vg);
     }
     else
@@ -245,6 +247,7 @@ void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
 void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
 {
     uint8_t* buffer = module ? module->getScreenBuffer() : exampleScreen;
+    GridTheme theme = module ? module->theme : GridTheme::Yellow;
     uint16_t pixel_x = 128;
     uint16_t pixel_y = 64;
 
@@ -274,15 +277,21 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
             float x = margin + i * pixel_width;
             float y = margin + j * pixel_height;
 
-            drawPixel(vg, x, y, pixel_width, pixel_height, *buffer++);
+            uint8_t d = *buffer++;
+            if (d > 0)
+            {
+                drawPixel(vg, theme, x, y, pixel_width, pixel_height, d);
+            }
         }
     }
 }
 
-void TeletypeScreenWidget::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
+void TeletypeScreenWidget::drawPixel(NVGcontext* vg, GridTheme theme, float x, float y, float width, float height, int data)
 {
     nvgBeginPath(vg);
     nvgRect(vg, x, y, width * 0.92, height * 0.92);
-    nvgFillColor(vg, nvgRGB(data ? data * 11 + 79 : 0, data ? data * 11 + 79 : 0, data * 11));
+    NVGcolor color;
+    levelToGradient(theme, data, &color, nullptr);
+    nvgFillColor(vg, color);
     nvgFill(vg);
 }

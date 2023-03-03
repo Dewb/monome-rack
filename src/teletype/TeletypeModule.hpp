@@ -56,6 +56,7 @@ struct TeletypeModule : LibAVR32Module
     void processInputs(const ProcessArgs& args) override;
     void processOutputs(const ProcessArgs& args) override;
 
+    json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
 
     rack::dsp::SchmittTrigger inputTriggers[8];

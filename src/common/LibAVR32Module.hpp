@@ -1,5 +1,6 @@
 #include "FirmwareManager.hpp"
 #include "GridConnection.hpp"
+#include "VirtualGridTheme.hpp"
 #include "rack.hpp"
 #include <queue>
 
@@ -70,6 +71,8 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     int inputRate;
     int outputRate;
+
+    GridTheme theme;
 
     virtual uint8_t* getScreenBuffer() { return 0; }
 
