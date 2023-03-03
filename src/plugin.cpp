@@ -53,4 +53,6 @@ void init(Plugin* p)
 
     // initialize ii bus
     iiBus::Initialize();
+
+    initThemes();
 }

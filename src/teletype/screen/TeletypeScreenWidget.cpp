@@ -282,7 +282,7 @@ void TeletypeScreenWidget::drawPixels(NVGcontext* vg)
 void TeletypeScreenWidget::drawPixel(NVGcontext* vg, float x, float y, float width, float height, int data)
 {
     nvgBeginPath(vg);
-    nvgRect(vg, x, y, width * 0.96, height * 0.96);
+    nvgRect(vg, x, y, width * 0.92, height * 0.92);
     nvgFillColor(vg, nvgRGB(data ? data * 11 + 79 : 0, data ? data * 11 + 79 : 0, data * 11));
     nvgFill(vg);
 }

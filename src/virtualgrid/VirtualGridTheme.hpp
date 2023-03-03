@@ -11,3 +11,4 @@ typedef enum
 } GridTheme;
 
 void levelToGradient(GridTheme theme, uint8_t level, NVGcolor* color1, NVGcolor* color2);
+void initThemes();
