@@ -1,5 +1,5 @@
 #include "TeletypeModule.hpp"
-#include "TeletypeSceneIO.hpp"
+#include "scene/TeletypeSceneIO.hpp"
 #include "screen/EngineStoppedScreen.hpp"
 
 #include <string.h>
