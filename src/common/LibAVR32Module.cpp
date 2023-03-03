@@ -7,6 +7,7 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 , currentConnectedDeviceId("")
 , firmwareName(firmwareName)
 , usbParamId(-1)
+, theme(GridTheme::Yellow)
 {
     gridConnection = nullptr;
 
