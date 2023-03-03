@@ -1,8 +1,8 @@
 #include "TeletypeScreenWidget.hpp"
 #include "TeletypeModule.hpp"
-#include "TeletypeScreenWidgetExampleScreen.hpp"
+#include "ExampleScreen.hpp"
 
-// #define SAVE_SCREEN_FILENAME "/tmp/ttscreen.txt"
+//#define SAVE_SCREEN_FILENAME "/tmp/ttscreen.txt"
 #ifdef SAVE_SCREEN_FILENAME
 #include <fstream>
 #include <iomanip>

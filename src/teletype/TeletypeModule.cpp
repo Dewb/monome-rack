@@ -1,5 +1,6 @@
 #include "TeletypeModule.hpp"
 #include "TeletypeSceneIO.hpp"
+#include "screen/EngineStoppedScreen.hpp"
 
 #include <string.h>
 
@@ -35,6 +36,9 @@ TeletypeModule::TeletypeModule()
 , _iiDevice(this)
 , screenBuffer{}
 {
+    // initialize screen with "engine stopped" message
+    memcpy(screenBuffer, engineStoppedScreen, 128 * 40 * sizeof(uint8_t));
+
     firmware.setScreenBuffer(getScreenBuffer());
 
     config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);

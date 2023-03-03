@@ -2,7 +2,7 @@
 #include "CommonWidgets.hpp"
 #include "SifamTPM.hpp"
 #include "TeletypeModule.hpp"
-#include "TeletypeScreenWidget.hpp"
+#include "screen/TeletypeScreenWidget.hpp"
 #include "TeletypeSceneIOMenu.hpp"
 
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
