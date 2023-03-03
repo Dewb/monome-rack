@@ -23,6 +23,14 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 
     firmware.advanceClock(0.02);
     firmware.step();
+
+    // ensure actions queue has memory allocated
+    audioThreadActions.push([=] {});
+    audioThreadActions.push([=] {});
+    audioThreadActions.push([=] {});
+    audioThreadActions.pop();
+    audioThreadActions.pop();
+    audioThreadActions.pop();
 }
 
 LibAVR32Module::~LibAVR32Module()
