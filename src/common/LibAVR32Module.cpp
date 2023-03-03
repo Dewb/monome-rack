@@ -9,7 +9,6 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 , usbParamId(-1)
 {
     gridConnection = nullptr;
-    reloadRequested = ReloadRequest::None;
 
     dacOffsetVolts = 0.0007;
     triggerHighThreshold = 2.21;
@@ -23,14 +22,6 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 
     firmware.advanceClock(0.02);
     firmware.step();
-
-    // ensure actions queue has memory allocated
-    audioThreadActions.push([=] {});
-    audioThreadActions.push([=] {});
-    audioThreadActions.push([=] {});
-    audioThreadActions.pop();
-    audioThreadActions.pop();
-    audioThreadActions.pop();
 }
 
 LibAVR32Module::~LibAVR32Module()
@@ -268,6 +259,11 @@ void LibAVR32Module::readSerialMessages()
     }
 }
 
+void LibAVR32Module::requestReloadFirmware(bool preserveMemory)
+{
+    audioThreadActions.push([=] { this->reloadFirmware(preserveMemory); });
+}
+
 void LibAVR32Module::reloadFirmware(bool preserveMemory)
 {
     void *data, *nvram_copy, *vram_copy = 0;
@@ -301,24 +297,7 @@ void LibAVR32Module::process(const ProcessArgs& args)
 {
     while (audioThreadActions.size())
     {
-        audioThreadActions.front()();
-        audioThreadActions.pop();
-    }
-
-    if (reloadRequested != ReloadRequest::None)
-    {
-        switch (reloadRequested)
-        {
-        case ReloadRequest::ReloadAndRestart:
-            reloadFirmware(false);
-            break;
-        case ReloadRequest::HotReload:
-            reloadFirmware(true);
-            break;
-        default:
-            break;
-        }
-        reloadRequested = ReloadRequest::None;
+        audioThreadActions.shift()();
     }
 
     // Run inputs at 1/2 audio rate by default, configurable in right-click menu

@@ -20,12 +20,12 @@ struct ConnectGridItem : rack::ui::MenuItem
 struct ReloadFirmwareItem : rack::ui::MenuItem
 {
     LibAVR32Module* module;
-    ReloadRequest requestType;
+    bool preserveMemory;
 
     void onAction(const rack::event::Action& e) override
     {
         if (module) {
-            module->requestReloadFirmware(requestType);
+            module->requestReloadFirmware(preserveMemory);
         }
     }
 };
@@ -85,13 +85,13 @@ struct FirmwareSubmenuItem : MenuItem
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";
         reloadItem->module = m;
-        reloadItem->requestType = ReloadRequest::ReloadAndRestart;
+        reloadItem->preserveMemory = false;
         menu->addChild(reloadItem);
 
         auto hotReloadItem = new ReloadFirmwareItem();
         hotReloadItem->text = "Hot Reload";
         hotReloadItem->module = m;
-        hotReloadItem->requestType = ReloadRequest::HotReload;
+        hotReloadItem->preserveMemory = true;
         menu->addChild(hotReloadItem);
 
         return menu;

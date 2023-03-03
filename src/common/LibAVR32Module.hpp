@@ -29,13 +29,6 @@
 
 struct GridConnection;
 
-enum ReloadRequest
-{
-    None = 0,
-    ReloadAndRestart,
-    HotReload,
-};
-
 struct LibAVR32Module : rack::engine::Module, GridConsumer
 {
     FirmwareManager firmware;
@@ -62,9 +55,9 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     void userReacquireGrid();
     void userToggleGridConnection(Grid* grid);
-
     virtual void readSerialMessages();
-    void requestReloadFirmware(ReloadRequest request) { reloadRequested = request; }
+
+    void requestReloadFirmware(bool preserveMemory);
 
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
@@ -91,16 +84,12 @@ protected:
     void setDeviceConnectionParam(int paramId) { usbParamId = paramId; }
     void processDeviceConnectionParam();
 
-    ReloadRequest reloadRequested;
-
     float dacOffsetVolts;
     float triggerHighThreshold;
     float triggerLowThreshold;
 
-    // std::deque is not thread safe in the general case, but the hypothesis is
-    // that we can safely have the UI thread pushing on infrequent user-initiated events,
-    // and the audio thread popping, with no reallocations or calls to other methods
-    typedef std::queue<Action> ActionQueue;
+    // Thread-safe for single-producer, single-consumer
+    typedef rack::dsp::RingBuffer<Action, 4> ActionQueue;
     ActionQueue audioThreadActions;
 };
 
