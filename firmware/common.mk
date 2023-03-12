@@ -8,6 +8,7 @@ FLAGS += \
 	-DNULL=0 \
 	-DARCH_AVR32=1 \
 	-fPIC \
+	-fvisibility=hidden \
 	-g \
 	-Werror=implicit-function-declaration \
 	-I../lib/cbbq \
