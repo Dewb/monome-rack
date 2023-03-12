@@ -137,8 +137,10 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
 
 json_t* TeletypeModule::dataToJson()
 {
-    json_t* rootJ = json_object();
+    json_t* rootJ = LibAVR32Module::dataToJson();
+
     json_object_set_new(rootJ, "theme", json_integer(theme));
+
     return rootJ;
 }
 
