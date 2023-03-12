@@ -1,7 +1,7 @@
 /build
-plugin.dylib
-plugin.dll
-plugin.so
+plugin*.dylib
+plugin*.dll
+plugin*.so
 .DS_Store
 /res/firmware
 /firmware/build

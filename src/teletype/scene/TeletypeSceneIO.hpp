@@ -8,7 +8,10 @@ typedef enum
     Save
 } SceneOperation;
 
-void presetImportString(LibAVR32Module* module, std::string scene, int preset_num, bool clearExisting);
+struct TeletypeSceneIO
+{
+    static void presetImportString(LibAVR32Module* module, std::string scene, int preset_num, bool clearExisting);
 
-void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, std::string fileName);
-void presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, bool clearExisting);
+    static void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, std::string fileName);
+    static void presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, bool clearExisting);
+};

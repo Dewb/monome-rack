@@ -167,6 +167,11 @@ void LibAVR32Module::userReacquireGrid()
 
 void LibAVR32Module::userToggleGridConnection(Grid* grid)
 {
+    audioThreadActions.push([this, grid]() { this->toggleGridConnection(grid); });
+}
+
+void LibAVR32Module::toggleGridConnection(Grid* grid)
+{
     if (gridConnection == grid)
     {
         GridConnectionManager::get().disconnect(this, true);
@@ -262,7 +267,7 @@ void LibAVR32Module::readSerialMessages()
 
 void LibAVR32Module::requestReloadFirmware(bool preserveMemory)
 {
-    audioThreadActions.push([=] { this->reloadFirmware(preserveMemory); });
+    audioThreadActions.push([this, preserveMemory]() { this->reloadFirmware(preserveMemory); });
 }
 
 void LibAVR32Module::reloadFirmware(bool preserveMemory)

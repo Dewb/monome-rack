@@ -137,8 +137,10 @@ void TeletypeModule::processOutputs(const ProcessArgs& args)
 
 json_t* TeletypeModule::dataToJson()
 {
-    json_t* rootJ = json_object();
+    json_t* rootJ = LibAVR32Module::dataToJson();
+
     json_object_set_new(rootJ, "theme", json_integer(theme));
+
     return rootJ;
 }
 
@@ -170,7 +172,7 @@ void TeletypeModule::dataFromJson(json_t* rootJ)
 
             if (loadActive)
             {
-                presetImportString(this, script, 255, true);
+                TeletypeSceneIO::presetImportString(this, script, 255, true);
             }
 
             if (loadFlash)
@@ -178,7 +180,7 @@ void TeletypeModule::dataFromJson(json_t* rootJ)
                 int num = json_integer_value(jsonFlash);
                 if (num >= 0 && num < 32)
                 {
-                    presetImportString(this, script, num, true);
+                    TeletypeSceneIO::presetImportString(this, script, num, true);
                 }
             }
 

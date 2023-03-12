@@ -13,7 +13,7 @@ struct ConnectGridItem : rack::ui::MenuItem
 
     void onAction(const rack::event::Action& e) override
     {
-        module->queueAudioThreadAction([=]() { module->userToggleGridConnection(grid); });
+        module->userToggleGridConnection(grid);
     }
 };
 
