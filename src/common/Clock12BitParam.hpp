@@ -50,7 +50,7 @@ struct Clock12BitParam : rack::engine::ParamQuantity
                 if (s == divisorLabels[i])
                 {
                     uint16_t word = (i * 455 + 227) << 2;
-                    setValue(word * (10.0 / 16383.0) + 0.0007);
+                    setImmediateValue(word * (10.0 / 16383.0) + 0.0007);
                     return;
                 }
             }
@@ -65,6 +65,6 @@ struct Clock12BitParam : rack::engine::ParamQuantity
     {
         uint16_t period = rack::math::clamp((int)floor(dv), 22 * Multiplier, 1000 * Multiplier);
         uint16_t word = (Multiplier * 12500 / (period / 2) - 25) << 4;
-        setValue(word * (10.0 / 16383.0) + 0.0007);
+        setImmediateValue(word * (10.0 / 16383.0) + 0.0007);
     }
 };

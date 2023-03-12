@@ -128,7 +128,7 @@ void VirtualGridWidget::clearHeldKeys()
         auto key = static_cast<VirtualGridKey*>(p);
         if (key && !key->isLocked())
         {
-            key->getSecondaryParamQuantity()->setValue(VirtualGridKey::OFF);
+            key->getSecondaryParamQuantity()->setImmediateValue(VirtualGridKey::OFF);
         }
     }
 }
@@ -141,7 +141,7 @@ void VirtualGridWidget::clearLockedKeys()
         if (key && key->isLocked())
         {
             key->setLocked(false);
-            key->getSecondaryParamQuantity()->setValue(VirtualGridKey::OFF);
+            key->getSecondaryParamQuantity()->setImmediateValue(VirtualGridKey::OFF);
         }
     }
 }
