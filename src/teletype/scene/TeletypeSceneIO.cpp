@@ -7,7 +7,7 @@
 
 #include "rack.hpp"
 
-void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, std::string fileName)
+void TeletypeSceneIO::presetImportExportFileOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, std::string fileName)
 {
     if (!module)
     {
@@ -46,11 +46,11 @@ void presetImportExportFileOperation(LibAVR32Module* module, SceneOperation oper
             (std::istreambuf_iterator<char>())
         );
 
-        presetImportString(module, scene, preset_num, true);
+        TeletypeSceneIO::presetImportString(module, scene, preset_num, true);
     }
 }
 
-void presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, bool clearExisting)
+void TeletypeSceneIO::presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation operation, int preset_num, bool clearExisting)
 {
     if (!module)
     {
@@ -78,11 +78,11 @@ void presetImportExportClipboardOperation(LibAVR32Module* module, SceneOperation
     {
         std::string rawclip(glfwGetClipboardString(APP->window->win));
 
-        presetImportString(module, rawclip, preset_num, clearExisting);
+        TeletypeSceneIO::presetImportString(module, rawclip, preset_num, clearExisting);
     }
 }
 
-void presetImportString(LibAVR32Module* module, std::string scene, int preset_num, bool clearExisting)
+void TeletypeSceneIO::presetImportString(LibAVR32Module* module, std::string scene, int preset_num, bool clearExisting)
 {
     // Remove any linefeeds
     scene.erase(std::remove(scene.begin(), scene.end(), '\r'), scene.end());
@@ -109,7 +109,7 @@ void presetImportString(LibAVR32Module* module, std::string scene, int preset_nu
     // Add a final newline, since a selection in discord/browser probably won't include it
     scene += "\n";
 
-    module->queueAudioThreadAction([=]() {
+    module->audioThreadActions.push([=]() {
         std::stringstream clip(scene);
 
         tt_deserializer_t stream {

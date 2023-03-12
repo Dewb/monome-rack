@@ -60,7 +60,7 @@ struct InternalPresetItem : rack::ui::MenuItem
         std::string path(path_result);
         std::free(path_result);
 
-        presetImportExportFileOperation(module, operation, preset_num, path);
+        TeletypeSceneIO::presetImportExportFileOperation(module, operation, preset_num, path);
     }
 };
 
@@ -84,7 +84,7 @@ struct InternalPresetClipboardItem : rack::ui::MenuItem
 
     void onAction(const rack::event::Action& e) override
     {
-        presetImportExportClipboardOperation(module, operation, preset_num, clearExisting);
+        TeletypeSceneIO::presetImportExportClipboardOperation(module, operation, preset_num, clearExisting);
     }
 };
 
@@ -128,7 +128,7 @@ struct InternalPresetBulkItem : rack::ui::MenuItem
                 << std::setfill('0') << std::setw(2) << i
                 << suffix
                 << ".txt";
-            presetImportExportFileOperation(module, operation, i, fileName.str());
+            TeletypeSceneIO::presetImportExportFileOperation(module, operation, i, fileName.str());
         }
     }
 };

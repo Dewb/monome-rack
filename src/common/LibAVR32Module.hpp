@@ -76,11 +76,9 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
     virtual uint8_t* getScreenBuffer() { return 0; }
 
-    typedef std::function<void(void)> Action;
-    void queueAudioThreadAction(Action action) { audioThreadActions.push(action); }
-
 protected:
     void reloadFirmware(bool preserveMemory);
+    void toggleGridConnection(Grid* grid);
 
     Grid* gridConnection;
     int usbParamId;
@@ -92,6 +90,8 @@ protected:
     float triggerLowThreshold;
 
     // Thread-safe for single-producer, single-consumer
+    friend struct TeletypeSceneIO;
+    typedef std::function<void(void)> Action;
     typedef rack::dsp::RingBuffer<Action, 4> ActionQueue;
     ActionQueue audioThreadActions;
 };

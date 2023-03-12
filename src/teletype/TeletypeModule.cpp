@@ -170,7 +170,7 @@ void TeletypeModule::dataFromJson(json_t* rootJ)
 
             if (loadActive)
             {
-                presetImportString(this, script, 255, true);
+                TeletypeSceneIO::presetImportString(this, script, 255, true);
             }
 
             if (loadFlash)
@@ -178,7 +178,7 @@ void TeletypeModule::dataFromJson(json_t* rootJ)
                 int num = json_integer_value(jsonFlash);
                 if (num >= 0 && num < 32)
                 {
-                    presetImportString(this, script, num, true);
+                    TeletypeSceneIO::presetImportString(this, script, num, true);
                 }
             }
 
