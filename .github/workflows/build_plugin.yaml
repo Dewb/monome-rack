@@ -2,7 +2,7 @@ name: Build VCV Rack Plugin
 on: push
 
 env:
-  rack-sdk-version: 2.2.2
+  rack-sdk-version: 2.3.0
   rack-plugin-toolchain-dir: /home/build/rack-plugin-toolchain
 
 defaults:

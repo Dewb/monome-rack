@@ -246,18 +246,18 @@ struct VirtualGridKey : rack::app::ParamWidget
                 (APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL)
             {
                 setLocked(true);
-                getSecondaryParamQuantity()->setValue(PRESSED);
+                getSecondaryParamQuantity()->setImmediateValue(PRESSED);
                 return;
             }
 
             // if we're Ctrl/Mac-clicking an already-held button, release it
             if ((APP->window->getMods() & RACK_MOD_CTRL) == RACK_MOD_CTRL && getSecondaryParamQuantity()->getValue() > 0)
             {
-                getSecondaryParamQuantity()->setValue(OFF);
+                getSecondaryParamQuantity()->setImmediateValue(OFF);
             }
             else
             {
-                getSecondaryParamQuantity()->setValue(PRESSED);
+                getSecondaryParamQuantity()->setImmediateValue(PRESSED);
             }
         }
     }
@@ -272,7 +272,7 @@ struct VirtualGridKey : rack::app::ParamWidget
 
         if (getSecondaryParamQuantity())
         {
-            getSecondaryParamQuantity()->setValue(OFF);
+            getSecondaryParamQuantity()->setImmediateValue(OFF);
         }
     }
 
