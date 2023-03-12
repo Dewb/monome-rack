@@ -5,7 +5,16 @@
 #endif
 
 #ifndef MOCK_API
-#define MOCK_API(returntype, name, argslist) returntype hardware_##name argslist
+#ifdef ARCH_WIN
+#define MOCK_API(returntype, name, argslist) __declspec(dllexport) \
+returntype hardware_##name argslist
+#elif ARCH_MAC
+#define MOCK_API(returntype, name, argslist) \
+returntype hardware_##name argslist
+#elif ARCH_LIN
+#define MOCK_API(returntype, name, argslist) __attribute__((visibility("default"))) \
+returntype hardware_##name argslist
+#endif
 #endif
 
 MOCK_API(void, init, ());
