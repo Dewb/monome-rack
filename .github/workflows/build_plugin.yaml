@@ -1,5 +1,11 @@
 name: Build VCV Rack Plugin
-on: push
+on: 
+  push:
+    paths-ignore:
+      - docs
+      - *.md
+      - LICENSE
+      - .github/ISSUE_TEMPLATE
 
 env:
   rack-sdk-version: 2.3.0
