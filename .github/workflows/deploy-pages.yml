@@ -1,4 +1,4 @@
-name: Deploy content to Pages
+name: Update Docs Site
 
 on:
   push:
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build:
-    name: "Build static site"
+    name: "Build MkDocs static site"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,7 +38,7 @@ jobs:
   deploy:
     needs: [ build ]
     if: github.ref == 'refs/heads/main'
-    name: "Deploy content to Pages"
+    name: "Deploy content to GitHub Pages"
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
