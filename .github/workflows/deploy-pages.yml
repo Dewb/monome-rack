@@ -5,6 +5,7 @@ on:
     paths: 
       - docs
       - 'mkdocs.yml'
+      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:

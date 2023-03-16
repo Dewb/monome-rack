@@ -6,7 +6,9 @@ on:
       - '*.md'
       - mkdocs.yml
       - LICENSE
-      - '.github/ISSUE_TEMPLATE'
+      - .github
+    paths:
+      - '.github/build-plugin.yaml'
 
 env:
   rack-sdk-version: 2.3.0
