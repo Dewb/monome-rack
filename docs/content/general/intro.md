@@ -1,4 +1,4 @@
-# Monome for VCV Rack
+# monome for VCV Rack
 
 ... some intro material about the collection
 
