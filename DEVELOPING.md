@@ -52,3 +52,12 @@
    ```bash
    $ make
    ```
+
+#### Updating documentation
+
+Prerequisites:
+* Recent `pip` and `python` 3.x
+* `mkdocs` and `mkdocs-terminal`. Install with:
+   `$ pip install -r docs/requirements.txt`
+
+Start a hot-reload server with `mkdocs serve`, and run `mkdocs build` to produce the static site.
