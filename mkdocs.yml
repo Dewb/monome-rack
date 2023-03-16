@@ -1,0 +1,40 @@
+site_name: Monome for VCV Rack
+site_url: https://dewb.github.io/monome-rack
+repo_url: https://github.com/Dewb/monome-rack
+nav:
+  - Manual: 'index.md'
+  - 'General Info':
+    - Introduction: 'general/intro.md'
+    - 'Connecting Devices': 'general/connections.md'
+    - 'Voltage Standards': 'general/voltage.md'
+    - 'About & Credits': "general/about.md"
+  - 'Core Modules':
+    - Ansible: 'modules/ansible.md'
+    - Teletype: 'modules/teletype.md'
+    - Earthsea: 'modules/earthsea.md'
+    - Meadowphysics: 'modules/meadowphysics.md'
+    - 'White Whale': 'modules/whitewhale.md'
+  - 'Accessory Modules':
+    - 'Virtual Grids': 'modules/grids.md'
+  - 'Getting Help':
+    - Index: 'help.md'
+  - 'Releases↗': 'https://github.com/Dewb/monome-rack/releases'
+  - 'Library Page↗': 'https://library.vcvrack.com/monome'
+theme:
+  name: terminal
+  locale: en
+  custom_dir: docs/custom-theme
+  features:
+    - navigation.side.indexes
+watch:
+  - docs/custom-theme
+docs_dir: docs/content
+site_dir: build/docs
+markdown_extensions:
+  - toc:
+      baselevel: "1"
+      toc_depth: "3"
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
