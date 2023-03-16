@@ -29,7 +29,7 @@ jobs:
       - name: Run MkDocs
         run: |
           mkdir -p build/docs
-          mkdocs
+          mkdocs build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
