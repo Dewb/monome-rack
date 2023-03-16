@@ -7,7 +7,7 @@ on:
       - mkdocs.yml
       - LICENSE
       - '.github/ISSUE_TEMPLATE'
-      - '.github/deploy-pages.yaml'
+      - '.github/workflows/deploy-pages.yaml'
 
 env:
   rack-sdk-version: 2.3.0
