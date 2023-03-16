@@ -2,11 +2,11 @@ name: Build VCV Rack Plugin
 on: 
   push:
     paths-ignore:
-      - docs
+      - 'docs/**'
       - '*.md'
-      - mkdocs.yml
-      - LICENSE
-      - '.github/ISSUE_TEMPLATE'
+      - 'mkdocs.yml'
+      - 'LICENSE'
+      - '.github/ISSUE_TEMPLATE/**'
       - '.github/workflows/deploy-pages.yaml'
 
 env:

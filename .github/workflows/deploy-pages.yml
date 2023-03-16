@@ -3,7 +3,7 @@ name: Update Docs Site
 on:
   push:
     paths: 
-      - docs
+      - 'docs/**'
       - 'mkdocs.yml'
       - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
