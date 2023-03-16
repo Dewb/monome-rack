@@ -3,9 +3,9 @@ on:
   push:
     paths-ignore:
       - docs
-      - *.md
+      - '*.md'
       - LICENSE
-      - .github/ISSUE_TEMPLATE
+      - '.github/ISSUE_TEMPLATE'
 
 env:
   rack-sdk-version: 2.3.0
