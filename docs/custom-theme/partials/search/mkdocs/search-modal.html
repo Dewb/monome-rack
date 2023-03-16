@@ -1,0 +1,53 @@
+<div class="modal" id="mkdocs_search_modal" tabindex="-1" role="alertdialog" aria-modal="true"
+    aria-labelledby="searchModalLabel">
+    <div class="modal-dialog modal-lg" role="search">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">{{ search_modal_ns.header }}</h5>
+                <button type="button" class="close btn btn-default btn-ghost" data-dismiss="modal"><span
+                        aria-hidden="true">{{ search_modal_ns.close_text }}</span><span class="sr-only">{{
+                        search_modal_ns.screen_reader_close_text }}</span></button>
+            </div>
+            <div class="modal-body">
+                <p id="searchInputLabel">{{ search_modal_ns.instructions }}</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" aria-labelledby="searchInputLabel"
+                            placeholder="{{ search_modal_ns.prompt }}" id="mkdocs-search-query"
+                            title="{{ search_modal_ns.tooltip }}" onfocus="setup()">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="{{ search_modal_ns.no_results }}"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // Replace the search event to add a trailing wildcard
+
+    function doCustomSearch() {
+        var query = `${document.getElementById('mkdocs-search-query').value}*`;
+        if (query.length > min_search_length) {
+            if (!window.Worker) {
+                displayResults(search(query));
+            } else {
+                searchWorker.postMessage({ query: query });
+            }
+        } else {
+            // Clear results for short queries
+            displayResults([]);
+        }
+    }
+
+    function setup() {
+        const queryElem = document.querySelector("#mkdocs-search-query");
+
+        queryElem.removeEventListener("keyup", doSearch);
+        queryElem.addEventListener("keyup", doCustomSearch);
+    }
+
+</script>

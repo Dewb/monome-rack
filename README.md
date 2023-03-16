@@ -97,9 +97,9 @@ See [DEVELOPING.md](DEVELOPING.md).
 
 The original hardware and firmware projects were initiated by [@tehn](https://github.com/tehn) at [monome](https://monome.org) with contributions from many members of the [lines community](https://llllllll.co). See the [individual submodule repositories](firmware) for more details. The VCVRack-specific code in this repository is a separate community effort, and again, no support or warranty is implied.
 
-[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrapper for white whale, meadowphysics, earthsea, and teletype.
+[Michael Dewberry](http://dewb.org) ([@dewb](https://github.com/Dewb)) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrappers for white whale, meadowphysics, earthsea, and teletype.
 
-Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues), in the [lines thread](https://llllllll.co/t/white-whale-in-vcvrack/10337), or in [the thread on the VCV Rack Community Forum](https://community.vcvrack.com/t/monome-modules-thread/3683).
+Additional community contributions and feedback are very welcome! Discuss either in an [issue here](/../../issues), in the [lines thread](https://llllllll.co/t/monome-vcv-rack-ports-development-log/10337), or in [the thread on the VCV Rack Community Forum](https://community.vcvrack.com/t/monome-modules-beta-dev-log/3683).
 
 ### What's next?
 
