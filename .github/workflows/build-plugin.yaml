@@ -4,8 +4,10 @@ on:
     paths-ignore:
       - docs
       - '*.md'
+      - mkdocs.yml
       - LICENSE
       - '.github/ISSUE_TEMPLATE'
+      - '.github/workflows/deploy-pages.yaml'
 
 env:
   rack-sdk-version: 2.3.0
