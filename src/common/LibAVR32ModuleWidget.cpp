@@ -3,6 +3,7 @@
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 #include "SerialOscInterface.hpp"
+#include "Screenshot.hpp"
 
 using namespace rack;
 
@@ -61,6 +62,7 @@ struct ioRateItem : rack::ui::MenuItem
 struct FirmwareSubmenuItem : MenuItem
 {
     LibAVR32Module* module;
+    LibAVR32ModuleWidget* widget;
 
     Menu* createChildMenu() override
     {
@@ -81,6 +83,13 @@ struct FirmwareSubmenuItem : MenuItem
         menu->addChild(construct<ioRateItem>(
             &MenuItem::text, "Output rate", &MenuItem::rightText, RIGHT_ARROW,
             &ioRateItem::defaultValue, 4, &ioRateItem::target, &m->outputRate));
+
+        menu->addChild(new MenuSeparator());
+
+        menu->addChild(createMenuItem("Save PNG screenshot", "", [this]()
+            { screenshotModulePNG(widget, widget->model->slug + "-screenshot.png"); }));
+
+        menu->addChild(new MenuSeparator());
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";
@@ -110,8 +119,9 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(new MenuSeparator());
 
     auto firmwareMenu = new FirmwareSubmenuItem();
-    firmwareMenu->text = "Firmware";
+    firmwareMenu->text = "Firmware Tools";
     firmwareMenu->module = m;
+    firmwareMenu->widget = this;
     firmwareMenu->rightText = "▸";
     menu->addChild(firmwareMenu);
 
@@ -186,4 +196,5 @@ void LibAVR32ModuleWidget::appendConnectionMenu(rack::Menu* menu)
             menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Can't reacquire grid (" + m->gridGetLastDeviceId(false) + " not found)"));
         }
     }
+
 }

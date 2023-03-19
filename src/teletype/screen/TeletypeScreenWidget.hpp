@@ -16,6 +16,7 @@ struct TeletypeScreenWidget : OpaqueWidget
 
 protected:
     void drawFrame(NVGcontext* vg);
+    void drawFocusRectangle(NVGcontext* vg);
     void drawPixels(NVGcontext* vg);
     void drawPixel(NVGcontext* vg, GridTheme theme, float x, float y, float width, float height, int data);
 

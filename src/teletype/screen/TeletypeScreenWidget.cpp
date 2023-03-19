@@ -196,48 +196,56 @@ void TeletypeScreenWidget::drawLayer(const DrawArgs& args, int layer)
 {
     if (layer == 1)
     {
+        if (this == APP->event->selectedWidget)
+        {
+            drawFocusRectangle(args.vg);
+        }
         drawPixels(args.vg);
     }
 }
 
 void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
 {
-    if (this == APP->event->selectedWidget)
-    {
-        // draw keyboard focus highlight rectangle
-        NVGcolor color;
-        levelToGradient(module->theme, 14, &color, nullptr);
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
-        nvgStrokeColor(vg, color);
-        nvgStrokeWidth(vg, 3.5);
-        nvgStroke(vg);
-        nvgFillColor(vg, color);
-        nvgFill(vg);
-    }
-    else
-    {
-        // draw skeumorphic shadow around screen
-        float t = 0.95;
-        float r = 2.75;
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
-        nvgFillColor(vg, nvgRGB(250, 250, 240));
-        nvgFill(vg);
+    // draw skeumorphic shadow around screen
+    float t = 0.95;
+    float r = 2.75;
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
+    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFill(vg);
 
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
-        nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
-        nvgFillColor(vg, nvgRGB(140, 140, 130));
-        nvgFill(vg);
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
+    nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
+    nvgFillColor(vg, nvgRGB(140, 140, 130));
+    nvgFill(vg);
 
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
-        nvgFillColor(vg, nvgRGB(250, 250, 240));
-        nvgFill(vg);
-    }
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
+    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFill(vg);
 
     // draw the empty screen
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
+    nvgFillColor(vg, nvgRGB(0, 0, 0));
+    nvgFill(vg);
+}
+
+void TeletypeScreenWidget::drawFocusRectangle(NVGcontext* vg)
+{
+    // draw keyboard focus highlight rectangle
+    NVGcolor color;
+    levelToGradient(module->theme, 14, &color, nullptr);
+    nvgBeginPath(vg);
+    nvgRoundedRect(vg, -2, -2, box.size.x + 4, box.size.y + 4, 2.5);
+    nvgStrokeColor(vg, color);
+    nvgStrokeWidth(vg, 3.5);
+    nvgStroke(vg);
+    nvgFillColor(vg, color);
+    nvgFill(vg);
+
+    // redraw empty screen
     nvgBeginPath(vg);
     nvgRoundedRect(vg, 0, 0, box.size.x, box.size.y, 2);
     nvgFillColor(vg, nvgRGB(0, 0, 0));
