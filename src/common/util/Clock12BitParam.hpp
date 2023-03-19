@@ -1,3 +1,5 @@
+#pragma once
+
 #include <rack.hpp>
 
 template<int Multiplier, int DividerModeWhenInputPatched = -1>

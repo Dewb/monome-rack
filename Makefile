@@ -4,7 +4,10 @@ RACK_DIR ?= ../..
 FLAGS += \
 	-Isrc \
 	-Isrc/common \
-	-Isrc/common/GridConnection \
+	-Isrc/common/core \
+	-Isrc/common/util \
+	-Isrc/common/widgets \
+	-Isrc/common/core/GridConnection \
 	-Isrc/virtualgrid \
 	-Isrc/whitewhale \
 	-Isrc/meadowphysics \
@@ -31,6 +34,7 @@ SOURCES += \
 	$(wildcard src/*.cpp) \
 	$(wildcard src/**/*.cpp) \
 	$(wildcard src/**/**/*.cpp) \
+	$(wildcard src/**/**/**/*.cpp) \
 
 include $(RACK_DIR)/arch.mk
 
