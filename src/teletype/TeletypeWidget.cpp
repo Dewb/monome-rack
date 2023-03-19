@@ -1,9 +1,9 @@
 #include "TeletypeWidget.hpp"
-#include "CommonWidgets.hpp"
 #include "SifamTPM.hpp"
 #include "TeletypeModule.hpp"
-#include "screen/TeletypeScreenWidget.hpp"
+#include "USBAJack.hpp"
 #include "scene/TeletypeSceneIOMenu.hpp"
+#include "screen/TeletypeScreenWidget.hpp"
 
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 {
