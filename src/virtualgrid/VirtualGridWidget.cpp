@@ -1,8 +1,8 @@
 #include "VirtualGridWidget.hpp"
+#include "Screenshot.hpp"
 #include "VirtualGridKey.hpp"
-#include "VirtualGridTheme.hpp"
 #include "VirtualGridModule.hpp"
-
+#include "VirtualGridTheme.hpp"
 
 using namespace rack;
 
@@ -108,7 +108,10 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
 
 VirtualGridWidget::~VirtualGridWidget()
 {
-    GridConnectionManager::get().deregisterGrid(id);
+    if (module)
+    {
+        GridConnectionManager::get().deregisterGrid(id);
+    }
 }
 
 void VirtualGridWidget::draw(const DrawArgs& args)
@@ -204,6 +207,12 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
 {
     VirtualGridModule* grid = dynamic_cast<VirtualGridModule*>(module);
     assert(grid);
+
+    menu->addChild(new MenuSeparator());
+
+    menu->addChild(createMenuItem("Save grid screenshot", "", [this]() {
+        screenshotModulePNG(this, "grid-screenshot.png");
+    }));
 
     menu->addChild(new MenuSeparator());
     menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &grid->theme));
