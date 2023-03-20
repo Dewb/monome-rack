@@ -1,8 +1,8 @@
 # Virtual grids
 
-...
+...pictures go here
 
-# Limitations
+# Limitations vs. hardware
 
 ...
 

@@ -7,7 +7,7 @@
   "authorEmail": "",
   "authorUrl": "",
   "pluginUrl": "https://github.com/Dewb/monome-rack",
-  "manualUrl": "https://github.com/Dewb/monome-rack/blob/main/README.md",
+  "manualUrl": "https://dewb.github.io/monome-rack",
   "sourceUrl": "https://github.com/Dewb/monome-rack",
   "donateUrl": "",
   "changelogUrl": "https://github.com/Dewb/monome-rack/releases",
@@ -17,7 +17,7 @@
       "name": "white whale",
       "description": "grid-enabled probabilistic step sequencer",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-white-whale",
-      "manualUrl": "https://monome.org/docs/whitewhale/",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/whitewhale",
       "tags": [
         "sequencer",
         "clock generator",
@@ -31,7 +31,7 @@
       "name": "earthsea",
       "description": "grid-enabled shape-memory pattern instrument",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-earthsea",
-      "manualUrl": "https://monome.org/docs/earthsea/",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/earthsea",
       "tags": [
         "sequencer",
         "digital",
@@ -44,7 +44,7 @@
       "name": "meadowphysics",
       "description": "grid-enabled rhizomatic cascading counter",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-meadowphysics",
-      "manualUrl": "https://monome.org/docs/meadowphysics/",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/meadowphysics",
       "tags": [
         "sequencer",
         "clock generator",
@@ -58,7 +58,7 @@
       "name": "teletype",
       "description": "algorithmic ecosystem: a dynamic, musical event triggering platform",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-teletype",
-      "manualUrl": "https://monome.org/docs/teletype/",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/teletype",
       "tags": [
         "arpeggiator",
         "clock generator",
@@ -83,7 +83,7 @@
       "name": "ansible",
       "description": "multi-mode sequencer and control voltage generator, for grid and arc controllers",
       "modularGridUrl": "https://www.modulargrid.net/e/monome-ansible",
-      "manualUrl": "https://monome.org/docs/ansible/",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/ansible",
       "tags": [
         "sequencer",
         "clock generator",
@@ -98,6 +98,7 @@
       "slug": "grid128",
       "name": "grid 128",
       "description": "",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
         "hardware clone",
@@ -108,6 +109,7 @@
       "slug": "grid64",
       "name": "grid 64",
       "description": "",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
         "hardware clone",
@@ -118,6 +120,7 @@
       "slug": "grid256",
       "name": "grid 256",
       "description": "",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
         "hardware clone",

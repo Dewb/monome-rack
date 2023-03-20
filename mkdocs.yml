@@ -7,12 +7,12 @@ nav:
     - Introduction: 'general/intro.md'
     - 'Connecting Devices': 'general/connections.md'
     - 'Voltage Standards': 'general/voltage.md'
-    - 'About & Credits': "general/about.md"
+    - 'Credits & License': "general/credits.md"
   - 'Core Modules':
     - Ansible: 'modules/ansible.md'
-    - Teletype: 'modules/teletype.md'
     - Earthsea: 'modules/earthsea.md'
     - Meadowphysics: 'modules/meadowphysics.md'
+    - Teletype: 'modules/teletype.md'
     - 'White Whale': 'modules/whitewhale.md'
   - 'Accessory Modules':
     - 'Virtual Grids': 'modules/grids.md'
@@ -30,10 +30,14 @@ watch:
   - docs/custom-theme
 docs_dir: docs/content
 site_dir: build/docs
+extra_css: [extra.css]
 markdown_extensions:
   - toc:
       baselevel: "1"
       toc_depth: "3"
+      permalink: false
+  - attr_list
+  - md_in_html
 plugins:
   - search:
       lang: en

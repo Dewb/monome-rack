@@ -8,13 +8,13 @@ On all modules, CV outs are unipolar with a range of 0-10 V. TR outs produce a g
 
 # Timing
 
-All of these modules produce control-rate modulation signals. Downsampling is enabled by default to save CPU. The amount of downsampling can be changed on a module-by-module basis by right-clicking the module and choosing **Firmware > Input Rate** or **Output Rate**, ranging from *1x* (no downsampling, audio rate) to **/16** (the module ticks only every 16 samples.)
+All of these modules produce control-rate modulation signals. Downsampling is enabled by default to save CPU. The amount of downsampling can be changed on a module-by-module basis by right-clicking the module and choosing **Firmware Tools > Input Rate** or **Output Rate**, ranging from *1x* (no downsampling, audio rate) to **/16** (the module ticks only every 16 samples.)
 
 There's generally no benefit to reducing the downsampling and running at audio rate. Most modules process their internal event loops at much less than audio rate regardless of the downsampling setting. The one exception is Teletype trigger inputs will be responded to on the sample they are triggered, so Teletype can be used for rudimentary audio synthesis if you trigger it at audio rates.
 
 # Sequencer Reset
 
-The [VCV Rack voltage standards for sequencer timing](https://vcvrack.com/manual/VoltageStandards#Timing) suggest that sequencers implement ignore clock gates that arrive too close to a reset signal, to avoid unexpected behavior due to triggers and reset signals arriving at different samples. Ansible is the only module with a reset input, and it does not do this; it implements the alternate strategy called the "Nord protocol" where a reset input never advances the clock; the reset happens on the next clock following a low-high transition on the reset input.
+The [VCV Rack voltage standards for sequencer timing](https://vcvrack.com/manual/VoltageStandards#Timing) describe the challenges in implementing a reset input when the reset and clock inputs might arrive on different samples. Ansible is the only module with a reset input, and rather than the Rack suggested fix, it implements the alternate "Nord reset protocol" strategy, where only clock triggers ever advance the clock, and a low-high transition on the reset input causes the sequence to reset on the next clock step. If a patch does not produce the expected reset behavior due to different propagation times on the clock and reset input, add logic delays to make sure your reset signal arrives *before* the clock signal.
 
 # Polyphony
 
