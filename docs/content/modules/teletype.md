@@ -14,15 +14,13 @@ Scripts can be simple or intricate, but there are just ten of them, and each one
 
 Scripts are made up of operators or [OPs](http://monome.org/docs/teletype/manual/#ops-and-mods). *OPs* may have one or more arguments that could be  numbers or the outputs of other OPs. OPs and values are combined in [prefix notation](https://en.wikipedia.org/wiki/Polish_notation). Hit **Alt-H** (**Option-H** on Mac) on the keyboard to enter **HELP** mode, an on-device reference for OPs and their arguments.
 
-When you enter a line of code, if Teletype can't understood the code, it won't be executed (in **LIVE** mode) or it won't be saved in a script (in **EDIT** mode). The design philosophy of Teletype is that code never produces runtime errors.
-
 # Using the keyboard
 
 To send keyboard input to Teletype, click the screen with your mouse or trackpad. A highlight ring will be drawn around the screen to indicate keyboard focus. Keystrokes will go into Teletype instead of Rack until you click away to un-focus the screen. 
 
-Note that your operating system may intercept some keyboard combinations (like Alt-Esc.) If that happens, Alt-Esc and some other key combinations can also be triggered via the right-click menu.
+Note that your operating system may intercept some keyboard combinations (like **Alt-Esc** to enter **SCENE WRITE** mode.) If that happens, **Alt-Esc** and other critical key combinations can also be triggered via the right-click menu.
 
-The VCV Rack version of Teletype defers keycode processing to the firmware, so unfortunately, like the hardware, it currently only supports US QWERTY keyboard layouts. Other layouts will produce unexpected, but consistent results.
+The VCV Rack version of Teletype defers keycode processing to the firmware, so unfortunately, like the hardware, it currently only supports US QWERTY keyboard layouts. 
 
 # TRIGGER inputs
 
