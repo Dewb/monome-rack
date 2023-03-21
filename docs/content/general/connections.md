@@ -12,13 +12,13 @@ All of the modules in this plugin are designed to be used alongside with non-Eur
 
 Place a grid-supporting module in your patch and right-click it. You'll see a list of hardware and virtual grids at the bottom of the menu.
 
-![connection menu](../images/connection-menu.png){: style="width: 25em;"}
+![connection menu](../images/connection-menu.png){: style="width: 20em;"}
 
 Hardware grid connections require [serialosc](https://monome.org/docs/serialosc/setup/). If serialosc is installed, the version will be shown in the menu; make sure yours is 1.4.1 or later. If serialosc is not installed, a link to install it will be shown instead.
 
 If you don't see any connections, place a [virtual grid module](../../modules/grids) in your patch and open the menu again.
 
-![connection menu](../images/connection-made.png){: style="width: 12em; float: left; margin: 0em 2em 1.5em 0em;"}
+![connection menu](../images/connection-made.png){: style="width: 10.5em; float: left; margin: 0em 2em 1.5em 0em;"}
 
 Once a connection has been established, the USB port on the module will be drawn with a "wireless connection nub." (The skeuomorphism of VCV Rack requires us to invent these little fictions.)
 
