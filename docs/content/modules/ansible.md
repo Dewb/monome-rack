@@ -1,4 +1,4 @@
-![ansible module screenshot](../images/ansible.png){: style="float: left; margin: 0em 2em 1.5em 0em; width: 9.5em; height: auto;"}
+![ansible module screenshot](../images/ansible.png){: class="module-image-sixhp" }
 ## Ansible
 
 Ansible has multiple modes that change the personality and functions of the module. To select a mode, first [connect the module](../../general/connections) to a hardware or virtual grid, or a hardware arc controller. Different modes are available depending on whether the module is connected to a grid or arc.

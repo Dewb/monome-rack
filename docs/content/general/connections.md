@@ -14,7 +14,7 @@ Place a grid-supporting module in your patch and right-click it. You'll see a li
 
 ![connection menu](../images/connection-menu.png){: style="width: 20em;"}
 
-Hardware grid connections require [serialosc](https://monome.org/docs/serialosc/setup/). If serialosc is installed, the version will be shown in the menu; make sure yours is 1.4.1 or later. If serialosc is not installed, a link to install it will be shown instead.
+Hardware grid connections require [serialosc](https://monome.org/docs/serialosc/setup/). If serialosc is installed, the version will be shown in the menu; make sure yours is 1.4.1 or later. If the serialosc service is not detected, a link to install it will be shown instead.
 
 If you don't see any connections, place a [virtual grid module](../../modules/grids) in your patch and open the menu again.
 

@@ -1,4 +1,4 @@
-# Inputs
+# Voltage Standards: Inputs
 
 Trigger/gate inputs use [Schmitt triggers](https://vcvrack.com/manual/VoltageStandards#Triggers-and-Gates) with a low threshold of **0.8 V** and a high threshold of **2.21 V**, roughly matching observations on the hardware.
 

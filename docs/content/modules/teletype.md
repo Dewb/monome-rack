@@ -1,6 +1,6 @@
 ##
 
-![teletype module screenshot](../images/teletype.png){: style="margin: 0em 2em 1.5em 0em; width: 28.5em; height: auto;"}
+![teletype module screenshot](../images/teletype.png){: class="module-image-eighteenhp" }
 
 ## Teletype
 
