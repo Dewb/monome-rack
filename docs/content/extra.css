@@ -1,1 +1,36 @@
-hr { display: none !important; }
+.module-image-sixhp {
+    margin: 0em 2rem 1.5rem 0em;
+    width: 9.5rem;
+    height: auto;
+    float: left;
+}
+
+.module-image-eighteenhp {
+    margin: 0em 2rem 1.5rem 0rem;
+    width: 28rem;
+    height: auto;
+}
+
+/* Adjust module image sizes on mobile screens */
+@media (max-width: 32rem) {
+    .module-image-sixhp {
+        width: 7.8rem !important;
+        margin: 0em 1.5rem 1.25rem 0em !important;
+    }
+    .module-image-eighteenhp {
+        width: 18rem !important;
+    }
+}
+
+/* hide blinking cursor in mkdocs-terminal theme */
+.terminal-prompt::after { animation: none; -webkit-animation: none; display: none; }
+
+/* hide footer horizontal rule in mkdocs-terminal theme */
+hr { visibility: hidden; }
+
+/* make side panel hr mode subtle */
+#terminal-mkdocs-side-panel hr {
+    visibility: visible !important;
+    border: 1px solid lightgray !important;
+    width: 3rem;
+}

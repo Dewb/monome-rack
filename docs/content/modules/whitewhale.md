@@ -1,4 +1,4 @@
-![white whale module screenshot](../images/whitewhale.png){: style="float: left; margin: 0em 2em 1.5em 0em; width: 9.5em; height: auto;"}
+![white whale module screenshot](../images/whitewhale.png){: class="module-image-sixhp" }
 ## White Whale
 
 # PARAM knob

@@ -1,5 +1,4 @@
-![earthsea module screenshot](../images/earthsea.png){: style="float: left; margin: 0em 2em 1.5em 0em; width: 9.5em; height: auto;"}
-
+![earthsea module screenshot](../images/earthsea.png){: class="module-image-sixhp" }
 ## Earthsea
 
 Earthsea, [connected to a grid controller](../../general/connections), is an isomorphic keyboard and sequencer. 
