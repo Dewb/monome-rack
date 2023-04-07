@@ -39,7 +39,7 @@ This quickstart example uses Earthsea alongside modules from VCV's [Fundamental 
 - Add voltage to Earthsea's **CV 1** and **CV 2** and perform a [triples shape-memory](https://monome.org/docs/earthsea/#shape-memories) to store it
 - Repeat the previous step for additional values and **triples** *shape-memories*
 - As the pattern plays, switch between *shape-memories*
-- [Add slew to each shape](https://monome.org/docs/earthsea/#slew)
+- [Add slew to each shape-memory](https://monome.org/docs/earthsea/#slew)
 
 # Further reading
 

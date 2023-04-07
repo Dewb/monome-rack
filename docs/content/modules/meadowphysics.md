@@ -21,7 +21,20 @@ VCV Rack will remember the current working memory in your patch, but the **PRESE
 
 # Quickstart
 
-...
+This quickstart example uses Meadowphysics alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental). Note that Meadowphysics was originally designed as a script-triggering companion to [Teletype](../teletype), so this example won't showcase the full potential of the module. Once you become familiar with Teletype, we encourage you to revisit this module!
+
+![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: style="width: 40em;"}
+*uses: Meadowphysics, VCO (2x), VCA MIX (2x), FADE, LFO, AUDIO*
+
+- Connect Meadowphysics to a grid
+- Patch the four outputs of each VCO to the four inputs of each ADSR
+- Patch the eight **TR** outputs of Meadowphysics to the CV inputs of each ADSR
+- Patch the MIX outputs of each ADSR to the inputs of FADE
+- Patch any LFO output to FADE's X FADE input and add modulation using the Crossfade CV attenuator above
+- Patch the output of FADE to the L/MON input of AUDIO
+- To set a different count for each row, press any pad beyond the first column in that row
+- Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic)
+- Change the [rule](https://monome.org/docs/meadowphysics/#rules--ranges) for each range
 
 # Further reading
 
