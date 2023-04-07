@@ -52,7 +52,9 @@ Ansible **IN 1** and **IN 2** jacks accept trigger/gate inputs. Their function d
 
 All of these quickstart examples use Ansible alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
 
-**Kria**  
+**Kria**
+
+![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: style="width: 40em;"}
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
 - Connect Ansible to a grid
@@ -65,9 +67,9 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 - Switch to Track 2 on the grid and set notes for **CV 2**'s modulation of the VCO's pulse width
 - Switch to the OCTAVE page on the grid and set different octaves for **CV 2**'s steps
 
-![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: style="width: 40em;"}
+**Meadowphysics**
 
-**Meadowphysics**  
+![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: style="width: 40em;"}
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Kria to Meadowphysics)
@@ -79,9 +81,9 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 - Patch ADSR's ENV and VCO's SQR to a VCA, then to AUDIO's L input
 - Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic) -- if you're using a virtual grid, **Ctrl-click** (**Cmd-click** on Mac) will hold a pressed pad until you release **Ctrl** / **Cmd**
 
-![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: style="width: 40em;"}
+**Earthsea**
 
-**Earthsea**  
+![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: style="width: 40em;"}
 *uses: Ansible, ADSR (2x), VCO (2x), VCA MIX, AUDIO*
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Meadowphysics to Earthsea)
@@ -95,8 +97,6 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 - Patch the VCA MIX's MIX output to AUDIO's L input
 - [Arm a pattern recorder](https://monome.org/docs/ansible/earthsea/#pattern-recording)
 - Record some chord shapes on the grid and play the pattern back
-
-![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: style="width: 40em;"}
 
 # Further reading
 
