@@ -56,6 +56,7 @@ Hold *ALT* and press *META* to enter [Series Mode](https://monome.org/docs/white
 
 This quickstart example uses White Whale alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
 
+![white whale quickstart screenshot](../images/whitewhale-quickstart.png){: style="width: 40em;"}
 *uses: White Whale, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
 - Connect White Whale to a grid
@@ -66,6 +67,7 @@ This quickstart example uses White Whale alongside modules from VCV's [Fundament
 - Patch VCA MIX's MIX output to AUDIO's L input
 - Create a sequence of triggers on White Whale's first channel to open the envelope
 - Patch White Whale's **CV A** to VCF's CUT input and add modulation using the attenuator above the input
+- Change VCF's CUTOFF and RES to hear **CV A**'s affect
 - Enter the **CV A** region on grid and use the **PARAM** knob to enter CV values for a few steps
 - Hold *ALT* on the grid and enter the **CV B** region on grid -- this will show put **CV B** into a [Scale Map](https://monome.org/docs/whitewhale/#cv-map), which quantizes **CV B**'s output to a musical note range
 - As the pattern plays, enter new notes for each step in the *Scale Map*
