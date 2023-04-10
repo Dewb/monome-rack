@@ -10,7 +10,7 @@ Without a grid connection it will not produce any output besides a clock, but on
 
 # CV A-B & TR 1-4 outputs
 
-White Whale produces two continuous CV outputs on **CV A** and **CV B** on the left side of the module and four trigger/gate outputs from **TR 1-4** on the right side. CV outputs range from 0-10 V and TR outputs are 0 V low, 8 V high.
+White Whale produces two continuous CV outputs on **CV A** and **CV B** on the left side of the module and four trigger/gate outputs from **TR 1-4** on the right side. CV outputs range from 0 V to 10 V and TR outputs are 0 V low, 8 V high.
 
 CV's are quantized to the nearest semitone by default, for easier melodic tuning. They can also be un-quantized in conjunction with the **PARAM** knob [as described in the hardware docs](https://monome.org/docs/whitewhale/#cv-map).
 
@@ -18,7 +18,7 @@ Triggers may be swapped for gates by entering [gate mode](https://monome.org/doc
 
 # CLOCK knob & jacks
 
-The **CLOCK** knob controls the timing of clock pulses that drive the four triggers and two CV values. The knob ranges from a period of 2 second to a period of 47ms. Patching a signal into **CLOCK IN** will override the timing and [every low/high transition](../../general/voltage/#inputs) on the input will pulse the counters. (Very fast clocks approaching a 1ms period may result in skipped pulses; the module will not go into audio rate.) The pulsewidth of the clock in sets the trigger time for individual trigger outs. The sequencer can be stopped altogether by inserting an unconnected patch cable to clock in.
+The **CLOCK** knob controls the timing of clock pulses that drive the four triggers and two CV values. The knob ranges from a period of 2 second to a period of 47ms. Patching a signal into **CLOCK IN** will override the timing and [every low/high transition](../../general/voltage/#inputs) on the input will pulse the counters. (Very fast clocks approaching a 1ms period may result in skipped pulses; the module will not go into audio rate.) The pulse width of the clock in sets the trigger time for individual trigger outs. The sequencer can be stopped altogether by inserting an unconnected patch cable to clock in.
 
 The **CLOCK OUT** jack sends a gate signal out according to the current clock following the internal or external clock as appropriate. This output is ideal for linking multiple sequencers, or for a regular rhythmic pulse in your system.
 
