@@ -66,9 +66,9 @@ This quickstart example uses White Whale alongside modules from VCV's [Fundament
 - Patch ADSR's ENV output to CV 1 of VCA MIX
 - Patch VCA MIX's MIX output to AUDIO's L input
 - Create a sequence of triggers on White Whale's first channel to open the envelope
-- Patch White Whale's **CV A** to VCF's CUT input and add modulation using the attenuator above the input
-- Change VCF's CUTOFF and RES to hear **CV A**'s affect
+- Patch White Whale's **CV A** to VCF's CUT input and add modulation using the attenuator above the input (you won't hear changes yet)
 - Enter the **CV A** region on grid and use the **PARAM** knob to enter CV values for a few steps
+- Adjust VCF's CUTOFF and RES to hear **CV A**'s affect
 - Hold *ALT* on the grid and enter the **CV B** region on grid -- this will show put **CV B** into a [Scale Map](https://monome.org/docs/whitewhale/#cv-map), which quantizes **CV B**'s output to a musical note range
 - As the pattern plays, enter new notes for each step in the *Scale Map*
 
