@@ -45,9 +45,9 @@ struct EarthseaModule : LibAVR32Module
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 
         configButton(BUTTON_PARAM, "PRESET");
-        configParam(CV1_PARAM, 0, 10.0, 5.0, "SHAPE 1", "V");
-        configParam(CV2_PARAM, 0, 10.0, 5.0, "SHAPE 2", "V");
-        configParam(CV3_PARAM, 0, 10.0, 5.0, "SHAPE 3", "V");
+        configParam(CV1_PARAM, 0, 10.0, 0.0, "SHAPE 1", "V");
+        configParam(CV2_PARAM, 0, 10.0, 0.0, "SHAPE 2", "V");
+        configParam(CV3_PARAM, 0, 10.0, 0.0, "SHAPE 3", "V");
         configOutput(CV1_OUTPUT, "SHAPE 1");
         configOutput(CV2_OUTPUT, "SHAPE 2");
         configOutput(CV3_OUTPUT, "SHAPE 3");
