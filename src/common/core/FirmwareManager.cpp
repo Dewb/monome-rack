@@ -161,7 +161,7 @@ struct FirmwareManagerImpl
 
             tempLibraryFile = tempLibraryFolder + PATH_SEPARATOR + "monome_vcvrack_firmware" + LIB_EXTENSION;
 
-            INFO("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
+            // DEBUG("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
 
             {
                 std::ifstream src(librarySource, std::ios::binary);
