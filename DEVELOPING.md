@@ -1,5 +1,11 @@
 
-#### To build with the Rack SDK:
+## To install prerelease builds:
+
+Download a release for your platform from the [Releases page](../../releases) and place it in your `Rack2\plugins` folder.
+
+More detailed instructions are available in the [Rack documentation on installing non-library plugins](https://vcvrack.com/manual/Installing#Installing-plugins-not-available-on-the-VCV-Library).
+
+## To build the plugin using the Rack SDK:
 
 * Clone this repo.
    ```bash
@@ -12,8 +18,8 @@
    ```
 * Download the latest Rack 2.x SDK.
    ```bash
-   $ curl -O https://vcvrack.com/downloads/Rack-SDK-2.2.3.zip
-   $ unzip Rack-SDK-2.2.3.zip
+   $ curl -O https://vcvrack.com/downloads/Rack-SDK-2.3.0.zip
+   $ unzip Rack-SDK-2.3.0.zip
    ```
 
 * Build dependencies.
@@ -26,7 +32,7 @@
    $ RACK_DIR=$(PWD)/Rack-SDK make install
    ```
 
-#### To build with the complete VCV Rack source:
+## To build the plugin using the complete VCV Rack source:
 
 * Read the [VCVRack](https://github.com/VCVRack/Rack) build instructions for your platform and follow them carefully. Run and test Rack to make sure it works as expected.
    ```bash
@@ -53,11 +59,13 @@
    $ make
    ```
 
-#### Updating documentation
+## Updating documentation
 
 Prerequisites:
 * Recent `pip` and `python` 3.x
 * `mkdocs` and `mkdocs-terminal`. Install with:
-   `$ pip install -r docs/requirements.txt`
+   ```bash
+   $ pip install -r docs/requirements.txt
+   ```
 
 Start a hot-reload server with `mkdocs serve`, and run `mkdocs build` to produce the static site.
