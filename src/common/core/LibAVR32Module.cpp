@@ -46,12 +46,16 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         connectionOwned = true;
 
         auto d = gridConnection->getDevice();
-        if (d.type == "monome arc 4")
+        if (d.type == "monome arc 2")
+        {
+            firmware.serialConnectionChange(true, 1, d.protocol, 2, 1);
+        }
+        else if (d.type.compare(0, 10, "monome arc") == 0)
         {
             firmware.serialConnectionChange(true, 1, d.protocol, 4, 1);
-        } else if (d.type == "monome arc 2") {
-            firmware.serialConnectionChange(true, 1, d.protocol, 2, 1);
-        } else {
+        }
+        else
+        {
             firmware.serialConnectionChange(true, 0, d.protocol, d.width, d.height);
         }
 
