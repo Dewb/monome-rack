@@ -56,19 +56,24 @@ $(ragel):
 	cd dep/ragel-6.10 && CC=gcc CXX=g++ STRIP=strip FLAGS= CFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix="$(DEP_PATH)"
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
-firmwares: export PATH := $(PWD)/dep/bin:$(PATH)
-firmwares: export RACK_DIR := $(realpath $(RACK_DIR))
-firmwares: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
+firmware: export PATH := $(PWD)/dep/bin:$(PATH)
+firmware: export RACK_DIR := $(realpath $(RACK_DIR))
+firmware: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
 	cd firmware && $(MAKE) -f teletype.mk
 	cd firmware && $(MAKE) -f ansible.mk
 
-all: firmwares
+firmware-clean:
+	rm -rfv firmware/build
 
 DISTRIBUTABLES += $(wildcard res)
 DISTRIBUTABLES += $(wildcard LICENSE*)
 DISTRIBUTABLES += $(wildcard presets)
 
 include $(RACK_DIR)/plugin.mk
+
+all: firmware
+
+clean: firmware-clean
