@@ -73,6 +73,8 @@ This quickstart example uses Teletype alongside modules from VCV's [Fundamental 
 ![teletype quickstart screenshot](../images/teletype-quickstart.png){: class="patch-image" }
 *uses: Meadowphysics, Teletype, grid (optional), VCO (2x), ADSR (2x), VCA MIX, AUDIO*
 
+[teletype-quickstart.vcv](../patches/teletype-quickstart.vcv){: class="patch-download-link" }
+
 - Load the `TRIANGLE MOUNTAIN` preset (see 'Saving, loading, and the SCENE key' above for more information on presets)
 - Patch **CV 1** to the first VCO's V/8 input, and **CV 2** to the other's
 - Patch **TR 1** to the first ADSR's GATE input, and **TR 2** to the other's

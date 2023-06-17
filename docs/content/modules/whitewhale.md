@@ -59,6 +59,8 @@ This quickstart example uses White Whale alongside modules from VCV's [Fundament
 ![white whale quickstart screenshot](../images/whitewhale-quickstart.png){: class="patch-image" }
 *uses: White Whale, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
+[whitewhale-quickstart.vcv](../patches/whitewhale-quickstart.vcv){: class="patch-download-link" }
+
 - Connect White Whale to a grid
 - Patch White Whale's **TR 1** to ADSR's GATE input
 - Patch VCO's TRI output to VCF's IN

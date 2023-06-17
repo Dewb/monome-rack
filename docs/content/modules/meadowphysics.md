@@ -26,6 +26,8 @@ This quickstart example uses Meadowphysics alongside modules from VCV's [Fundame
 ![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: class="patch-image" }
 *uses: Meadowphysics, VCO (2x), VCA MIX (2x), FADE, LFO, AUDIO*
 
+[meadowphysics-quickstart.vcv](../patches/meadowphysics-quickstart.vcv){: class="patch-download-link" }
+
 - Connect Meadowphysics to a grid
 - Patch the four outputs of each VCO to the four inputs of each ADSR
 - Patch the eight **TR** outputs of Meadowphysics to the CV inputs of each ADSR

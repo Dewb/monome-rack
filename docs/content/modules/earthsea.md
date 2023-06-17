@@ -26,6 +26,8 @@ This quickstart example uses Earthsea alongside modules from VCV's [Fundamental 
 ![earthsea quickstart screenshot](../images/earthsea-quickstart.png){: class="patch-image" }
 *uses: Earthsea, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
+[earthsea-quickstart.vcv](../patches/earthsea-quickstart.vcv){: class="patch-download-link" }
+
 - Connect Earthsea to a grid
 - Patch Earthsea's **EDGE** to ADSR's GATE input
 - Patch Earthsea's  **POS** to VCO's V/OCT input

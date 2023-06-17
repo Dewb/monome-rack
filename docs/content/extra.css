@@ -16,6 +16,12 @@
     width: 100% !important;
 }
 
+.patch-download-link:before {
+    content: "\01F4BE";
+    text-decoration: none;
+    padding: 4px;
+}
+
 /* Adjust module image sizes on mobile screens */
 @media (max-width: 32rem) {
     .module-image-sixhp {

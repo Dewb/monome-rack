@@ -54,8 +54,10 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Kria**
 
-![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: class="patch-image" }
+![ansible kria quickstart screenshot](../images/ansible-kria-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
+
+[ansible-kria-quickstart.vcv](../patches/ansible-kria-quickstart.vcv){: class="patch-download-link" }
 
 - Connect Ansible to a grid
 - Patch **TR 1** to the GATE input of ADSR
@@ -69,8 +71,10 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Meadowphysics**
 
-![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: class="patch-image" }
+![ansible meadowphysics quickstart screenshot](../images/ansible-meadowphysics-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
+
+[ansible-meadowphysics-quickstart.vcv](../patches/ansible-meadowphysics-quickstart.vcv){: class="patch-download-link" }
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Kria to Meadowphysics)
 - <kbd>Ctrl-Shift-click</kbd> (<kbd>Cmd-Shift-click</kbd> on Mac) **KEY 2** on Ansible's faceplate to open the [config interface](https://monome.org/docs/ansible/meadowphysics/#config)
@@ -83,8 +87,10 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Earthsea**
 
-![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: class="patch-image" }
+![ansible earthsea quickstart screenshot](../images/ansible-earthsea-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR (2x), VCO (2x), VCA MIX, AUDIO*
+
+[ansible-earthsea-quickstart.vcv](../patches/ansible-earthsea-quickstart.vcv){: class="patch-download-link" }
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Meadowphysics to Earthsea)
 - Hold the bottom-left pad on the grid to enter the [voice allocation interface](https://monome.org/docs/ansible/earthsea/#voice-allocation) and set the first two outputs to active on both *pattern* and *live*
