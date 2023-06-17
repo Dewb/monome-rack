@@ -1,11 +1,11 @@
 {
   "slug": "monome",
   "name": "monome",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "license": "GPL-2.0-only",
   "author": "Michael Dewberry",
   "authorEmail": "",
-  "authorUrl": "http://dewb.org",
+  "authorUrl": "https://dewb.github.io/monome-rack/general/credits/",
   "pluginUrl": "https://dewb.github.io/monome-rack",
   "manualUrl": "https://dewb.github.io/monome-rack",
   "sourceUrl": "https://github.com/Dewb/monome-rack",

@@ -56,9 +56,9 @@ $(ragel):
 	cd dep/ragel-6.10 && CC=gcc CXX=g++ STRIP=strip FLAGS= CFLAGS= CXXFLAGS= LDFLAGS= ./configure --prefix="$(DEP_PATH)"
 	cd dep/ragel-6.10 && $(MAKE) && $(MAKE) install
 
-firmware: export PATH := $(PWD)/dep/bin:$(PATH)
-firmware: export RACK_DIR := $(realpath $(RACK_DIR))
-firmware: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
+firmware-build: export PATH := $(PWD)/dep/bin:$(PATH)
+firmware-build: export RACK_DIR := $(realpath $(RACK_DIR))
+firmware-build: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
@@ -74,6 +74,6 @@ DISTRIBUTABLES += $(wildcard presets)
 
 include $(RACK_DIR)/plugin.mk
 
-all: firmware
+all: firmware-build
 
 clean: firmware-clean
