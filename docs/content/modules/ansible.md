@@ -54,7 +54,7 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Kria**
 
-![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: style="width: 40em;"}
+![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
 - Connect Ansible to a grid
@@ -69,7 +69,7 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Meadowphysics**
 
-![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: style="width: 40em;"}
+![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Kria to Meadowphysics)
@@ -83,7 +83,7 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 
 **Earthsea**
 
-![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: style="width: 40em;"}
+![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: class="patch-image" }
 *uses: Ansible, ADSR (2x), VCO (2x), VCA MIX, AUDIO*
 
 - Connect Ansible to a grid (hold + release **KEY 2** to move from Meadowphysics to Earthsea)

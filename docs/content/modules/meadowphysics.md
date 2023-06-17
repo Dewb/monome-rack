@@ -23,7 +23,7 @@ VCV Rack will remember the current working memory in your patch, but the **PRESE
 
 This quickstart example uses Meadowphysics alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental). Note that Meadowphysics was originally designed as a script-triggering companion to [Teletype](../teletype), so this example won't showcase the full potential of the module. Once you become familiar with Teletype, we encourage you to revisit this module!
 
-![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: style="width: 40em;"}
+![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: class="patch-image" }
 *uses: Meadowphysics, VCO (2x), VCA MIX (2x), FADE, LFO, AUDIO*
 
 - Connect Meadowphysics to a grid

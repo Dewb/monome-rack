@@ -1,14 +1,19 @@
 .module-image-sixhp {
-    margin: 0em 2rem 1.5rem 0em;
+    margin: 0rem 2rem 1.5rem 0rem;
     width: 9.5rem;
     height: auto;
     float: left;
 }
 
 .module-image-eighteenhp {
-    margin: 0em 2rem 1.5rem 0rem;
+    margin: 0rem 2rem 1.5rem 0rem;
     width: 28rem;
     height: auto;
+}
+
+.patch-image {
+    margin: 0rem;
+    width: 100% !important;
 }
 
 /* Adjust module image sizes on mobile screens */

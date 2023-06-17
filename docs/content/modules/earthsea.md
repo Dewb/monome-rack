@@ -23,7 +23,7 @@ Earthsea does not have any inputs.
 # Quickstart
 This quickstart example uses Earthsea alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
 
-![earthsea quickstart screenshot](../images/earthsea-quickstart.png){: style="width: 40em;"}
+![earthsea quickstart screenshot](../images/earthsea-quickstart.png){: class="patch-image" }
 *uses: Earthsea, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
 - Connect Earthsea to a grid

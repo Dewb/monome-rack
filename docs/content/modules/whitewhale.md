@@ -26,7 +26,7 @@ The **CLOCK OUT** jack sends a gate signal out according to the current clock fo
 
 A multi-purpose control which changes its mode depending on the grid interface:
 
-![white whale grid legend screenshot](../images/whitewhale-grid-legend.png){: style="width: 40em;"}
+![white whale grid legend screenshot](../images/whitewhale-grid-legend.png){: class="patch-image" }
 
 Change CV values while in the *CV A* or *CV B* region by either:
 
@@ -56,7 +56,7 @@ Hold *ALT* and press *META* to enter [Series Mode](https://monome.org/docs/white
 
 This quickstart example uses White Whale alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
 
-![white whale quickstart screenshot](../images/whitewhale-quickstart.png){: style="width: 40em;"}
+![white whale quickstart screenshot](../images/whitewhale-quickstart.png){: class="patch-image" }
 *uses: White Whale, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
 - Connect White Whale to a grid

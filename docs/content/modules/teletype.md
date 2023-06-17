@@ -70,7 +70,7 @@ For advanced scripting techniques, see `@scanner-darkly`'s [GRID INTEGRATION stu
 
 This quickstart example uses Teletype alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental). Since [Meadowphysics](../meadowphysics) was originally designed as a script-triggering companion to Teletype, we'll use it to create some exciting changes in our patch. If you're not yet familiar with Meadowphysics, we encourage you to take a look at this module next!
 
-![teletype quickstart screenshot](../images/teletype-quickstart.png){: style="width: 40em;"}
+![teletype quickstart screenshot](../images/teletype-quickstart.png){: class="patch-image" }
 *uses: Meadowphysics, Teletype, grid (optional), VCO (2x), ADSR (2x), VCA MIX, AUDIO*
 
 - Load the `TRIANGLE MOUNTAIN` preset (see 'Saving, loading, and the SCENE key' above for more information on presets)
