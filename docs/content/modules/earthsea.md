@@ -20,8 +20,15 @@ The **CV 1-3** jacks each output a 0 V to 10 V signal that is initially controll
 
 Earthsea does not have any inputs.
 
+# Using the grid
+
+![earthsea grid legend screenshot](../images/earthsea-grid-legend.png){: class="patch-image" }
+
+[earthsea-grid-legend.vcv](../patches/earthsea-grid-legend.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
+
 # Quickstart
-This quickstart example uses Earthsea alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
+
+This quickstart example uses Earthsea alongside modules from VCV's [Free collection](https://vcvrack.com/Free).
 
 ![earthsea quickstart screenshot](../images/earthsea-quickstart.png){: class="patch-image" }
 *uses: Earthsea, ADSR, VCO, VCF, VCA MIX, AUDIO*

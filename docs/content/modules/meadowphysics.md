@@ -38,6 +38,14 @@ This quickstart example uses Meadowphysics alongside modules from VCV's [Fundame
 - Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic)
 - Change the [rule](https://monome.org/docs/meadowphysics/#rules--ranges) for each range
 
+# Grid reference
+
+![meadowphysics grid legend screenshot](../images/meadowphysics-grid-legend.png){: class="patch-image" }
+![meadowphysics grid legend links screenshot](../images/meadowphysics-grid-legend-links.png){: class="patch-image" }
+![meadowphysics grid legend rules screenshot](../images/meadowphysics-grid-legend-rules.png){: class="patch-image" }
+
+[meadowphysics-grid-legends.vcv](../patches/meadowphysics-grid-legends.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
+
 # Further reading
 
 * Meadowphysics [hardware documentation](http://monome.org/docs/meadowphysics/)

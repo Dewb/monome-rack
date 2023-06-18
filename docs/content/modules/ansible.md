@@ -104,6 +104,18 @@ All of these quickstart examples use Ansible alongside modules from VCV's [Funda
 - [Arm a pattern recorder](https://monome.org/docs/ansible/earthsea/#pattern-recording)
 - Record some chord shapes on the grid and play the pattern back
 
+# Grid reference
+
+When using Kria, the bottom row of the grid controls the track/mode/view, and is consistent across modes (with a couple of exceptions.) The rest of the grid contents depend on the mode you're in. See [the hardware documentation](https://monome.org/docs/ansible/kria/) for more details.
+
+![ansible kria grid legend screenshot](../images/ansible-kria-grid-legend.png){: class="patch-image" }
+
+[ansible-kria-grid-legend.vcv](../patches/ansible-kria-grid-legend.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
+
+For Meadowphysics, see the [grid legends for standalone Meadowphysics](../meadowphysics/#grid-reference).
+
+For Earthsea, see the [grid legend for standalone Earthsea](../earthsea/#using-the-grid). Ansible Earthsea is identical except the last two functions, Slew and Portamento, are replaced by the [Runes](https://monome.org/docs/ansible/earthsea/#runes) and [Voice Allocation](https://monome.org/docs/ansible/earthsea/#voice-allocation) screens.
+
 # Further reading
 
 * Ansible [hardware documentation](http://monome.org/docs/ansible/)

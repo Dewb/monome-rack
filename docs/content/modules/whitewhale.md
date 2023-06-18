@@ -28,6 +28,8 @@ A multi-purpose control which changes its mode depending on the grid interface:
 
 ![white whale grid legend screenshot](../images/whitewhale-grid-legend.png){: class="patch-image" }
 
+[whitewhale-grid-legend.vcv](../patches/whitewhale-grid-legend.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
+
 Change CV values while in the *CV A* or *CV B* region by either:
 
 - pressing any pad in the bottom 4 rows to set that step's CV value to the **PARAM** knob's position
