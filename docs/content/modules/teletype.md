@@ -110,14 +110,14 @@ This quickstart example uses Teletype alongside modules from VCV's [Free collect
 
 If all went well, you'll start hearing a cycling arpeggio from the first VCO. Experiment with patching outputs from Meadowphysics into each of Teletype's eight trigger inputs. We recommend starting with trigger input `5` to get a sequence going on the second VCO, then explore from there! Be sure to play with running Meadowphysics and Teletype at different rates, with the *CLOCK* knob on Meadowphysics and the *PARAM* knob on Teletype.
 
-Click the Teletype screen and hit <key>Tab</key> to look at the pattern values in TRACKER mode and the scripts in EDIT mode. The TRIANGLE MOUNTAIN scene exhibits several Teletype features, including the `P` pattern ops, the `S` stack ops, `IF:`/`ELSE:` preconditions, and the `L:` loop precondition.
+Click the Teletype screen and hit <key>Tab</key> to look at the pattern values in TRACKER mode and the scripts in EDIT mode. The TRIANGLE MOUNTAIN scene demonstrates several Teletype features, including the `P` [pattern ops](https://monome.org/docs/teletype/manual/#patterns-1), the `S` [stack ops](https://monome.org/docs/teletype/manual/#stack), and the [preconditions](https://monome.org/docs/teletype/manual/#control-flow) `IF:`, `ELSE:` and `L:` (for Loop).
 
 
 # Teletype and grids
 
 Unlike the other modules in this collection, Teletype can be used close to fully without a grid controller. But it does have two optional ways to interact with a connected grid.
 
-The first is a Grid Control Mode that is always available without scripting. Connect a grid and press the `PRESET` button twice to enable grid control mode. It will only take up an 8x8 section of the grid, so on larger grids the rest of the grid is still available for scripting. From the grid control mode interface, you can jump to scripts in the editor, toggle and mute them, edit patterns, mute individual lines of code, and manage scenes. See the [GRID INTEGRATION guide section on Grid Control Mode](https://github.com/scanner-darkly/teletype/wiki/GRID-CONTROL-MODE) for the details.
+The first is "Grid Control Mode" which is always available, without special scripting. Connect a grid and press the `PRESET` button twice to enable grid control mode. It will only take up an 8x8 section of the grid, so on larger grids the rest of the grid will show whatever the scene has scripted (or nothing.) From the grid control mode interface, you can jump to scripts in the editor, toggle and mute them, edit patterns, mute individual lines of code, and manage scenes. See the [GRID INTEGRATION guide section on Grid Control Mode](https://github.com/scanner-darkly/teletype/wiki/GRID-CONTROL-MODE) for the details.
 
 The second way to interact with grids is to script your own interface. The `G` series of operators allow creating scenes that can light up individual LEDs, draw shapes, and create controls (such as buttons and faders) that can be used to trigger and control scripts. 
 
@@ -125,7 +125,7 @@ For the basics, see [the Teletype manual](https://monome.org/docs/teletype/manua
 
 For advanced scripting techniques, see `@scanner-darkly`'s [GRID INTEGRATION studies](https://github.com/scanner-darkly/teletype/wiki/GRID-INTEGRATION).
 
-You can use either a physical or virtual grid to take advantage of the grid operators or Grid Control Mode. Hardware versions of Teletype can't use both the grid and the keyboard at the same time, and there are [some precautions to follow](https://monome.org/docs/grid/grid-modular/#teletype) regarding power loads, but thankfully the software version has none of these restrictions, making it an excellent environment for developing complex grid sequencers that you can later transfer to hardware.
+You can use either a physical or virtual grid to take advantage of the grid operators or Grid Control Mode. Hardware versions of Teletype can't use both the grid and the keyboard at the same time, and there are [some precautions to follow](https://monome.org/docs/grid/grid-modular/#teletype) regarding power loads, but thankfully the software version has none of these restrictions, making it an excellent environment for developing complex grid scenes that you can later transfer to hardware.
 
 # Further reading
 

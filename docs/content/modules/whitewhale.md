@@ -24,57 +24,48 @@ The **CLOCK OUT** jack sends a gate signal out according to the current clock fo
 
 # PARAM knob
 
-A multi-purpose control which changes its mode depending on the grid interface:
+A multi-purpose control which changes its mode depending on the grid interface. Generally, if there is a continuous value represented by a grid key or row, holding that key and turning *PARAM* will allow you to edit it.
+
+# Grid reference
 
 ![white whale grid legend screenshot](../images/whitewhale-grid-legend.png){: class="patch-image" }
 
 [whitewhale-grid-legend.vcv](../patches/whitewhale-grid-legend.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
 
-Change CV values while in the *CV A* or *CV B* region by either:
+Pressing a key in the first row will swap between three data views: the *TR 1-4* trigger outs, the *CV A* output, or the *CV B* output. In the Triggers view, pressing a key will turn the gate on or off for that step.
+
+The *CV A & B* modes are more complex. They can either be in [Curves](http://monome.org/docs/whitewhale/#cv-curves) mode for unquantized outputs, or [CV Map](http://monome.org/docs/whitewhale/#cv-map) mode for outputs quantized to a scale. 
+
+In the default [Curves](http://monome.org/docs/whitewhale/#cv-curves) mode, you can change CV values while in the *CV A* or *CV B* region by either:
 
 - pressing any pad in the bottom 4 rows to set that step's CV value to the **PARAM** knob's position
 - holding any one pad in the bottom 4 rows and using **PARAM** to adjust that step's CV value
 - holding ALT and the bottom-right key to live-record the **PARAM** knob's value to each step in realtime
   - note: values overwrite as soon as you hold the ALT + bottom-right key combo
 
-Change scale values while in the *CV A* or *CV B* region by entering the [CV Map](https://monome.org/docs/whitewhale/#cv-map):
-
-- [modify the scale maps](https://monome.org/docs/whitewhale/#modifying-scale-maps) by selecting a scale tone on the bottom row
-- hold *ALT* and the bottom-right grid key
-- set the value with the **PARAM** knob
-
-Change the CV randomization range by entering the *CV A* or *CV B* region:
-
-- hold a step's *center* key (located two rows above the bottom row)
-- set the maximum possible random value with the **PARAM** knob
-- while holding the *center* key press the key in bottom row to generate a random value  
-- the above is similar for [channel transposition](https://monome.org/docs/whitewhale/#channel-transpose)
-
-Hold *ALT* and press *META* to enter [Series Mode](https://monome.org/docs/whitewhale/#series-mode):
-
-- hold *META* to use the **PARAM** knob to scroll the view
+In [CV Map](http://monome.org/docs/whitewhale/#cv-map) mode, you can change CV values by selecting a step on the fifth row, and selecting one of the 16 values in the map on the bottom row.
 
 # Quickstart
 
-This quickstart example uses White Whale alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
+This quickstart example uses White Whale alongside modules from VCV's [Free collection](https://vcvrack.com/Free).
 
 ![white whale quickstart screenshot](../images/whitewhale-quickstart.png){: class="patch-image" }
 *uses: White Whale, ADSR, VCO, VCF, VCA MIX, AUDIO*
 
 [whitewhale-quickstart.vcv](../patches/whitewhale-quickstart.vcv){: class="patch-download-link" }
 
-- Connect White Whale to a grid
-- Patch White Whale's **TR 1** to ADSR's GATE input
-- Patch VCO's TRI output to VCF's IN
-- Patch VCF's LPF output to IN 1 of VCA MIX
-- Patch ADSR's ENV output to CV 1 of VCA MIX
-- Patch VCA MIX's MIX output to AUDIO's L input
-- Create a sequence of triggers on White Whale's first channel to open the envelope
-- Patch White Whale's **CV A** to VCF's CUT input and add modulation using the attenuator above the input (you won't hear changes yet)
-- Enter the **CV A** region on grid and use the **PARAM** knob to enter CV values for a few steps
-- Adjust VCF's CUTOFF and RES to hear **CV A**'s affect
-- Hold *ALT* on the grid and enter the **CV B** region on grid -- this will show put **CV B** into a [Scale Map](https://monome.org/docs/whitewhale/#cv-map), which quantizes **CV B**'s output to a musical note range
-- As the pattern plays, enter new notes for each step in the *Scale Map*
+- Connect White Whale to a grid (See [Making Connections](../../general/connections/#making-connections).)
+- Patch White Whale's **TR 1** to ADSR's GATE input.
+- Patch VCO's TRI output to VCF's IN.
+- Patch VCF's LPF output to IN 1 of VCA MIX.
+- Patch ADSR's ENV output to CV 1 of VCA MIX.
+- Patch VCA MIX's MIX output to AUDIO's L input.
+- Create a sequence of triggers on White Whale's first channel to open the envelope.
+- Patch White Whale's **CV A** to VCF's CUT input and add modulation using the attenuator above the input (you won't hear changes yet.)
+- Enter the **CV A** region on grid by pressing the fourth key in the top row. Now enter CV values for a few steps by holding a key on the bottom row and turning the **PARAM** knob.
+- Adjust VCF's CUTOFF and RES to hear **CV A**'s affect.
+- Hold *ALT* on the grid and enter the **CV B** region on grid -- this will show put **CV B** into a [Scale Map](https://monome.org/docs/whitewhale/#cv-map), which quantizes **CV B**'s output to a musical note range.
+- As the pattern plays, enter new notes for each step in the *Scale Map*.
 
 # Further reading
 
