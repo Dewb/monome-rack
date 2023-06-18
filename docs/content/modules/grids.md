@@ -40,5 +40,7 @@ Locking and holding keys can work together. For example, to adjust loop length i
 
 # Theme and protocol options
 
-...
+From the right-click menu, you can change the *Theme* of a individual grid instance to differentiate it from other grids in your patch, or just for personal style preference. The four themes are *loosely* based on the various eras of grid controller hardware. They don't have identical brightness curves and some themes may be more satisfying than others for certain modules and modes.
+
+There is also a menu option to change the protocol the grid is simulating. This might be useful if you have an older-protocol hardware grid and you want to practice with the same non-varibright behavior on a virtual grid, or if you are developing new module firmware and want to test against older, non-varibright grids. Most users should leave this set to *Mext (varibright)*.
 

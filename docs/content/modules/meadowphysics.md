@@ -5,6 +5,8 @@ Meadowphysics generates eight interrelated gate sequences. Without a grid connec
 
 [Read the introduction to the hardware module](http://monome.org/docs/meadowphysics/#introduction).
 
+The trigger outputs from Meadowphysics are suitable for firing off ADSR envelopes, pinging LPGs or filters, clocking or resetting sequencers, triggering drum modules or samplers, or whatever complex events you have in your patch. Meadowphysics was originally designed as a script-triggering companion to [Teletype](../teletype), so try using them together once you're familiar with both.
+
 # Main outputs
 
 Outputs 1-8 produce gates at 8 V according to the counters on rows 1-8 of the grid. Outputs follow the pulse length of the clock; the built-in clock has a 50% duty cycle.
@@ -21,10 +23,12 @@ VCV Rack will remember the current working memory in your patch, but the **PRESE
 
 # Quickstart
 
-This quickstart example uses Meadowphysics alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental). Note that Meadowphysics was originally designed as a script-triggering companion to [Teletype](../teletype), so this example won't showcase the full potential of the module. Once you become familiar with Teletype, we encourage you to revisit this module!
+This quickstart example uses Meadowphysics alongside modules from VCV's [Free collection](https://vcvrack.com/Free). 
 
-![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: style="width: 40em;"}
+![meadowphysics quickstart screenshot](../images/meadowphysics-quickstart.png){: class="patch-image" }
 *uses: Meadowphysics, VCO (2x), VCA MIX (2x), FADE, LFO, AUDIO*
+
+[meadowphysics-quickstart.vcv](../patches/meadowphysics-quickstart.vcv){: class="patch-download-link" }
 
 - Connect Meadowphysics to a grid
 - Patch the four outputs of each VCO to the four inputs of each ADSR
@@ -35,6 +39,14 @@ This quickstart example uses Meadowphysics alongside modules from VCV's [Fundame
 - To set a different count for each row, press any pad beyond the first column in that row
 - Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic)
 - Change the [rule](https://monome.org/docs/meadowphysics/#rules--ranges) for each range
+
+# Grid reference
+
+![meadowphysics grid legend screenshot](../images/meadowphysics-grid-legend.png){: class="patch-image" }
+![meadowphysics grid legend links screenshot](../images/meadowphysics-grid-legend-links.png){: class="patch-image" }
+![meadowphysics grid legend rules screenshot](../images/meadowphysics-grid-legend-rules.png){: class="patch-image" }
+
+[meadowphysics-grid-legends.vcv](../patches/meadowphysics-grid-legends.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
 
 # Further reading
 

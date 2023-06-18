@@ -50,53 +50,74 @@ Ansible **IN 1** and **IN 2** jacks accept trigger/gate inputs. Their function d
 
 # Quickstart
 
-All of these quickstart examples use Ansible alongside modules from VCV's [Fundamental collection](https://vcvrack.com/Fundamental).
+All of these quickstart examples use Ansible alongside modules from VCV's [Free collection](https://vcvrack.com/Free).
 
 **Kria**
 
-![ansible quickstart kria screenshot](../images/ansible-quickstart-kria.png){: style="width: 40em;"}
+![ansible kria quickstart screenshot](../images/ansible-kria-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
-- Connect Ansible to a grid
-- Patch **TR 1** to the GATE input of ADSR
-- Patch **CV 1** to the V/OCT input of VCO
-- Patch **CV 2** to the PWM input of VCO and add modulation using the attenuator
-- Patch ADSR's ENV and VCO's SQR to a VCA, then to AUDIO's L input
-- Press some pads in Kria's top row to create a rhythm on **TR 1**
-- Switch to the NOTE page on the grid and set notes for **CV 1**
-- Switch to Track 2 on the grid and set notes for **CV 2**'s modulation of the VCO's pulse width
-- Switch to the OCTAVE page on the grid and set different octaves for **CV 2**'s steps
+[ansible-kria-quickstart.vcv](../patches/ansible-kria-quickstart.vcv){: class="patch-download-link" }
+
+- Connect Ansible to a grid. (See [Making Connections](../../general/connections/#making-connections).)
+- The LED next to the **MODE** key should be *yellow-orange*. If it isn't, hold + release the **MODE** key to cycle through modes until Kria is active.
+- Patch **TR 1** to the GATE input of ADSR.
+- Patch **CV 1** to the V/OCT input of VCO.
+- Patch **CV 2** to the PWM input of VCO and add modulation using the attenuator.
+- Patch ADSR's ENV and VCO's SQR to a VCA, then to AUDIO's L input.
+- Press some pads in Kria's top row to create a rhythm on **TR 1**.
+- Switch to the NOTE page on the grid by pressing the 7th key on the bottom row, and set notes for **CV 1**.
+- Switch to Track 2 on the grid by pressing the 2nd key on the bottom row, and set notes for **CV 2**'s modulation of the VCO's pulse width.
+- Switch to the OCTAVE page on the grid by pressing the 8th key on the bottom row, and set different octaves for **CV 2**'s steps.
 
 **Meadowphysics**
 
-![ansible quickstart meadowphysics screenshot](../images/ansible-quickstart-meadowphysics.png){: style="width: 40em;"}
+![ansible meadowphysics quickstart screenshot](../images/ansible-meadowphysics-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR, VCA, VCO, AUDIO*
 
-- Connect Ansible to a grid (hold + release **KEY 2** to move from Kria to Meadowphysics)
-- <kbd>Ctrl-Shift-click</kbd> (<kbd>Cmd-Shift-click</kbd> on Mac) **KEY 2** on Ansible's faceplate to open the [config interface](https://monome.org/docs/ansible/meadowphysics/#config)
-- Set the *voice mode* to *2 CV/TR voices*
-- Patch **TR 1** to the GATE input of ADSR
-- Patch **CV 1** to the V/OCT input of VCO
-- Patch **CV 2** to the PWM input of VCO and add modulation using the attenuator
-- Patch ADSR's ENV and VCO's SQR to a VCA, then to AUDIO's L input
-- Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic) -- if you're using a virtual grid, <kbd>Ctrl-click</kbd> (<kbd>Cmd-click</kbd> on Mac) will hold a pressed pad until you release <kbd>Ctrl</kbd> / <kbd>Cmd</kbd>
+[ansible-meadowphysics-quickstart.vcv](../patches/ansible-meadowphysics-quickstart.vcv){: class="patch-download-link" }
+
+- Connect Ansible to a grid. (See [Making Connections](../../general/connections/#making-connections).)
+- Hold + release the **MODE** key to move from Kria to Meadowphysics. The LED next to the **MODE** key should be *white*.
+- <kbd>Ctrl-Shift-click</kbd> (<kbd>Cmd-Shift-click</kbd> on Mac) **KEY 2** on Ansible's faceplate to open the [config interface](https://monome.org/docs/ansible/meadowphysics/#config).
+- Set the *voice mode* to *2 CV/TR voices*.
+- Patch **TR 1** to the GATE input of ADSR.
+- Patch **CV 1** to the V/OCT input of VCO.
+- Patch **CV 2** to the PWM input of VCO and add modulation using the attenuator.
+- Patch ADSR's ENV and VCO's SQR to a VCA, then to AUDIO's L input.
+- Hold down any pad outside of column 1 in any row and press another pad in the same row to create a [count range](https://monome.org/docs/ansible/meadowphysics/#basic) -- if you're using a virtual grid, <kbd>Ctrl-click</kbd> (<kbd>Cmd-click</kbd> on Mac) will hold a pressed pad until you release <kbd>Ctrl</kbd> / <kbd>Cmd</kbd>.
 
 **Earthsea**
 
-![ansible quickstart earthsea screenshot](../images/ansible-quickstart-earthsea.png){: style="width: 40em;"}
+![ansible earthsea quickstart screenshot](../images/ansible-earthsea-quickstart.png){: class="patch-image" }
 *uses: Ansible, ADSR (2x), VCO (2x), VCA MIX, AUDIO*
 
-- Connect Ansible to a grid (hold + release **KEY 2** to move from Meadowphysics to Earthsea)
-- Hold the bottom-left pad on the grid to enter the [voice allocation interface](https://monome.org/docs/ansible/earthsea/#voice-allocation) and set the first two outputs to active on both *pattern* and *live*
-- Instantiate two ADSR's, two VCO's
-- Set one of the VCO's FREQ to 1/2 the FREQ of the other
-- Patch **TR 1** and **TR 2** to the GATE input of each ADSR
-- Patch **CV 1** and **CV 2** to the V/OCT input of each VCO
-- Patch one output of each VCO to the first two inputs of VCA MIX
-- Patch each ADSR's ENV output to the corresponding CV inputs of VCA MIX
-- Patch the VCA MIX's MIX output to AUDIO's L input
-- [Arm a pattern recorder](https://monome.org/docs/ansible/earthsea/#pattern-recording)
-- Record some chord shapes on the grid and play the pattern back
+[ansible-earthsea-quickstart.vcv](../patches/ansible-earthsea-quickstart.vcv){: class="patch-download-link" }
+
+- Connect Ansible to a grid. (See [Making Connections](../../general/connections/#making-connections).)
+- Hold + release the **MODE** key to move from Kria to Meadowphysics and then Earthsea.  The LED next to the **MODE** key should be *yellow-white*.
+- Hold the bottom-left pad on the grid to enter the [voice allocation interface](https://monome.org/docs/ansible/earthsea/#voice-allocation) and set the first two outputs to active on both *pattern* and *live*.
+- Instantiate two ADSR and two VCO modules.
+- Set one of the VCO's FREQ to 1/2 the FREQ of the other.
+- Patch **TR 1** and **TR 2** to the GATE input of each ADSR.
+- Patch **CV 1** and **CV 2** to the V/OCT input of each VCO.
+- Patch one output of each VCO to the first two inputs of VCA MIX.
+- Patch each ADSR's ENV output to the corresponding CV inputs of VCA MIX.
+- Patch the VCA MIX's MIX output to AUDIO's L input.
+- [Arm a pattern recorder](https://monome.org/docs/ansible/earthsea/#pattern-recording) by pressing the key in the third row of the leftmost column.
+- Record some chord shapes on the grid. Hit the pattern record arm key again to stop recording and play the pattern back.
+
+# Grid reference
+
+When using Kria, the bottom row of the grid controls the track/mode/view, and is consistent across modes (with a couple of exceptions.) The rest of the grid contents depend on the mode you're in. See [the hardware documentation](https://monome.org/docs/ansible/kria/) for more details.
+
+![ansible kria grid legend screenshot](../images/ansible-kria-grid-legend.png){: class="patch-image" }
+
+[ansible-kria-grid-legend.vcv](../patches/ansible-kria-grid-legend.vcv){: class="patch-download-link" } *(requires [Stoermelder Glue](https://library.vcvrack.com/Stoermelder-P1))*
+
+For Meadowphysics, see the [grid legends for standalone Meadowphysics](../meadowphysics/#grid-reference).
+
+For Earthsea, see the [grid legend for standalone Earthsea](../earthsea/#grid-reference). Ansible Earthsea is identical except the last two functions, Slew and Portamento, are replaced by the [Runes](https://monome.org/docs/ansible/earthsea/#runes) and [Voice Allocation](https://monome.org/docs/ansible/earthsea/#voice-allocation) screens.
 
 # Further reading
 
