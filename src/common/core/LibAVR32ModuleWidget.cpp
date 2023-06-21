@@ -109,6 +109,8 @@ struct FirmwareSubmenuItem : MenuItem
 
 LibAVR32ModuleWidget::LibAVR32ModuleWidget()
 {
+    // make sure serialosc is fully initialized before the user opens the right-click menu
+    SerialOscInterface::get();
 }
 
 void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
