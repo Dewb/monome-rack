@@ -66,7 +66,7 @@ struct WhiteWhaleModule : LibAVR32Module
         setDeviceConnectionParam(USB_PARAM);
     }
 
-    void processInputs(const ProcessArgs& args)
+    void processInputs(const ProcessArgs& args) override
     {
         // Convert clock input jack to GPIO signals for normal connection and value
         bool clockNormal = !inputs[CLOCK_INPUT].isConnected();
@@ -96,7 +96,7 @@ struct WhiteWhaleModule : LibAVR32Module
         firmware.setADC(1, voltsToAdc(params[PARAM_PARAM].getValue()));
     }
 
-    void processOutputs(const ProcessArgs& args)
+    void processOutputs(const ProcessArgs& args) override
     {
         float cv1 = dacToVolts(firmware.getDAC(0));
         float cv2 = dacToVolts(firmware.getDAC(1));
