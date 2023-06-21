@@ -186,6 +186,10 @@ void VirtualGridWidget::onHoverKey(const rack::Widget::HoverKeyEvent& e)
         clearHeldKeys();
         clearLockedKeys();
     }
+    else
+    {
+        rack::app::ModuleWidget::onHoverKey(e);
+    }
 }
 
 void VirtualGridWidget::onLeave(const rack::Widget::LeaveEvent& e)
