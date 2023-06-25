@@ -11,4 +11,4 @@ these software ports in VCV Rack; for further study consulting the [original har
 
 Read the [credits](../credits).
 
-Get the plugin from the [Releases](https://github.com/Dewb/monome-rack/releases) page or (eventually) the [VCV Rack Library](https://library.vcvrack.com/).
+Get the latest version of the plugin from the [VCV Rack Library](https://library.vcvrack.com/). Older versions and changelogs are available on the [GitHub Releases page](https://github.com/Dewb/monome-rack/releases).
