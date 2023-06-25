@@ -4,6 +4,8 @@ The original hardware and firmware projects were initiated by [@tehn](https://gi
 
 The VCVRack-specific code is a separate community effort; the above parties should not be expected to support or warranty these ports or take any blame for its imperfections. [@dewb](https://github.com/Dewb) wrote the virtual grid module, the hardware simulation layer, and the VCV module wrappers and software UX for white whale, meadowphysics, earthsea, and teletype. Advice and encouragement from the [lines community](https://llllllll.co) and the adjacent Teletype Study Group Discord was instrumental.
 
+[@dndrks](https://github.com/dndrks) contributed a wealth of material to the documentation site, including the quick-start patches.
+
 ## License
 
 The firmware code for the hardware modules are licensed under the version 2 of the GPL. Panel graphics [incorporate elements](https://github.com/monome/teletype-hardware/blob/master/teletype-panel-graphic.pdf) of hardware panel PDFs licensed CC-BY-SA 3.0. 
