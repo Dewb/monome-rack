@@ -1,4 +1,5 @@
 #include "LibAVR32Module.hpp"
+#include "SerialOscInterface.hpp"
 #include "base64.h"
 #include <string.h>
 
@@ -10,6 +11,10 @@ LibAVR32Module::LibAVR32Module(std::string firmwareName)
 , theme(GridTheme::Yellow)
 {
     gridConnection = nullptr;
+
+    // make sure serialosc is fully initialized by the time
+    // the user needs to interact with it
+    SerialOscInterface::get();
 
     dacOffsetVolts = 0.0007;
     triggerHighThreshold = 2.21;
