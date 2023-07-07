@@ -67,6 +67,9 @@ firmware-build: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.r
 
 firmware-clean:
 	rm -rfv firmware/build
+	rm -fv res/firmware/*.dll
+	rm -fv res/firmware/*.dylib
+	rm -fv res/firmware/*.so
 
 DISTRIBUTABLES += $(wildcard res)
 DISTRIBUTABLES += $(wildcard LICENSE*)
