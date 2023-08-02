@@ -45,7 +45,7 @@ jobs:
       options: --user root
     strategy:
       matrix:
-        platform: [win-x64, linux-x64]
+        platform: [win-x64, lin-x64]
     steps:
       - uses: actions/checkout@v3
         with:
