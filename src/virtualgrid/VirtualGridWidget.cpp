@@ -3,6 +3,7 @@
 #include "VirtualGridKey.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridTheme.hpp"
+#include "GridConnectionMenu.hpp"
 
 using namespace rack;
 
@@ -217,6 +218,8 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
     menu->addChild(createMenuItem("Save grid screenshot", "", [this]() {
         screenshotModulePNG(this, "grid-screenshot.png");
     }));
+
+    appendDeviceConnectionMenu(menu, grid->mirrorModeConsumer, &grid->audioThreadActions);
 
     menu->addChild(new MenuSeparator());
     menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &grid->theme));

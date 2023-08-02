@@ -144,6 +144,11 @@ void LibAVR32Module::encDeltaEvent(int n, int d)
     }
 }
 
+std::string LibAVR32Module::gridGetCurrentDeviceId()
+{
+    return currentConnectedDeviceId;
+}
+
 std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
 {
     if (owned && !connectionOwned)
@@ -152,6 +157,11 @@ std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
     }
 
     return lastConnectedDeviceId;
+}
+
+Grid* LibAVR32Module::gridGetDevice()
+{
+    return gridConnection;
 }
 
 void LibAVR32Module::userReacquireGrid()

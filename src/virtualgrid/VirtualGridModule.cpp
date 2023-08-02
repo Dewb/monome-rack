@@ -4,6 +4,93 @@
 #include <iomanip>
 #include <sstream>
 
+struct MirrorModeGridConsumer : GridConsumer
+{
+    std::string lastConnectedDeviceId;
+    std::string currentConnectedDeviceId;
+    bool connectionOwned;
+
+    MirrorModeGridConsumer(VirtualGridModule* module)
+        : module(module)
+    {
+    }
+
+    ~MirrorModeGridConsumer()
+    {
+    }
+
+    void gridConnected(Grid* newConnection) override
+    {
+        if (newConnection == module)
+        { // don't mirror self
+            return;
+        }
+
+        gridConnection = newConnection;
+        if (gridConnection)
+        {
+            std::string id = gridConnection->getDevice().id;
+            lastConnectedDeviceId = id;
+            currentConnectedDeviceId = id;
+            connectionOwned = true;
+        }
+    }
+
+    void gridDisconnected(bool ownerChanged) override
+    {
+        gridConnection = nullptr;
+        currentConnectedDeviceId = "";
+        if (ownerChanged)
+        {
+            connectionOwned = false;
+        }
+    }
+
+    void gridButtonEvent(int x, int y, bool state) override
+    {
+        if (module)
+        {
+            int w = module->device.width;
+            auto param = module->getParamQuantity((x + y * w) * 2);
+            if (param)
+            {
+                module->audioThreadActions.push([param, state]()
+                    { param->setImmediateValue(state ? 1 : 0); });
+            }
+        }
+    }
+
+    void encDeltaEvent(int n, int d) override
+    {
+
+    }
+
+    std::string gridGetLastDeviceId(bool owned) override
+    {
+        if (owned && !connectionOwned)
+        {
+            return "";
+        }
+
+        return lastConnectedDeviceId;
+    }
+
+    std::string gridGetCurrentDeviceId() override
+    {
+        return currentConnectedDeviceId;
+    }
+
+    Grid* gridGetDevice() override
+    {
+        return gridConnection;
+    }
+
+protected:
+
+    Grid* gridConnection;
+    VirtualGridModule* module;
+};
+
 std::string formatVirtualDeviceId(int64_t id)
 {
     std::ostringstream ss;
@@ -52,11 +139,14 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 
     theme = GridTheme::Yellow;
 
+    mirrorModeConsumer = new MirrorModeGridConsumer(this);
+
     clearAll();
 }
 
 VirtualGridModule::~VirtualGridModule()
 {
+    delete mirrorModeConsumer;
 }
 
 void VirtualGridModule::onAdd()
@@ -66,6 +156,11 @@ void VirtualGridModule::onAdd()
 
 void VirtualGridModule::process(const ProcessArgs& args)
 {
+    while (audioThreadActions.size())
+    {
+        audioThreadActions.shift()();
+    }
+
     std::vector<std::tuple<int, int>> presses;
     std::vector<std::tuple<int, int>> releases;
 
@@ -138,6 +233,15 @@ const MonomeDevice& VirtualGridModule::getDevice()
 
 void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
 {
+    if (mirrorModeConsumer)
+    {
+        auto mirroredGrid = mirrorModeConsumer->gridGetDevice();
+        if (mirroredGrid)
+        {
+            mirroredGrid->updateRow(x_offset, y, bitfield);
+        }
+    }
+
     uint8_t* ptr = ledBuffer + y * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {
@@ -147,6 +251,15 @@ void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
 
 void VirtualGridModule::updateQuadrant(int x_offset, int y_offset, uint8_t* leds)
 {
+    if (mirrorModeConsumer)
+    {
+        auto mirroredGrid = mirrorModeConsumer->gridGetDevice();
+        if (mirroredGrid)
+        {
+            mirroredGrid->updateQuadrant(x_offset, y_offset, leds);
+        }
+    }
+
     uint8_t* ptr = ledBuffer + y_offset * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {

@@ -2,7 +2,7 @@
 #include "GridConnection.hpp"
 #include "VirtualGridTheme.hpp"
 #include "rack.hpp"
-#include <queue>
+#include "ActionQueue.hpp"
 
 #pragma once
 
@@ -52,7 +52,9 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void gridDisconnected(bool ownerChanged) override;
     void gridButtonEvent(int x, int y, bool state) override;
     void encDeltaEvent(int n, int d) override;
+    std::string gridGetCurrentDeviceId() override;
     std::string gridGetLastDeviceId(bool owned) override;
+    Grid* gridGetDevice() override;
 
     void userReacquireGrid();
     void userToggleGridConnection(Grid* grid);
@@ -91,8 +93,6 @@ protected:
 
     // Thread-safe for single-producer, single-consumer
     friend struct TeletypeSceneIO;
-    typedef std::function<void(void)> Action;
-    typedef rack::dsp::RingBuffer<Action, 4> ActionQueue;
     ActionQueue audioThreadActions;
 };
 

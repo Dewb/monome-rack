@@ -2,6 +2,7 @@
 #include "GridConnection.hpp"
 #include "VirtualGridTheme.hpp"
 #include "rack.hpp"
+#include "ActionQueue.hpp"
 
 #define GRID_MAX_SIZE 256
 
@@ -30,6 +31,9 @@ struct VirtualGridModule : rack::Module, Grid
     void updateQuadrant(int x_offset, int y_offset, uint8_t* leds) override;
     void updateRing(int n, uint8_t leds[64]) override {};
     void clearAll() override;
+
+    GridConsumer* mirrorModeConsumer;
+    ActionQueue audioThreadActions;
 };
 
 template <unsigned width, unsigned height>
