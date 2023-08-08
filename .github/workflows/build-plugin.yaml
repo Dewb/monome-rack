@@ -10,7 +10,7 @@ on:
       - '.github/workflows/deploy-pages.yaml'
 
 env:
-  rack-sdk-version: 2.3.0
+  rack-sdk-version: 2.4.0
   rack-plugin-toolchain-dir: /home/build/rack-plugin-toolchain
 
 defaults:
