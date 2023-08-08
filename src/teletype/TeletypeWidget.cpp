@@ -12,27 +12,21 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     box.size = Vec(15 * 18, 380);
 
     {
-        auto panel = new SvgPanel();
-        panel->setBackground(APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/teletype.svg")));
+        auto panel = new ThemedSvgPanel();
+        panel->setBackground(
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/teletype.svg")),
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/teletype-dark.svg")));
         panel->box.size = box.size;
         addChild(panel);
     }
-    
-    // addChild(createScrew<ScrewSilver>(Vec(15, 0)));
-    // addChild(createScrew<ScrewSilver>(Vec(15, 365)));
-    // addChild(createScrew<ScrewSilver>(Vec(239, 0)));
-    // addChild(createScrew<ScrewSilver>(Vec(239, 365)));
 
-    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
-    addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
-    addChild(createWidget<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
-    addChild(createWidget<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+    addChild(createWidget<ThemedScrew>(Vec(RACK_GRID_WIDTH, 0)));
+    addChild(createWidget<ThemedScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, 0)));
+    addChild(createWidget<ThemedScrew>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
+    addChild(createWidget<ThemedScrew>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
     addParam(createParam<USBAJack>(Vec(7, 333), module, TeletypeModule::USB_PARAM));
     addParam(createParam<TL1105>(Vec(62, 337), module, TeletypeModule::BUTTON_PARAM));
-
-    // addChild(createScrew<ScrewSilver>(Vec(11, 312)));
-    // addChild(createScrew<ScrewSilver>(Vec(244, 312)));
 
     screen = new TeletypeScreenWidget(module);
     screen->box.pos = Vec(30, 200);
@@ -41,25 +35,25 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 
     addParam(createParam<SifamTPN111GrayBlackStripe>(Vec(211, 47.5), module, TeletypeModule::PARAM_PARAM));
 
-    addInput(createInput<PJ301MPort>(Vec(11, 38.5), module, TeletypeModule::TRIG1_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(50.5, 38.5), module, TeletypeModule::TRIG3_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(90, 38.5), module, TeletypeModule::TRIG5_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(130, 38.5), module, TeletypeModule::TRIG7_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(30, 77.5), module, TeletypeModule::TRIG2_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(69.5, 77.5), module, TeletypeModule::TRIG4_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(109, 77.5), module, TeletypeModule::TRIG6_INPUT));
-    addInput(createInput<PJ301MPort>(Vec(148.5, 77.5), module, TeletypeModule::TRIG8_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(11, 38.5), module, TeletypeModule::TRIG1_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(50.5, 38.5), module, TeletypeModule::TRIG3_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(90, 38.5), module, TeletypeModule::TRIG5_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(130, 38.5), module, TeletypeModule::TRIG7_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(30, 77.5), module, TeletypeModule::TRIG2_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(69.5, 77.5), module, TeletypeModule::TRIG4_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(109, 77.5), module, TeletypeModule::TRIG6_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(148.5, 77.5), module, TeletypeModule::TRIG8_INPUT));
 
-    addInput(createInput<PJ301MPort>(Vec(169, 38.5), module, TeletypeModule::IN_INPUT));
+    addInput(createInput<ThemedPJ301MPort>(Vec(169, 38.5), module, TeletypeModule::IN_INPUT));
 
-    addOutput(createOutput<PJ301MPort>(Vec(90, 117.5), module, TeletypeModule::TR1_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(129.5, 117.5), module, TeletypeModule::TR2_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(169, 117.5), module, TeletypeModule::TR3_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(208.5, 117.5), module, TeletypeModule::TR4_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(109, 157.5), module, TeletypeModule::CV1_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(148.5, 157.5), module, TeletypeModule::CV2_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(188, 157.5), module, TeletypeModule::CV3_OUTPUT));
-    addOutput(createOutput<PJ301MPort>(Vec(227.5, 157.5), module, TeletypeModule::CV4_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(90, 117.5), module, TeletypeModule::TR1_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(129.5, 117.5), module, TeletypeModule::TR2_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(169, 117.5), module, TeletypeModule::TR3_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(208.5, 117.5), module, TeletypeModule::TR4_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(109, 157.5), module, TeletypeModule::CV1_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(148.5, 157.5), module, TeletypeModule::CV2_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(188, 157.5), module, TeletypeModule::CV3_OUTPUT));
+    addOutput(createOutput<ThemedPJ301MPort>(Vec(227.5, 157.5), module, TeletypeModule::CV4_OUTPUT));
 
     addChild(createLight<MediumLight<YellowLight>>(Vec(117, 112), module, TeletypeModule::TR1_LIGHT));
     addChild(createLight<MediumLight<YellowLight>>(Vec(156.5, 112), module, TeletypeModule::TR2_LIGHT));
