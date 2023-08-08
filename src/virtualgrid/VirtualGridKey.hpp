@@ -60,14 +60,9 @@ struct VirtualGridKey : rack::app::ParamWidget
             &color2
         );
 
-        // if (isLocked())
-        // {
-        //     // draw highlight rect around key
-        //     nvgBeginPath(vg);
-        //     nvgRoundedRect(vg, 0, pushAmount, rect.x + 2 * margin, rect.y + margin, 5.3);
-        //     nvgFillColor(vg, nvgRGB(190, 180, 0));
-        //     nvgFill(vg);
-        // }
+        NVGcolor edgeColor = !rack::settings::preferDarkPanels ? nvgRGB(180, 180, 180) : nvgRGB(96, 96, 94);
+        NVGcolor shadowColor = !rack::settings::preferDarkPanels ? nvgRGB(140, 140, 140) : nvgRGB(60, 60, 50);
+        NVGcolor faceColor = !rack::settings::preferDarkPanels ? nvgRGB(58, 58, 58) : nvgRGB(20, 20, 10);
 
         if (!pushed)
         {
@@ -75,7 +70,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
                 nvgRoundedRect(vg, x - 0.3, y - 0.3, rect.x + 0.6, rect.y + 0.3, cornerRadius);
-                nvgFillColor(vg, val > 0 ? color1 : nvgRGB(180, 180, 180));
+                nvgFillColor(vg, val > 0 ? color1 : edgeColor);
                 nvgFill(vg);
             }
 
@@ -83,7 +78,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             if (layer == 0) {
                 nvgBeginPath(vg);
                 nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 1.2, innerCornerRadius);
-                nvgFillColor(vg, nvgRGB(160, 160, 160));
+                nvgFillColor(vg, shadowColor);
                 nvgFill(vg);
             }
         } else {
@@ -91,14 +86,14 @@ struct VirtualGridKey : rack::app::ParamWidget
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
                 nvgRoundedRect(vg, x - 0.3, y - 0.3 + pushAmount, rect.x + 0.6, rect.y - pushAmount + 0.3, cornerRadius);
-                nvgFillColor(vg, val > 0 ? color1 : nvgRGB(180, 180, 180));
+                nvgFillColor(vg, val > 0 ? color1 : edgeColor);
                 nvgFill(vg);
             }
             // shadow
             if (layer == 0) {
                 nvgBeginPath(vg);
                 nvgRoundedRect(vg, x, y + pushAmount, rect.x, rect.y - pushAmount + 0.8, innerCornerRadius);
-                nvgFillColor(vg, nvgRGB(160, 160, 160));
+                nvgFillColor(vg, shadowColor);
                 nvgFill(vg);
             }
         }
@@ -108,7 +103,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             if ((val > 0 && layer == 1) || (val == 0 && layer == 0)) {
                 nvgBeginPath(vg);
                 nvgRoundedRect(vg, x, y + rect.y - (pushAmount + 10), rect.x, pushAmount + 10, innerCornerRadius);
-                nvgFillColor(vg, val > 0 ? color2 : nvgRGB(58, 58, 58));
+                nvgFillColor(vg, val > 0 ? color2 : faceColor);
                 nvgFill(vg);
             }
         }
@@ -138,39 +133,8 @@ struct VirtualGridKey : rack::app::ParamWidget
                 levelToGradient(theme ? *theme : GridTheme::Yellow, 14, &lockColor, nullptr);
             }
 
-            // drawLock(args, x, y + rect.y/2, rect.x/2, rect.y/2, lockColor);
             drawDot(args, x + rect.x / 4, y + 3 * rect.y / 4, rect.x / 4 - 1.5 * margin, lockColor);
-            // drawPin(args, x + 1.5 * margin, y + rect.y * 0.6, rect.x * 0.4 - 1.5 * margin, rect.y * 0.4 - 1.5 * margin, lockColor);
         }
-    }
-
-    void drawPin(const DrawArgs& args, float x, float y, float w, float h, NVGcolor& color)
-    {
-        auto vg = args.vg;
-
-        float d = w / (2 / 1.41421356 + 1);
-        float s = w - d;
-
-        nvgBeginPath(vg);
-        nvgMoveTo(vg, x, y + w);
-        nvgLineTo(vg, x + s, y + d);
-        nvgStrokeColor(vg, color);
-        nvgStrokeWidth(vg, h * 0.12);
-        nvgLineCap(vg, NVG_ROUND);
-        nvgStroke(vg);
-
-        nvgBeginPath(vg);
-        nvgMoveTo(vg, x, y + d);
-        nvgLineTo(vg, x + s, y + w);
-
-        nvgLineTo(vg, x + s, y + 2 * d);
-        nvgLineTo(vg, x + w, y + d);
-        nvgLineTo(vg, x + s, y);
-        nvgLineTo(vg, x + s - d, y + d);
-        nvgLineTo(vg, x, y + d);
-        nvgFillColor(vg, color);
-        nvgLineJoin(vg, NVG_ROUND);
-        nvgFill(vg);
     }
 
     void drawDot(const DrawArgs& args, float cx, float cy, float r, NVGcolor& color)
@@ -181,31 +145,6 @@ struct VirtualGridKey : rack::app::ParamWidget
         nvgCircle(vg, cx, cy, r);
         nvgFillColor(vg, color);
         nvgFill(vg);
-    }
-
-    void drawLock(const DrawArgs& args, float x, float y, float w, float h, NVGcolor& color)
-    {
-        auto vg = args.vg;
-
-        float cx = x + w / 2;
-        float cy = y + h / 2;
-        float bend = y + h / 2.3;
-        float r = w / 6.4;
-
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + w / 4, cy, w / 2, h / 3, 1.0);
-        nvgFillColor(vg, color);
-        nvgFill(vg);
-
-        nvgBeginPath(vg);
-        nvgMoveTo(vg, cx + r, cy + 2.0);
-        nvgLineTo(vg, cx + r, bend);
-        nvgArcTo(vg, cx + r, bend - r, cx, bend - r, r);
-        nvgArcTo(vg, cx - r, bend - r, cx - r, bend, r);
-        nvgLineTo(vg, cx - r, cy + 2.0);
-        nvgStrokeColor(vg, color);
-        nvgStrokeWidth(vg, h * 0.09);
-        nvgStroke(vg);
     }
 
     rack::engine::ParamQuantity* getSecondaryParamQuantity()
@@ -358,5 +297,5 @@ struct VirtualGridKey : rack::app::ParamWidget
     }
 
 protected:
-        bool _locked;
+    bool _locked;
 };

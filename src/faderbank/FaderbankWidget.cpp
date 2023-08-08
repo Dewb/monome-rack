@@ -35,7 +35,7 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 
     for (int i = 0; i < NUM_FADERS; i++)
     {
-        addOutput(createOutput<PJ301MPort>(Vec(26 + 43 * i, 26), module, i));
+        addOutput(createOutput<ThemedPJ301MPort>(Vec(26 + 43 * i, 26), module, i));
         addParam(createParam<FaderbankSliderYellow>(Vec(23 + 43 * i, 66), module, i));
     }
 }
