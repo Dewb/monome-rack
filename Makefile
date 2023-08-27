@@ -62,7 +62,8 @@ firmware-build: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.r
 	cd firmware && $(MAKE) -f whitewhale.mk
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
-	cd firmware && $(MAKE) -f teletype.mk
+	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype4
+	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype5
 	cd firmware && $(MAKE) -f ansible.mk
 
 firmware-clean:

@@ -1,5 +1,5 @@
 #ifndef MOCK_API_SKIP_TYPES
-#include "../teletype/src/serializer.h"
+#include "../teletype4/src/serializer.h"
 #include <stdint.h>
 #include <stdbool.h>
 #endif

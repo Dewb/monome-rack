@@ -31,6 +31,33 @@ struct ReloadFirmwareItem : rack::ui::MenuItem
     }
 };
 
+struct SwitchFirmwareItem : rack::ui::MenuItem
+{
+    LibAVR32Module* module;
+
+    ui::Menu* createChildMenu() override
+    {
+        ui::Menu* menu = new ui::Menu;
+
+        // TODO: populate this from looking in the firmware folder for binaries starting with the module basename
+        std::string names[] = { "teletype4", "teletype5" };
+
+        for (int i = 0; i < 2; i++)
+        {
+            menu->addChild(createCheckMenuItem(
+                names[i],
+                "",
+                [=]()
+                { return module->firmware.getLoadedName() == names[i]; },
+                [=]()
+                { module->requestReloadFirmware(false, names[i]); }
+            ));
+        }
+
+        return menu;
+    }
+};
+
 struct ioRateItem : rack::ui::MenuItem
 {
     int* target = nullptr;
@@ -90,6 +117,14 @@ struct FirmwareSubmenuItem : MenuItem
             { screenshotModulePNG(widget, widget->model->slug + "-screenshot.png"); }));
 
         menu->addChild(new MenuSeparator());
+
+        // TODO: enable for other modules
+        if (m->firmwarePrefix == "teletype") {
+            menu->addChild(construct<SwitchFirmwareItem>(
+                &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
+                &SwitchFirmwareItem::module, m
+            ));
+        }
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";

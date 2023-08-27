@@ -54,7 +54,7 @@ struct AnsibleModule : LibAVR32Module
     rack::dsp::SchmittTrigger inputTriggers[2];
 
     AnsibleModule()
-        : LibAVR32Module("ansible")
+        : LibAVR32Module("ansible", "ansible")
     {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configButton(KEY1_PARAM, "KEY 1");
