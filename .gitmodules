@@ -3,7 +3,7 @@
 	url = https://github.com/Dewb/whitewhale
 	branch = vcvrack_pr
 [submodule "firmware/teletype"]
-	path = firmware/teletype
+	path = firmware/teletype4
 	url = https://github.com/Dewb/teletype
 	branch = vcvrack-4.0.0
 [submodule "firmware/meadowphysics"]
@@ -17,3 +17,7 @@
 [submodule "firmware/ansible"]
 	path = firmware/ansible
 	url = https://github.com/Dewb/ansible
+[submodule "firmware/firmware/teletype-5"]
+	path = firmware/teletype5
+	url = https://github.com/Dewb/teletype
+	branch = vcvrack-5

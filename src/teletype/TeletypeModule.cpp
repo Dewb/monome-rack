@@ -32,7 +32,7 @@ struct TTParamQuantity : rack::engine::ParamQuantity
 };
 
 TeletypeModule::TeletypeModule()
-: LibAVR32Module("teletype")
+: LibAVR32Module("teletype", "teletype4")
 , _iiDevice(this)
 , screenBuffer{}
 {

@@ -230,16 +230,17 @@ FirmwareManager::~FirmwareManager()
     delete impl;
 }
 
-bool FirmwareManager::load(std::string modulePath)
+bool FirmwareManager::load(std::string firmwareName)
 {
     delete impl;
     impl = new FirmwareManagerImpl();
-    if (!impl->load(modulePath))
+    if (!impl->load(firmwareName))
     {
         impl = nullptr;
-        WARN("Could not load firmware %s", modulePath.c_str());
+        WARN("Could not load firmware %s", firmwareName.c_str());
         return false;
     }
+    loadedName = firmwareName;
     return true;
 }
 

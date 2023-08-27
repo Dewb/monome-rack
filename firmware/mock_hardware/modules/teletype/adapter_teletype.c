@@ -1,5 +1,6 @@
 #include "mock_hardware_api.h"
 #include "mock_hardware_api_private.h"
+#include "flashc.h"
 
 #include "module/edit_mode.h"
 #include "module/flash.h"
@@ -10,6 +11,16 @@
 #include "src/serialize.h"
 #include "src/teletype_io.h"
 #include "types.h"
+
+extern nvram_data_t f;
+extern scene_state_t scene_state;
+
+#ifdef DECLARE_NVRAM
+DECLARE_NVRAM(&f, sizeof(nvram_data_t))
+#endif
+#ifdef DECLARE_VRAM
+DECLARE_VRAM(&scene_state, sizeof(scene_state))
+#endif
 
 void clock_null(uint8_t phase) { }
 typedef void (*clock_pulse_t)(uint8_t phase);

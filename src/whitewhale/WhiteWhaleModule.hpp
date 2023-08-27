@@ -47,7 +47,7 @@ struct WhiteWhaleModule : LibAVR32Module
     rack::dsp::SchmittTrigger clockTrigger;
 
     WhiteWhaleModule()
-        : LibAVR32Module("whitewhale")
+        : LibAVR32Module("whitewhale", "whitewhale")
     {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configButton(BUTTON_PARAM, "PRESET");

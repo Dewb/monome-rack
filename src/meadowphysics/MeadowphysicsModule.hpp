@@ -50,7 +50,7 @@ struct MeadowphysicsModule : LibAVR32Module
     rack::dsp::SchmittTrigger clockTrigger;
 
     MeadowphysicsModule()
-        : LibAVR32Module("meadowphysics")
+        : LibAVR32Module("meadowphysics", "meadowphysics")
     {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
         configButton(BUTTON_PARAM, "PRESET");
