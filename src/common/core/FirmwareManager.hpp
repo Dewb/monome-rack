@@ -16,6 +16,8 @@ struct FirmwareManager
     FirmwareManager();
     ~FirmwareManager();
 
+    const std::string getLibExtension();
+
     bool load(std::string firmwareName);
     void unload();
 

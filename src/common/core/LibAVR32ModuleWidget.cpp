@@ -5,6 +5,10 @@
 #include "SerialOscInterface.hpp"
 #include "Screenshot.hpp"
 
+#include <ghc/filesystem.hpp>
+
+namespace fs = ghc::filesystem;
+
 using namespace rack;
 
 struct ConnectGridItem : rack::ui::MenuItem
@@ -37,15 +41,27 @@ struct SwitchFirmwareItem : rack::ui::MenuItem
 
     ui::Menu* createChildMenu() override
     {
+        // duplicate filenames that may be left in res folder by prior versions
+        std::vector<std::string> ignoreList = {"teletype", "ansible 2", "earthsea 2", "meadowphysics 2", "teletype 2", "whitewhale 2"};
+        std::vector<std::string> fwNames = {};
+
+        const fs::path fwPath{rack::asset::plugin(pluginInstance, "res/firmware")};
+        for (auto const& file : fs::directory_iterator{fwPath})
+        {
+            auto name = file.path().stem().string();
+            auto extension = file.path().extension().string();
+            if (extension == module->firmware.getLibExtension() &&
+                name.substr(0, module->firmwarePrefix.size()) == module->firmwarePrefix &&
+                std::find(std::begin(ignoreList), std::end(ignoreList), name) == std::end(ignoreList))
+            {
+                fwNames.push_back(name);
+            }
+        }
+
         ui::Menu* menu = new ui::Menu;
 
-        // TODO: populate this from looking in the firmware folder for binaries starting with the module basename
-        std::string tt_names[] = { "teletype4", "teletype5" };
-        std::string ww_names[] = { "whitewhale", "whitewhale-kria" };
-
-        for (int i = 0; i < 2; i++)
+        for (auto const& name : fwNames)
         {
-            std::string name = module->firmwarePrefix == "teletype" ? tt_names[i] : ww_names[i];
             menu->addChild(createCheckMenuItem(
                 name,
                 "",
@@ -120,13 +136,10 @@ struct FirmwareSubmenuItem : MenuItem
 
         menu->addChild(new MenuSeparator());
 
-        // TODO: enable for other modules
-        if (m->firmwarePrefix == "teletype" || m->firmwarePrefix == "whitewhale") {
-            menu->addChild(construct<SwitchFirmwareItem>(
-                &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
-                &SwitchFirmwareItem::module, m
-            ));
-        }
+        menu->addChild(construct<SwitchFirmwareItem>(
+            &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
+            &SwitchFirmwareItem::module, m
+        ));
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";
