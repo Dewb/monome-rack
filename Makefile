@@ -59,7 +59,8 @@ $(ragel):
 firmware-build: export PATH := $(PWD)/dep/bin:$(PATH)
 firmware-build: export RACK_DIR := $(realpath $(RACK_DIR))
 firmware-build: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
-	cd firmware && $(MAKE) -f whitewhale.mk
+	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale
+	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale-kria
 	cd firmware && $(MAKE) -f meadowphysics.mk
 	cd firmware && $(MAKE) -f earthsea.mk
 	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype4

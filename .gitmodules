@@ -17,7 +17,12 @@
 [submodule "firmware/ansible"]
 	path = firmware/ansible
 	url = https://github.com/Dewb/ansible
+	branch = vcvrack
 [submodule "firmware/firmware/teletype-5"]
 	path = firmware/teletype5
 	url = https://github.com/Dewb/teletype
 	branch = vcvrack-5
+[submodule "firmware/whitewhale-kria"]
+	path = firmware/whitewhale-kria
+	url = https://github.com/Dewb/kria
+	branch = vcvrack

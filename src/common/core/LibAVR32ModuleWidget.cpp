@@ -40,17 +40,19 @@ struct SwitchFirmwareItem : rack::ui::MenuItem
         ui::Menu* menu = new ui::Menu;
 
         // TODO: populate this from looking in the firmware folder for binaries starting with the module basename
-        std::string names[] = { "teletype4", "teletype5" };
+        std::string tt_names[] = { "teletype4", "teletype5" };
+        std::string ww_names[] = { "whitewhale", "whitewhale-kria" };
 
         for (int i = 0; i < 2; i++)
         {
+            std::string name = module->firmwarePrefix == "teletype" ? tt_names[i] : ww_names[i];
             menu->addChild(createCheckMenuItem(
-                names[i],
+                name,
                 "",
                 [=]()
-                { return module->firmware.getLoadedName() == names[i]; },
+                { return module->firmware.getLoadedName() == name; },
                 [=]()
-                { module->requestReloadFirmware(false, names[i]); }
+                { module->requestReloadFirmware(false, name); }
             ));
         }
 
@@ -119,7 +121,7 @@ struct FirmwareSubmenuItem : MenuItem
         menu->addChild(new MenuSeparator());
 
         // TODO: enable for other modules
-        if (m->firmwarePrefix == "teletype") {
+        if (m->firmwarePrefix == "teletype" || m->firmwarePrefix == "whitewhale") {
             menu->addChild(construct<SwitchFirmwareItem>(
                 &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
                 &SwitchFirmwareItem::module, m
