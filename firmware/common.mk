@@ -2,6 +2,7 @@ SHELL := /bin/bash -O extglob
 RACK_DIR ?= ../../..
 
 TARGET_DIR := ../res/firmware/
+BUILD_DIR := ../build/firmware/$(TARGET_NAME)
 
 FLAGS += \
 	-DDEBUG \
@@ -33,7 +34,7 @@ ifeq ($(ARCH_WIN), 1)
 	TARGET = $(TARGET_DIR)$(TARGET_NAME).dll
 endif
 
-include $(RACK_DIR)/compile.mk
+include compile.mk
 
 all: $(TARGET)
 

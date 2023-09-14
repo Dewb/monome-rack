@@ -8,7 +8,7 @@
 #include "module/globals.h"
 #include "module/live_mode.h"
 #include "module/preset_w_mode.h"
-#include "src/serialize.h"
+#include "src/scene_serialization.h"
 #include "src/teletype_io.h"
 #include "types.h"
 
@@ -62,8 +62,16 @@ void fake_flash_read(scene_state_t* src_scene, scene_state_t* dest_scene,
     uint8_t init_i2c_op_address)
 {
     memcpy(ss_scripts_ptr(dest_scene), ss_scripts_ptr(src_scene),
+
+// handle difference in macros between TT 5 and 4
+#ifdef EDITABLE_SCRIPT_COUNT
+        ss_scripts_size(EDITABLE_SCRIPT_COUNT)
+#else
         // Exclude size of TEMP script as above
-        ss_scripts_size() - sizeof(scene_script_t));
+        ss_scripts_size() - sizeof(scene_script_t)
+#endif
+
+    );
 
     if (init_pattern)
     {
@@ -77,7 +85,13 @@ void fake_flash_read(scene_state_t* src_scene, scene_state_t* dest_scene,
     memcpy(dest_text, src_text, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
     // need to reset timestamps
     uint32_t ticks = tele_get_ticks();
+
+// handle difference in macros between TT 5 and 4
+#ifdef TOTAL_SCRIPT_COUNT
+    for (size_t i = 0; i < TOTAL_SCRIPT_COUNT; i++)
+#else
     for (size_t i = 0; i < TEMP_SCRIPT; i++)
+#endif
         dest_scene->scripts[i].last_time = ticks;
     dest_scene->variables.time = 0;
 
