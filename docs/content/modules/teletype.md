@@ -127,6 +127,14 @@ For advanced scripting techniques, see `@scanner-darkly`'s [GRID INTEGRATION stu
 
 You can use either a physical or virtual grid to take advantage of the grid operators or Grid Control Mode. Hardware versions of Teletype can't use both the grid and the keyboard at the same time, and there are [some precautions to follow](https://monome.org/docs/grid/grid-modular/#teletype) regarding power loads, but thankfully the software version has none of these restrictions, making it an excellent environment for developing complex grid scenes that you can later transfer to hardware.
 
+# Alternate firmware
+
+Choose **Firmware Tools > Switch Firmware** to see alternate firmware options for Teletype.
+
+Currently there are firmware builds for the teletype 4.0 and 5.0-beta release streams. 4.0 is the default; at some point after 5.0 is out of beta, it will become the default for newly placed modules, but modules already placed in your patch will remain 4.0.
+
+Switching firmware will reset the VRAM and NVRAM for the module, so export any scenes you want to keep before to text files before switching firmware editions.
+
 # Further reading
 
 * Teletype [hardware documentation](http://monome.org/docs/teletype/)

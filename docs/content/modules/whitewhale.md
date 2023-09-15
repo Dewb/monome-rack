@@ -67,6 +67,12 @@ This quickstart example uses White Whale alongside modules from VCV's [Free coll
 - Hold *ALT* on the grid and enter the **CV B** region on grid -- this will show put **CV B** into a [Scale Map](https://monome.org/docs/whitewhale/#cv-map), which quantizes **CV B**'s output to a musical note range.
 - As the pattern plays, enter new notes for each step in the *Scale Map*.
 
+# Alternate firmware
+
+Choose **Firmware Tools > Switch Firmware** to see alternate firmware options for White Whale.
+
+White Whale offers the standard firmware plus the Kria alternate firmware, an early form of the Kria sequencer mode in Ansible. [Read about the original version of Kria here](https://llllllll.co/t/kria-0-3-initial-release/2409).
+
 # Further reading
 
 * White Whale [hardware documentation](http://monome.org/docs/whitewhale/)
@@ -79,3 +85,5 @@ This quickstart example uses White Whale alongside modules from VCV's [Free coll
 * [white whale tutorial part 2](https://vimeo.com/105368874)
 * [white whale tutorial part 3](https://vimeo.com/105408057)
 * [white whale tutorial part 4](https://vimeo.com/105408747)
+* [kria demo](https://vimeo.com/152756139)
+* [kria lesson](https://vimeo.com/153923660)
