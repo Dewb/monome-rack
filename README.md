@@ -14,7 +14,7 @@ This plugin currently includes:
 * [white whale](https://monome.org/docs/whitewhale/), a probabilistic step sequencer
 * [meadowphysics](https://monome.org/docs/meadowphysics/), an event sequencer for polyrhythms and rule-based evolving patterns
 * [earthsea](https://monome.org/docs/earthsea/), a live keyboard that can sequence melodies and recall CV with shape memory gestures
-* Support for [monome grid](https://monome.org/docs/grid/) and [monome arc](https://monome.org/docs/arc/) hardware controllers, both current editions and older models, plus virtual versions of the controllers within VCV Rack, in 64, 128, and 256-key flavors.
+* Support for [monome grid](https://monome.org/docs/grid/) and [monome arc](https://monome.org/docs/arc/) hardware controllers, both current editions and older models, plus virtual versions of the grid controller within VCV Rack, in 64, 128, and 256-key flavors.
     
 All of the modules can connect to either a virtual grid or a real hardware grid controller. ([Serialosc](https://monome.org/docs/setup/) is required to use real hardware, but no drivers are required for the virtual grids.) 
 
@@ -35,7 +35,7 @@ To install the latest library release:
 * Right-click the `white whale` module and select your virtual grid from the list of devices. It should light up.
 * If you have a hardware grid connected, right-click the module and select your hardware grid from the list. The virtual grid should go dark and your physical grid should light up.
 
-### Deeping learning and getting help
+### Deeper learning and getting help
 
 See the [online manual](https://dewb.github.io/monome-rack), specifically the [Getting Help section](https://dewb.github.io/monome-rack/help/).
 
