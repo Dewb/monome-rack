@@ -1,15 +1,22 @@
 #include "LibAVR32Module.hpp"
+#include "SerialOscInterface.hpp"
 #include "base64.h"
 #include <string.h>
 
-LibAVR32Module::LibAVR32Module(std::string firmwareName)
+LibAVR32Module::LibAVR32Module(std::string firmwarePrefix, std::string defaultFirmwareName)
 : lastConnectedDeviceId("")
 , currentConnectedDeviceId("")
-, firmwareName(firmwareName)
+, firmwarePrefix(firmwarePrefix)
+, firmwareName(defaultFirmwareName)
+, defaultFirmwareName(defaultFirmwareName)
 , usbParamId(-1)
 , theme(GridTheme::Yellow)
 {
     gridConnection = nullptr;
+
+    // make sure serialosc is fully initialized by the time
+    // the user needs to interact with it
+    SerialOscInterface::get();
 
     dacOffsetVolts = 0.0007;
     triggerHighThreshold = 2.21;
@@ -279,15 +286,20 @@ void LibAVR32Module::readSerialMessages()
     }
 }
 
-void LibAVR32Module::requestReloadFirmware(bool preserveMemory)
+void LibAVR32Module::requestReloadFirmware(bool preserveMemory, const std::string& firmwareName)
 {
-    audioThreadActions.push([this, preserveMemory]() { this->reloadFirmware(preserveMemory); });
+    audioThreadActions.push([this, preserveMemory, firmwareName]() { this->reloadFirmware(preserveMemory, firmwareName); });
 }
 
-void LibAVR32Module::reloadFirmware(bool preserveMemory)
+void LibAVR32Module::reloadFirmware(bool preserveMemory, const std::string& newName)
 {
     void *data, *nvram_copy, *vram_copy = 0;
     uint32_t nvram_size, vram_size = 0;
+
+    firmwareName = newName.empty() ? firmware.getLoadedName() : newName;
+    if (firmwareName != firmware.getLoadedName()) {
+        preserveMemory = false;
+    }
 
     if (preserveMemory) {
         firmware.readNVRAM(&data, &nvram_size);
@@ -356,6 +368,7 @@ json_t* LibAVR32Module::dataToJson()
     }
 
     json_t* rootJ = json_object();
+    json_object_set_new(rootJ, "firmwareName", json_string(firmwareName.c_str()));
     json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
     json_object_set_new(rootJ, "connectionOwned", json_boolean(connectionOwned));
     json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
@@ -381,6 +394,14 @@ json_t* LibAVR32Module::dataToJson()
 
 void LibAVR32Module::dataFromJson(json_t* rootJ)
 {
+    json_t* jsonFirmwareName = json_object_get(rootJ, "firmwareName");
+    std::string newFirmwareName = jsonFirmwareName ? json_string_value(jsonFirmwareName) : defaultFirmwareName;
+
+    if (newFirmwareName != firmwareName)
+    {
+        reloadFirmware(false, newFirmwareName);
+    }
+
     json_t* id = json_object_get(rootJ, "connectedDeviceId");
     if (id)
     {

@@ -66,6 +66,15 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
 
     box.size = Vec(rackWidth, 380);
 
+    {
+        auto panel = new ThemedSvgPanel();
+        panel->setBackground(
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/grid.svg")),
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/grid-dark.svg")));
+        panel->box.size = box.size;
+        addChild(panel);
+    }
+
     // create an opaque child underneath the keys to defeat module dragging in between the buttons
     auto gridZone = new OpaqueWidget();
     gridZone->setSize(Vec(box.size.x - 2 * margins.x, box.size.y - 2 * margins.y));
@@ -101,10 +110,6 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             addParam(key);
         }
     }
-
-    PanelBorder* pb = new PanelBorder;
-    pb->box.size = box.size;
-    addChild(pb);
 }
 
 VirtualGridWidget::~VirtualGridWidget()
@@ -113,16 +118,6 @@ VirtualGridWidget::~VirtualGridWidget()
     {
         GridConnectionManager::get().deregisterGrid(id);
     }
-}
-
-void VirtualGridWidget::draw(const DrawArgs& args)
-{
-    nvgBeginPath(args.vg);
-    nvgRect(args.vg, 0.0, 0.0, box.size.x, box.size.y);
-    nvgFillColor(args.vg, nvgRGB(0xf0, 0xf0, 0xf0));
-    nvgFill(args.vg);
-
-    rack::app::ModuleWidget::draw(args);
 }
 
 void VirtualGridWidget::clearHeldKeys()

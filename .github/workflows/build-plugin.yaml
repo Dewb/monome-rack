@@ -10,7 +10,7 @@ on:
       - '.github/workflows/deploy-pages.yaml'
 
 env:
-  rack-sdk-version: 2.3.0
+  rack-sdk-version: 2.4.0
   rack-plugin-toolchain-dir: /home/build/rack-plugin-toolchain
 
 defaults:
@@ -45,7 +45,7 @@ jobs:
       options: --user root
     strategy:
       matrix:
-        platform: [win-x64, linux-x64]
+        platform: [win-x64, lin-x64]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -59,6 +59,9 @@ jobs:
         run: |
           export PLUGIN_DIR=$GITHUB_WORKSPACE
           pushd ${{ env.rack-plugin-toolchain-dir }}
+          sed -i 's/\(RACK_SDK_VERSION \:\= \)[0-9\.]\+$/\1${{ env.rack-sdk-version }}/' Makefile
+          make rack-sdk-clean
+          make rack-sdk-${{ matrix.platform }}
           make plugin-build-${{ matrix.platform }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3

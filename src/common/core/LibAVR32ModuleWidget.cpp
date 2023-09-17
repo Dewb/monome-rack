@@ -5,6 +5,10 @@
 #include "SerialOscInterface.hpp"
 #include "Screenshot.hpp"
 
+#include <ghc/filesystem.hpp>
+
+namespace fs = ghc::filesystem;
+
 using namespace rack;
 
 struct ConnectGridItem : rack::ui::MenuItem
@@ -28,6 +32,54 @@ struct ReloadFirmwareItem : rack::ui::MenuItem
         if (module) {
             module->requestReloadFirmware(preserveMemory);
         }
+    }
+};
+
+struct SwitchFirmwareItem : rack::ui::MenuItem
+{
+    LibAVR32Module* module;
+
+    ui::Menu* createChildMenu() override
+    {
+        // duplicate filenames that may be left in res folder by prior versions
+        std::vector<std::string> ignoreList = {"teletype", "ansible 2", "earthsea 2", "meadowphysics 2", "teletype 2", "whitewhale 2"};
+        std::vector<std::string> fwNames = {};
+
+        const fs::path fwPath{rack::asset::plugin(pluginInstance, "res/firmware")};
+        for (auto const& file : fs::directory_iterator{fwPath})
+        {
+            auto name = file.path().stem().string();
+            auto extension = file.path().extension().string();
+            if (extension == module->firmware.getLibExtension() &&
+                name.substr(0, module->firmwarePrefix.size()) == module->firmwarePrefix &&
+                std::find(std::begin(ignoreList), std::end(ignoreList), name) == std::end(ignoreList))
+            {
+                fwNames.push_back(name);
+            }
+        }
+
+        bool currentMissing = false;
+        if (std::find(std::begin(fwNames), std::end(fwNames), module->firmwareName) == std::end(fwNames))
+        {
+            fwNames.push_back(module->firmwareName);
+            currentMissing = true;
+        }
+
+        ui::Menu* menu = new ui::Menu;
+
+        for (auto const& name : fwNames)
+        {
+            menu->addChild(createCheckMenuItem(
+                name,
+                (currentMissing && (module->firmwareName == name)) ? "(missing)" : "",
+                [=]()
+                { return module->firmwareName == name; },
+                [=]()
+                { module->requestReloadFirmware(false, name); }
+            ));
+        }
+
+        return menu;
     }
 };
 
@@ -90,6 +142,11 @@ struct FirmwareSubmenuItem : MenuItem
             { screenshotModulePNG(widget, widget->model->slug + "-screenshot.png"); }));
 
         menu->addChild(new MenuSeparator());
+
+        menu->addChild(construct<SwitchFirmwareItem>(
+            &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
+            &SwitchFirmwareItem::module, m
+        ));
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";

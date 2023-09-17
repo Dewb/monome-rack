@@ -6,6 +6,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <unordered_set>
+#include <ghc/filesystem.hpp>
+
+namespace fs = ghc::filesystem;
 
 extern rack::Plugin* pluginInstance;
 
@@ -108,6 +111,14 @@ struct FirmwareManagerImpl
 
         std::string librarySource;
         librarySource = rack::asset::plugin(pluginInstance, "res/firmware/" + firmwareName + LIB_EXTENSION);
+
+        std::error_code ec;
+        if (!fs::is_regular_file(fs::status(librarySource, ec)))
+        {
+            WARN("Requested firmware not found or invalid");
+            return false;
+        }
+
         std::string libraryToLoad = librarySource;
 
         // If we have already loaded this firmware at least once, create a temp copy so it will have its own address space
@@ -181,12 +192,19 @@ struct FirmwareManagerImpl
 
 #if ARCH_WIN
 
-        wchar_t* libName = new wchar_t[4096];
-        MultiByteToWideChar(CP_ACP, 0, libraryToLoad.c_str(), -1, libName, 4096);
+        int wideLength = MultiByteToWideChar(CP_UTF8, 0, libraryToLoad.c_str(), -1, nullptr, 0);
+        if (wideLength > 0)
+        {
+            std::vector<wchar_t> wideLibName(wideLength);
+            wideLength = MultiByteToWideChar(CP_UTF8, 0, libraryToLoad.c_str(), -1, wideLibName.data(), wideLength);
+            if (wideLength > 0)
+            {
+                SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
+                handle = LoadLibraryW(wideLibName.data());
+                SetErrorMode(0);
+            }
+        }
 
-        SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        handle = LoadLibrary(libName);
-        SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
@@ -230,16 +248,23 @@ FirmwareManager::~FirmwareManager()
     delete impl;
 }
 
-bool FirmwareManager::load(std::string modulePath)
+const std::string FirmwareManager::getLibExtension()
+{
+    return LIB_EXTENSION;
+}
+
+bool FirmwareManager::load(std::string firmwareName)
 {
     delete impl;
     impl = new FirmwareManagerImpl();
-    if (!impl->load(modulePath))
+    if (!impl->load(firmwareName))
     {
+        delete impl;
         impl = nullptr;
-        WARN("Could not load firmware %s", modulePath.c_str());
+        WARN("Could not load firmware %s", firmwareName.c_str());
         return false;
     }
+    loadedName = firmwareName;
     return true;
 }
 

@@ -2,6 +2,8 @@
 
 #pragma once
 
+extern rack::Plugin* pluginInstance;
+
 struct VirtualGridKey;
 struct VirtualGridModule;
 
@@ -10,7 +12,6 @@ struct VirtualGridWidget : rack::app::ModuleWidget
     VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h);
     ~VirtualGridWidget();
 
-    void draw(const DrawArgs& args) override;
     void onDragEnter(const rack::event::DragEnter& e) override;
     void onDragStart(const rack::event::DragStart& e) override;
     void onDragEnd(const rack::event::DragEnd& e) override;

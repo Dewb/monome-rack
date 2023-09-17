@@ -16,8 +16,12 @@ struct FirmwareManager
     FirmwareManager();
     ~FirmwareManager();
 
-    bool load(std::string firmwarePath);
+    const std::string getLibExtension();
+
+    bool load(std::string firmwareName);
     void unload();
+
+    const std::string& getLoadedName() const { return loadedName; }
 
     void setClockPeriod(float seconds);
     void advanceClock(float seconds);
@@ -30,4 +34,6 @@ struct FirmwareManager
 #include "mock_hardware_api.h"
 
     struct FirmwareManagerImpl* impl;
+protected:
+    std::string loadedName;
 };

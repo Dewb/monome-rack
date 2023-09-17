@@ -40,7 +40,7 @@ struct EarthseaModule : LibAVR32Module
     };
 
     EarthseaModule()
-        : LibAVR32Module("earthsea")
+        : LibAVR32Module("earthsea", "earthsea")
     {
         config(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS);
 

@@ -34,7 +34,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 {
     FirmwareManager firmware;
 
-    LibAVR32Module(std::string firmwareName);
+    LibAVR32Module(std::string firmwarePrefix, std::string defaultFirmwareName);
     ~LibAVR32Module();
 
     // Rack module methods
@@ -60,7 +60,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     void userToggleGridConnection(Grid* grid);
     virtual void readSerialMessages();
 
-    void requestReloadFirmware(bool preserveMemory);
+    void requestReloadFirmware(bool preserveMemory, const std::string& firmwareName = "");
 
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
@@ -69,7 +69,9 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     std::string currentConnectedDeviceId;
     bool connectionOwned;
 
+    std::string firmwarePrefix;
     std::string firmwareName;
+    std::string defaultFirmwareName;
 
     int inputRate;
     int outputRate;
@@ -79,7 +81,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     virtual uint8_t* getScreenBuffer() { return 0; }
 
 protected:
-    void reloadFirmware(bool preserveMemory);
+    void reloadFirmware(bool preserveMemory, const std::string& newFirmware = "");
     void toggleGridConnection(Grid* grid);
 
     Grid* gridConnection;

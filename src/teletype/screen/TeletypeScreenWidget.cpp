@@ -206,23 +206,26 @@ void TeletypeScreenWidget::drawLayer(const DrawArgs& args, int layer)
 
 void TeletypeScreenWidget::drawFrame(NVGcontext* vg)
 {
+    NVGcolor hiColor = !settings::preferDarkPanels ? nvgRGB(250, 250, 250) : nvgRGB(96, 96, 94);
+    NVGcolor loColor = !settings::preferDarkPanels ? nvgRGB(140, 140, 130) : nvgRGB(20, 20, 5);
+
     // draw skeumorphic shadow around screen
     float t = 0.95;
     float r = 2.75;
     nvgBeginPath(vg);
     nvgRoundedRect(vg, box.size.x - t, -t, 2 * t, box.size.y + t, r);
-    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFillColor(vg, hiColor);
     nvgFill(vg);
 
     nvgBeginPath(vg);
     nvgRoundedRect(vg, -t, -t, box.size.x + 2 * t, 2 * t, r);
     nvgRoundedRect(vg, -t, -t, 2 * t, box.size.y + t, r);
-    nvgFillColor(vg, nvgRGB(140, 140, 130));
+    nvgFillColor(vg, loColor);
     nvgFill(vg);
 
     nvgBeginPath(vg);
     nvgRoundedRect(vg, -t, box.size.y - t, box.size.x + 2 * t, 2 * t, r);
-    nvgFillColor(vg, nvgRGB(250, 250, 240));
+    nvgFillColor(vg, hiColor);
     nvgFill(vg);
 
     // draw the empty screen
