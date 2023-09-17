@@ -3,6 +3,7 @@
 #include "VirtualGridKey.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridTheme.hpp"
+#include "GridConnectionMenu.hpp"
 
 using namespace rack;
 
@@ -213,10 +214,16 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
         screenshotModulePNG(this, "grid-screenshot.png");
     }));
 
+    menu->addChild(createSubmenuItem("Mirror hardware grid", "", [=](Menu *childMenu) {
+        appendDeviceConnectionMenu(childMenu, grid->mirrorModeConsumer, &grid->audioThreadActions, true);
+    }));
+
     menu->addChild(new MenuSeparator());
     menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &grid->theme));
     menu->addChild(createIndexSubmenuItem("Protocol", {"40h", "Series", "Mext (varibright)"}, 
-        [=]() { return grid ? grid->device.protocol : 0; },
+        [=]() {
+            return grid ? grid->device.protocol : 0;
+        },
         [=](size_t index) {
             setProtocol(grid, static_cast<MonomeProtocol>(index));
         }));

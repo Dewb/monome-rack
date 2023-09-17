@@ -1,15 +1,11 @@
 #include "GridConnection.hpp"
 
-Grid::~Grid()
-{
-}
-
 void GridConnectionManager::registerGrid(Grid* grid)
 {
     grids.insert(grid);
 
     // Check if there's a consumer with a saved connection looking for this grid
-    GridConsumer* consumerToConnect = nullptr;
+    IGridConsumer* consumerToConnect = nullptr;
     for (auto consumer : consumers)
     {
         if (!isConnected(consumer) && grid->getDevice().id == consumer->gridGetLastDeviceId(true))
@@ -25,7 +21,7 @@ void GridConnectionManager::registerGrid(Grid* grid)
     }
 }
 
-void GridConnectionManager::registerGridConsumer(GridConsumer* consumer)
+void GridConnectionManager::registerGridConsumer(IGridConsumer* consumer)
 {
     consumers.insert(consumer);
 
@@ -66,13 +62,13 @@ void GridConnectionManager::deregisterGrid(std::string id, bool deleteGrid)
     }
 }
 
-void GridConnectionManager::deregisterGridConsumer(GridConsumer* consumer)
+void GridConnectionManager::deregisterGridConsumer(IGridConsumer* consumer)
 {
     disconnect(consumer);
     consumers.erase(consumer);
 }
 
-void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
+void GridConnectionManager::connect(Grid* grid, IGridConsumer* consumer)
 {
     disconnect(consumer, true);
     disconnect(grid, true);
@@ -82,7 +78,7 @@ void GridConnectionManager::connect(Grid* grid, GridConsumer* consumer)
     consumer->gridConnected(grid);
 }
 
-bool GridConnectionManager::isConnected(GridConsumer* consumer)
+bool GridConnectionManager::isConnected(IGridConsumer* consumer)
 {
     return consumerToGridMap.find(consumer) != consumerToGridMap.end();
 }
@@ -100,7 +96,7 @@ void GridConnectionManager::disconnect(Grid* grid, bool ownerChanged)
         auto iter = idToConsumerMap.find(grid->getDevice().id);
         if (iter != idToConsumerMap.end())
         {
-            GridConsumer* consumer = iter->second;
+            auto consumer = iter->second;
             consumer->gridDisconnected(ownerChanged);
             idToConsumerMap.erase(grid->getDevice().id);
             consumerToGridMap.erase(consumer);
@@ -108,7 +104,7 @@ void GridConnectionManager::disconnect(Grid* grid, bool ownerChanged)
     }
 }
 
-void GridConnectionManager::disconnect(GridConsumer* consumer, bool ownerChanged)
+void GridConnectionManager::disconnect(IGridConsumer* consumer, bool ownerChanged)
 {
     if (consumer)
     {

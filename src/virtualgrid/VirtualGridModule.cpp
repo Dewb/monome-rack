@@ -1,8 +1,53 @@
 #include "VirtualGridModule.hpp"
 #include "LibAVR32Module.hpp"
+#include "GridConsumerBase.hpp"
 
 #include <iomanip>
 #include <sstream>
+
+struct MirrorModeGridConsumer : GridConsumerBase
+{
+    MirrorModeGridConsumer(VirtualGridModule* module)
+        : module(module)
+    {
+    }
+
+    virtual ~MirrorModeGridConsumer()
+    {
+    }
+
+    void gridConnected(Grid* newConnection) override
+    {
+        if (newConnection == module)
+        { // don't mirror self
+            return;
+        }
+
+        GridConsumerBase::gridConnected(newConnection);
+    }
+
+    void gridButtonEvent(int x, int y, bool state) override
+    {
+        if (module)
+        {
+            int w = module->device.width;
+            auto param = module->getParamQuantity((x + y * w) * 2);
+            if (param)
+            {
+                module->audioThreadActions.push([param, state]()
+                    { param->setImmediateValue(state ? 1 : 0); });
+            }
+        }
+    }
+
+    void encDeltaEvent(int n, int d) override
+    {
+
+    }
+
+protected:
+    VirtualGridModule* module;
+};
 
 std::string formatVirtualDeviceId(int64_t id)
 {
@@ -52,11 +97,15 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 
     theme = GridTheme::Yellow;
 
+    mirrorModeConsumer = new MirrorModeGridConsumer(this);
+
     clearAll();
 }
 
 VirtualGridModule::~VirtualGridModule()
 {
+    GridConnectionManager::get().deregisterGridConsumer(mirrorModeConsumer);
+    delete mirrorModeConsumer;
 }
 
 void VirtualGridModule::onAdd()
@@ -66,6 +115,11 @@ void VirtualGridModule::onAdd()
 
 void VirtualGridModule::process(const ProcessArgs& args)
 {
+    while (audioThreadActions.size())
+    {
+        audioThreadActions.shift()();
+    }
+
     std::vector<std::tuple<int, int>> presses;
     std::vector<std::tuple<int, int>> releases;
 
@@ -106,6 +160,15 @@ json_t* VirtualGridModule::dataToJson()
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "protocol", json_integer(device.protocol));
     json_object_set_new(rootJ, "theme", json_integer(theme));
+
+    auto consumer = dynamic_cast<GridConsumerBase*>(mirrorModeConsumer);
+    if (consumer)
+    {
+        json_t* mirrorJ = json_object();
+        consumer->saveGridConnectionToJson(mirrorJ);
+        json_object_set_new(rootJ, "mirror", mirrorJ);
+    }
+
     return rootJ;
 }
 
@@ -129,6 +192,14 @@ void VirtualGridModule::dataFromJson(json_t* rootJ)
     {
         theme = static_cast<GridTheme>(json_integer_value(json_theme));
     }
+
+    auto consumer = dynamic_cast<GridConsumerBase*>(mirrorModeConsumer);
+    if (consumer)
+    {
+        auto json_mirror = json_object_get(rootJ, "mirror");
+        consumer->loadGridConnectionFromJson(json_mirror);
+        GridConnectionManager::get().registerGridConsumer(consumer);
+    }
 }
 
 const MonomeDevice& VirtualGridModule::getDevice()
@@ -138,6 +209,15 @@ const MonomeDevice& VirtualGridModule::getDevice()
 
 void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
 {
+    if (mirrorModeConsumer)
+    {
+        auto mirroredGrid = mirrorModeConsumer->gridGetDevice();
+        if (mirroredGrid)
+        {
+            mirroredGrid->updateRow(x_offset, y, bitfield);
+        }
+    }
+
     uint8_t* ptr = ledBuffer + y * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {
@@ -147,6 +227,15 @@ void VirtualGridModule::updateRow(int x_offset, int y, uint8_t bitfield)
 
 void VirtualGridModule::updateQuadrant(int x_offset, int y_offset, uint8_t* leds)
 {
+    if (mirrorModeConsumer)
+    {
+        auto mirroredGrid = mirrorModeConsumer->gridGetDevice();
+        if (mirroredGrid)
+        {
+            mirroredGrid->updateQuadrant(x_offset, y_offset, leds);
+        }
+    }
+
     uint8_t* ptr = ledBuffer + y_offset * 16 + x_offset;
     for (int i = 0; i < 8; i++)
     {

@@ -4,16 +4,12 @@
 #include <string.h>
 
 LibAVR32Module::LibAVR32Module(std::string firmwarePrefix, std::string defaultFirmwareName)
-: lastConnectedDeviceId("")
-, currentConnectedDeviceId("")
-, firmwarePrefix(firmwarePrefix)
-, firmwareName(defaultFirmwareName)
-, defaultFirmwareName(defaultFirmwareName)
-, usbParamId(-1)
-, theme(GridTheme::Yellow)
+    : firmwarePrefix(firmwarePrefix)
+    , firmwareName(defaultFirmwareName)
+    , defaultFirmwareName(defaultFirmwareName)
+    , theme(GridTheme::Yellow)
+    , usbParamId(-1)
 {
-    gridConnection = nullptr;
-
     // make sure serialosc is fully initialized by the time
     // the user needs to interact with it
     SerialOscInterface::get();
@@ -44,14 +40,10 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
         firmware.serialConnectionChange(false, 0, 0, 0, 0);
     }
 
-    gridConnection = newConnection;
+    GridConsumerBase::gridConnected(newConnection);
+
     if (gridConnection)
     {
-        std::string id = gridConnection->getDevice().id;
-        lastConnectedDeviceId = id;
-        currentConnectedDeviceId = id;
-        connectionOwned = true;
-
         auto d = gridConnection->getDevice();
         if (d.type == "monome arc 2")
         {
@@ -75,13 +67,9 @@ void LibAVR32Module::gridConnected(Grid* newConnection)
 
 void LibAVR32Module::gridDisconnected(bool ownerChanged)
 {
-    gridConnection = nullptr;
-    currentConnectedDeviceId = "";
+    GridConsumerBase::gridDisconnected(ownerChanged);
+
     firmware.serialConnectionChange(false, 0, 0, 0, 0);
-    if (ownerChanged)
-    {
-        connectionOwned = false;
-    }
 
     if (usbParamId >= 0)
     {
@@ -151,47 +139,9 @@ void LibAVR32Module::encDeltaEvent(int n, int d)
     }
 }
 
-std::string LibAVR32Module::gridGetLastDeviceId(bool owned)
-{
-    if (owned && !connectionOwned)
-    {
-        return "";
-    }
-
-    return lastConnectedDeviceId;
-}
-
-void LibAVR32Module::userReacquireGrid()
-{
-    if (lastConnectedDeviceId != "" && gridConnection == nullptr)
-    {
-        for (Grid* grid : GridConnectionManager::get().getGrids())
-        {
-            if (gridGetLastDeviceId(false) == grid->getDevice().id)
-            {
-                GridConnectionManager::get().connect(grid, this);
-                return;
-            }
-        }
-    }
-}
-
 void LibAVR32Module::userToggleGridConnection(Grid* grid)
 {
     audioThreadActions.push([this, grid]() { this->toggleGridConnection(grid); });
-}
-
-void LibAVR32Module::toggleGridConnection(Grid* grid)
-{
-    if (gridConnection == grid)
-    {
-        GridConnectionManager::get().disconnect(this, true);
-        lastConnectedDeviceId = "";
-    }
-    else
-    {
-        GridConnectionManager::get().connect(grid, this);
-    }
 }
 
 void LibAVR32Module::readSerialMessages()
@@ -351,18 +301,12 @@ void LibAVR32Module::process(const ProcessArgs& args)
 
 json_t* LibAVR32Module::dataToJson()
 {
-    std::string deviceId = lastConnectedDeviceId;
-    if (gridConnection)
-    {
-        deviceId = gridConnection->getDevice().id;
-    }
-
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "firmwareName", json_string(firmwareName.c_str()));
-    json_object_set_new(rootJ, "connectedDeviceId", json_string(deviceId.c_str()));
-    json_object_set_new(rootJ, "connectionOwned", json_boolean(connectionOwned));
     json_object_set_new(rootJ, "inputRate", json_integer(inputRate));
     json_object_set_new(rootJ, "outputRate", json_integer(outputRate));
+
+    saveGridConnectionToJson(rootJ);
 
     void* data = 0;
     uint32_t size = 0;
@@ -384,24 +328,14 @@ json_t* LibAVR32Module::dataToJson()
 
 void LibAVR32Module::dataFromJson(json_t* rootJ)
 {
+    loadGridConnectionFromJson(rootJ);
+
     json_t* jsonFirmwareName = json_object_get(rootJ, "firmwareName");
     std::string newFirmwareName = jsonFirmwareName ? json_string_value(jsonFirmwareName) : defaultFirmwareName;
 
     if (newFirmwareName != firmwareName)
     {
         reloadFirmware(false, newFirmwareName);
-    }
-
-    json_t* id = json_object_get(rootJ, "connectedDeviceId");
-    if (id)
-    {
-        lastConnectedDeviceId = json_string_value(id);
-    }
-
-    json_t* owned = json_object_get(rootJ, "connectionOwned");
-    if (owned)
-    {
-        connectionOwned = json_boolean_value(owned);
     }
 
     void* data = 0;
