@@ -41,7 +41,7 @@ void menuUserReacquireGrid(GridConsumer* consumer, std::string lastDeviceId, Act
     }
 }
 
-void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, ActionQueue* actionQueue)
+void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, ActionQueue* actionQueue, bool hardwareOnly)
 {
     std::string currentConnectedDeviceId = consumer->gridGetCurrentDeviceId();
     std::string lastConnectedDeviceId = consumer->gridGetLastDeviceId(false);
@@ -70,6 +70,11 @@ void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, Action
     bool preferredDeviceFound = false;
     for (Grid* grid : GridConnectionManager::get().getGrids())
     {
+        if (hardwareOnly && !grid->isHardware())
+        {
+            continue;
+        }
+
         auto connectItem = new NewConnectGridItem();
         connectItem->text = "└ " + grid->getDevice().type + " (" + grid->getDevice().id + ") ";
 
@@ -96,7 +101,8 @@ void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, Action
 
     if (deviceCount == 0)
     {
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "  (no physical or virtual devices found)"));
+        std::string message = hardwareOnly ? "no hardware devices found" : "no hardware or virtual devices found";
+        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "  (" + message + ")"));
     }
 
     if (currentConnectedDeviceId == "" && lastConnectedDeviceId != "")

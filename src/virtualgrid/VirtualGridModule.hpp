@@ -31,6 +31,7 @@ struct VirtualGridModule : rack::Module, Grid
     void updateQuadrant(int x_offset, int y_offset, uint8_t* leds) override;
     void updateRing(int n, uint8_t leds[64]) override {};
     void clearAll() override;
+    bool isHardware() override { return false; }
 
     GridConsumer* mirrorModeConsumer;
     ActionQueue audioThreadActions;

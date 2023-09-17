@@ -15,6 +15,7 @@ struct Grid
     virtual void updateQuadrant(int x, int y, uint8_t* leds) = 0;
     virtual void updateRing(int n, uint8_t leds[64]) = 0;
     virtual void clearAll() = 0;
+    virtual bool isHardware() = 0;
 };
 
 struct GridConsumer
