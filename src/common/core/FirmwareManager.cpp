@@ -192,12 +192,19 @@ struct FirmwareManagerImpl
 
 #if ARCH_WIN
 
-        wchar_t* libName = new wchar_t[4096];
-        MultiByteToWideChar(CP_ACP, 0, libraryToLoad.c_str(), -1, libName, 4096);
+        int wideLength = MultiByteToWideChar(CP_UTF8, 0, libraryToLoad.c_str(), -1, nullptr, 0);
+        if (wideLength > 0)
+        {
+            std::vector<wchar_t> wideLibName(wideLength);
+            wideLength = MultiByteToWideChar(CP_UTF8, 0, libraryToLoad.c_str(), -1, wideLibName.data(), wideLength);
+            if (wideLength > 0)
+            {
+                SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
+                handle = LoadLibraryW(wideLibName.data());
+                SetErrorMode(0);
+            }
+        }
 
-        SetErrorMode(SEM_NOOPENFILEERRORBOX | SEM_FAILCRITICALERRORS);
-        handle = LoadLibrary(libName);
-        SetErrorMode(0);
         if (!handle)
         {
             int error = GetLastError();
