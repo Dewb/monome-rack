@@ -33,7 +33,7 @@ struct VirtualGridModule : rack::Module, Grid
     void clearAll() override;
     bool isHardware() override { return false; }
 
-    GridConsumer* mirrorModeConsumer;
+    IGridConsumer* mirrorModeConsumer;
     ActionQueue audioThreadActions;
 };
 

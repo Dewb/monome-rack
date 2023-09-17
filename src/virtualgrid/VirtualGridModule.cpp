@@ -1,22 +1,18 @@
 #include "VirtualGridModule.hpp"
 #include "LibAVR32Module.hpp"
+#include "GridConsumerBase.hpp"
 
 #include <iomanip>
 #include <sstream>
 
-struct MirrorModeGridConsumer : GridConsumer
+struct MirrorModeGridConsumer : GridConsumerBase
 {
-    std::string lastConnectedDeviceId;
-    std::string currentConnectedDeviceId;
-    bool connectionOwned;
-
     MirrorModeGridConsumer(VirtualGridModule* module)
         : module(module)
-        , gridConnection(nullptr)
     {
     }
 
-    ~MirrorModeGridConsumer()
+    virtual ~MirrorModeGridConsumer()
     {
     }
 
@@ -27,24 +23,7 @@ struct MirrorModeGridConsumer : GridConsumer
             return;
         }
 
-        gridConnection = newConnection;
-        if (gridConnection)
-        {
-            std::string id = gridConnection->getDevice().id;
-            lastConnectedDeviceId = id;
-            currentConnectedDeviceId = id;
-            connectionOwned = true;
-        }
-    }
-
-    void gridDisconnected(bool ownerChanged) override
-    {
-        gridConnection = nullptr;
-        currentConnectedDeviceId = "";
-        if (ownerChanged)
-        {
-            connectionOwned = false;
-        }
+        GridConsumerBase::gridConnected(newConnection);
     }
 
     void gridButtonEvent(int x, int y, bool state) override
@@ -66,29 +45,7 @@ struct MirrorModeGridConsumer : GridConsumer
 
     }
 
-    std::string gridGetLastDeviceId(bool owned) override
-    {
-        if (owned && !connectionOwned)
-        {
-            return "";
-        }
-
-        return lastConnectedDeviceId;
-    }
-
-    std::string gridGetCurrentDeviceId() override
-    {
-        return currentConnectedDeviceId;
-    }
-
-    Grid* gridGetDevice() override
-    {
-        return gridConnection;
-    }
-
 protected:
-
-    Grid* gridConnection;
     VirtualGridModule* module;
 };
 
@@ -147,6 +104,7 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
 
 VirtualGridModule::~VirtualGridModule()
 {
+    GridConnectionManager::get().deregisterGridConsumer(mirrorModeConsumer);
     delete mirrorModeConsumer;
 }
 
@@ -202,6 +160,15 @@ json_t* VirtualGridModule::dataToJson()
     json_t* rootJ = json_object();
     json_object_set_new(rootJ, "protocol", json_integer(device.protocol));
     json_object_set_new(rootJ, "theme", json_integer(theme));
+
+    auto consumer = dynamic_cast<GridConsumerBase*>(mirrorModeConsumer);
+    if (consumer)
+    {
+        json_t* mirrorJ = json_object();
+        consumer->saveGridConnectionToJson(mirrorJ);
+        json_object_set_new(rootJ, "mirror", mirrorJ);
+    }
+
     return rootJ;
 }
 
@@ -224,6 +191,14 @@ void VirtualGridModule::dataFromJson(json_t* rootJ)
     if (json_theme)
     {
         theme = static_cast<GridTheme>(json_integer_value(json_theme));
+    }
+
+    auto consumer = dynamic_cast<GridConsumerBase*>(mirrorModeConsumer);
+    if (consumer)
+    {
+        auto json_mirror = json_object_get(rootJ, "mirror");
+        consumer->loadGridConnectionFromJson(json_mirror);
+        GridConnectionManager::get().registerGridConsumer(consumer);
     }
 }
 

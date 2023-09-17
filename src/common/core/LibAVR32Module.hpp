@@ -1,5 +1,6 @@
 #include "FirmwareManager.hpp"
 #include "GridConnection.hpp"
+#include "GridConsumerBase.hpp"
 #include "VirtualGridTheme.hpp"
 #include "rack.hpp"
 #include "ActionQueue.hpp"
@@ -30,7 +31,7 @@
 
 struct GridConnection;
 
-struct LibAVR32Module : rack::engine::Module, GridConsumer
+struct LibAVR32Module : rack::engine::Module, GridConsumerBase
 {
     FirmwareManager firmware;
 
@@ -47,27 +48,20 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
     virtual void processInputs(const ProcessArgs& args) = 0;
     virtual void processOutputs(const ProcessArgs& args) = 0;
 
-    // GridConsumer methods
-    void gridConnected(Grid* grid) override;
-    void gridDisconnected(bool ownerChanged) override;
-    void gridButtonEvent(int x, int y, bool state) override;
-    void encDeltaEvent(int n, int d) override;
-    std::string gridGetCurrentDeviceId() override;
-    std::string gridGetLastDeviceId(bool owned) override;
-    Grid* gridGetDevice() override;
+    // Override IGridConsumer methods implemented by GridConsumerBase (and call base impl)
+    // TODO: replace this with an event hook system
+    virtual void gridConnected(Grid* newConnection) override;
+    virtual void gridDisconnected(bool ownerChanged) override;
+    // Implement remaining IGridConsumer methods
+    virtual void gridButtonEvent(int x, int y, bool state) override;
+    virtual void encDeltaEvent(int n, int d) override;
 
-    void userReacquireGrid();
     void userToggleGridConnection(Grid* grid);
     virtual void readSerialMessages();
-
     void requestReloadFirmware(bool preserveMemory, const std::string& firmwareName = "");
 
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
-
-    std::string lastConnectedDeviceId;
-    std::string currentConnectedDeviceId;
-    bool connectionOwned;
 
     std::string firmwarePrefix;
     std::string firmwareName;
@@ -82,9 +76,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumer
 
 protected:
     void reloadFirmware(bool preserveMemory, const std::string& newFirmware = "");
-    void toggleGridConnection(Grid* grid);
 
-    Grid* gridConnection;
     int usbParamId;
     void setDeviceConnectionParam(int paramId) { usbParamId = paramId; }
     void processDeviceConnectionParam();

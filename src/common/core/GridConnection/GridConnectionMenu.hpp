@@ -4,4 +4,4 @@
 #include "GridConnection.hpp"
 #include "ActionQueue.hpp"
 
-void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, ActionQueue* queue, bool hardwareOnly = false);
+void appendDeviceConnectionMenu(rack::Menu* menu, IGridConsumer* consumer, ActionQueue* queue, bool hardwareOnly = false);

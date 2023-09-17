@@ -9,7 +9,7 @@ struct SerialOscInterface;
 
 struct Grid
 {
-    virtual ~Grid();
+    virtual ~Grid() {}
     virtual const MonomeDevice& getDevice() = 0;
     virtual void updateRow(int x_offset, int y, uint8_t bitfield) = 0;
     virtual void updateQuadrant(int x, int y, uint8_t* leds) = 0;
@@ -18,8 +18,9 @@ struct Grid
     virtual bool isHardware() = 0;
 };
 
-struct GridConsumer
+struct IGridConsumer
 {
+    virtual ~IGridConsumer() {}
     virtual void gridConnected(Grid* grid) = 0;
     virtual void gridDisconnected(bool ownerChanged) = 0;
     virtual std::string gridGetCurrentDeviceId() = 0;
@@ -27,22 +28,21 @@ struct GridConsumer
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
     virtual void encDeltaEvent(int n, int d) = 0;
     virtual Grid* gridGetDevice() = 0;
-    virtual ~GridConsumer() {};
 };
 
 struct GridConnectionManager final
 {
     // Only call these from the UI thread
     void registerGrid(Grid* grid);
-    void registerGridConsumer(GridConsumer* consumer);
+    void registerGridConsumer(IGridConsumer* consumer);
     void deregisterGrid(std::string id, bool deleteGrid = false);
-    void deregisterGridConsumer(GridConsumer* consumer);
+    void deregisterGridConsumer(IGridConsumer* consumer);
 
-    void connect(Grid* grid, GridConsumer* consumer);
-    bool isConnected(GridConsumer* consumer);
+    void connect(Grid* grid, IGridConsumer* consumer);
+    bool isConnected(IGridConsumer* consumer);
     bool isConnected(std::string id);
     void disconnect(Grid* grid, bool ownerChanged = false);
-    void disconnect(GridConsumer* consumer, bool ownerChanged = false);
+    void disconnect(IGridConsumer* consumer, bool ownerChanged = false);
 
     void dispatchButtonMessage(MonomeDevice* device, int x, int y, bool state);
     void dispatchEncDeltaMessage(MonomeDevice* device, int n, int d);
@@ -58,8 +58,8 @@ private:
     GridConnectionManager(GridConnectionManager&&) = delete;
     GridConnectionManager&& operator=(const GridConnectionManager&&) = delete;
 
-    std::set<GridConsumer*> consumers;
+    std::set<IGridConsumer*> consumers;
     std::set<Grid*> grids;
-    std::map<std::string, GridConsumer*> idToConsumerMap;
-    std::map<GridConsumer*, Grid*> consumerToGridMap;
+    std::map<std::string, IGridConsumer*> idToConsumerMap;
+    std::map<IGridConsumer*, Grid*> consumerToGridMap;
 };

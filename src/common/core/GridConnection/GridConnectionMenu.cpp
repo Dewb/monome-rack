@@ -6,7 +6,7 @@ using namespace rack;
 struct NewConnectGridItem : rack::ui::MenuItem
 {
     Grid* grid;
-    GridConsumer* consumer;
+    IGridConsumer* consumer;
     ActionQueue* actionQueue;
 
     void onAction(const rack::event::Action& e) override
@@ -22,7 +22,7 @@ struct NewConnectGridItem : rack::ui::MenuItem
     }
 };
 
-void menuUserReacquireGrid(GridConsumer* consumer, std::string lastDeviceId, ActionQueue* actionQueue)
+void menuUserReacquireGrid(IGridConsumer* consumer, std::string lastDeviceId, ActionQueue* actionQueue)
 {
     for (Grid* grid : GridConnectionManager::get().getGrids())
     {
@@ -41,7 +41,7 @@ void menuUserReacquireGrid(GridConsumer* consumer, std::string lastDeviceId, Act
     }
 }
 
-void appendDeviceConnectionMenu(rack::Menu* menu, GridConsumer* consumer, ActionQueue* actionQueue, bool hardwareOnly)
+void appendDeviceConnectionMenu(rack::Menu* menu, IGridConsumer* consumer, ActionQueue* actionQueue, bool hardwareOnly)
 {
     std::string currentConnectedDeviceId = consumer->gridGetCurrentDeviceId();
     std::string lastConnectedDeviceId = consumer->gridGetLastDeviceId(false);
