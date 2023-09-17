@@ -12,6 +12,7 @@ struct MirrorModeGridConsumer : GridConsumer
 
     MirrorModeGridConsumer(VirtualGridModule* module)
         : module(module)
+        , gridConnection(nullptr)
     {
     }
 
