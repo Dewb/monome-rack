@@ -58,15 +58,22 @@ struct SwitchFirmwareItem : rack::ui::MenuItem
             }
         }
 
+        bool currentMissing = false;
+        if (std::find(std::begin(fwNames), std::end(fwNames), module->firmwareName) == std::end(fwNames))
+        {
+            fwNames.push_back(module->firmwareName);
+            currentMissing = true;
+        }
+
         ui::Menu* menu = new ui::Menu;
 
         for (auto const& name : fwNames)
         {
             menu->addChild(createCheckMenuItem(
                 name,
-                "",
+                (currentMissing && (module->firmwareName == name)) ? "(missing)" : "",
                 [=]()
-                { return module->firmware.getLoadedName() == name; },
+                { return module->firmwareName == name; },
                 [=]()
                 { module->requestReloadFirmware(false, name); }
             ));
