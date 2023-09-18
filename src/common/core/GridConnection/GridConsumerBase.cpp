@@ -46,6 +46,11 @@ std::string GridConsumerBase::gridGetLastDeviceId(bool owned)
     return lastConnectedDeviceId;
 }
 
+void GridConsumerBase::setLastDeviceId(std::string id)
+{
+    lastConnectedDeviceId = id;
+}
+
 Grid* GridConsumerBase::gridGetDevice()
 {
     return gridConnection;
@@ -63,19 +68,6 @@ void GridConsumerBase::userReacquireGrid()
                 return;
             }
         }
-    }
-}
-
-void GridConsumerBase::toggleGridConnection(Grid* grid)
-{
-    if (gridConnection == grid)
-    {
-        GridConnectionManager::get().disconnect(this, true);
-        lastConnectedDeviceId = "";
-    }
-    else
-    {
-        GridConnectionManager::get().connect(grid, this);
     }
 }
 

@@ -3,7 +3,7 @@
 
 using namespace rack;
 
-struct NewConnectGridItem : rack::ui::MenuItem
+struct ConnectGridItem : rack::ui::MenuItem
 {
     Grid* grid;
     IGridConsumer* consumer;
@@ -15,9 +15,10 @@ struct NewConnectGridItem : rack::ui::MenuItem
         {
             auto thisGrid = grid;
             auto thisConsumer = consumer;
-            
-            actionQueue->push([thisGrid, thisConsumer]()
-                { GridConnectionManager::get().connect(thisGrid, thisConsumer); });
+
+            actionQueue->push([thisGrid, thisConsumer]() {
+                GridConnectionManager::get().toggleConnection(thisGrid, thisConsumer);
+            });
         }
     }
 };
@@ -30,11 +31,9 @@ void menuUserReacquireGrid(IGridConsumer* consumer, std::string lastDeviceId, Ac
         {
             if (actionQueue)
             {
-                actionQueue->push([grid, consumer]()
-                    { 
-                        GridConnectionManager::get().connect(grid, consumer); 
-                    }
-                );
+                actionQueue->push([grid, consumer]() {
+                    GridConnectionManager::get().connect(grid, consumer);
+                });
             }
             return;
         }
@@ -75,7 +74,7 @@ void appendDeviceConnectionMenu(rack::Menu* menu, IGridConsumer* consumer, Actio
             continue;
         }
 
-        auto connectItem = new NewConnectGridItem();
+        auto connectItem = new ConnectGridItem();
         connectItem->text = "└ " + grid->getDevice().type + " (" + grid->getDevice().id + ") ";
 
         auto rightText = "";
