@@ -19,11 +19,32 @@ struct MirrorModeGridConsumer : GridConsumerBase
     void gridConnected(Grid* newConnection) override
     {
         if (newConnection == module)
-        { // don't mirror self
+        {
+            // don't mirror self
             return;
         }
 
         GridConsumerBase::gridConnected(newConnection);
+
+        if (module && newConnection)
+        {
+            // update initial LED state
+            uint8_t leds[64];
+            for (int x_offset = 0; x_offset < 16; x_offset += 8)
+            {
+                for (int y_offset = 0; y_offset < 16; y_offset += 8)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        for (int y = 0; y < 8; y++)
+                        {
+                            leds[y * 8 + x] = module->ledBuffer[(y_offset + y) * 16 + x_offset + x];
+                        }
+                    }
+                    newConnection->updateQuadrant(x_offset, y_offset, leds);
+                }
+            }
+        }
     }
 
     void gridButtonEvent(int x, int y, bool state) override
