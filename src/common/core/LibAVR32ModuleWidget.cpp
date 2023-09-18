@@ -1,5 +1,6 @@
 #include "LibAVR32ModuleWidget.hpp"
 #include "LibAVR32Module.hpp"
+#include "GridConnectionMenu.hpp"
 #include "VirtualGridModule.hpp"
 #include "VirtualGridWidget.hpp"
 #include "SerialOscInterface.hpp"
@@ -11,16 +12,6 @@ namespace fs = ghc::filesystem;
 
 using namespace rack;
 
-struct ConnectGridItem : rack::ui::MenuItem
-{
-    LibAVR32Module* module;
-    Grid* grid;
-
-    void onAction(const rack::event::Action& e) override
-    {
-        module->userToggleGridConnection(grid);
-    }
-};
 
 struct ReloadFirmwareItem : rack::ui::MenuItem
 {
@@ -183,75 +174,5 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(firmwareMenu);
 
     menu->addChild(new MenuSeparator());
-    appendConnectionMenu(menu);
-}
-
-void LibAVR32ModuleWidget::appendConnectionMenu(rack::Menu* menu)
-{
-    LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
-    assert(m);
-
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Device Connection"));
-
-    if (SerialOscInterface::get()->isServiceDetected())
-    {
-        menu->addChild(
-            construct<MenuLabel>(
-                &MenuLabel::text,
-                "serialosc version " + SerialOscInterface::get()->getServiceVersion()));
-    }
-    else
-    {
-        menu->addChild(
-            createMenuItem("└ serialosc service not detected, click here to install", "",
-                [=]()
-                {
-                    system::openBrowser("https://monome.org/docs/serialosc/setup/");
-                }));
-    }
-
-    // enumerate registered grid devices
-    int deviceCount = 0;
-    bool preferredDeviceFound = false;
-    for (Grid* grid : GridConnectionManager::get().getGrids())
-    {
-        auto connectItem = new ConnectGridItem();
-        connectItem->text = "└ " + grid->getDevice().type + " (" + grid->getDevice().id + ") ";
-
-        auto rightText = "";
-        if (m->currentConnectedDeviceId == grid->getDevice().id)
-        {
-            rightText = "✔";
-            preferredDeviceFound = true;
-        }
-        else if (m->currentConnectedDeviceId == "" && m->gridGetLastDeviceId(false) == grid->getDevice().id)
-        {
-            rightText = "⋯";
-            preferredDeviceFound = true;
-        }
-
-        connectItem->rightText = rightText;
-        connectItem->module = m;
-        connectItem->grid = grid;
-        menu->addChild(connectItem);
-        deviceCount++;
-    }
-
-    if (deviceCount == 0)
-    {
-        menu->addChild(construct<MenuLabel>(&MenuLabel::text, "  (no physical or virtual devices found)"));
-    }
-
-    if (m->currentConnectedDeviceId == "" && m->gridGetLastDeviceId(false) != "")
-    {
-        if (preferredDeviceFound)
-        {
-            menu->addChild(createMenuItem("Reacquire grid", "", [=]() { m->userReacquireGrid(); }));
-        }
-        else
-        {
-            menu->addChild(construct<MenuLabel>(&MenuLabel::text, "Can't reacquire grid (" + m->gridGetLastDeviceId(false) + " not found)"));
-        }
-    }
-
+    appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
 }

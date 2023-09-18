@@ -216,6 +216,15 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
 
     menu->addChild(createSubmenuItem("Mirror hardware grid", "", [=](Menu *childMenu) {
         appendDeviceConnectionMenu(childMenu, grid->mirrorModeConsumer, &grid->audioThreadActions, true);
+        childMenu->addChild(createMenuItem("Stop mirroring", "",
+            [=]() {
+                if (grid->mirrorModeConsumer) {
+                    GridConnectionManager::get().disconnect(grid->mirrorModeConsumer);
+                    grid->mirrorModeConsumer->setLastDeviceId("");
+                }
+            },
+            !grid->mirrorModeConsumer || grid->mirrorModeConsumer->gridGetDevice() == nullptr
+        ));
     }));
 
     menu->addChild(new MenuSeparator());

@@ -2,6 +2,7 @@
 
 #include "rack.hpp"
 #include "LibAVR32Module.hpp"
+#include "GridConnectionMenu.hpp"
 
 
 struct USBAJack : rack::Switch
@@ -87,8 +88,12 @@ struct USBAJack : rack::Switch
         auto mw = dynamic_cast<LibAVR32ModuleWidget*>(parent);
         if (mw)
         {
-            menu->addChild(new rack::MenuSeparator());
-            mw->appendConnectionMenu(menu);
+            auto m = dynamic_cast<LibAVR32Module*>(mw->module);
+            if (mw)
+            {
+                menu->addChild(new rack::MenuSeparator());
+                appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
+            }
         }
     }
 };

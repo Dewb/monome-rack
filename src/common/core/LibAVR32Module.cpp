@@ -139,11 +139,6 @@ void LibAVR32Module::encDeltaEvent(int n, int d)
     }
 }
 
-void LibAVR32Module::userToggleGridConnection(Grid* grid)
-{
-    audioThreadActions.push([this, grid]() { this->toggleGridConnection(grid); });
-}
-
 void LibAVR32Module::readSerialMessages()
 {
     uint8_t* msg;

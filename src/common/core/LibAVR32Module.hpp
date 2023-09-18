@@ -56,7 +56,6 @@ struct LibAVR32Module : rack::engine::Module, GridConsumerBase
     virtual void gridButtonEvent(int x, int y, bool state) override;
     virtual void encDeltaEvent(int n, int d) override;
 
-    void userToggleGridConnection(Grid* grid);
     virtual void readSerialMessages();
     void requestReloadFirmware(bool preserveMemory, const std::string& firmwareName = "");
 
@@ -87,6 +86,8 @@ protected:
 
     // Thread-safe for single-producer, single-consumer
     friend struct TeletypeSceneIO;
+    friend struct LibAVR32ModuleWidget;
+    friend struct USBAJack;
     ActionQueue audioThreadActions;
 };
 

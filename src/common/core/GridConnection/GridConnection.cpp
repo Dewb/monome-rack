@@ -123,6 +123,19 @@ void GridConnectionManager::disconnect(IGridConsumer* consumer, bool ownerChange
     }
 }
 
+void GridConnectionManager::toggleConnection(Grid* grid, IGridConsumer* consumer)
+{
+    if (consumer && consumer->gridGetDevice() == grid)
+    {
+        disconnect(consumer, true);
+        consumer->setLastDeviceId("");
+    }
+    else
+    {
+        connect(grid, consumer);
+    }
+}
+
 void GridConnectionManager::dispatchButtonMessage(MonomeDevice* device, int x, int y, bool state)
 {
     auto iter = idToConsumerMap.find(device->id);

@@ -10,6 +10,7 @@ struct GridConsumerBase : public IGridConsumer
     void gridDisconnected(bool ownerChanged) override;
     std::string gridGetCurrentDeviceId() override;
     std::string gridGetLastDeviceId(bool owned) override;
+    virtual void setLastDeviceId(std::string id) override;
     Grid* gridGetDevice() override;
 
     GridConsumerBase();
@@ -25,6 +26,5 @@ struct GridConsumerBase : public IGridConsumer
     bool connectionOwned;
 
 protected:
-    void toggleGridConnection(Grid* grid);
     Grid* gridConnection;
 };

@@ -25,6 +25,7 @@ struct IGridConsumer
     virtual void gridDisconnected(bool ownerChanged) = 0;
     virtual std::string gridGetCurrentDeviceId() = 0;
     virtual std::string gridGetLastDeviceId(bool owned) = 0;
+    virtual void setLastDeviceId(std::string id) = 0;
     virtual void gridButtonEvent(int x, int y, bool state) = 0;
     virtual void encDeltaEvent(int n, int d) = 0;
     virtual Grid* gridGetDevice() = 0;
@@ -43,6 +44,7 @@ struct GridConnectionManager final
     bool isConnected(std::string id);
     void disconnect(Grid* grid, bool ownerChanged = false);
     void disconnect(IGridConsumer* consumer, bool ownerChanged = false);
+    void toggleConnection(Grid* grid, IGridConsumer* consumer);
 
     void dispatchButtonMessage(MonomeDevice* device, int x, int y, bool state);
     void dispatchEncDeltaMessage(MonomeDevice* device, int n, int d);
