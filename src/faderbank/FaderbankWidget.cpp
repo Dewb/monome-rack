@@ -115,4 +115,15 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 
 void FaderbankWidget::appendContextMenu(Menu* menu)
 {
+    auto fb = dynamic_cast<FaderbankModule*>(module);
+    if (!fb)
+    {
+        return;
+    }
+
+    menu->addChild(new MenuSeparator());
+
+    menu->addChild(createSubmenuItem("MIDI Connection", "", [=](Menu *childMenu) {
+        appendMidiMenu(childMenu, &fb->midiInput);
+    }));
 }
