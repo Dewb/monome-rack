@@ -57,18 +57,20 @@ struct WideYellowLight : YellowLight
 
         math::Vec c = box.size.div(2);
 
-        // make this the average instead of min
-        float radius = (box.size.x + box.size.y) / 3.f;
-        float oradius = radius + std::min(radius * 4.f, 15.f);
+        float xoradius = c.x + std::min(c.x * 1.55f, 15.f);
+        float yoradius = c.y + std::min(c.y * 1.85f, 15.f);
 
         nvgBeginPath(args.vg);
-        nvgRect(args.vg, c.x - oradius, c.y - oradius, 2 * oradius, 2 * oradius);
+        nvgRect(args.vg, c.x - xoradius, c.y - yoradius, 2 * xoradius, 3 * yoradius);
 
         NVGcolor icol = color::mult(color, halo);
         NVGcolor ocol = nvgRGBA(0, 0, 0, 0);
-        NVGpaint paint = nvgRadialGradient(args.vg, c.x, c.y, radius, oradius, icol, ocol);
+        nvgSave(args.vg);
+        nvgScale(args.vg, 1.0f, 1.85f * c.y / c.x);
+        NVGpaint paint = nvgRadialGradient(args.vg, c.x, c.y, c.x * 0.46, xoradius * 0.8, icol, ocol);
         nvgFillPaint(args.vg, paint);
         nvgFill(args.vg);
+        nvgRestore(args.vg);
     }
 };
 
