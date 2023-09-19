@@ -11,7 +11,8 @@ struct FBFaderParam : rack::engine::ParamQuantity
 };
 
 FaderbankModule::FaderbankModule()
-:_iiDevice(this)
+: startCC(32)
+, _iiDevice(this)
 {
     config(NUM_FADERS, 0, NUM_FADERS, 0);
 
@@ -29,6 +30,12 @@ FaderbankModule::~FaderbankModule()
 
 void FaderbankModule::process(const ProcessArgs& args)
 {
+    rack::midi::Message msg;
+    while (midiInput.tryPop(&msg, args.frame))
+    {
+        processMIDIMessage(msg);
+    }
+
     for (unsigned i = 0; i < NUM_FADERS; i++)
     {
         outputs[i].setVoltage(params[i].getValue());
@@ -38,13 +45,37 @@ void FaderbankModule::process(const ProcessArgs& args)
     }
 }
 
+void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
+{
+    DEBUG("MIDI: %lld %s", msg.getFrame(), msg.toString().c_str());
+
+    switch (msg.getStatus())
+    {
+        case 0xb:
+            {
+                uint8_t cc = msg.getNote();
+                int index = cc - startCC;
+                if (index >= 0 && index < NUM_FADERS)
+                {
+                    params[index].setValue((msg.getValue() * 10.0) / 127.0);
+                }
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 json_t* FaderbankModule::dataToJson()
 {
     json_t* rootJ = json_object();
+    json_object_set_new(rootJ, "midi", midiInput.toJson());
     return rootJ;
 }
 
 void FaderbankModule::dataFromJson(json_t* rootJ)
 {
+    json_t* midiJ = json_object_get(rootJ, "midi");
+    if (midiJ)
+        midiInput.fromJson(midiJ);
 }
-
