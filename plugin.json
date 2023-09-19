@@ -127,6 +127,17 @@
         "hardware clone",
         "controller"
       ]
+    },
+    {
+      "slug": "faderbank",
+      "name": "faderbank",
+      "description": "",
+      "manualUrl": "https://dewb.github.io/monome-rack/modules/faderbank",
+      "tags": [
+        "digital",
+        "hardware clone",
+        "controller"
+      ]
     }
   ]
 }
