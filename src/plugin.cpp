@@ -33,7 +33,7 @@ void init(Plugin* p)
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8>, VirtualGridWidgetTemplate<8, 8>>("grid64");
     Model* modelGrid256 = createModel<VirtualGridModuleTemplate<16, 16>, VirtualGridWidgetTemplate<16, 16>>("grid256");
 
-    // Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
+    Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
 
     p->addModel(modelWhiteWhale);
     p->addModel(modelMeadowphysics);
@@ -46,7 +46,7 @@ void init(Plugin* p)
     p->addModel(modelGrid64);
     p->addModel(modelGrid256);
 
-    // p->addModel(modelFaderbank);
+    p->addModel(modelFaderbank);
 
     initThemes();
 }
