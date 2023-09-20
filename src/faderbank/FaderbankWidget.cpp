@@ -7,19 +7,24 @@ using namespace rack;
 
 struct ThemedSvgSlider : app::SvgSlider
 {
-    std::shared_ptr<window::Svg> lightBackgroundSvg;
-    std::shared_ptr<window::Svg> darkBackgroundSvg;
+    std::vector<std::shared_ptr<window::Svg>> lightThemedBackgrounds;
+    std::vector<std::shared_ptr<window::Svg>> darkThemedBackgrounds;
 
-    void setBackgroundSvg(std::shared_ptr<window::Svg> lightBackgroundSvg, std::shared_ptr<window::Svg> darkBackgroundSvg)
+    unsigned int *theme = 0;
+
+    void updateGraphics()
     {
-        this->lightBackgroundSvg = lightBackgroundSvg;
-        this->darkBackgroundSvg = darkBackgroundSvg;
-        SvgSlider::setBackgroundSvg(settings::preferDarkPanels ? darkBackgroundSvg : lightBackgroundSvg);
+        int t = theme == nullptr ? 0 : *theme;
+        SvgSlider::setBackgroundSvg(
+            settings::preferDarkPanels ?
+                darkThemedBackgrounds[t % darkThemedBackgrounds.size()] :
+                lightThemedBackgrounds[t % lightThemedBackgrounds.size()]
+        );
     }
 
     void step() override
     {
-        SvgSlider::setBackgroundSvg(settings::preferDarkPanels ? darkBackgroundSvg : lightBackgroundSvg);
+        updateGraphics();
         SvgSlider::step();
     }
 };
@@ -28,14 +33,24 @@ struct FaderbankSlider : ThemedSvgSlider
 {
     FaderbankSlider()
     {
-        maxHandlePos = rack::window::mm2px(math::Vec(0.738, 1.8).plus(math::Vec(0, 0)));
-        minHandlePos = rack::window::mm2px(math::Vec(0.738, 87.3).plus(math::Vec(0, 0)));
-        setBackgroundSvg(
-            Svg::load(asset::plugin(pluginInstance, "res/FaderBackground.svg")),
-            Svg::load(asset::plugin(pluginInstance, "res/FaderBackground-dark.svg"))
-        );
+        lightThemedBackgrounds.push_back(Svg::load(asset::plugin(pluginInstance, "res/FaderBackground90mm.svg")));
+        lightThemedBackgrounds.push_back(Svg::load(asset::plugin(pluginInstance, "res/FaderBackground60mm.svg")));
+        darkThemedBackgrounds.push_back(Svg::load(asset::plugin(pluginInstance, "res/FaderBackground90mm-dark.svg")));
+        darkThemedBackgrounds.push_back(Svg::load(asset::plugin(pluginInstance, "res/FaderBackground60mm-dark.svg")));
+
         setHandleSvg(Svg::load(asset::plugin(pluginInstance, "res/FaderHandle.svg")));
+        updateGraphics();
+
+        maxHandlePos = rack::window::mm2px(math::Vec(0.738, 1.8));
+        minHandlePos = rack::window::mm2px(math::Vec(0.738, 87.3));
+
         box.grow(math::Vec(3, 1));
+    }
+
+    void step() override
+    {
+        minHandlePos = rack::window::mm2px(math::Vec(0.738, (theme == nullptr || *theme == 0) ? 87.3 : 59.8));
+        ThemedSvgSlider::step();
     }
 };
 
@@ -111,7 +126,17 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
     for (int i = 0; i < NUM_FADERS; i++)
     {
         addOutput(createOutput<ThemedPJ301MPort>(Vec(26 + 43 * i, 26), module, i));
-        addParam(createParam<FaderbankSliderYellow>(Vec(23 + 43 * i, 66), module, i));
+        auto slider = createParam<FaderbankSliderYellow>(Vec(23 + 43 * i, 66), module, i);
+        if (module != nullptr)
+        {
+            slider->theme = (unsigned int*)&module->faderSize;
+        }
+        else
+        {
+            // set the handles on a diagonal in the library
+            slider->handle->box.pos = slider->minHandlePos.crossfade(slider->maxHandlePos, i/(NUM_FADERS * 1.0));
+        }
+        addParam(slider);
     }
 }
 
@@ -125,7 +150,23 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createSubmenuItem("MIDI Connection", "", [=](Menu *childMenu) {
+    menu->addChild(createIndexSubmenuItem("Fader size", { "90mm", "60mm" },
+        [=]() {
+            return fb->faderSize;
+        },
+        [=](int index) {
+            fb->faderSize = static_cast<FaderbankModule::FaderSize>(index);
+            // update all the slider handle positions
+            for (widget::Widget* child : children)
+            {
+                child->step();
+                ChangeEvent eChange;
+                child->onChange(eChange);
+            }
+        }
+    ));
+
+    menu->addChild(createSubmenuItem("MIDI connection", "", [=](Menu *childMenu) {
         appendMidiMenu(childMenu, &fb->midiInput);
     }));
 }

@@ -19,6 +19,14 @@ struct FaderbankModule : rack::Module
     rack::midi::InputQueue midiInput;
     uint8_t startCC;
 
+    typedef enum
+    {
+        Fader90mm,
+        Fader60mm
+    } FaderSize;
+
+    FaderSize faderSize = Fader90mm;
+
 protected:
     iiDevice _iiDevice;
 };
