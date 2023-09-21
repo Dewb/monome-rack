@@ -2,6 +2,8 @@
 #include "rack.hpp"
 #include "iiBus.h"
 
+#include <map>
+
 #define NUM_FADERS 16
 
 struct FaderbankModule : rack::Module
@@ -17,7 +19,7 @@ struct FaderbankModule : rack::Module
     void dataFromJson(json_t* rootJ) override;
 
     rack::midi::InputQueue midiInput;
-    uint8_t startCC;
+    std::map<uint16_t, uint8_t> inputMap;
 
     typedef enum
     {
@@ -26,7 +28,4 @@ struct FaderbankModule : rack::Module
     } FaderSize;
 
     FaderSize faderSize = Fader90mm;
-
-protected:
-    iiDevice _iiDevice;
 };
