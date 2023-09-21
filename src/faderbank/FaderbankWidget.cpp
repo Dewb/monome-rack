@@ -166,20 +166,29 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
         }
     ));
 
-    menu->addChild(createSubmenuItem("MIDI connection", "", [=](Menu *childMenu) {
-        appendMidiMenu(childMenu, &fb->midiInput);
-    }));
+    menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
+        [=](Menu* childMenu)
+        {
+            appendMidiMenu(childMenu, &fb->midiInput);
+            // remove channel selection
+            auto last = childMenu->children.back();
+            childMenu->removeChild(last);
+            delete last;
+        }));
 
     menu->addChild(createMenuItem("Autodetect 16n configuration", "",
-        [=]() {
+        [=]()
+        {
+            fb->resetConfig();
+
             // Send a sysex message to request device channel/CC config.
             midi::Message msg;
             msg.setSize(6);
             msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
+
             midi::Output output;
             output.setDriverId(fb->midiInput.getDriverId());
             output.setDeviceId(fb->midiInput.getDeviceId());
             output.sendMessage(msg);
-        }
-    ));
+        }));
 }
