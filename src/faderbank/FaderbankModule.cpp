@@ -19,11 +19,7 @@ FaderbankModule::FaderbankModule()
         configParam<FBFaderParam>(i, 0.0, 10.0, 0.0);
     }
 
-    for (int i = 0; i < 16; i++)
-    {
-        // by default, assign CC faders starting with 32, all on channel 1
-        inputMap[32 + i] = i;
-    }
+    resetConfig();
 }
 
 FaderbankModule::~FaderbankModule()
@@ -88,6 +84,16 @@ void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
             break;
         default:
             break;
+    }
+}
+
+void FaderbankModule::resetConfig()
+{
+    inputMap.clear();
+    for (int i = 0; i < NUM_FADERS; i++)
+    {
+        // by default, assign CC faders starting with 32, all on channel 1
+        inputMap[32 + i] = i;
     }
 }
 

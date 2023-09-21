@@ -14,6 +14,7 @@ struct FaderbankModule : rack::Module
     void process(const ProcessArgs& args) override;
 
     void processMIDIMessage(const rack::midi::Message& msg);
+    void resetConfig();
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
