@@ -169,4 +169,17 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
     menu->addChild(createSubmenuItem("MIDI connection", "", [=](Menu *childMenu) {
         appendMidiMenu(childMenu, &fb->midiInput);
     }));
+
+    menu->addChild(createMenuItem("Autodetect 16n configuration", "",
+        [=]() {
+            // Send a sysex message to request device channel/CC config.
+            midi::Message msg;
+            msg.setSize(6);
+            msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
+            midi::Output output;
+            output.setDriverId(fb->midiInput.getDriverId());
+            output.setDeviceId(fb->midiInput.getDeviceId());
+            output.sendMessage(msg);
+        }
+    ));
 }
