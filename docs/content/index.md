@@ -62,6 +62,13 @@
  </a>
 </div>
 
+<div class="module">
+ <a href="modules/faderbank">
+  <b>Faderbank</b><br>
+  <img src="images/faderbank.png">
+ </a>
+</div>
+
 ##
 
 [Introduction to the collection](general/intro)
