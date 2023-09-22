@@ -238,22 +238,28 @@ void hardware_setScreenBuffer(uint8_t* buf)
     screenBuffer = buf;
 }
 
-// TODO: make this generic for all followers somehow
-uint16_t faderbank[16];
+// TODO: make this generic to support more follower types
+uint16_t faderbank[64];
 
-void hardware_iiUpdateFollowerData(uint16_t key, uint16_t data)
+void hardware_iiUpdateFollowerData(uint8_t device, uint8_t param, uint16_t data)
 {
-    if (key >> 8 == 0x34)
+    // For now, only support 16 params each on devices 0x34-0x37
+    uint8_t offset = device - 0x34;
+    if (offset < 4 && param < 16)
     {
-        faderbank[key & 0xFF] = data;
+        uint8_t index = offset * 16 + param;
+        faderbank[index] = data;
     }
 }
 
-uint16_t hardware_iiGetFollowerData(uint16_t key)
+uint16_t hardware_iiGetFollowerData(uint8_t device, uint8_t param)
 {
-    if (key >> 8 == 0x34)
+    // For now, only support 16 params each on devices 0x34-0x37
+    uint8_t offset = device - 0x34;
+    if (offset < 4 && param < 16)
     {
-        return faderbank[key & 0xFF];
+        uint8_t index = offset * 16 + param;
+        return faderbank[index];
     }
     return 0;
 }

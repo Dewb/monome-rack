@@ -1,5 +1,5 @@
 #include "LibAVR32Module.hpp"
-#include "iiBus.h"
+#include "IIBus.h"
 
 #include "rack.hpp"
 
@@ -64,7 +64,7 @@ struct TeletypeModule : LibAVR32Module
     virtual uint8_t* getScreenBuffer() override { return screenBuffer; }
 
 protected:
-    iiDevice _iiDevice;
+    IIBus iiBus;
 
     uint8_t screenBuffer[128 * 64];
 };

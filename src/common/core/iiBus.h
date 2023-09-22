@@ -6,40 +6,24 @@
 #include <unordered_map>
 #include <atomic>
 
-#define MAX_II_DATA_BYTES 8
+struct LibAVR32Module;
 
-// i2c devices cannot wait on each other. Even if the Rack engine is using multiple threads,
-// a leader and follower may be executing on the same thread. 
-// Since the leader will block waiting on a request for data from a follower, we need to 
-// have the data ready in advance. Therefore all followers must continuously update a data
-// structure accessible to the leader with all data the leader could possible request. 
+// Notes on the work-in-progress implementation of II (monome ecosystem i2c):
+//
+// An i2c module cannot wait for a response to messages. Even if the Rack engine is
+// using multiple threads, a leader and follower may be executing on the same thread.
+//
+// Since the leader will block waiting on a request for data from a follower, we need to
+// have the data ready in advance. Therefore the bus must continuously maintain a data
+// structure accessible to the leader with all data the leader could possibly request.
 
-// cheapo concurrent data structure for time-travelling follower data
-typedef std::unordered_map<uint16_t, std::atomic<uint16_t>> iiFollowerData_t;
-
-struct iiBus {
-    static void Initialize();
-    static iiFollowerData_t FollowerData;
-};
-
-// TODO: send commands from follower over Rack expander bus
-struct iiCommand
+struct IIBus
 {
-    // 7-bit I2C address
-    uint8_t address;
-    uint8_t data[MAX_II_DATA_BYTES];
-    uint8_t length;
-};
+    IIBus(LibAVR32Module* leader);
+    bool isFollower(rack::Module* module);
 
-struct iiDevice
-{
-    iiDevice(rack::Module* module);
-
-    void setAddress(uint8_t address);
-    void updateFollowerData(uint8_t id, uint16_t data);
-    void transmit(const iiCommand& msg);
+    void step();
 
 protected:
-    rack::Module* _module;
-    uint8_t _address; 
+    LibAVR32Module* leader;
 };

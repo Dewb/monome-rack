@@ -33,7 +33,7 @@ struct TTParamQuantity : rack::engine::ParamQuantity
 
 TeletypeModule::TeletypeModule()
 : LibAVR32Module("teletype", "teletype4")
-, _iiDevice(this)
+, iiBus(this)
 , screenBuffer{}
 {
     // initialize screen with "engine stopped" message
@@ -89,15 +89,9 @@ void TeletypeModule::processInputs(const ProcessArgs& args)
         firmware.setGPIO(A00 + i, inputTriggers[i].isHigh());
     }
 
-    // for (const auto& [key, value] : iiBus::FollowerData)
-    // {
-    //     firmware.iiUpdateFollowerData(key, value.load(std::memory_order_relaxed));
-    // }
-
-    // iiCommand msg;
-    // while (firmware.iiPopMessage(&msg.address, msg.data, &msg.length))  {
-    //     _iiDevice.transmit(msg);
-    // }
+    // process II follower-to-leader input
+    // no support for leader-to-follower commands right now
+    iiBus.step();
 }
 
 void TeletypeModule::processOutputs(const ProcessArgs& args)

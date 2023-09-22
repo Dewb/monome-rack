@@ -18,7 +18,7 @@ int i2c_leader_rx(uint8_t addr, uint8_t* data, uint8_t l)
 {
     if (l == 2)
     {
-        uint16_t value = hardware_iiGetFollowerData(addr << 8 | last_port);
+        uint16_t value = hardware_iiGetFollowerData(addr, last_port);
         data[0] = value >> 8;
         data[1] = value & 0xFF;
     }

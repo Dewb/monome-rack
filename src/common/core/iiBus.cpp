@@ -1,55 +1,62 @@
-#include "iiBus.h"
+#include "IIBus.h"
+#include "LibAVR32Module.hpp"
 
-iiFollowerData_t iiBus::FollowerData;
+#define FADERBANK_II_MAX_VALUE 16383
 
-void iiBus::Initialize()
+extern rack::plugin::Model* modelFaderbank;
+
+IIBus::IIBus(LibAVR32Module* leader)
+    : leader(leader)
 {
-    for (int device = 0x34; device <= 0x37; device++) 
+}
+
+bool IIBus::isFollower(rack::Module* module)
+{
+    // Only faderbanks participate in II right now
+    return module != nullptr && module->model == modelFaderbank;
+}
+
+void IIBus::step()
+{
+    if (leader == nullptr)
     {
-        for (int fader = 0; fader < 16; fader++)
-        {
-            iiBus::FollowerData.emplace(std::make_pair((device << 8) | fader, 0));
-        }
+        return;
     }
-}
 
-iiDevice::iiDevice(rack::Module* module)
-: _module(module)
-{
-    if (_module) 
+    // let's tentatively define a bus as an unbroken chain of II-supporting
+    // modules directly attached to either the left or right of the leader.
+
+    // scan the "bus" for eligible modules, starting to the leader's left
+    std::vector<rack::Module*> followers;
+    auto module = leader->getLeftExpander().module;
+    while (isFollower(module))
     {
-        _module->rightExpander.producerMessage = new iiCommand();
-        _module->leftExpander.producerMessage = new iiCommand();
+        followers.push_back(module);
+        module = module->getLeftExpander().module;
     }
-}
 
-void iiDevice::setAddress(uint8_t address)
-{
-    _address = address;
-}
-
-void iiDevice::updateFollowerData(uint8_t id, uint16_t data)
-{
-    const auto record = iiBus::FollowerData.find((_address << 8) | id);
-    if (record != iiBus::FollowerData.end()) 
+    // flip the order, so we can prioritize left-to-right
+    if (followers.size() > 1)
     {
-        record->second.store(data, std::memory_order_relaxed);
+        std::reverse(followers.begin(), followers.end());
     }
-}
 
-void iiDevice::transmit(const iiCommand& msg)
-{
-    if (_module) 
+    // scan to the leader's right
+    module = leader->getRightExpander().module;
+    while (isFollower(module))
     {
-        if (_module->rightExpander.producerMessage)
+        followers.push_back(module);
+        module = module->getRightExpander().module;
+    }
+
+    // gather params from all followers
+    for (size_t follower = 0; follower < std::min(static_cast<size_t>(4), followers.size()); follower++)
+    {
+        for (uint8_t fader = 0; fader < std::min(16, followers[follower]->getNumParams()); fader++)
         {
-            *(reinterpret_cast<iiCommand*>(_module->rightExpander.producerMessage)) = msg;
-            _module->rightExpander.messageFlipRequested = true;
-        }
-        if (_module->leftExpander.producerMessage)
-        {
-            *(reinterpret_cast<iiCommand*>(_module->leftExpander.producerMessage)) = msg;
-            _module->leftExpander.messageFlipRequested = true;
+            float voltage = followers[follower]->params[fader].getValue();
+            uint16_t value = static_cast<uint16_t>(voltage / 10.0 * FADERBANK_II_MAX_VALUE);
+            leader->firmware.iiUpdateFollowerData(follower + 0x34, fader, value);
         }
     }
 }
