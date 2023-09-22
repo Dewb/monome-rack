@@ -50,8 +50,8 @@ MOCK_API(void, hidConnect, ());
 MOCK_API(void, hidDisconnect, ());
 MOCK_API(void, hidMessage, (uint8_t key, uint8_t mod, bool held, bool release));
 
-MOCK_API(void, iiUpdateFollowerData, (uint16_t key, uint16_t data));
-MOCK_API(uint16_t, iiGetFollowerData, (uint16_t key));
+MOCK_API(void, iiUpdateFollowerData, (uint8_t device, uint8_t param, uint16_t data));
+MOCK_API(uint16_t, iiGetFollowerData, (uint8_t device, uint8_t param));
 MOCK_API(bool, iiPushMessage, (uint8_t addr, uint8_t* data, uint8_t length));
 MOCK_API(bool, iiPopMessage, (uint8_t* addr, uint8_t* data, uint8_t* length));
 

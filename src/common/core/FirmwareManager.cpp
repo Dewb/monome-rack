@@ -459,11 +459,11 @@ void FirmwareManager::hidMessage(uint8_t key, uint8_t mod, bool held, bool relea
     }
 }
 
-void FirmwareManager::iiUpdateFollowerData(uint16_t key, uint16_t value)
+void FirmwareManager::iiUpdateFollowerData(uint8_t device, uint8_t param, uint16_t value)
 {
     if (impl)
     {
-        impl->fw_fn_hardware_iiUpdateFollowerData(key, value);
+        impl->fw_fn_hardware_iiUpdateFollowerData(device, param, value);
     }
 }
 

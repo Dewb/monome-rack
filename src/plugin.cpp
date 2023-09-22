@@ -17,6 +17,7 @@
 using namespace rack;
 
 Plugin* pluginInstance;
+Model* modelFaderbank;
 
 void init(Plugin* p)
 {
@@ -33,7 +34,7 @@ void init(Plugin* p)
     Model* modelGrid64 = createModel<VirtualGridModuleTemplate<8, 8>, VirtualGridWidgetTemplate<8, 8>>("grid64");
     Model* modelGrid256 = createModel<VirtualGridModuleTemplate<16, 16>, VirtualGridWidgetTemplate<16, 16>>("grid256");
 
-    Model* modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
+    modelFaderbank = createModel<FaderbankModule, FaderbankWidget>("faderbank");
 
     p->addModel(modelWhiteWhale);
     p->addModel(modelMeadowphysics);
