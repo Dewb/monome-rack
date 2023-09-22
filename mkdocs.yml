@@ -16,6 +16,7 @@ nav:
     - 'White Whale': 'modules/whitewhale.md'
   - 'Accessory Modules':
     - 'Virtual Grids': 'modules/grids.md'
+    - 'Faderbank': 'modules/faderbank.md'
   - 'Getting Help':
     - Index: 'help.md'
   - 'Releases↗': 'https://github.com/Dewb/monome-rack/releases'
