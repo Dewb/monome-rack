@@ -221,26 +221,32 @@ void LibAVR32Module::readSerialMessages()
     }
 }
 
-void LibAVR32Module::requestReloadFirmware(bool preserveMemory, const std::string& firmwareName)
+void LibAVR32Module::requestReloadFirmware(bool preserveVRAM, bool preserveNVRAM, const std::string& firmwareName)
 {
-    audioThreadActions.push([this, preserveMemory, firmwareName]() { this->reloadFirmware(preserveMemory, firmwareName); });
+    audioThreadActions.push([this, preserveVRAM, preserveNVRAM, firmwareName]()
+        { this->reloadFirmware(preserveVRAM, preserveNVRAM, firmwareName); });
 }
 
-void LibAVR32Module::reloadFirmware(bool preserveMemory, const std::string& newName)
+void LibAVR32Module::reloadFirmware(bool preserveVRAM, bool preserveNVRAM, const std::string& newName)
 {
     void *data, *nvram_copy, *vram_copy = 0;
     uint32_t nvram_size, vram_size = 0;
 
     firmwareName = newName.empty() ? firmware.getLoadedName() : newName;
     if (firmwareName != firmware.getLoadedName()) {
-        preserveMemory = false;
+        preserveVRAM = false;
+        preserveNVRAM = false;
     }
 
-    if (preserveMemory) {
+    if (preserveNVRAM)
+    {
         firmware.readNVRAM(&data, &nvram_size);
         nvram_copy = malloc(nvram_size);
         memcpy(nvram_copy, data, nvram_size);
+    }
 
+    if (preserveVRAM)
+    {
         firmware.readVRAM(&data, &vram_size);
         vram_copy = malloc(vram_size);
         memcpy(vram_copy, data, vram_size);
@@ -250,13 +256,18 @@ void LibAVR32Module::reloadFirmware(bool preserveMemory, const std::string& newN
     firmware.init();
     firmware.setScreenBuffer(getScreenBuffer());
 
-    if (preserveMemory) {
+    if (preserveNVRAM)
+    {
         firmware.writeNVRAM(nvram_copy, nvram_size);
-        firmware.writeVRAM(vram_copy, vram_size);
         free(nvram_copy);
+    }
+
+    if (preserveVRAM)
+    {
+        firmware.writeVRAM(vram_copy, vram_size);
         free(vram_copy);
     }
-    
+
     gridConnected(gridConnection);
 }
 
@@ -330,7 +341,7 @@ void LibAVR32Module::dataFromJson(json_t* rootJ)
 
     if (newFirmwareName != firmwareName)
     {
-        reloadFirmware(false, newFirmwareName);
+        reloadFirmware(false, false, newFirmwareName);
     }
 
     void* data = 0;

@@ -16,12 +16,13 @@ using namespace rack;
 struct ReloadFirmwareItem : rack::ui::MenuItem
 {
     LibAVR32Module* module;
-    bool preserveMemory;
+    bool preserveVRAM;
+    bool preserveNVRAM;
 
     void onAction(const rack::event::Action& e) override
     {
         if (module) {
-            module->requestReloadFirmware(preserveMemory);
+            module->requestReloadFirmware(preserveVRAM, preserveNVRAM);
         }
     }
 };
@@ -66,7 +67,7 @@ struct SwitchFirmwareItem : rack::ui::MenuItem
                 [=]()
                 { return module->firmwareName == name; },
                 [=]()
-                { module->requestReloadFirmware(false, name); }
+                { module->requestReloadFirmware(false, false, name); }
             ));
         }
 
@@ -139,17 +140,26 @@ struct FirmwareSubmenuItem : MenuItem
             &SwitchFirmwareItem::module, m
         ));
 
-        auto reloadItem = new ReloadFirmwareItem();
-        reloadItem->text = "Reload & Restart";
-        reloadItem->module = m;
-        reloadItem->preserveMemory = false;
-        menu->addChild(reloadItem);
-
         auto hotReloadItem = new ReloadFirmwareItem();
         hotReloadItem->text = "Hot Reload";
         hotReloadItem->module = m;
-        hotReloadItem->preserveMemory = true;
+        hotReloadItem->preserveVRAM = true;
+        hotReloadItem->preserveNVRAM = true;
         menu->addChild(hotReloadItem);
+
+        auto reloadItem = new ReloadFirmwareItem();
+        reloadItem->text = "Reload & Restart";
+        reloadItem->module = m;
+        reloadItem->preserveVRAM = false;
+        reloadItem->preserveNVRAM = true;
+        menu->addChild(reloadItem);
+
+        auto clearItem = new ReloadFirmwareItem();
+        clearItem->text = "Clear NVRAM";
+        clearItem->module = m;
+        clearItem->preserveVRAM = true;
+        clearItem->preserveNVRAM = false;
+        menu->addChild(clearItem);
 
         return menu;
     }
