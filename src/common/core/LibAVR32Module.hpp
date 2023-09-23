@@ -57,7 +57,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumerBase
     virtual void encDeltaEvent(int n, int d) override;
 
     virtual void readSerialMessages();
-    void requestReloadFirmware(bool preserveMemory, const std::string& firmwareName = "");
+    void requestReloadFirmware(bool preserveVRAM, bool preserveNVRAM, const std::string& firmwareName = "");
 
     float dacToVolts(uint16_t adc);
     uint16_t voltsToAdc(float volts);
@@ -74,7 +74,7 @@ struct LibAVR32Module : rack::engine::Module, GridConsumerBase
     virtual uint8_t* getScreenBuffer() { return 0; }
 
 protected:
-    void reloadFirmware(bool preserveMemory, const std::string& newFirmware = "");
+    void reloadFirmware(bool preserveVRAM, bool preserveNVRAM = true, const std::string& newFirmware = "");
 
     int usbParamId;
     void setDeviceConnectionParam(int paramId) { usbParamId = paramId; }
