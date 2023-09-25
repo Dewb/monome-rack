@@ -112,7 +112,7 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 {
     setModule(module);
 
-    box.size = Vec(720, 380);
+    box.size = Vec(735, 380);
 
     {
         auto panel = new ThemedSvgPanel();
@@ -125,8 +125,8 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 
     for (int i = 0; i < NUM_FADERS; i++)
     {
-        addOutput(createOutput<ThemedPJ301MPort>(Vec(26 + 43 * i, 26), module, i));
-        auto slider = createParam<FaderbankSliderYellow>(Vec(23 + 43 * i, 66), module, i);
+        addOutput(createOutput<ThemedPJ301MPort>(Vec(17 + 45 * i, 20), module, i));
+        auto slider = createParam<FaderbankSliderYellow>(Vec(14.5 + 45 * i, 60), module, i);
         if (module != nullptr)
         {
             slider->theme = (unsigned int*)&module->faderSize;
