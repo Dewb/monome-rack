@@ -123,6 +123,13 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
         addChild(panel);
     }
 
+    // dummy opaque widget to prevent accidentally dragging the module when clicking between faders
+    // TODO: increase hitboxes of faders instead
+    auto dummy = new OpaqueWidget();
+    dummy->box.size = Vec(735 - 29, 300);
+    dummy->setPosition(Vec(14.5, 60));
+    addChild(dummy);
+
     for (int i = 0; i < NUM_FADERS; i++)
     {
         addOutput(createOutput<ThemedPJ301MPort>(Vec(17 + 45 * i, 20), module, i));
