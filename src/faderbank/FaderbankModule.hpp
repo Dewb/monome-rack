@@ -14,6 +14,7 @@ struct FaderbankModule : rack::Module
 
     void processMIDIMessage(const rack::midi::Message& msg);
     void resetConfig();
+    void updateFaderRanges();
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
@@ -23,9 +24,17 @@ struct FaderbankModule : rack::Module
 
     typedef enum
     {
-        Fader90mm,
-        Fader60mm
+        FaderSize90mm,
+        FaderSize60mm
     } FaderSize;
 
-    FaderSize faderSize = Fader90mm;
+    typedef enum
+    {
+        FaderRange10V,
+        FaderRange5V,
+        FaderRangeBipolar
+    } FaderRange;
+
+    FaderSize faderSize = FaderSize90mm;
+    FaderRange faderRange = FaderRange10V;
 };
