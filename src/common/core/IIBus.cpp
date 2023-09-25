@@ -54,9 +54,12 @@ void IIBus::step()
     {
         for (uint8_t fader = 0; fader < std::min(16, followers[follower]->getNumParams()); fader++)
         {
-            float voltage = followers[follower]->params[fader].getValue();
-            uint16_t value = static_cast<uint16_t>(voltage / 10.0 * FADERBANK_II_MAX_VALUE);
-            leader->firmware.iiUpdateFollowerData(follower + 0x34, fader, value);
+            auto param = followers[follower]->getParamQuantity(fader);
+            if (param)
+            {
+                uint16_t value = static_cast<uint16_t>(param->getScaledValue() * FADERBANK_II_MAX_VALUE);
+                leader->firmware.iiUpdateFollowerData(follower + 0x34, fader, value);
+            }
         }
     }
 }
