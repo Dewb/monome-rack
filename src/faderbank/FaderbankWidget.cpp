@@ -150,6 +150,22 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
+    menu->addChild(createIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
+        [=]() {
+            return fb->faderRange;
+        },
+        [=](int index) {
+            fb->faderRange = static_cast<FaderbankModule::FaderRange>(index);
+            fb->updateFaderRanges();
+            // update all the slider handle positions
+            for (widget::Widget* child : children)
+            {
+                child->step();
+                ChangeEvent eChange;
+                child->onChange(eChange);
+            }
+        }));
+
     menu->addChild(createIndexSubmenuItem("Fader size", { "90mm", "60mm" },
         [=]() {
             return fb->faderSize;
@@ -165,6 +181,8 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             }
         }
     ));
+
+    menu->addChild(new MenuSeparator());
 
     menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
         [=](Menu* childMenu)

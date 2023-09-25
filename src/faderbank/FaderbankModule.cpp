@@ -1,12 +1,5 @@
 #include "FaderbankModule.hpp"
 
-struct FBFaderParam : rack::engine::ParamQuantity
-{
-    std::string getDisplayValueString() override
-    {
-        return "";
-    }
-};
 
 FaderbankModule::FaderbankModule()
 {
@@ -14,7 +7,7 @@ FaderbankModule::FaderbankModule()
 
     for (unsigned i = 0; i < NUM_FADERS; i++)
     {
-        configParam<FBFaderParam>(i, 0.0, 10.0, 0.0);
+        configParam(i, -10.0, 10.0, 0.0, rack::string::f("Fader %d", i + 1), " V");
     }
 
     resetConfig();
@@ -54,7 +47,11 @@ void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
                     uint8_t index = iter->second;
                     if (index >= 0 && index < NUM_FADERS)
                     {
-                        params[index].setValue((msg.getValue() * 10.0) / 127.0);
+                        auto param = getParamQuantity(index);
+                        if (param)
+                        {
+                            param->setScaledValue((msg.getValue() * 1.0) / 127.0);
+                        }
                     }
                 }
             }
@@ -92,11 +89,49 @@ void FaderbankModule::resetConfig()
     }
 }
 
+void FaderbankModule::updateFaderRanges()
+{
+    for (int i = 0; i < NUM_FADERS; i++)
+    {
+        auto param = getParamQuantity(i);
+        if (param != nullptr)
+        {
+            float orig = param->getValue();
+            switch (faderRange)
+            {
+                case FaderRange10V:
+                    {
+                        param->minValue = 0.0;
+                        param->maxValue = 10.0;
+                    }
+                    break;
+                case FaderRange5V:
+                    {
+                        param->minValue = 0.0;
+                        param->maxValue = 5.0;
+                    }
+                    break;
+                case FaderRangeBipolar:
+                    {
+                        param->minValue = -5.0;
+                        param->maxValue = 5.0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            param->setValue(orig);
+        }
+    }
+}
+
 json_t* FaderbankModule::dataToJson()
 {
     json_t* rootJ = json_object();
-    json_object_set_new(rootJ, "midi", midiInput.toJson());
+
+    json_object_set_new(rootJ, "faderRange", json_integer(faderRange));
     json_object_set_new(rootJ, "faderSize", json_integer(faderSize));
+    json_object_set_new(rootJ, "midi", midiInput.toJson());
 
     json_t* configJ = json_object();
     for (auto& entry : inputMap)
@@ -110,13 +145,19 @@ json_t* FaderbankModule::dataToJson()
 
 void FaderbankModule::dataFromJson(json_t* rootJ)
 {
-    json_t* midiJ = json_object_get(rootJ, "midi");
-    if (midiJ)
-        midiInput.fromJson(midiJ);
+    json_t* faderRangeJ = json_object_get(rootJ, "faderRange");
+    if (faderRangeJ)
+        faderRange = static_cast<FaderRange>(json_integer_value(faderRangeJ));
+
+    updateFaderRanges();
 
     json_t* faderSizeJ = json_object_get(rootJ, "faderSize");
     if (faderSizeJ)
         faderSize = static_cast<FaderSize>(json_integer_value(faderSizeJ));
+
+    json_t* midiJ = json_object_get(rootJ, "midi");
+    if (midiJ)
+        midiInput.fromJson(midiJ);
 
     json_t* configJ = json_object_get(rootJ, "16n_config");
     if (configJ)
