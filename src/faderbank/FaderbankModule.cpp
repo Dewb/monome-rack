@@ -29,6 +29,19 @@ void FaderbankModule::process(const ProcessArgs& args)
     {
         outputs[i].setVoltage(params[i].getValue());
     }
+
+    if (polyphonicMode)
+    {
+        outputs[NUM_FADERS - 1].setChannels(16);
+        for (unsigned i = 0; i < NUM_FADERS; i++)
+        {
+            outputs[NUM_FADERS - 1].setVoltage(params[i].getValue(), i);
+        }
+    }
+    else
+    {
+        outputs[NUM_FADERS - 1].setChannels(1);
+    }
 }
 
 void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
@@ -45,7 +58,7 @@ void FaderbankModule::processMIDIMessage(const rack::midi::Message& msg)
                 if (iter != inputMap.end())
                 {
                     uint8_t index = iter->second;
-                    if (index >= 0 && index < NUM_FADERS)
+                    if (index < NUM_FADERS)
                     {
                         auto param = getParamQuantity(index);
                         if (param)
@@ -131,6 +144,8 @@ json_t* FaderbankModule::dataToJson()
 
     json_object_set_new(rootJ, "faderRange", json_integer(faderRange));
     json_object_set_new(rootJ, "faderSize", json_integer(faderSize));
+    json_object_set_new(rootJ, "polyphonicMode", json_boolean(polyphonicMode));
+
     json_object_set_new(rootJ, "midi", midiInput.toJson());
 
     json_t* configJ = json_object();
@@ -154,6 +169,10 @@ void FaderbankModule::dataFromJson(json_t* rootJ)
     json_t* faderSizeJ = json_object_get(rootJ, "faderSize");
     if (faderSizeJ)
         faderSize = static_cast<FaderSize>(json_integer_value(faderSizeJ));
+
+    json_t* polyphonicModeJ = json_object_get(rootJ, "polyphonicMode");
+    if (polyphonicModeJ)
+        polyphonicMode = json_boolean_value(polyphonicModeJ);
 
     json_t* midiJ = json_object_get(rootJ, "midi");
     if (midiJ)

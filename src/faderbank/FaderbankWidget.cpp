@@ -182,6 +182,15 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
         }
     ));
 
+    menu->addChild(createCheckMenuItem(
+        "Polyphonic mode", "",
+        [=]() {
+            return fb->polyphonicMode;
+        },
+        [=]() {
+            fb->polyphonicMode = !fb->polyphonicMode;
+        }));
+
     menu->addChild(new MenuSeparator());
 
     menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),

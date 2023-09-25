@@ -37,4 +37,5 @@ struct FaderbankModule : rack::Module
 
     FaderSize faderSize = FaderSize90mm;
     FaderRange faderRange = FaderRange10V;
+    bool polyphonicMode = false;
 };

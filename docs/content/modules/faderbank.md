@@ -51,6 +51,10 @@ Right click the module and change **Fader length** to 60mm in order to free up s
 
 ![faderbank and Glue screenshot](../images/faderbank-glue.png)
 
+# Polyphonic mode
+
+Right-click the module and check **Polyphonic mode** to convert the #16 output into a polyphonic output that contains all 16 fader voltages on one cable.
+
 # Further reading
 
 * [16n-faderbank website](https://16n-faderbank.github.io)

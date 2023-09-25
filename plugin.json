@@ -98,7 +98,7 @@
     {
       "slug": "grid128",
       "name": "grid 128",
-      "description": "",
+      "description": "16x8 grid controller",
       "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
@@ -109,7 +109,7 @@
     {
       "slug": "grid64",
       "name": "grid 64",
-      "description": "",
+      "description": "8x8 grid controller",
       "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
@@ -120,7 +120,7 @@
     {
       "slug": "grid256",
       "name": "grid 256",
-      "description": "",
+      "description": "16x16 grid controller",
       "manualUrl": "https://dewb.github.io/monome-rack/modules/grids",
       "tags": [
         "digital",
@@ -131,12 +131,14 @@
     {
       "slug": "faderbank",
       "name": "faderbank",
-      "description": "",
+      "description": "virtual control surface and teletype parameter expander",
       "manualUrl": "https://dewb.github.io/monome-rack/modules/faderbank",
       "tags": [
         "digital",
         "hardware clone",
-        "controller"
+        "controller",
+        "expander",
+        "polyphonic"
       ]
     }
   ]
