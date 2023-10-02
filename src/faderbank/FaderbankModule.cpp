@@ -7,7 +7,7 @@ FaderbankModule::FaderbankModule()
 
     for (unsigned i = 0; i < NUM_FADERS; i++)
     {
-        configParam(i, -10.0, 10.0, 0.0, rack::string::f("Fader %d", i + 1), " V");
+        configParam(i, 0.0, 10.0, 0.0, rack::string::f("Fader %d", i + 1), " V");
     }
 
     resetConfig();
@@ -190,4 +190,14 @@ void FaderbankModule::dataFromJson(json_t* rootJ)
             inputMap[val] = json_integer_value(dataJ);
         }
     }
+}
+
+void FaderbankModule::fromJson(json_t* rootJ)
+{
+    // deserialize data before params, so voltage range option is set correctly
+    json_t* dataJ = json_object_get(rootJ, "data");
+    if (dataJ)
+        dataFromJson(dataJ);
+
+    Module::fromJson(rootJ);
 }
