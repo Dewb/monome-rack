@@ -18,6 +18,9 @@ struct FaderbankModule : rack::Module
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
+    // override fromJson to deserialize data before params
+    void fromJson(json_t* rootJ) override;
+
 
     rack::midi::InputQueue midiInput;
     std::map<uint16_t, uint8_t> inputMap;
