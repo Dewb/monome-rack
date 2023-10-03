@@ -20,7 +20,9 @@ To send keyboard input to Teletype, click the screen with your mouse or trackpad
 
 Note that your operating system may intercept some keyboard combinations (like <kbd>Alt-Esc</kbd> to enter **SCENE WRITE** mode). If that happens, <kbd>Alt-Esc</kbd> and other critical key combinations can also be triggered via the right-click menu.
 
-The VCV Rack version of Teletype defers keycode processing to the firmware, so unfortunately, like the hardware, it currently only supports US QWERTY keyboard layouts. 
+The VCV Rack version of Teletype defers keycode processing to the firmware, so like the hardware, it operates directly on fixed USB HID scancodes. The translation of Rack keystrokes to HID keystrokes can be customized for different keyboard layouts. Right-click the module and select **Keyboard layout** to change the layout for all Teletype instances. 
+
+These layout options are defined with JSON files in your Rack2 user folder, under `Rack2/plugin-<os>-<arch>/monome/res/keymaps`. Adding or modifying files here will allow you to customize this translation process for international keyboards or other alternate layouts. [See GitHub for details](https://github.com/Dewb/monome-rack/tree/main/res/keymaps).
 
 # TRIGGER inputs
 
