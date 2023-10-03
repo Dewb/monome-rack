@@ -3,7 +3,11 @@
 #include "TeletypeModule.hpp"
 #include "USBAJack.hpp"
 #include "scene/TeletypeSceneIOMenu.hpp"
+#include "screen/TeletypeKeyboard.hpp"
 #include "screen/TeletypeScreenWidget.hpp"
+#include <ghc/filesystem.hpp>
+
+namespace fs = ghc::filesystem;
 
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 {
@@ -65,6 +69,54 @@ TeletypeWidget::TeletypeWidget(TeletypeModule* module)
     addChild(createLight<MediumLight<WhiteLight>>(Vec(254.5, 152), module, TeletypeModule::CV4_LIGHT));
 }
 
+struct TeletypeKeyboardLayoutItem : rack::ui::MenuItem
+{
+    LibAVR32Module* module;
+
+    TeletypeKeyboardLayoutItem()
+    {
+        text = "Keyboard Layout";
+        rightText = TeletypeKeyboard::getCurrentLayout() + "  " + RIGHT_ARROW;
+    }
+
+    ui::Menu* createChildMenu() override
+    {
+        std::vector<std::string> layoutNames = {};
+
+        const fs::path mapPath { rack::asset::plugin(pluginInstance, "res/keymaps") };
+        for (auto const& file : fs::directory_iterator { mapPath })
+        {
+            auto name = file.path().stem().string();
+            auto extension = file.path().extension().string();
+            if (extension == ".json")
+            {
+                layoutNames.push_back(name);
+            }
+        }
+
+        ui::Menu* menu = new ui::Menu;
+
+        for (auto const& name : layoutNames)
+        {
+            menu->addChild(createCheckMenuItem(
+                name,
+                "",
+                [=]()
+                {
+                    return name == TeletypeKeyboard::getCurrentLayout();
+                },
+                [=]()
+                {
+                    TeletypeKeyboard::setCurrentLayout(name);
+                    TeletypeKeyboard::init();
+                }
+            ));
+        }
+
+        return menu;
+    }
+};
+
 struct TeletypeKeystrokeItem : rack::ui::MenuItem
 {
     TeletypeModule* module;
@@ -106,6 +158,7 @@ void TeletypeWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(new MenuSeparator());
 
     menu->addChild(createIndexPtrSubmenuItem("Theme", { "Red", "Orange", "Yellow", "White" }, &m->theme));
+    menu->addChild(new TeletypeKeyboardLayoutItem());
 
     menu->addChild(new MenuSeparator());
 

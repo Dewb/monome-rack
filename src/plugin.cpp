@@ -13,6 +13,7 @@
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
 #include "WhiteWhaleWidget.hpp"
+#include "screen/TeletypeKeyboard.hpp"
 
 using namespace rack;
 
@@ -50,4 +51,18 @@ void init(Plugin* p)
     p->addModel(modelFaderbank);
 
     initThemes();
+}
+
+json_t* settingsToJson()
+{
+    json_t* rootJ = json_object();
+    json_object_set_new(rootJ, "keyboardLayout", json_string(TeletypeKeyboard::getCurrentLayout().c_str()));
+    return rootJ;
+}
+
+void settingsFromJson(json_t* rootJ)
+{
+    json_t* themeJ = json_object_get(rootJ, "keyboardLayout");
+    if (themeJ)
+        TeletypeKeyboard::setCurrentLayout(json_string_value(themeJ));
 }
