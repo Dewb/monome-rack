@@ -1,9 +1,9 @@
 #include "TeletypeWidget.hpp"
 #include "SifamTPM.hpp"
+#include "TeletypeKeyboard.hpp"
 #include "TeletypeModule.hpp"
 #include "USBAJack.hpp"
 #include "scene/TeletypeSceneIOMenu.hpp"
-#include "screen/TeletypeKeyboard.hpp"
 #include "screen/TeletypeScreenWidget.hpp"
 #include <ghc/filesystem.hpp>
 
