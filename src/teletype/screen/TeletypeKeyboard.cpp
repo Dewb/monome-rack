@@ -9,19 +9,35 @@ extern rack::Plugin* pluginInstance;
 
 TeletypeKeyboard::KeycodeMap TeletypeKeyboard::keycodeMap;
 bool TeletypeKeyboard::initialized = false;
+std::string TeletypeKeyboard::currentLayout = "us-qwerty";
 
 void TeletypeKeyboard::init()
 {
     if (!initialized)
     {
-        std::string keymapFilename = "en-us";
-        loadMap(rack::asset::plugin(pluginInstance, "res/keymaps/" + keymapFilename + ".json"));
+        loadMap();
         initialized = true;
     }
 }
 
-void TeletypeKeyboard::loadMap(std::string path)
+void TeletypeKeyboard::setCurrentLayout(std::string layoutName)
 {
+    if (currentLayout != layoutName)
+    {
+        currentLayout = layoutName;
+        initialized = false;
+    }
+}
+
+const std::string& TeletypeKeyboard::getCurrentLayout()
+{
+    return currentLayout;
+}
+
+void TeletypeKeyboard::loadMap()
+{
+    auto path = rack::asset::plugin(pluginInstance, "res/keymaps/" + currentLayout + ".json");
+
     FILE* file = std::fopen(path.c_str(), "r");
     if (!file)
         return;
