@@ -77,7 +77,23 @@ void TeletypeKeyboard::loadMap()
                 uint8_t outputCode = stringToHIDCode(std::string(json_string_value(outputJ)));
                 if (inputCode != GLFW_KEY_UNKNOWN && outputCode != 0)
                 {
-                    keycodeMap.insert(std::make_pair(std::make_pair(inputCode, 0), std::make_pair(outputCode, 0)));
+                    int inputMod = 0;
+                    uint8_t outputMod = 0;
+
+                    json_t* inputShift = json_object_get(mapEntryJ, "input_shift");
+                    json_t* outputShift = json_object_get(mapEntryJ, "output_shift");
+
+                    if (inputShift && json_boolean_value(inputShift))
+                    {
+                        inputMod |= GLFW_MOD_SHIFT;
+                    }
+
+                    if (outputShift && json_boolean_value(outputShift))
+                    {
+                        outputMod |= 0x02;
+                    }
+
+                    keycodeMap.insert(std::make_pair(std::make_pair(inputCode, inputMod), std::make_pair(outputCode, outputMod)));
                 }
             }
         }
@@ -91,11 +107,39 @@ bool TeletypeKeyboard::process(const rack::event::SelectKey& e, uint8_t* pKey, u
     uint8_t key = 0;
     uint8_t mod = 0;
 
+    bool found = false;
+    bool shiftConsumed = false;
+
+    // Look for a mapping with shift explicitly set
+    if (e.mods & GLFW_MOD_SHIFT)
+    {
+        auto result = keycodeMap.find(std::make_pair(e.key, GLFW_MOD_SHIFT));
+        if (result != keycodeMap.end())
+        {
+            key = result->second.first;
+            mod = result->second.second;
+            found = true;
+            shiftConsumed = true;
+        }
+    }
+
+    // Look for a mapping of the keycode with no modifiers
+    if (!found)
+    {
+        auto result = keycodeMap.find(std::make_pair(e.key, 0));
+        if (result != keycodeMap.end())
+        {
+            key = result->second.first;
+            mod = result->second.second;
+            found = true;
+        }
+    }
+
     if (e.mods & GLFW_MOD_CONTROL)
     {
         mod |= 0x1;
     }
-    if (e.mods & GLFW_MOD_SHIFT)
+    if ((e.mods & GLFW_MOD_SHIFT) && !shiftConsumed)
     {
         mod |= 0x2;
     }
@@ -106,14 +150,6 @@ bool TeletypeKeyboard::process(const rack::event::SelectKey& e, uint8_t* pKey, u
     if (e.mods & GLFW_MOD_SUPER)
     {
         mod |= 0x8;
-    }
-
-    bool found = false;
-    auto result = keycodeMap.find(std::make_pair(e.key, 0));
-    if (result != keycodeMap.end())
-    {
-        key = result->second.first;
-        found = true;
     }
 
     if (found)

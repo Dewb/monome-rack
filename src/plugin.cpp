@@ -13,7 +13,7 @@
 #include "VirtualGridWidget.hpp"
 #include "WhiteWhaleModule.hpp"
 #include "WhiteWhaleWidget.hpp"
-#include "screen/TeletypeKeyboard.hpp"
+#include "TeletypeKeyboard.hpp"
 
 using namespace rack;
 
