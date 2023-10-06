@@ -87,7 +87,7 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
         assert(0);
     }
 
-    config(w * h * 2, 0, 0, 0);
+    config(w * h * 2, 0, 0, w * h);
 
     for (unsigned j = 0; j < h; j++)
     {
@@ -104,6 +104,8 @@ VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)
             param->resetEnabled = false;
             param->smoothEnabled = false;
             param->randomizeEnabled = false;
+
+            configLight(i+j*w, rack::string::f("(%d,%d)", i, j));
         }
     }
 
@@ -174,6 +176,16 @@ void VirtualGridModule::process(const ProcessArgs& args)
     std::for_each(presses.begin(), presses.end(), [=](std::tuple<int, int> c) {
         GridConnectionManager::get().dispatchButtonMessage(&this->device, std::get<0>(c), std::get<1>(c), true);
     });
+
+    // keep Rack light values in sync with LED buffer
+    // TODO: only do this in update functions, not in process()
+    for (int x = 0; x < 8; x++)
+    {
+        for (int y = 0; y < 8; y++)
+        {
+            lights[y * 8 + x].setBrightness(ledBuffer[y * 16 + x] / 15.0f);
+        }
+    }
 }
 
 json_t* VirtualGridModule::dataToJson()
