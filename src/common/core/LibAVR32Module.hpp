@@ -93,6 +93,11 @@ protected:
 
 inline float LibAVR32Module::dacToVolts(uint16_t dac)
 {
+    // special case 0 so CV outs used as gates hit true zero (see issue #187)
+    if (dac == 0) {
+        return 0;
+    }
+
     // 12 bits of information left aligned in a 16-bit word, add a small offset to get the 12-bit data closer to true
     return (10.0 * dac / (0xFFFF * 1.0)) + dacOffsetVolts;
 }
