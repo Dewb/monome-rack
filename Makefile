@@ -59,6 +59,7 @@ $(ragel):
 firmware-build: export PATH := $(PWD)/dep/bin:$(PATH)
 firmware-build: export RACK_DIR := $(realpath $(RACK_DIR))
 firmware-build: firmware/*.mk firmware/**/*.c firmware/**/*.h firmware/**/**/*.rl
+	git submodule foreach 'git fetch --tags'
 	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale
 	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale-kria
 	cd firmware && $(MAKE) -f meadowphysics.mk
