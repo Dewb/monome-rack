@@ -23,7 +23,7 @@ jobs:
     name: Modify plugin version
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/cache@v3
         id: plugin-version-cache
         with:
@@ -47,7 +47,7 @@ jobs:
       matrix:
         platform: [win-x64, lin-x64]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: make submodule folders safe for git operations
@@ -81,7 +81,7 @@ jobs:
       matrix:
         platform: [x64, arm64]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - uses: actions/cache@v3
@@ -118,7 +118,7 @@ jobs:
       contents: write
     needs:  [build, build-mac]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Check if plugin version matches tag
         run: |
