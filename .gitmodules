@@ -2,7 +2,7 @@
 	path = firmware/whitewhale
 	url = https://github.com/Dewb/whitewhale
 	branch = vcvrack_pr
-[submodule "firmware/teletype"]
+[submodule "firmware/teletype4"]
 	path = firmware/teletype4
 	url = https://github.com/Dewb/teletype
 	branch = vcvrack-4.0.0
@@ -18,10 +18,10 @@
 	path = firmware/ansible
 	url = https://github.com/Dewb/ansible
 	branch = vcvrack
-[submodule "firmware/firmware/teletype-5"]
+[submodule "firmware/teletype5"]
 	path = firmware/teletype5
-	url = https://github.com/Dewb/teletype
-	branch = vcvrack-5
+	url = https://github.com/monome/teletype
+	branch = main
 [submodule "firmware/whitewhale-kria"]
 	path = firmware/whitewhale-kria
 	url = https://github.com/Dewb/kria
