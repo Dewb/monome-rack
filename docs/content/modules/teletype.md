@@ -141,7 +141,7 @@ Switching firmware will reset the VRAM and NVRAM for the module, so export any s
 
 * Teletype [hardware documentation](http://monome.org/docs/teletype/)
 * Teletype manual [on the web](https://monome.org/docs/teletype/manual) and [in PDF format](https://monome.org/docs/teletype/manual.pdf)
-* Printable Teletype [command cheat sheet](https://monome.org/docs/teletype/TT_commands_4.0.pdf)
+* Printable Teletype 5.0 [command cheat sheet](https://monome.org/docs/teletype/TT_commands_5.0.pdf)
 * [Teletype Studies](https://monome.org/docs/teletype/studies-1/)
 * [A user's guide to the wonderful world of teletype](https://llllllll.co/t/a-users-guide-to-the-wonderful-world-of-teletype/35971)
 * [Teletype workflow, basics, and questions](https://llllllll.co/t/teletype-workflow-basics-and-questions/12392)
