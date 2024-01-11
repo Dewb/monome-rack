@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/qno/rack-plugin-toolchain-win-linux
-      options: --user root
+      options: --user 1001
     strategy:
       matrix:
         platform: [win-x64, lin-x64]
