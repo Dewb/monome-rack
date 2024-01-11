@@ -200,7 +200,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
+    menu->addChild(createSubmenuItem("MIDI input", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
         [=](Menu* childMenu)
         {
             appendMidiMenu(childMenu, &fb->midiInput);
@@ -208,6 +208,27 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             auto last = childMenu->children.back();
             childMenu->removeChild(last);
             delete last;
+        }));
+
+    menu->addChild(createSubmenuItem("MIDI output", fb->midiOutput.getDeviceName(fb->midiOutput.getDeviceId()),
+        [=](Menu* childMenu)
+        {
+            appendMidiMenu(childMenu, &fb->midiOutput);
+            // remove channel selection
+            auto last = childMenu->children.back();
+            childMenu->removeChild(last);
+            delete last;
+        }));
+
+    menu->addChild(createCheckMenuItem(
+        "Use 14-bit MIDI CCs", "",
+        [=]()
+        {
+            return fb->use14bitCCs;
+        },
+        [=]()
+        {
+            fb->use14bitCCs = !fb->use14bitCCs;
         }));
 
     menu->addChild(createMenuItem("Autodetect 16n configuration", "",
@@ -220,9 +241,6 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             msg.setSize(6);
             msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
 
-            midi::Output output;
-            output.setDriverId(fb->midiInput.getDriverId());
-            output.setDeviceId(fb->midiInput.getDeviceId());
-            output.sendMessage(msg);
+            fb->midiOutput.sendMessage(msg);
         }));
 }
