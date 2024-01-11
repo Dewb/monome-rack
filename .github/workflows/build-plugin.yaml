@@ -47,6 +47,9 @@ jobs:
       matrix:
         platform: [win-x64, lin-x64]
     steps:
+      - name: make folder safe for git operations
+        run: |
+          git config --global --add safe.directory $(pwd)
       - uses: actions/checkout@v4
         with:
           submodules: recursive
