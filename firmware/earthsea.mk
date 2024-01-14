@@ -27,6 +27,6 @@ SOURCES = \
 	$(wildcard mock_hardware/common/*.c) \
 	$(wildcard mock_hardware/modules/trilogy/*.c) \
 
-FLAGS += -DGIT_VERSION="\"$(shell cut -d '-' -f 1 <<< $(shell cd earthsea; git describe --tags | cut -c 1-)) $(shell cd earthsea; git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\""
+FLAGS += -DGIT_VERSION="\"$(GIT_VERSION)\""
 
 include common.mk
