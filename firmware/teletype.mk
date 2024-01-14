@@ -51,7 +51,7 @@ $(TARGET_NAME)/src/scanner.c: $(TARGET_NAME)/src/scanner.rl
 	$(RAGEL) -C -G2 $(TARGET_NAME)/src/scanner.rl -o $(TARGET_NAME)/src/scanner.c
 
 # Add the git commit id to a file for use when printing out the version
-$(TARGET_NAME)/module/gitversion.c: $(shell find ../.git/modules/firmware/$(TARGET_NAME)/refs) ../.git/modules/firmware/$(TARGET_NAME)/packed-refs ../.git/modules/firmware/$(TARGET_NAME)/HEAD
+$(TARGET_NAME)/module/gitversion.c: $(TARGET_NAME)
 	echo "const char *git_version = \"$(GIT_VERSION)\";" > $@
 
 include common.mk
