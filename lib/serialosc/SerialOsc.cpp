@@ -46,7 +46,7 @@ void SerialOsc::start(Listener* listener)
         try
         {
             listenSocket = new UdpListeningReceiveSocket(
-                IpEndpointName(IpEndpointName::ANY_ADDRESS, tempPort),
+                IpEndpointName("localhost", tempPort),
                 this);
 
             listenPort = tempPort;
