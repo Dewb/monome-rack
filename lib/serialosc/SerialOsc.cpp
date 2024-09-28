@@ -413,9 +413,6 @@ void SerialOsc::ProcessMessage(const osc::ReceivedMessage& m, const IpEndpointNa
             // wait until after size message recieved -MD
             // listener->deviceFound(device);
             sendDeviceInfoMessage(device->port);
-
-            sendDevicePrefixMessage(port);
-            sendDevicePortMessage(port);
         }
         else if (address == "/serialosc/remove")
         {
