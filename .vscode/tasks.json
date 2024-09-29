@@ -28,8 +28,7 @@
                     "env": {
                         "PATH": "C:\\msys64\\usr\\bin;c:\\msys64\\mingw64\\bin",
                         "MSYSTEM": "MINGW64",
-                        "CC": "gcc",
-                        "RACK_USER_DIR": "${OneDrive}\\Documents\\Rack2"
+                        "CC": "gcc"
                     },
                     "shell": {
                         "executable": "C:\\msys64\\usr\\bin\\bash.exe",
