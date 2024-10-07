@@ -72,7 +72,7 @@ u8* mock_serial_rx_buf(void)
     return mock_serial_current_message_buffer;
 }
 
-u8 mock_serial_rx_bytes(void)
+volatile u8 mock_serial_rx_bytes(void)
 {
     return mock_serial_current_message_length;
 }
