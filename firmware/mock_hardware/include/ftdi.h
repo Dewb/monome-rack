@@ -13,7 +13,7 @@ void ftdi_change(uhc_device_t* dev, u8 plug);
 void ftdi_setup(void);
 
 u8* ftdi_rx_buf(void);
-u8 ftdi_rx_bytes(void);
-u8 ftdi_rx_busy(void);
-u8 ftdi_tx_busy(void);
+volatile u8 ftdi_rx_bytes(void);
+volatile u8 ftdi_rx_busy(void);
+volatile u8 ftdi_tx_busy(void);
 u8 ftdi_connected(void);

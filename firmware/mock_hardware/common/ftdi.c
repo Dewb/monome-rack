@@ -17,13 +17,13 @@ u8* ftdi_rx_buf(void)
     return 0;
 }
 
-u8 ftdi_rx_bytes(void)
+volatile u8 ftdi_rx_bytes(void)
 {
     return 0;
 }
 
-u8 ftdi_rx_busy(void) { return 0; }
-u8 ftdi_tx_busy(void) { return 0; }
+volatile u8 ftdi_rx_busy(void) { return 0; }
+volatile u8 ftdi_tx_busy(void) { return 0; }
 
 u8 ftdi_connected(void)
 {
