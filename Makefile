@@ -59,13 +59,13 @@ $(ragel):
 firmware-build: export PATH := $(PWD)/dep/bin:$(PATH)
 firmware-build: export RACK_DIR := $(realpath $(RACK_DIR))
 firmware-build:
-	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale
-	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale-kria
-	cd firmware && $(MAKE) -f meadowphysics.mk
-	cd firmware && $(MAKE) -f earthsea.mk
-	cd firmware && $(MAKE) -f ansible.mk
-	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype4
-	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype5
+	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale GIT_VERSION="v1.5 6CD668C"
+	cd firmware && $(MAKE) -f whitewhale.mk TARGET_NAME=whitewhale-kria GIT_VERSION="v0.4 1E0E2FB"
+	cd firmware && $(MAKE) -f meadowphysics.mk GIT_VERSION="v2.1 39A2139"
+	cd firmware && $(MAKE) -f earthsea.mk GIT_VERSION="v1.9.4 4B88B2E"
+	cd firmware && $(MAKE) -f ansible.mk GIT_VERSION="v1.5.0 6EEF788"
+	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype4 GIT_VERSION="v4.0.0 A34DA87"
+	cd firmware && $(MAKE) -f teletype.mk TARGET_NAME=teletype5 GIT_VERSION="v5.0.0 00F5FD2"
 
 firmware-clean:
 	rm -fv res/firmware/*.dll
