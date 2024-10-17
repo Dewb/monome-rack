@@ -110,3 +110,14 @@ Start a hot-reload server with `mkdocs serve`, and run `mkdocs build` to produce
     ```bash
     $ git submodule add -b my_new_feature https://github.com/<your user name>/teletype teletype-dev
     ```
+15. Finally, once your new fix or feature is tested and working inside Rack, you can try building it for the hardware. The hardware build process uses the `Makefile` *inside* the specific firmware subfolder, instead of the Rack makefiles in `firmware/`. Building with these Makefiles requires the avr32 toolchain, but if you have Docker or Rancher Desktop you can use a preconfigured image to make this easy.
+    ```bash
+    $ cd firmware/teletype-dev
+    $ nerdctl run -v $(pwd):/target -t dewb/monome-build 
+    ```
+    See [the monome-build image README](https://github.com/Dewb/monome-build/blob/master/README.md) for more background on building with the image.
+    * Note: to make this work with teletype, you'll need to comment out the last two lines of the Makefile, like so:
+        ```make
+        # Add the git commit id to a file for use when printing out the version
+        #../module/gitversion.c: $(GIT_DIR)/HEAD $(GIT_DIR)/index
+        #	echo "const char *git_version = \"$(shell cut -d '-' -f 1 ...
