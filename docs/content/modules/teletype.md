@@ -125,7 +125,7 @@ The second way to interact with grids is to script your own interface. The `G` s
 
 For the basics, see [the Teletype manual](https://monome.org/docs/teletype/manual/#grid).
 
-For advanced scripting techniques, see `@scanner-darkly`'s [GRID INTEGRATION studies](https://github.com/scanner-darkly/teletype/wiki/GRID-INTEGRATION).
+For advanced scripting techniques, see [@scanner-darkly](https://github.com/scanner-darkly)'s [GRID INTEGRATION studies](https://github.com/scanner-darkly/teletype/wiki/GRID-INTEGRATION).
 
 You can use either a physical or virtual grid to take advantage of the grid operators or Grid Control Mode. Hardware versions of Teletype can't use both the grid and the keyboard at the same time, and there are [some precautions to follow](https://monome.org/docs/grid/grid-modular/#teletype) regarding power loads, but thankfully the software version has none of these restrictions, making it an excellent environment for developing complex grid scenes that you can later transfer to hardware.
 
@@ -133,9 +133,9 @@ You can use either a physical or virtual grid to take advantage of the grid oper
 
 Choose **Firmware Tools > Switch Firmware** to see alternate firmware options for Teletype.
 
-Currently there are firmware builds for the teletype 4.0 and 5.0-beta release streams. 4.0 is the default; at some point after 5.0 is out of beta, it will become the default for newly placed modules, but modules already placed in your patch will remain 4.0.
+Currently there are firmware options for the Teletype 4.x and 5.x release streams. Older versions of monome-rack used Teletype 4.x by default; as of monome-rack 2.2.5, newly placed modules will default to 5.x, but modules already placed in your patch will stay on whatever they're currently using.
 
-Switching firmware will reset the VRAM and NVRAM for the module, so export any scenes you want to keep before to text files before switching firmware editions.
+Switching firmware will reset the active scene VRAM and the stored scenes NVRAM for the module. Make sure to export any scenes you want to keep before switching firmware editions.
 
 # Further reading
 
