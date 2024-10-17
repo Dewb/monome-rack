@@ -12,12 +12,11 @@ The firmware code for the hardware modules are licensed under the version 2 of t
 
 Full source for the plugin is available at [https://github.com/Dewb/monome-rack](https://github.com/Dewb/monome-rack). The new code in this repository is also licensed under [version 2 of the GPL](https://github.com/Dewb/monome-rack/blob/main/LICENSE).
 
-
-
-This project benefits from the inclusion of the following source libraries with GPL-compatible licenses:
+This project benefits from the inclusion of the following source libraries:
 
 * [base64](https://github.com/ReneNyffenegger/cpp-base64) by René Nyffenegger [License](https://github.com/Dewb/monome-rack/blob/main/lib/base64/LICENSE)
 * [simple-svg](https://github.com/adishavit/simple-svg) by adishavit [License](https://github.com/Dewb/monome-rack/blob/main/lib/simple-svg/LICENSE)
 * [oscpack](https://github.com/RossBencina/oscpack) by Ross Bencina [License](https://github.com/Dewb/monome-rack/blob/main/lib/oscpack/LICENSE)
+* [serialosc_example](https://github.com/daniel-bytes/serialosc_example) by Daniel Battaglia
 
-Naturally, this project also couldn't exist without the [VCV Rack SDK](https://github.com/VCVRack/Rack) and the [many open-source libraries](https://github.com/vcvrack/rack#software-libraries) that it depends on.
+Naturally, this project wouldn't exist without the [VCV Rack SDK](https://github.com/VCVRack/Rack) and the [many open-source libraries](https://github.com/vcvrack/rack#software-libraries) that it depends on.

@@ -22,9 +22,9 @@ Check out the recordings of past [flash crash livecoding events](https://flashcr
 
 [The VCV Community Forum](https://community.vcvrack.com) is a community of VCV Rack users and module developers of all experience levels. [There is a thread for discussion of these modules there as well](https://community.vcvrack.com/t/monome-modules-beta-dev-log/3683).
 
-# Building from source 
+# Development information
 
-[See DEVELOPING.md on GitHub](https://github.com/Dewb/monome-rack/blob/main/DEVELOPING.md).
+For guides to building the plugin from scratch, or using the plugin as a development environment for changes to the module firmware, [see DEVELOPING.md on GitHub](https://github.com/Dewb/monome-rack/blob/main/DEVELOPING.md).
 
 # Reporting bugs
 
