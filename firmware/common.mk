@@ -4,7 +4,7 @@ RACK_DIR ?= ../../..
 TARGET_DIR := ../res/firmware/
 BUILD_DIR := ../build/firmware/$(TARGET_NAME)
 
-GIT_VERSION := $(shell cut -d '-' -f 1 <<< $(shell cd $(TARGET_NAME); git describe --tags | cut -c 1-)) $(shell cd $(TARGET_NAME); git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')
+GIT_VERSION ?= $(shell cut -d '-' -f 1 <<< $(shell cd $(TARGET_NAME); git describe --tags | cut -c 1-)) $(shell cd $(TARGET_NAME); git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')
 
 FLAGS += \
 	-DDEBUG \

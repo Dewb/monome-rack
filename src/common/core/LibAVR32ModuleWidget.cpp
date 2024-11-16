@@ -110,9 +110,6 @@ struct FirmwareSubmenuItem : MenuItem
 
     Menu* createChildMenu() override
     {
-        LibAVR32Module* m = dynamic_cast<LibAVR32Module*>(module);
-        assert(m);
-
         Menu* menu = new Menu;
 
         char versionbuf[512];
@@ -122,11 +119,11 @@ struct FirmwareSubmenuItem : MenuItem
 
         menu->addChild(construct<ioRateItem>(
             &MenuItem::text, "Input rate", &MenuItem::rightText, RIGHT_ARROW,
-            &ioRateItem::defaultValue, 2, &ioRateItem::target, &m->inputRate));
+            &ioRateItem::defaultValue, 2, &ioRateItem::target, &module->inputRate));
 
         menu->addChild(construct<ioRateItem>(
             &MenuItem::text, "Output rate", &MenuItem::rightText, RIGHT_ARROW,
-            &ioRateItem::defaultValue, 4, &ioRateItem::target, &m->outputRate));
+            &ioRateItem::defaultValue, 4, &ioRateItem::target, &module->outputRate));
 
         menu->addChild(new MenuSeparator());
 
@@ -137,26 +134,25 @@ struct FirmwareSubmenuItem : MenuItem
 
         menu->addChild(construct<SwitchFirmwareItem>(
             &MenuItem::text, "Switch Firmware", &MenuItem::rightText, RIGHT_ARROW,
-            &SwitchFirmwareItem::module, m
-        ));
+            &SwitchFirmwareItem::module, module));
 
         auto hotReloadItem = new ReloadFirmwareItem();
         hotReloadItem->text = "Hot Reload";
-        hotReloadItem->module = m;
+        hotReloadItem->module = module;
         hotReloadItem->preserveVRAM = true;
         hotReloadItem->preserveNVRAM = true;
         menu->addChild(hotReloadItem);
 
         auto reloadItem = new ReloadFirmwareItem();
         reloadItem->text = "Reload & Restart";
-        reloadItem->module = m;
+        reloadItem->module = module;
         reloadItem->preserveVRAM = false;
         reloadItem->preserveNVRAM = true;
         menu->addChild(reloadItem);
 
         auto clearItem = new ReloadFirmwareItem();
         clearItem->text = "Clear NVRAM";
-        clearItem->module = m;
+        clearItem->module = module;
         clearItem->preserveVRAM = true;
         clearItem->preserveNVRAM = false;
         menu->addChild(clearItem);

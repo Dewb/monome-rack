@@ -47,6 +47,6 @@ SOURCES = \
 
 # Add the git commit id to a file for use when printing out the version
 ansible/src/gitversion.c: $(TARGET_NAME)
-	echo "const char *git_version = \"$(GIT_VERSION)\";" > $@
+	echo "const char git_version[] = \"$(GIT_VERSION)\";" > $@
 
 include common.mk
