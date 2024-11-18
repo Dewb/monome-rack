@@ -333,7 +333,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             configMenu->addChild(createMenuItem("Write configuration to 16n hardware", "",
                 [=]()
                 {
-                    // TODO
+                    fb->writeConfigSysex();
                 }
             ));
         }

@@ -274,6 +274,37 @@ void FaderbankModule::autodetectConfig()
     }
 }
 
+void FaderbankModule::writeConfigSysex()
+{
+    if (midiOutput.deviceId != -1)
+    {
+        rack::midi::Message msg;
+        msg.setSize(40);
+
+        uint8_t header[] = { 0xF0, 0x7d, 0x00, 0x00, 0x0C };
+        for (int i = 0; i < 5; i++)
+        {
+            msg.bytes[i] = header[i];
+        }
+
+        uint16_t modeBits = 0xFFFF;
+        for (int i = 0; i < NUM_FADERS; i++)
+        {
+            msg.bytes[5 + i] = (records[i].channel + 1) & 0x1F;
+            msg.bytes[21 + i] = records[i].ccNum & 0x7F;
+            if (records[i].faderMode == FaderMode14bitCC)
+            {
+                modeBits ^= 1 << i;
+            }
+        }
+        msg.bytes[37] = (modeBits >> 8) & 0x7F;
+        msg.bytes[38] = modeBits & 0x7F;
+        msg.bytes[39] = 0xF7;
+
+        midiOutput.sendMessage(msg);
+    }
+}
+
 json_t* FaderbankModule::dataToJson()
 {
     json_t* rootJ = json_object();

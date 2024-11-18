@@ -18,6 +18,7 @@ struct FaderbankModule : rack::Module
     void updateInputMap();
     void updateFaderRanges();
     void autodetectConfig();
+    void writeConfigSysex();
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
