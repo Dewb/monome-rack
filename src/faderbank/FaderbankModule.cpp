@@ -56,29 +56,35 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
                     // Combine channel and CC number into a lookup key
                     uint8_t ccNum = msg.getNote();
                     uint16_t key = (msg.getChannel() << 8) | ccNum;
+
                     auto iter = inputMap.find(key);
                     if (iter != inputMap.end())
                     {
-                        uint8_t index = iter->second;
-                        if (index < NUM_FADERS)
-                        {
-                            records[index].highValue = msg.getValue();
-                            records[index].lastHighValue = msg.getValue();
-                            records[index].lastHighValueFrame = args.frame;
+                        auto faderDestinations = iter->second;
+                        for (auto index : faderDestinations) {
+                            if (index < NUM_FADERS)
+                            {
+                                records[index].highValue = msg.getValue();
+                                records[index].lastHighValue = msg.getValue();
+                                records[index].lastHighValueFrame = args.frame;
+                            }
                         }
                     }
-                    else if (use14bitCCs && ccNum >= 32 && ccNum < 64)
+                    else if (ccNum >= 32 && ccNum < 64)
                     {
                         // look for potential LSB CC of 14-bit CC 0-31
                         key = (msg.getChannel() << 8) | (ccNum - 32);
                         iter = inputMap.find(key);
                         if (iter != inputMap.end())
                         {
-                            uint8_t index = iter->second;
-                            if (index < NUM_FADERS)
+                            auto faderDestinations = iter->second;
+                            for (auto index : faderDestinations)
                             {
-                                records[index].lowValue = msg.getValue();
-                                records[index].lastLowValueFrame = args.frame;
+                                if (index < NUM_FADERS && records[index].faderMode == FaderMode14bitCC)
+                                {
+                                    records[index].lowValue = msg.getValue();
+                                    records[index].lastLowValueFrame = args.frame;
+                                }
                             }
                         }
                     }
@@ -90,16 +96,21 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
                         msg.bytes[2] == 0x00 &&
                         msg.bytes[3] == 0x00 &&
                         msg.bytes[4] == 0x0F && // sysex config response ID
-                        msg.bytes.size() > (9 + 48 + NUM_FADERS))
+                        msg.bytes.size() >= (9 + 80))
                     {
-                        inputMap.clear();
                         for (int i = 0; i < NUM_FADERS; i++)
                         {
-                            uint8_t channel = msg.bytes[9 + 16 + i] - 1;
-                            uint8_t ccNum = msg.bytes[9 + 48 + i];
-                            inputMap[(channel << 8) | ccNum] = i;
+                            uint8_t channel = ((msg.bytes[9 + 16 + i]) & 0xF) - 1;
+                            uint8_t ccNum = msg.bytes[9 + 48 + i] & 0x7F;
                             records[i].ccNum = ccNum;
+                            records[i].channel = channel;
+                            if (msg.bytes.size() >= 9 + 82)
+                            {
+                                uint16_t ccMode = msg.bytes[9 + 80] << 8 | msg.bytes[9 + 81];
+                                records[i].faderMode = (ccMode & (1 << i)) == 0 ? FaderMode14bitCC : FaderModeCC;
+                            }
                         }
+                        updateInputMap();
                     }
                 }
                 break;
@@ -112,7 +123,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
     {
         uint16_t value;
         bool updateable = false;
-        bool expect14bit = use14bitCCs && records[i].ccNum < 32;
+        bool expect14bit = records[i].faderMode == FaderMode14bitCC && records[i].ccNum < 32;
 
         if (records[i].highValue != 0xFF)
         {
@@ -132,7 +143,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
             }
             else
             {
-                value = records[i].highValue & 0x7F;
+                value = (records[i].highValue & 0x7F) << 7;
                 updateable = true;
             }
         }
@@ -148,7 +159,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
             auto param = getParamQuantity(i);
             if (param)
             {
-                param->setScaledValue((value * 1.0f) / ((expect14bit ? 0x3FFF : 0x7F) * 1.0f));
+                param->setScaledValue((value * 1.0f) / (0x3FFF * 1.0f));
             }
 
             records[i].highValue = 0xFF;
@@ -159,12 +170,30 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
 
 void FaderbankModule::resetConfig()
 {
-    inputMap.clear();
     for (int i = 0; i < NUM_FADERS; i++)
     {
         // by default, assign CC faders starting with 32, all on channel 1
-        inputMap[32 + i] = i;
         records[i].ccNum = 32 + i;
+        records[i].channel = 0;
+        records[i].faderMode = FaderModeCC;
+    }
+
+    updateInputMap();
+}
+
+void FaderbankModule::updateInputMap()
+{
+    inputMap.clear();
+
+    for (int i = 0; i < NUM_FADERS; i++)
+    {
+        uint16_t key = (records[i].channel << 8) | records[i].ccNum;
+        if (inputMap.find(key) == inputMap.end())
+        {
+            inputMap.insert(make_pair(key, std::vector<uint8_t>()));
+        }
+
+        inputMap[key].push_back(i);
     }
 }
 
@@ -204,6 +233,47 @@ void FaderbankModule::updateFaderRanges()
     }
 }
 
+void FaderbankModule::autodetectConfig()
+{
+    resetConfig();
+
+    midiInput.setDriverId(rack::midi::getDriverIds()[0]);
+    if (midiInput.deviceId == -1)
+    {
+        for (int deviceId : midiInput.getDeviceIds())
+        {
+            if (midiInput.getDeviceName(deviceId).substr(0, 3).find("16n") != std::string::npos)
+            {
+                midiInput.setDeviceId(deviceId);
+                break;
+            }
+        }
+    }
+
+    midiOutput.setDriverId(rack::midi::getDriverIds()[0]);
+    if (midiOutput.deviceId == -1)
+    {
+        for (int deviceId : midiOutput.getDeviceIds())
+        {
+            if (midiOutput.getDeviceName(deviceId).find("16n") != std::string::npos)
+            {
+                midiOutput.setDeviceId(deviceId);
+                break;
+            }
+        }
+    }
+
+    // Send a sysex message to request device channel/CC config.
+    if (midiOutput.deviceId != -1)
+    {
+        rack::midi::Message msg;
+        msg.setSize(6);
+        msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
+
+        midiOutput.sendMessage(msg);
+    }
+}
+
 json_t* FaderbankModule::dataToJson()
 {
     json_t* rootJ = json_object();
@@ -211,17 +281,21 @@ json_t* FaderbankModule::dataToJson()
     json_object_set_new(rootJ, "faderRange", json_integer(faderRange));
     json_object_set_new(rootJ, "faderSize", json_integer(faderSize));
     json_object_set_new(rootJ, "polyphonicMode", json_boolean(polyphonicMode));
-    json_object_set_new(rootJ, "use14bitCCs", json_boolean(use14bitCCs));
 
     json_object_set_new(rootJ, "midi", midiInput.toJson());
     json_object_set_new(rootJ, "midiOutput", midiOutput.toJson());
 
-    json_t* configJ = json_object();
-    for (auto& entry : inputMap)
+    json_t* configJ = json_array();
+    for (auto& entry : records)
     {
-        json_object_set_new(configJ, std::to_string(entry.first).c_str(), json_integer(entry.second));
+        json_t* faderRecord = json_object();
+        json_object_set_new(faderRecord, "channel", json_integer(entry.channel));
+        json_object_set_new(faderRecord, "faderMode", json_integer(entry.faderMode));
+        json_object_set_new(faderRecord, "ccNum", json_integer(entry.ccNum));
+
+        json_array_append(configJ, faderRecord);
     }
-    json_object_set_new(rootJ, "16n_config", configJ);
+    json_object_set_new(rootJ, "fader_config", configJ);
 
     return rootJ;
 }
@@ -242,10 +316,6 @@ void FaderbankModule::dataFromJson(json_t* rootJ)
     if (polyphonicModeJ)
         polyphonicMode = json_boolean_value(polyphonicModeJ);
 
-    json_t* use14bitCCsJ = json_object_get(rootJ, "use14bitCCs");
-    if (use14bitCCsJ)
-        use14bitCCs = json_boolean_value(use14bitCCsJ);
-
     json_t* midiJ = json_object_get(rootJ, "midi");
     if (midiJ)
         midiInput.fromJson(midiJ);
@@ -254,20 +324,51 @@ void FaderbankModule::dataFromJson(json_t* rootJ)
     if (midiOutputJ)
         midiOutput.fromJson(midiOutputJ);
 
-    json_t* configJ = json_object_get(rootJ, "16n_config");
-    if (configJ)
+    // backwards compatibility for patches with older config structure
+    json_t* oldConfigJ = json_object_get(rootJ, "16n_config");
+    if (oldConfigJ)
     {
-        inputMap.clear();
         json_t* dataJ;
         const char* key;
-        json_object_foreach(configJ, key, dataJ)
+        json_object_foreach(oldConfigJ, key, dataJ)
         {
             int16_t val = std::stoi(key);
             int8_t fader = json_integer_value(dataJ);
-            inputMap[val] = fader;
-            records[fader].ccNum = val & 0xFF;
+            records[fader].ccNum = val & 0x7F;
+            records[fader].channel = val >> 8;
         }
     }
+
+    // current format for config
+    json_t* configJ = json_object_get(rootJ, "fader_config");
+    if (configJ)
+    {
+        json_t* dataJ;
+        size_t key;
+        json_array_foreach(configJ, key, dataJ)
+        {
+            if (key < NUM_FADERS)
+            {
+                json_t* channelJ = json_object_get(dataJ, "channel");
+                if (channelJ)
+                {
+                    records[key].channel = json_integer_value(channelJ) & 0xF;
+                }
+                json_t* modeJ = json_object_get(dataJ, "faderMode");
+                if (modeJ)
+                {
+                    records[key].faderMode = static_cast<FaderMode>(json_integer_value(modeJ));
+                }
+                json_t* ccJ = json_object_get(dataJ, "ccNum");
+                if (ccJ)
+                {
+                    records[key].ccNum = json_integer_value(ccJ) & 0x7F;
+                }
+            }
+        }
+    }
+
+    updateInputMap();
 }
 
 void FaderbankModule::fromJson(json_t* rootJ)
@@ -278,4 +379,14 @@ void FaderbankModule::fromJson(json_t* rootJ)
         dataFromJson(dataJ);
 
     Module::fromJson(rootJ);
+}
+
+FaderbankModule::ControllerRecord::ControllerRecord()
+{
+    highValue = 0xFF;
+    lowValue = 0xFF;
+    lastHighValue = 0;
+    channel = 0;
+    ccNum = 0;
+    faderMode = FaderModeCC;
 }
