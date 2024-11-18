@@ -143,7 +143,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
             }
             else
             {
-                value = (records[i].highValue & 0x7F) << 7;
+                value = records[i].highValue & 0x7F;
                 updateable = true;
             }
         }
@@ -159,7 +159,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
             auto param = getParamQuantity(i);
             if (param)
             {
-                param->setScaledValue((value * 1.0f) / (0x3FFF * 1.0f));
+                param->setScaledValue((value * 1.0f) / ((expect14bit ? 0x3FFF : 0x7F) * 1.0f));
             }
 
             records[i].highValue = 0xFF;
