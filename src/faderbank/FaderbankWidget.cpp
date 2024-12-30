@@ -1,5 +1,6 @@
 #include "FaderbankWidget.hpp"
 #include "FaderbankModule.hpp"
+#include "CustomMenuTemplates.hpp"
 
 extern rack::Plugin* pluginInstance;
 
@@ -107,7 +108,6 @@ struct FaderbankSliderYellow : LightSlider<FaderbankSlider, FaderbankSliderLight
     }
 };
 
-
 FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 {
     setModule(module);
@@ -147,6 +147,97 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
     }
 }
 
+void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
+{
+    if (fb == nullptr || menu == nullptr || faderIndex < 0 || faderIndex > NUM_FADERS)
+    {
+        return;
+    }
+
+    std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
+
+    std::vector<std::string> channelNames;
+    for (auto i = 0; i < 16; i++)
+    {
+        std::ostringstream ss;
+        ss << (i + 1);
+        channelNames.push_back(ss.str());
+    }
+
+    std::ostringstream faderName;
+    faderName << faderIndex + 1;
+
+    menu->addChild(createSubmenuItemWithDynamicRightText(faderName.str(),
+        [=]()
+        {
+            FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+            std::ostringstream faderDesc;
+            faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
+            if (record.faderMode == FaderbankModule::FaderModeCC)
+            {
+                faderDesc << (int)record.ccNum;
+            }
+            else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
+            {
+                faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
+            }
+            return faderDesc.str();
+        },
+        [=](Menu* childMenu)
+        {
+            childMenu->addChild(createUnconsumingIndexSubmenuItem("Channel", channelNames,
+                [=]()
+                {
+                    return fb->records[faderIndex].channel;
+                },
+                [=](int index)
+                {
+                    fb->records[faderIndex].channel = index & 0xF;
+                    fb->updateInputMap();
+                }
+            ));
+
+            childMenu->addChild(createUnconsumingIndexSubmenuItem("Mode", modeNames,
+                [=]()
+                {
+                    return fb->records[faderIndex].faderMode;
+                },
+                [=](int index)
+                {
+                    fb->records[faderIndex].faderMode = static_cast<FaderbankModule::FaderMode>(index);
+                    fb->updateInputMap();
+                }
+            ));
+
+            childMenu->addChild(createUnconsumingIndexSubmenuItemWithDynamicLabels("CC Number",
+                [=]()
+                {
+                    FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+                    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
+
+                    std::vector<std::string> ccNames;
+                    for (auto i = 0; i < ccMax + 1; i++)
+                    {
+                        std::ostringstream ss;
+                        ss << i;
+                        ccNames.push_back(ss.str());
+                    }
+                    return ccNames;
+                },
+                [=]()
+                {
+                    return fb->records[faderIndex].ccNum;
+                },
+                [=](int index)
+                {
+                    fb->records[faderIndex].ccNum = index & 0x7F;
+                    fb->updateInputMap();
+                }
+            ));
+        }
+    ));
+}
+
 void FaderbankWidget::appendContextMenu(Menu* menu)
 {
     auto fb = dynamic_cast<FaderbankModule*>(module);
@@ -157,7 +248,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
+    menu->addChild(createUnconsumingIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
         [=]() {
             return fb->faderRange;
         },
@@ -173,7 +264,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             }
         }));
 
-    menu->addChild(createIndexSubmenuItem("Fader size", { "90mm", "60mm" },
+    menu->addChild(createUnconsumingIndexSubmenuItem("Fader size", { "90mm", "60mm" },
         [=]() {
             return fb->faderSize;
         },
@@ -200,29 +291,61 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createSubmenuItem("MIDI connection", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
-        [=](Menu* childMenu)
-        {
-            appendMidiMenu(childMenu, &fb->midiInput);
-            // remove channel selection
-            auto last = childMenu->children.back();
-            childMenu->removeChild(last);
-            delete last;
-        }));
-
-    menu->addChild(createMenuItem("Autodetect 16n configuration", "",
+    menu->addChild(createMenuItem("Autodetect 16n hardware", "",
         [=]()
         {
-            fb->resetConfig();
-
-            // Send a sysex message to request device channel/CC config.
-            midi::Message msg;
-            msg.setSize(6);
-            msg.bytes = { 0xF0, 0x7d, 0x00, 0x00, 0x1F, 0xF7 };
-
-            midi::Output output;
-            output.setDriverId(fb->midiInput.getDriverId());
-            output.setDeviceId(fb->midiInput.getDeviceId());
-            output.sendMessage(msg);
+            fb->autodetectConfig();
         }));
+
+    menu->addChild(createSubmenuItem("MIDI Configuration", "",
+        [=](Menu* configMenu)
+        {
+            configMenu->addChild(createSubmenuItem("Input device", fb->midiInput.getDeviceName(fb->midiInput.getDeviceId()),
+                [=](Menu* childMenu)
+                {
+                    appendMidiMenu(childMenu, &fb->midiInput);
+                    // remove channel selection
+                    auto last = childMenu->children.back();
+                    childMenu->removeChild(last);
+                    delete last;
+                    // and separator
+                    last = childMenu->children.back();
+                    childMenu->removeChild(last);
+                    delete last;
+                }));
+
+            configMenu->addChild(createSubmenuItem("Output device", fb->midiOutput.getDeviceName(fb->midiOutput.getDeviceId()),
+                [=](Menu* childMenu)
+                {
+                    appendMidiMenu(childMenu, &fb->midiOutput);
+                    // remove channel selection
+                    auto last = childMenu->children.back();
+                    childMenu->removeChild(last);
+                    delete last;
+                    // and separator
+                    last = childMenu->children.back();
+                    childMenu->removeChild(last);
+                    delete last;
+                }));
+
+            configMenu->addChild(createSubmenuItem("Fader settings", "",
+                [=](Menu* childMenu)
+                {
+                    for (int i = 0; i < NUM_FADERS; i++)
+                    {
+                        appendFaderConfigMenu(fb, childMenu, i);
+                    }
+                }));
+
+            configMenu->addChild(new MenuSeparator());
+
+            configMenu->addChild(createMenuItem("Write configuration to 16n hardware", "",
+                [=]()
+                {
+                    fb->writeConfigSysex();
+                }
+            ));
+        }
+    ));
 }
+

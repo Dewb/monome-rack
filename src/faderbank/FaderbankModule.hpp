@@ -5,6 +5,7 @@
 
 #define NUM_FADERS 16
 
+
 struct FaderbankModule : rack::Module
 {
     FaderbankModule();
@@ -12,18 +13,22 @@ struct FaderbankModule : rack::Module
 
     void process(const ProcessArgs& args) override;
 
-    void processMIDIMessage(const rack::midi::Message& msg);
+    void processMIDIMessages(const ProcessArgs& args);
     void resetConfig();
+    void updateInputMap();
     void updateFaderRanges();
+    void autodetectConfig();
+    void writeConfigSysex();
 
     json_t* dataToJson() override;
     void dataFromJson(json_t* rootJ) override;
     // override fromJson to deserialize data before params
     void fromJson(json_t* rootJ) override;
 
+    std::map<uint16_t, std::vector<uint8_t> > inputMap;
 
     rack::midi::InputQueue midiInput;
-    std::map<uint16_t, uint8_t> inputMap;
+    rack::midi::Output midiOutput;
 
     typedef enum
     {
@@ -38,7 +43,29 @@ struct FaderbankModule : rack::Module
         FaderRangeBipolar
     } FaderRange;
 
+    typedef enum
+    {
+        FaderModeCC,
+        FaderMode14bitCC
+    } FaderMode;
+
+    struct ControllerRecord
+    {
+        uint8_t highValue;
+        uint8_t lowValue;
+        uint8_t lastHighValue;
+        int64_t lastHighValueFrame;
+        int64_t lastLowValueFrame;
+        uint8_t ccNum;
+        uint8_t channel;
+        FaderMode faderMode;
+
+        ControllerRecord();
+    };
+
     FaderSize faderSize = FaderSize90mm;
     FaderRange faderRange = FaderRange10V;
     bool polyphonicMode = false;
+
+    ControllerRecord records[NUM_FADERS];
 };
