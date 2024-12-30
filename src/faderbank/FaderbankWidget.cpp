@@ -1,5 +1,6 @@
 #include "FaderbankWidget.hpp"
 #include "FaderbankModule.hpp"
+#include "CustomMenuTemplates.hpp"
 
 extern rack::Plugin* pluginInstance;
 
@@ -153,10 +154,7 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
         return;
     }
 
-    FaderbankModule::ControllerRecord record = fb->records[faderIndex];
-
     std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
-    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
 
     std::vector<std::string> channelNames;
     for (auto i = 0; i < 16; i++)
@@ -166,32 +164,28 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
         channelNames.push_back(ss.str());
     }
 
-    std::vector<std::string> ccNames;
-    for (auto i = 0; i < ccMax + 1; i++)
-    {
-        std::ostringstream ss;
-        ss << i;
-        ccNames.push_back(ss.str());
-    }
-
     std::ostringstream faderName;
     faderName << faderIndex + 1;
 
-    std::ostringstream faderDesc;
-    faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
-    if (record.faderMode == FaderbankModule::FaderModeCC)
-    {
-        faderDesc << (int)record.ccNum;
-    }
-    else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
-    {
-        faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
-    }
-
-    menu->addChild(createSubmenuItem(faderName.str(), faderDesc.str(),
+    menu->addChild(createSubmenuItemWithDynamicRightText(faderName.str(),
+        [=]()
+        {
+            FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+            std::ostringstream faderDesc;
+            faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
+            if (record.faderMode == FaderbankModule::FaderModeCC)
+            {
+                faderDesc << (int)record.ccNum;
+            }
+            else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
+            {
+                faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
+            }
+            return faderDesc.str();
+        },
         [=](Menu* childMenu)
         {
-            childMenu->addChild(createIndexSubmenuItem("Channel", channelNames,
+            childMenu->addChild(createUnconsumingIndexSubmenuItem("Channel", channelNames,
                 [=]()
                 {
                     return fb->records[faderIndex].channel;
@@ -203,7 +197,7 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
                 }
             ));
 
-            childMenu->addChild(createIndexSubmenuItem("Mode", modeNames,
+            childMenu->addChild(createUnconsumingIndexSubmenuItem("Mode", modeNames,
                 [=]()
                 {
                     return fb->records[faderIndex].faderMode;
@@ -215,7 +209,21 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
                 }
             ));
 
-            childMenu->addChild(createIndexSubmenuItem("CC Number", ccNames,
+            childMenu->addChild(createUnconsumingIndexSubmenuItemWithDynamicLabels("CC Number",
+                [=]()
+                {
+                    FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+                    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
+
+                    std::vector<std::string> ccNames;
+                    for (auto i = 0; i < ccMax + 1; i++)
+                    {
+                        std::ostringstream ss;
+                        ss << i;
+                        ccNames.push_back(ss.str());
+                    }
+                    return ccNames;
+                },
                 [=]()
                 {
                     return fb->records[faderIndex].ccNum;
@@ -240,7 +248,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
+    menu->addChild(createUnconsumingIndexSubmenuItem("Fader voltage range", { "0-10V", "0-5V", "+/-5V" },
         [=]() {
             return fb->faderRange;
         },
@@ -256,7 +264,7 @@ void FaderbankWidget::appendContextMenu(Menu* menu)
             }
         }));
 
-    menu->addChild(createIndexSubmenuItem("Fader size", { "90mm", "60mm" },
+    menu->addChild(createUnconsumingIndexSubmenuItem("Fader size", { "90mm", "60mm" },
         [=]() {
             return fb->faderSize;
         },
