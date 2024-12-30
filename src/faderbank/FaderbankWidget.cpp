@@ -156,6 +156,7 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
     FaderbankModule::ControllerRecord record = fb->records[faderIndex];
 
     std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
+    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
 
     std::vector<std::string> channelNames;
     for (auto i = 0; i < 16; i++)
@@ -166,7 +167,7 @@ void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
     }
 
     std::vector<std::string> ccNames;
-    for (auto i = 0; i < 128; i++)
+    for (auto i = 0; i < ccMax + 1; i++)
     {
         std::ostringstream ss;
         ss << i;
