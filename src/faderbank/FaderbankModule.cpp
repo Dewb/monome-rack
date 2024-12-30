@@ -42,7 +42,7 @@ void FaderbankModule::process(const ProcessArgs& args)
 
 void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
 {
-    int min14bitInterval = 16;
+    int min14bitInterval = floor(args.sampleRate * 0.004);
 
     rack::midi::Message msg;
     while (midiInput.tryPop(&msg, args.frame))
@@ -70,7 +70,8 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
                             }
                         }
                     }
-                    else if (ccNum >= 32 && ccNum < 64)
+
+                    if (ccNum >= 32 && ccNum < 64)
                     {
                         // look for potential LSB CC of 14-bit CC 0-31
                         key = (msg.getChannel() << 8) | (ccNum - 32);
