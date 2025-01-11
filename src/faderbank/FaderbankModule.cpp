@@ -105,10 +105,10 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
                             uint8_t ccNum = msg.bytes[9 + 48 + i] & 0x7F;
                             records[i].ccNum = ccNum;
                             records[i].channel = channel;
-                            if (msg.bytes.size() >= 9 + 82)
+                            if (msg.bytes.size() >= 9 + 83)
                             {
-                                uint16_t ccMode = msg.bytes[9 + 80] << 8 | msg.bytes[9 + 81];
-                                records[i].faderMode = (ccMode & (1 << i)) == 0 ? FaderMode14bitCC : FaderModeCC;
+                                uint16_t ccMode = (msg.bytes[9 + 80] & 0x7F) | ((msg.bytes[9 + 81] & 0x7F) << 7) | ((msg.bytes[9 + 82] & 0x03) << 14);
+                                records[i].faderMode = (ccMode & (1 << i)) == 0 ? FaderModeCC : FaderMode14bitCC;
                             }
                         }
                         updateInputMap();
@@ -280,7 +280,7 @@ void FaderbankModule::writeConfigSysex()
     if (midiOutput.deviceId != -1)
     {
         rack::midi::Message msg;
-        msg.setSize(40);
+        msg.setSize(41);
 
         uint8_t header[] = { 0xF0, 0x7d, 0x00, 0x00, 0x0C };
         for (int i = 0; i < 5; i++)
@@ -288,19 +288,20 @@ void FaderbankModule::writeConfigSysex()
             msg.bytes[i] = header[i];
         }
 
-        uint16_t modeBits = 0xFFFF;
+        uint16_t modeBits = 0x0000;
         for (int i = 0; i < NUM_FADERS; i++)
         {
             msg.bytes[5 + i] = (records[i].channel + 1) & 0x1F;
             msg.bytes[21 + i] = records[i].ccNum & 0x7F;
             if (records[i].faderMode == FaderMode14bitCC)
             {
-                modeBits ^= 1 << i;
+                modeBits |= (1 << i);
             }
         }
-        msg.bytes[37] = (modeBits >> 8) & 0x7F;
-        msg.bytes[38] = modeBits & 0x7F;
-        msg.bytes[39] = 0xF7;
+        msg.bytes[37] = modeBits & 0x7F;
+        msg.bytes[38] = (modeBits >> 7) & 0x7F;
+        msg.bytes[39] = (modeBits >> 14) & 0x03;
+        msg.bytes[40] = 0xF7;
 
         midiOutput.sendMessage(msg);
     }
