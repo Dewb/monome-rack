@@ -71,9 +71,9 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
                         }
                     }
 
-                    if (ccNum >= 32 && ccNum < 64)
+                    if (ccNum >= 32)
                     {
-                        // look for potential LSB CC of 14-bit CC 0-31
+                        // look for potential LSB CC of 14-bit CC
                         key = (msg.getChannel() << 8) | (ccNum - 32);
                         iter = inputMap.find(key);
                         if (iter != inputMap.end())
@@ -124,7 +124,7 @@ void FaderbankModule::processMIDIMessages(const ProcessArgs& args)
     {
         uint16_t value;
         bool updateable = false;
-        bool expect14bit = records[i].faderMode == FaderMode14bitCC && records[i].ccNum < 32;
+        bool expect14bit = records[i].faderMode == FaderMode14bitCC && records[i].ccNum < 96;
 
         if (records[i].highValue != 0xFF)
         {
