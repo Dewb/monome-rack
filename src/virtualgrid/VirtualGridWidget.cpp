@@ -210,12 +210,12 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
 
     menu->addChild(new MenuSeparator());
 
-    menu->addChild(createMenuItem("Save grid screenshot", "", [this]() {
-        screenshotModulePNG(this, "grid-screenshot.png");
-    }));
+    // menu->addChild(createMenuItem("Save grid screenshot", "", [this]() {
+    //     screenshotModulePNG(this, "grid-screenshot.png");
+    // }));
 
     menu->addChild(createSubmenuItem("Mirror hardware grid", "", [=](Menu *childMenu) {
-        appendDeviceConnectionMenu(childMenu, grid->mirrorModeConsumer, &grid->audioThreadActions, true);
+        //appendDeviceConnectionMenu(childMenu, grid->mirrorModeConsumer, &grid->audioThreadActions, true);
         childMenu->addChild(createMenuItem("Stop mirroring", "",
             [=]() {
                 if (grid->mirrorModeConsumer) {

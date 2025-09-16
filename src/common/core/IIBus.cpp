@@ -3,7 +3,7 @@
 
 #define FADERBANK_II_MAX_VALUE 16383
 
-extern rack::plugin::Model* modelFaderbank;
+//extern rack::plugin::Model* modelFaderbank;
 
 IIBus::IIBus(LibAVR32Module* leader)
     : leader(leader)
@@ -13,7 +13,7 @@ IIBus::IIBus(LibAVR32Module* leader)
 bool IIBus::isFollower(rack::Module* module)
 {
     // Only faderbanks participate in II right now
-    return module != nullptr && module->model == modelFaderbank;
+    return false; //module != nullptr && module->model == modelFaderbank;
 }
 
 void IIBus::step()

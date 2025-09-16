@@ -31,36 +31,36 @@ struct InternalPresetItem : rack::ui::MenuItem
 
     void onAction(const ActionEvent& e) override
     {
-        osdialog_filters* filters = osdialog_filters_parse("Teletype Scene Files (*.txt):txt");
+        // osdialog_filters* filters = osdialog_filters_parse("Teletype Scene Files (*.txt):txt");
 
-        std::stringstream defaultFileName;
-        if (preset_num < 0)
-        {
-            defaultFileName << "tt_active" << (operation == Save ? "_s.txt" : ".txt");
-        }
-        else
-        {
-            defaultFileName
-                << "tt"
-                << std::setw(2) << std::setfill('0') << preset_num
-                << (operation == Save ? "s.txt" : ".txt");
-        }
+        // std::stringstream defaultFileName;
+        // if (preset_num < 0)
+        // {
+        //     defaultFileName << "tt_active" << (operation == Save ? "_s.txt" : ".txt");
+        // }
+        // else
+        // {
+        //     defaultFileName
+        //         << "tt"
+        //         << std::setw(2) << std::setfill('0') << preset_num
+        //         << (operation == Save ? "s.txt" : ".txt");
+        // }
 
-        char* path_result = osdialog_file(
-            operation == Save ? OSDIALOG_SAVE : OSDIALOG_OPEN,
-            NULL,
-            defaultFileName.str().c_str(),
-            filters);
+        // char* path_result = osdialog_file(
+        //     operation == Save ? OSDIALOG_SAVE : OSDIALOG_OPEN,
+        //     NULL,
+        //     defaultFileName.str().c_str(),
+        //     filters);
 
-        osdialog_filters_free(filters);
+        // osdialog_filters_free(filters);
 
-        if (!path_result)
-            return;
+        // if (!path_result)
+        //     return;
 
-        std::string path(path_result);
-        std::free(path_result);
+        // std::string path(path_result);
+        // std::free(path_result);
 
-        TeletypeSceneIO::presetImportExportFileOperation(module, operation, preset_num, path);
+        // TeletypeSceneIO::presetImportExportFileOperation(module, operation, preset_num, path);
     }
 };
 
@@ -106,30 +106,30 @@ struct InternalPresetBulkItem : rack::ui::MenuItem
 
     void onAction(const ActionEvent& e) override
     {
-        char* path_result = osdialog_file(
-            OSDIALOG_OPEN_DIR,
-            NULL,
-            NULL,
-            NULL);
+        // char* path_result = osdialog_file(
+        //     OSDIALOG_OPEN_DIR,
+        //     NULL,
+        //     NULL,
+        //     NULL);
 
-        if (!path_result)
-            return;
+        // if (!path_result)
+        //     return;
 
-        std::string path(path_result);
-        std::free(path_result);
+        // std::string path(path_result);
+        // std::free(path_result);
 
-        for (int i = 0; i < 32; i++)
-        {
-            std::stringstream fileName;
-            fileName
-                << path
-                << PATH_SEPARATOR
-                << "tt"
-                << std::setfill('0') << std::setw(2) << i
-                << suffix
-                << ".txt";
-            TeletypeSceneIO::presetImportExportFileOperation(module, operation, i, fileName.str());
-        }
+        // for (int i = 0; i < 32; i++)
+        // {
+        //     std::stringstream fileName;
+        //     fileName
+        //         << path
+        //         << PATH_SEPARATOR
+        //         << "tt"
+        //         << std::setfill('0') << std::setw(2) << i
+        //         << suffix
+        //         << ".txt";
+        //     TeletypeSceneIO::presetImportExportFileOperation(module, operation, i, fileName.str());
+        // }
     }
 };
 

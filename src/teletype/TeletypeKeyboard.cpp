@@ -1,6 +1,6 @@
 #include "TeletypeKeyboard.hpp"
 
-#include "osdialog.h"
+//#include "osdialog.h"
 #include <system.hpp>
 
 using namespace rack;
@@ -47,14 +47,14 @@ void TeletypeKeyboard::loadMap()
     json_t* rootJ = json_loadf(file, 0, &error);
     if (!rootJ)
     {
-        std::string message = rack::string::f(
-            "Teletype keymap file %s has invalid JSON at line %d, column %d.\n\nError text: %s",
-            path.c_str(),
-            error.line,
-            error.column,
-            error.text
-        );
-        osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
+        // std::string message = rack::string::f(
+        //     "Teletype keymap file %s has invalid JSON at line %d, column %d.\n\nError text: %s",
+        //     path.c_str(),
+        //     error.line,
+        //     error.column,
+        //     error.text
+        // );
+        // osdialog_message(OSDIALOG_WARNING, OSDIALOG_OK, message.c_str());
         return;
     }
 

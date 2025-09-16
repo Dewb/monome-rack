@@ -135,8 +135,8 @@ struct FirmwareSubmenuItem : MenuItem
 
         menu->addChild(new MenuSeparator());
 
-        menu->addChild(createMenuItem("Save PNG screenshot", "", [this]()
-            { screenshotModulePNG(widget, widget->model->slug + "-screenshot.png"); }));
+        // menu->addChild(createMenuItem("Save PNG screenshot", "", [this]()
+        //     { screenshotModulePNG(widget, widget->model->slug + "-screenshot.png"); }));
 
         menu->addChild(new MenuSeparator());
 
@@ -188,5 +188,5 @@ void LibAVR32ModuleWidget::appendContextMenu(rack::Menu* menu)
     menu->addChild(firmwareMenu);
 
     menu->addChild(new MenuSeparator());
-    appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
+    //appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
 }

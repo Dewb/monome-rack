@@ -72,12 +72,14 @@ protected:
 
 std::string formatVirtualDeviceId(int64_t id)
 {
-    std::ostringstream ss;
-    std::string prefix("virt");
+    // std::ostringstream ss;
+    // std::string prefix("virt");
 
-    // Rack IDs are in the range 0-2^53
-    ss << prefix << std::setw(14) << std::setfill('0') << std::hex << id;
-    return ss.str();
+    // // Rack IDs are in the range 0-2^53
+    // ss << prefix << std::setw(14) << std::setfill('0') << std::hex << id;
+    // return ss.str();
+
+    return std::to_string(id);
 }
 
 VirtualGridModule::VirtualGridModule(unsigned w, unsigned h)

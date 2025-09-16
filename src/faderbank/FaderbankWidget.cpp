@@ -149,93 +149,93 @@ FaderbankWidget::FaderbankWidget(FaderbankModule* module)
 
 void appendFaderConfigMenu(FaderbankModule* fb, ::Menu* menu, int faderIndex)
 {
-    if (fb == nullptr || menu == nullptr || faderIndex < 0 || faderIndex > NUM_FADERS)
-    {
-        return;
-    }
+    // if (fb == nullptr || menu == nullptr || faderIndex < 0 || faderIndex > NUM_FADERS)
+    // {
+    //     return;
+    // }
 
-    std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
+    // std::vector<std::string> modeNames { "CC", "CC (14-bit)" };
 
-    std::vector<std::string> channelNames;
-    for (auto i = 0; i < 16; i++)
-    {
-        std::ostringstream ss;
-        ss << (i + 1);
-        channelNames.push_back(ss.str());
-    }
+    // std::vector<std::string> channelNames;
+    // for (auto i = 0; i < 16; i++)
+    // {
+    //     std::ostringstream ss;
+    //     ss << (i + 1);
+    //     channelNames.push_back(ss.str());
+    // }
 
-    std::ostringstream faderName;
-    faderName << faderIndex + 1;
+    // std::ostringstream faderName;
+    // faderName << faderIndex + 1;
 
-    menu->addChild(createSubmenuItemWithDynamicRightText(faderName.str(),
-        [=]()
-        {
-            FaderbankModule::ControllerRecord record = fb->records[faderIndex];
-            std::ostringstream faderDesc;
-            faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
-            if (record.faderMode == FaderbankModule::FaderModeCC)
-            {
-                faderDesc << (int)record.ccNum;
-            }
-            else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
-            {
-                faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
-            }
-            return faderDesc.str();
-        },
-        [=](Menu* childMenu)
-        {
-            childMenu->addChild(createUnconsumingIndexSubmenuItem("Channel", channelNames,
-                [=]()
-                {
-                    return fb->records[faderIndex].channel;
-                },
-                [=](int index)
-                {
-                    fb->records[faderIndex].channel = index & 0xF;
-                    fb->updateInputMap();
-                }
-            ));
+    // menu->addChild(createSubmenuItemWithDynamicRightText(faderName.str(),
+    //     [=]()
+    //     {
+    //         FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+    //         std::ostringstream faderDesc;
+    //         faderDesc << "Ch " << (int)(record.channel + 1) << " " << modeNames[record.faderMode] << " ";
+    //         if (record.faderMode == FaderbankModule::FaderModeCC)
+    //         {
+    //             faderDesc << (int)record.ccNum;
+    //         }
+    //         else if (record.faderMode == FaderbankModule::FaderMode14bitCC)
+    //         {
+    //             faderDesc << (int)record.ccNum << "/" << (int)(record.ccNum + 32);
+    //         }
+    //         return faderDesc.str();
+    //     },
+    //     [=](Menu* childMenu)
+    //     {
+    //         childMenu->addChild(createUnconsumingIndexSubmenuItem("Channel", channelNames,
+    //             [=]()
+    //             {
+    //                 return fb->records[faderIndex].channel;
+    //             },
+    //             [=](int index)
+    //             {
+    //                 fb->records[faderIndex].channel = index & 0xF;
+    //                 fb->updateInputMap();
+    //             }
+    //         ));
 
-            childMenu->addChild(createUnconsumingIndexSubmenuItem("Mode", modeNames,
-                [=]()
-                {
-                    return fb->records[faderIndex].faderMode;
-                },
-                [=](int index)
-                {
-                    fb->records[faderIndex].faderMode = static_cast<FaderbankModule::FaderMode>(index);
-                    fb->updateInputMap();
-                }
-            ));
+    //         childMenu->addChild(createUnconsumingIndexSubmenuItem("Mode", modeNames,
+    //             [=]()
+    //             {
+    //                 return fb->records[faderIndex].faderMode;
+    //             },
+    //             [=](int index)
+    //             {
+    //                 fb->records[faderIndex].faderMode = static_cast<FaderbankModule::FaderMode>(index);
+    //                 fb->updateInputMap();
+    //             }
+    //         ));
 
-            childMenu->addChild(createUnconsumingIndexSubmenuItemWithDynamicLabels("CC Number",
-                [=]()
-                {
-                    FaderbankModule::ControllerRecord record = fb->records[faderIndex];
-                    uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
+    //         childMenu->addChild(createUnconsumingIndexSubmenuItemWithDynamicLabels("CC Number",
+    //             [=]()
+    //             {
+    //                 FaderbankModule::ControllerRecord record = fb->records[faderIndex];
+    //                 uint8_t ccMax = record.faderMode == FaderbankModule::FaderMode14bitCC ? 31 : 127;
 
-                    std::vector<std::string> ccNames;
-                    for (auto i = 0; i < ccMax + 1; i++)
-                    {
-                        std::ostringstream ss;
-                        ss << i;
-                        ccNames.push_back(ss.str());
-                    }
-                    return ccNames;
-                },
-                [=]()
-                {
-                    return fb->records[faderIndex].ccNum;
-                },
-                [=](int index)
-                {
-                    fb->records[faderIndex].ccNum = index & 0x7F;
-                    fb->updateInputMap();
-                }
-            ));
-        }
-    ));
+    //                 std::vector<std::string> ccNames;
+    //                 for (auto i = 0; i < ccMax + 1; i++)
+    //                 {
+    //                     std::ostringstream ss;
+    //                     ss << i;
+    //                     ccNames.push_back(ss.str());
+    //                 }
+    //                 return ccNames;
+    //             },
+    //             [=]()
+    //             {
+    //                 return fb->records[faderIndex].ccNum;
+    //             },
+    //             [=](int index)
+    //             {
+    //                 fb->records[faderIndex].ccNum = index & 0x7F;
+    //                 fb->updateInputMap();
+    //             }
+    //         ));
+    //     }
+    // ));
 }
 
 void FaderbankWidget::appendContextMenu(Menu* menu)

@@ -92,7 +92,7 @@ struct USBAJack : rack::Switch
             if (mw)
             {
                 menu->addChild(new rack::MenuSeparator());
-                appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
+                //appendDeviceConnectionMenu(menu, m, &m->audioThreadActions);
             }
         }
     }

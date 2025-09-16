@@ -2,8 +2,8 @@
 #include "rack.hpp"
 
 #include <cstdio>
-#include <fstream>
-#include <iostream>
+// #include <fstream>
+// #include <iostream>
 #include <stdlib.h>
 #include <unordered_set>
 //#include <ghc/filesystem.hpp>
@@ -24,10 +24,12 @@ extern rack::Plugin* pluginInstance;
 #define LIB_EXTENSION ".dylib"
 #define PATH_SEPARATOR '/'
 #define MODULE_HANDLE_TYPE void*
-#else
+#elif METAMODULE
 #define LIB_EXTENSION ".so"
 #define PATH_SEPARATOR '/'
 #define MODULE_HANDLE_TYPE void*
+#else
+#error Unsupported environment!
 #endif
 
 #if ARCH_WIN
@@ -61,7 +63,7 @@ extern rack::Plugin* pluginInstance;
         return false;                                  \
     }
 
-#else
+#elif METAMODULE
 
 #define GET_PROC_ADDRESS(returntype, name, argslist)   \
     fw_fn_hardware_##name = reinterpret_cast<fw_fn_hardware_##name##_t>( \
@@ -72,6 +74,8 @@ extern rack::Plugin* pluginInstance;
         return false;                                  \
     }
 
+#else
+#error Unsupported environment!
 #endif
 
 #define DECLARE_PROC(returntype, name, argslist)    \
@@ -108,15 +112,19 @@ struct FirmwareManagerImpl
         FreeLibrary(handle);
 #elif ARCH_LIN || ARCH_MAC
         dlclose(handle);
+#elif METAMODULE
+
+#else
+#error Unsupported environment!
 #endif
 
         if (!tempLibraryFile.empty())
         {
-            unlink(tempLibraryFile.c_str());
+            //unlink(tempLibraryFile.c_str());
         }
         if (!tempLibraryFolder.empty())
         {
-            rmdir(tempLibraryFolder.c_str());
+            //rmdir(tempLibraryFolder.c_str());
         }
     }
 
@@ -177,6 +185,10 @@ struct FirmwareManagerImpl
                 }
             }
 
+#elif METAMODULE
+
+#else
+#error Unsupported environment!
 #endif
 
             if (!success)
@@ -190,9 +202,9 @@ struct FirmwareManagerImpl
             // DEBUG("Creating new temporary firmware instance at %s", tempLibraryFile.c_str());
 
             {
-                std::ifstream src(librarySource, std::ios::binary);
-                std::ofstream dst(tempLibraryFile, std::ios::binary);
-                dst << src.rdbuf();
+                //std::ifstream src(librarySource, std::ios::binary);
+                //std::ofstream dst(tempLibraryFile, std::ios::binary);
+                //dst << src.rdbuf();
             }
 
             libraryToLoad = tempLibraryFile;
@@ -236,6 +248,10 @@ struct FirmwareManagerImpl
             return false;
         }
 
+#elif METAMODULE
+
+#else
+#error Unsupported environment!
 #endif
 
 #ifdef MOCK_API
