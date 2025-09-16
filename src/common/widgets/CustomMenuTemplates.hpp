@@ -18,7 +18,7 @@ TMenuItem* createUnconsumingIndexSubmenuItem(std::string text, std::vector<std::
             this->rightText = CHECKMARK(currIndex == index);
             MenuItem::step();
         }
-        void onAction(const event::Action& e) override
+        void onAction(const ActionEvent& e) override
         {
             setter(index);
             e.unconsume();
@@ -76,7 +76,7 @@ TMenuItem* createUnconsumingIndexSubmenuItemWithDynamicLabels(std::string text, 
             this->rightText = CHECKMARK(currIndex == index);
             MenuItem::step();
         }
-        void onAction(const event::Action& e) override
+        void onAction(const ActionEvent& e) override
         {
             setter(index);
             e.unconsume();

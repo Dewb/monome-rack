@@ -12,6 +12,14 @@
 
 using namespace rack;
 
+namespace rack { 
+    namespace event {
+        struct Action {
+            int foo;
+        };
+    }
+}
+
 
 struct ReloadFirmwareItem : rack::ui::MenuItem
 {
@@ -19,7 +27,7 @@ struct ReloadFirmwareItem : rack::ui::MenuItem
     bool preserveVRAM;
     bool preserveNVRAM;
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         if (module) {
             module->requestReloadFirmware(preserveVRAM, preserveNVRAM);

@@ -24,6 +24,10 @@ extern rack::Plugin* pluginInstance;
 #define LIB_EXTENSION ".dylib"
 #define PATH_SEPARATOR '/'
 #define MODULE_HANDLE_TYPE void*
+#else
+#define LIB_EXTENSION ".so"
+#define PATH_SEPARATOR '/'
+#define MODULE_HANDLE_TYPE void*
 #endif
 
 #if ARCH_WIN
@@ -54,6 +58,17 @@ extern rack::Plugin* pluginInstance;
     if (!fw_fn_hardware_##name)                                 \
     {                                                  \
         WARN("Failed to find symbol 'hardware_" #name "'");     \
+        return false;                                  \
+    }
+
+#else
+
+#define GET_PROC_ADDRESS(returntype, name, argslist)   \
+    fw_fn_hardware_##name = reinterpret_cast<fw_fn_hardware_##name##_t>( \
+        reinterpret_cast<void*>(0));                    \
+    if (!fw_fn_hardware_##name)                                 \
+    {                                                  \
+        WARN("Unsupported OS; failed to find symbol 'hardware_" #name "'");     \
         return false;                                  \
     }
 

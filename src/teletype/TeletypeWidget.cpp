@@ -9,6 +9,7 @@
 
 //namespace fs = ghc::filesystem;
 
+
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 {
     setModule(module);
@@ -134,7 +135,7 @@ struct TeletypeKeystrokeItem : rack::ui::MenuItem
         rightText = _rightText;
     }
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         if (module)
         {

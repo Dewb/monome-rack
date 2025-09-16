@@ -9,7 +9,7 @@ struct ConnectGridItem : rack::ui::MenuItem
     IGridConsumer* consumer;
     ActionQueue* actionQueue;
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         if (actionQueue)
         {

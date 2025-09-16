@@ -29,7 +29,7 @@ struct InternalPresetItem : rack::ui::MenuItem
         }
     }
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         osdialog_filters* filters = osdialog_filters_parse("Teletype Scene Files (*.txt):txt");
 
@@ -82,7 +82,7 @@ struct InternalPresetClipboardItem : rack::ui::MenuItem
             (clearExisting ? "Paste and init new scene from clipboard" : "Paste and merge clipboard into current scene"));
     }
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         TeletypeSceneIO::presetImportExportClipboardOperation(module, operation, preset_num, clearExisting);
     }
@@ -104,7 +104,7 @@ struct InternalPresetBulkItem : rack::ui::MenuItem
             : ("All → tt##" + suffix + ".txt");
     }
 
-    void onAction(const rack::event::Action& e) override
+    void onAction(const ActionEvent& e) override
     {
         char* path_result = osdialog_file(
             OSDIALOG_OPEN_DIR,
