@@ -6,9 +6,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <unordered_set>
-#include <ghc/filesystem.hpp>
+//#include <ghc/filesystem.hpp>
 
-namespace fs = ghc::filesystem;
+//namespace fs = ghc::filesystem;
 
 extern rack::Plugin* pluginInstance;
 
@@ -113,11 +113,11 @@ struct FirmwareManagerImpl
         librarySource = rack::asset::plugin(pluginInstance, "res/firmware/" + firmwareName + LIB_EXTENSION);
 
         std::error_code ec;
-        if (!fs::is_regular_file(fs::status(librarySource, ec)))
-        {
-            WARN("Requested firmware not found or invalid");
-            return false;
-        }
+        //if (!fs::is_regular_file(fs::status(librarySource, ec)))
+        //{
+            // WARN("Requested firmware not found or invalid");
+        //     return false;
+        // }
 
         std::string libraryToLoad = librarySource;
 

@@ -1,5 +1,5 @@
 #include "LibAVR32Module.hpp"
-#include "SerialOscInterface.hpp"
+//#include "SerialOscInterface.hpp"
 #include "base64.h"
 #include <string.h>
 
@@ -12,7 +12,7 @@ LibAVR32Module::LibAVR32Module(std::string firmwarePrefix, std::string defaultFi
 {
     // make sure serialosc is fully initialized by the time
     // the user needs to interact with it
-    SerialOscInterface::get();
+    //SerialOscInterface::get();
 
     dacOffsetVolts = 0.0007;
     triggerHighThreshold = 2.21;

@@ -2,13 +2,13 @@
 #include "LibAVR32Module.hpp"
 #include "GridConnectionMenu.hpp"
 #include "VirtualGridModule.hpp"
-#include "VirtualGridWidget.hpp"
-#include "SerialOscInterface.hpp"
+//#include "VirtualGridWidget.hpp"
+//#include "SerialOscInterface.hpp"
 #include "Screenshot.hpp"
 
-#include <ghc/filesystem.hpp>
+// #include <ghc/filesystem.hpp>
 
-namespace fs = ghc::filesystem;
+// namespace fs = ghc::filesystem;
 
 using namespace rack;
 
@@ -37,18 +37,18 @@ struct SwitchFirmwareItem : rack::ui::MenuItem
         std::vector<std::string> ignoreList = {"teletype", "ansible 2", "earthsea 2", "meadowphysics 2", "teletype 2", "whitewhale 2"};
         std::vector<std::string> fwNames = {};
 
-        const fs::path fwPath{rack::asset::plugin(pluginInstance, "res/firmware")};
-        for (auto const& file : fs::directory_iterator{fwPath})
-        {
-            auto name = file.path().stem().string();
-            auto extension = file.path().extension().string();
-            if (extension == module->firmware.getLibExtension() &&
-                name.substr(0, module->firmwarePrefix.size()) == module->firmwarePrefix &&
-                std::find(std::begin(ignoreList), std::end(ignoreList), name) == std::end(ignoreList))
-            {
-                fwNames.push_back(name);
-            }
-        }
+        // const fs::path fwPath{rack::asset::plugin(pluginInstance, "res/firmware")};
+        // for (auto const& file : fs::directory_iterator{fwPath})
+        // {
+        //     auto name = file.path().stem().string();
+        //     auto extension = file.path().extension().string();
+        //     if (extension == module->firmware.getLibExtension() &&
+        //         name.substr(0, module->firmwarePrefix.size()) == module->firmwarePrefix &&
+        //         std::find(std::begin(ignoreList), std::end(ignoreList), name) == std::end(ignoreList))
+        //     {
+        //         fwNames.push_back(name);
+        //     }
+        // }
 
         bool currentMissing = false;
         if (std::find(std::begin(fwNames), std::end(fwNames), module->firmwareName) == std::end(fwNames))

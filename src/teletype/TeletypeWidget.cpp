@@ -5,9 +5,9 @@
 #include "USBAJack.hpp"
 #include "scene/TeletypeSceneIOMenu.hpp"
 #include "screen/TeletypeScreenWidget.hpp"
-#include <ghc/filesystem.hpp>
+//#include <ghc/filesystem.hpp>
 
-namespace fs = ghc::filesystem;
+//namespace fs = ghc::filesystem;
 
 TeletypeWidget::TeletypeWidget(TeletypeModule* module)
 {
@@ -83,16 +83,16 @@ struct TeletypeKeyboardLayoutItem : rack::ui::MenuItem
     {
         std::vector<std::string> layoutNames = {};
 
-        const fs::path mapPath { rack::asset::plugin(pluginInstance, "res/keymaps") };
-        for (auto const& file : fs::directory_iterator { mapPath })
-        {
-            auto name = file.path().stem().string();
-            auto extension = file.path().extension().string();
-            if (extension == ".json")
-            {
-                layoutNames.push_back(name);
-            }
-        }
+        // const fs::path mapPath { rack::asset::plugin(pluginInstance, "res/keymaps") };
+        // for (auto const& file : fs::directory_iterator { mapPath })
+        // {
+        //     auto name = file.path().stem().string();
+        //     auto extension = file.path().extension().string();
+        //     if (extension == ".json")
+        //     {
+        //         layoutNames.push_back(name);
+        //     }
+        // }
 
         ui::Menu* menu = new ui::Menu;
 

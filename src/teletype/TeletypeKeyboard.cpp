@@ -100,73 +100,73 @@ void TeletypeKeyboard::loadMap()
     }
 }
 
-bool TeletypeKeyboard::process(const rack::event::SelectKey& e, uint8_t* pKey, uint8_t* pMod)
-{
-    init();
+// bool TeletypeKeyboard::process(const rack::event::SelectKey& e, uint8_t* pKey, uint8_t* pMod)
+// {
+//     init();
 
-    uint8_t key = 0;
-    uint8_t mod = 0;
+//     uint8_t key = 0;
+//     uint8_t mod = 0;
 
-    bool found = false;
-    bool shiftConsumed = false;
+//     bool found = false;
+//     bool shiftConsumed = false;
 
-    // Look for a mapping with shift explicitly set
-    if (e.mods & GLFW_MOD_SHIFT)
-    {
-        auto result = keycodeMap.find(std::make_pair(e.key, GLFW_MOD_SHIFT));
-        if (result != keycodeMap.end())
-        {
-            key = result->second.first;
-            mod = result->second.second;
-            found = true;
-            shiftConsumed = true;
-        }
-    }
+//     // Look for a mapping with shift explicitly set
+//     if (e.mods & GLFW_MOD_SHIFT)
+//     {
+//         auto result = keycodeMap.find(std::make_pair(e.key, GLFW_MOD_SHIFT));
+//         if (result != keycodeMap.end())
+//         {
+//             key = result->second.first;
+//             mod = result->second.second;
+//             found = true;
+//             shiftConsumed = true;
+//         }
+//     }
 
-    // Look for a mapping of the keycode with no modifiers
-    if (!found)
-    {
-        auto result = keycodeMap.find(std::make_pair(e.key, 0));
-        if (result != keycodeMap.end())
-        {
-            key = result->second.first;
-            mod = result->second.second;
-            found = true;
-        }
-    }
+//     // Look for a mapping of the keycode with no modifiers
+//     if (!found)
+//     {
+//         auto result = keycodeMap.find(std::make_pair(e.key, 0));
+//         if (result != keycodeMap.end())
+//         {
+//             key = result->second.first;
+//             mod = result->second.second;
+//             found = true;
+//         }
+//     }
 
-    if (e.mods & GLFW_MOD_CONTROL)
-    {
-        mod |= 0x1;
-    }
-    if ((e.mods & GLFW_MOD_SHIFT) && !shiftConsumed)
-    {
-        mod |= 0x2;
-    }
-    if (e.mods & GLFW_MOD_ALT)
-    {
-        mod |= 0x4;
-    }
-    if (e.mods & GLFW_MOD_SUPER)
-    {
-        mod |= 0x8;
-    }
+//     if (e.mods & GLFW_MOD_CONTROL)
+//     {
+//         mod |= 0x1;
+//     }
+//     if ((e.mods & GLFW_MOD_SHIFT) && !shiftConsumed)
+//     {
+//         mod |= 0x2;
+//     }
+//     if (e.mods & GLFW_MOD_ALT)
+//     {
+//         mod |= 0x4;
+//     }
+//     if (e.mods & GLFW_MOD_SUPER)
+//     {
+//         mod |= 0x8;
+//     }
 
-    if (found)
-    {
-        if (pKey)
-        {
-            *pKey = key;
-        }
+//     if (found)
+//     {
+//         if (pKey)
+//         {
+//             *pKey = key;
+//         }
 
-        if (pMod)
-        {
-            *pMod = mod;
-        }
-    }
+//         if (pMod)
+//         {
+//             *pMod = mod;
+//         }
+//     }
 
-    return found;
-}
+//     return found;
+// }
 
 int TeletypeKeyboard::stringToGLFWCode(std::string s)
 {

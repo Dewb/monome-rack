@@ -13,46 +13,47 @@
 TeletypeScreenWidget::TeletypeScreenWidget(LibAVR32Module* module)
     : module(module)
 {
-    if (module)
-    {
-        TeletypeKeyboard::init();
-    }
+    // if (module)
+    // {
+    //     TeletypeKeyboard::init();
+    // }
 }
 
-void TeletypeScreenWidget::onSelect(const event::Select& e)
-{
-}
+// void TeletypeScreenWidget::onSelect(const event::Select& e)
+// {
+// }
 
-void TeletypeScreenWidget::onDeselect(const event::Deselect& e)
-{
-}
+// void TeletypeScreenWidget::onDeselect(const event::Deselect& e)
+// {
+// }
 
-void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
-{
-    uint8_t key = 0;
-    uint8_t mod = 0;
 
-    if (TeletypeKeyboard::process(e, &key, &mod))
-    {
-        if (module)
-        {
-            if (e.action == GLFW_PRESS)
-            {
-                module->firmware.hidMessage(key, mod, false, false);
-            }
-            else if (e.action == GLFW_REPEAT)
-            {
-                module->firmware.hidMessage(key, mod, true, false);
-            }
-            else if (e.action == GLFW_RELEASE)
-            {
-                module->firmware.hidMessage(key, mod, false, true);
-            }
-        }
-    }
+// void TeletypeScreenWidget::onSelectKey(const event::SelectKey& e)
+// {
+//     uint8_t key = 0;
+//     uint8_t mod = 0;
 
-    e.consume(this);
-}
+//     if (TeletypeKeyboard::process(e, &key, &mod))
+//     {
+//         if (module)
+//         {
+//             if (e.action == GLFW_PRESS)
+//             {
+//                 module->firmware.hidMessage(key, mod, false, false);
+//             }
+//             else if (e.action == GLFW_REPEAT)
+//             {
+//                 module->firmware.hidMessage(key, mod, true, false);
+//             }
+//             else if (e.action == GLFW_RELEASE)
+//             {
+//                 module->firmware.hidMessage(key, mod, false, true);
+//             }
+//         }
+//     }
+
+//     e.consume(this);
+// }
 
 void TeletypeScreenWidget::draw(const DrawArgs& args)
 {

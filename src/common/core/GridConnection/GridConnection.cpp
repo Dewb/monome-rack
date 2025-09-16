@@ -1,5 +1,5 @@
 #include "GridConnection.hpp"
-#include "SerialOscInterface.hpp"
+//#include "SerialOscInterface.hpp"
 
 void GridConnectionManager::registerGrid(Grid* grid)
 {
@@ -79,13 +79,13 @@ void GridConnectionManager::connect(Grid* grid, IGridConsumer* consumer)
     consumer->gridConnected(grid);
 
     // If serialosc is managing the grid (e.g. it's a hardware grid), inform serialosc about new grid owner
-    auto port = grid->getDevice().port;
-    auto so = SerialOscInterface::get();
-    if (port > 0 && so != nullptr && so->driver != nullptr)
-    {
-        so->driver->sendDevicePrefixMessage(port);
-        so->driver->sendDevicePortMessage(port);
-    }
+    // auto port = grid->getDevice().port;
+    // auto so = SerialOscInterface::get();
+    // if (port > 0 && so != nullptr && so->driver != nullptr)
+    // {
+    //     so->driver->sendDevicePrefixMessage(port);
+    //     so->driver->sendDevicePortMessage(port);
+    // }
 }
 
 bool GridConnectionManager::isConnected(IGridConsumer* consumer)
