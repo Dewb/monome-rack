@@ -229,8 +229,8 @@ void LibAVR32Module::requestReloadFirmware(bool preserveVRAM, bool preserveNVRAM
 
 void LibAVR32Module::reloadFirmware(bool preserveVRAM, bool preserveNVRAM, const std::string& newName)
 {
-    void *data, *nvram_copy, *vram_copy = 0;
-    uint32_t nvram_size, vram_size = 0;
+    void *data = 0, *nvram_copy = 0, *vram_copy = 0;
+    uint32_t nvram_size = 0, vram_size = 0;
 
     firmwareName = newName.empty() ? firmware.getLoadedName() : newName;
     if (firmwareName != firmware.getLoadedName()) {
