@@ -12,12 +12,12 @@ struct VirtualGridWidget : rack::app::ModuleWidget
     VirtualGridWidget(VirtualGridModule* module, unsigned w, unsigned h);
     ~VirtualGridWidget();
 
-    void onDragEnter(const rack::event::DragEnter& e) override;
-    void onDragStart(const rack::event::DragStart& e) override;
-    void onDragEnd(const rack::event::DragEnd& e) override;
-    void onDragLeave(const rack::event::DragLeave& e) override;
-    void onHoverKey(const rack::Widget::HoverKeyEvent& e) override;
-    void onLeave(const rack::Widget::LeaveEvent& e) override;
+    void onDragEnter(const DragEnterEvent& e) override;
+    void onDragStart(const DragStartEvent& e) override;
+    void onDragEnd(const DragEndEvent& e) override;
+    void onDragLeave(const DragLeaveEvent& e) override;
+    void onHoverKey(const HoverKeyEvent& e) override;
+    void onLeave(const LeaveEvent& e) override;
     void appendContextMenu(rack::ui::Menu* menu) override;
 
     void clearHeldKeys();

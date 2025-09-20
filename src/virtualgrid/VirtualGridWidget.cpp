@@ -69,17 +69,19 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
     {
         auto panel = new ThemedSvgPanel();
         panel->setBackground(
-            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/grid.svg")),
-            APP->window->loadSvg(rack::asset::plugin(pluginInstance, "res/grid-dark.svg")));
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, rack::string::f("res/grid-%d.svg", static_cast<int>(rackWidth)))),
+            APP->window->loadSvg(rack::asset::plugin(pluginInstance, rack::string::f("res/grid-%d-dark.svg", static_cast<int>(rackWidth)))));
         panel->box.size = box.size;
         addChild(panel);
     }
 
+#ifndef METAMODULE
     // create an opaque child underneath the keys to defeat module dragging in between the buttons
     auto gridZone = new OpaqueWidget();
     gridZone->setSize(Vec(box.size.x - 2 * margins.x, box.size.y - 2 * margins.y));
     gridZone->setPosition(Vec(margins.x, margins.y));
     addChild(gridZone);
+#endif
 
     float spacingRatio = 0.14;
     float button_size = (box.size.y - margins.y * 2) / (h + (h - 1) * spacingRatio);
@@ -94,8 +96,14 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             float y = margins.y + j * (button_size + spacing) - keyMargin;
             int n = i + j * w;
 
+#ifdef METAMODULE
+            VirtualGridKey* key = new VirtualGridKey();
+            key->box.pos = Vec(x, y);
+            key->parent = this;
+#else
             VirtualGridKey* key = (VirtualGridKey*)createParam<VirtualGridKey>(Vec(x, y), module, n * 2);
-            if (module)
+#endif
+        if (module)
             {
                 key->setKeyAddress(module->ledBuffer + i + j * 16);
                 key->theme = &(module->theme);
@@ -107,7 +115,11 @@ VirtualGridWidget::VirtualGridWidget(VirtualGridModule* module, unsigned w, unsi
             key->margin = keyMargin;
             key->pushAmount = h == 16 ? 2.1 : 3.8;
             key->cornerRadius = h == 16 ? 2.5 : 4.3;
+#ifdef METAMODULE
+            addChild(key);
+#else
             addParam(key);
+#endif
         }
     }
 }
@@ -122,6 +134,7 @@ VirtualGridWidget::~VirtualGridWidget()
 
 void VirtualGridWidget::clearHeldKeys()
 {
+#ifndef METAMODULE
     for (auto p : getParams())
     {
         auto key = static_cast<VirtualGridKey*>(p);
@@ -130,10 +143,12 @@ void VirtualGridWidget::clearHeldKeys()
             key->getSecondaryParamQuantity()->setImmediateValue(VirtualGridKey::OFF);
         }
     }
+#endif
 }
 
 void VirtualGridWidget::clearLockedKeys()
 {
+#ifndef METAMODULE
     for (auto p : getParams())
     {
         auto key = static_cast<VirtualGridKey*>(p);
@@ -143,29 +158,30 @@ void VirtualGridWidget::clearLockedKeys()
             key->getSecondaryParamQuantity()->setImmediateValue(VirtualGridKey::OFF);
         }
     }
+#endif
 }
 
-void VirtualGridWidget::onDragEnter(const event::DragEnter& e)
+void VirtualGridWidget::onDragEnter(const DragEnterEvent& e)
 {
 }
 
-void VirtualGridWidget::onDragStart(const event::DragStart& e)
+void VirtualGridWidget::onDragStart(const DragStartEvent& e)
 {
     ModuleWidget::onDragStart(e);
 }
 
-void VirtualGridWidget::onDragEnd(const event::DragEnd& e)
+void VirtualGridWidget::onDragEnd(const DragEndEvent& e)
 {
     ModuleWidget::onDragEnd(e);
 }
 
-void VirtualGridWidget::onDragLeave(const event::DragLeave& e)
+void VirtualGridWidget::onDragLeave(const DragLeaveEvent& e)
 {
     clearHeldKeys();
     ModuleWidget::onDragLeave(e);
 }
 
-void VirtualGridWidget::onHoverKey(const rack::Widget::HoverKeyEvent& e)
+void VirtualGridWidget::onHoverKey(const HoverKeyEvent& e)
 {
 #if defined ARCH_MAC
     bool isHoldModifier = e.key == GLFW_KEY_LEFT_SUPER || e.key == GLFW_KEY_RIGHT_SUPER;
@@ -188,7 +204,7 @@ void VirtualGridWidget::onHoverKey(const rack::Widget::HoverKeyEvent& e)
     }
 }
 
-void VirtualGridWidget::onLeave(const rack::Widget::LeaveEvent& e)
+void VirtualGridWidget::onLeave(const LeaveEvent& e)
 {
     clearHeldKeys();
 }
@@ -241,5 +257,5 @@ void VirtualGridWidget::appendContextMenu(Menu * menu)
         this->clearLockedKeys();
     }));
 
-    menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + id + ")"));
+    //menu->addChild(construct<MenuLabel>(&MenuLabel::text, model->name + " (" + id + ")"));
 }

@@ -47,7 +47,7 @@ void GridConnectionManager::deregisterGrid(std::string id, bool deleteGrid)
 {
     for (Grid* grid : grids)
     {
-        if (grid->getDevice().id == id)
+        if (grid && grid->getDevice().id == id)
         {
             disconnect(grid);
             grids.erase(grid);

@@ -1,7 +1,14 @@
 #include "rack.hpp"
 #include "VirtualGridTheme.hpp"
 
-struct VirtualGridKey : rack::app::ParamWidget
+#ifdef METAMODULE
+typedef rack::widget::OpaqueWidget GridKeyBase;
+#else
+typedef rack::widget::ParamWidget GridKeyBase;
+#endif
+
+
+struct VirtualGridKey : GridKeyBase
 {
     uint8_t* ledAddress;
     GridTheme* theme;
@@ -147,6 +154,15 @@ struct VirtualGridKey : rack::app::ParamWidget
         nvgFill(vg);
     }
 
+#ifdef METAMODULE
+
+    bool isPushed()
+    {
+        return false;
+    }
+
+#else
+
     rack::engine::ParamQuantity* getSecondaryParamQuantity()
     {
         if (!module)
@@ -160,6 +176,7 @@ struct VirtualGridKey : rack::app::ParamWidget
             (getParamQuantity() && getParamQuantity()->getValue() == PRESSED) ||
             (getSecondaryParamQuantity() && getSecondaryParamQuantity()->getValue() == PRESSED);
     }
+#endif
 
     bool isLocked()
     {
@@ -170,6 +187,8 @@ struct VirtualGridKey : rack::app::ParamWidget
     {
         _locked = b;
     }
+
+#ifndef METAMODULE
 
     void beginPress()
     {
@@ -215,7 +234,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         }
     }
 
-    void onButton(const rack::event::Button& e) override
+    void onButton(const ButtonEvent& e) override
     {
         if (e.button == GLFW_MOUSE_BUTTON_LEFT)
         {
@@ -262,12 +281,12 @@ struct VirtualGridKey : rack::app::ParamWidget
         }
     }
 
-    void onDragStart(const rack::event::DragStart& e) override
+    void onDragStart(const DragStartEvent& e) override
     {
         beginPress();
     }
 
-    void onDragEnd(const rack::event::DragEnd& e) override
+    void onDragEnd(const DragEndEvent& e) override
     {
         if (e.getTarget() == nullptr || e.getTarget()->parent == this->parent)
         {
@@ -275,7 +294,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         }
     }
 
-    void onDragLeave(const rack::event::DragLeave& e) override
+    void onDragLeave(const DragLeaveEvent& e) override
     {
         if (e.origin->parent == this->parent)
         {
@@ -283,7 +302,7 @@ struct VirtualGridKey : rack::app::ParamWidget
         }
     }
 
-    void onDragEnter(const rack::event::DragEnter& e) override
+    void onDragEnter(const DragEnterEvent& e) override
     {
         if (e.origin->parent == this->parent)
         {
@@ -296,6 +315,9 @@ struct VirtualGridKey : rack::app::ParamWidget
         // override base class to prevent tooltip creation
     }
 
+#endif
+
 protected:
     bool _locked;
 };
+
