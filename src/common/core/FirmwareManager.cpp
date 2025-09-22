@@ -65,12 +65,27 @@ extern rack::Plugin* pluginInstance;
 
 #elif METAMODULE
 
+// Metamodule direct C linking glue
+extern "C" {
+#define DECLARE_LOCAL_PROC(returntype, name, argslist)    \
+    returntype hardware_##name argslist
+#ifdef MOCK_API
+#undef MOCK_API
+#endif
+#ifndef MOCK_API_SKIP_TYPES
+#define MOCK_API_SKIP_TYPES
+#endif
+#define MOCK_API DECLARE_LOCAL_PROC
+#include "mock_hardware_api.h"
+#undef MOCK_API
+}
+
 #define GET_PROC_ADDRESS(returntype, name, argslist)   \
-    fw_fn_hardware_##name = reinterpret_cast<fw_fn_hardware_##name##_t>( \
-        reinterpret_cast<void*>(0));                    \
+    fw_fn_hardware_##name = \
+        reinterpret_cast<fw_fn_hardware_##name##_t>(hardware_##name); \
     if (!fw_fn_hardware_##name)                                 \
     {                                                  \
-        WARN("Unsupported OS; failed to find symbol 'hardware_" #name "'");     \
+        WARN("Failed to find symbol 'hardware_" #name "'");     \
         return false;                                  \
     }
 
@@ -78,9 +93,12 @@ extern rack::Plugin* pluginInstance;
 #error Unsupported environment!
 #endif
 
+
+
 #define DECLARE_PROC(returntype, name, argslist)    \
     typedef returntype(*fw_fn_hardware_##name##_t) argslist; \
     fw_fn_hardware_##name##_t fw_fn_hardware_##name;
+
 
 struct FirmwareManagerImpl
 {
